@@ -1,0 +1,47 @@
+{
+  "name": "山田太郎",
+  "nameJa": "やまだ たろう",
+  "currentAffiliation": "○○大学 情報学部",
+  "currentPosition": "准教授",
+  "bio": "機械学習とWebテクノロジーの研究に従事。特に自然言語処理と深層学習の分野で活動し、Next.jsを用いたフロントエンド開発にも興味を持つ。産学連携プロジェクトを通じて実用的な技術開発にも取り組んでいる。",
+  "location": "東京, 日本",
+  "avatarUrl": "/images/avatar.jpg",
+  "socialLinks": [
+    {
+      "id": "social-001",
+      "platform": "twitter",
+      "url": "https://twitter.com/yamada_taro",
+      "username": "@yamada_taro"
+    },
+    {
+      "id": "social-002",
+      "platform": "github",
+      "url": "https://github.com/yamada-taro",
+      "username": "yamada-taro"
+    },
+    {
+      "id": "social-003",
+      "platform": "linkedin",
+      "url": "https://linkedin.com/in/yamada-taro",
+      "username": "yamada-taro"
+    },
+    {
+      "id": "social-004",
+      "platform": "orcid",
+      "url": "https://orcid.org/0000-0000-0000-0000",
+      "username": "0000-0000-0000-0000"
+    },
+    {
+      "id": "social-005",
+      "platform": "email",
+      "url": "mailto:yamada@university.ac.jp",
+      "username": "yamada@university.ac.jp"
+    },
+    {
+      "id": "social-006",
+      "platform": "website",
+      "url": "https://yamada-lab.university.ac.jp",
+      "username": "研究室サイト"
+    }
+  ]
+}

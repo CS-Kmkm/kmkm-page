@@ -1,0 +1,165 @@
+{
+  "technologies": [
+    {
+      "id": "tech-001",
+      "name": "TypeScript",
+      "category": "language",
+      "proficiency": "advanced",
+      "experienceYears": 4,
+      "projects": ["proj-001", "proj-002", "proj-003"],
+      "description": "型安全なJavaScript開発に使用。フロントエンドからバックエンドまで幅広く活用。",
+      "logoUrl": "/images/tech-logos/typescript.svg",
+      "logoAlt": "TypeScript logo"
+    },
+    {
+      "id": "tech-002",
+      "name": "React",
+      "category": "framework",
+      "proficiency": "advanced",
+      "experienceYears": 5,
+      "projects": ["proj-001", "proj-002"],
+      "description": "モダンなWebアプリケーション開発のメインフレームワーク。Hooks、Context APIを活用。",
+      "logoUrl": "/images/tech-logos/react.svg",
+      "logoAlt": "React logo"
+    },
+    {
+      "id": "tech-003",
+      "name": "Next.js",
+      "category": "framework",
+      "proficiency": "advanced",
+      "experienceYears": 3,
+      "projects": ["proj-001", "proj-004"],
+      "description": "React ベースのフルスタックフレームワーク。SSG、SSR、App Routerを活用した開発経験。",
+      "logoUrl": "/images/tech-logos/nextjs.svg",
+      "logoAlt": "Next.js logo"
+    },
+    {
+      "id": "tech-004",
+      "name": "Python",
+      "category": "language",
+      "proficiency": "expert",
+      "experienceYears": 8,
+      "projects": ["proj-005", "proj-006", "proj-007"],
+      "description": "機械学習、データ分析、Web API開発に使用。NumPy、pandas、scikit-learn、PyTorchを活用。",
+      "logoUrl": "/images/tech-logos/python.svg",
+      "logoAlt": "Python logo"
+    },
+    {
+      "id": "tech-005",
+      "name": "PyTorch",
+      "category": "framework",
+      "proficiency": "advanced",
+      "experienceYears": 4,
+      "projects": ["proj-005", "proj-006"],
+      "description": "深層学習モデルの開発と訓練に使用。自然言語処理、画像認識の研究プロジェクトで活用。",
+      "logoUrl": "/images/tech-logos/pytorch.svg",
+      "logoAlt": "PyTorch logo"
+    },
+    {
+      "id": "tech-006",
+      "name": "Tailwind CSS",
+      "category": "framework",
+      "proficiency": "intermediate",
+      "experienceYears": 2,
+      "projects": ["proj-001", "proj-004"],
+      "description": "ユーティリティファーストのCSSフレームワーク。レスポンシブデザインの実装に活用。",
+      "logoUrl": "/images/tech-logos/tailwindcss.svg",
+      "logoAlt": "Tailwind CSS logo"
+    },
+    {
+      "id": "tech-007",
+      "name": "PostgreSQL",
+      "category": "database",
+      "proficiency": "intermediate",
+      "experienceYears": 5,
+      "projects": ["proj-003", "proj-007"],
+      "description": "リレーショナルデータベースとして使用。複雑なクエリ設計とパフォーマンス最適化の経験。",
+      "logoUrl": "/images/tech-logos/postgresql.svg",
+      "logoAlt": "PostgreSQL logo"
+    },
+    {
+      "id": "tech-008",
+      "name": "Docker",
+      "category": "tool",
+      "proficiency": "intermediate",
+      "experienceYears": 3,
+      "projects": ["proj-003", "proj-007"],
+      "description": "コンテナ化による開発環境の構築と本番デプロイメント。Docker Composeを活用したマルチコンテナ構成。",
+      "logoUrl": "/images/tech-logos/docker.svg",
+      "logoAlt": "Docker logo"
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-001",
+      "name": "個人ポートフォリオサイト",
+      "description": "Next.js 16.0とTailwind CSS v4を使用して構築した個人ポートフォリオサイト。レスポンシブデザインとアクセシビリティに配慮し、TypeScriptで型安全な開発を実現。",
+      "technologies": ["TypeScript", "React", "Next.js", "Tailwind CSS"],
+      "duration": "2024年1月 - 2024年3月",
+      "role": "フルスタック開発者",
+      "url": "https://portfolio.example.com",
+      "githubUrl": "https://github.com/username/portfolio",
+      "imageUrl": "/images/projects/portfolio.png"
+    },
+    {
+      "id": "proj-002",
+      "name": "研究室管理システム",
+      "description": "研究室の学生管理、研究進捗管理、論文投稿状況を一元管理するWebアプリケーション。React + TypeScriptでフロントエンドを構築。",
+      "technologies": ["TypeScript", "React", "Node.js", "Express"],
+      "duration": "2023年4月 - 2023年12月",
+      "role": "フロントエンド開発リード",
+      "githubUrl": "https://github.com/lab/management-system",
+      "imageUrl": "/images/projects/lab-management.png"
+    },
+    {
+      "id": "proj-003",
+      "name": "学術論文検索API",
+      "description": "自然言語処理を活用した学術論文の検索・推薦システム。TypeScript + Node.js でREST APIを構築し、PostgreSQLでデータ管理。",
+      "technologies": ["TypeScript", "Node.js", "PostgreSQL", "Docker"],
+      "duration": "2023年1月 - 2023年8月",
+      "role": "バックエンド開発者",
+      "githubUrl": "https://github.com/research/paper-search-api",
+      "imageUrl": "/images/projects/paper-search.png"
+    },
+    {
+      "id": "proj-004",
+      "name": "学会発表管理サイト",
+      "description": "学会発表の申込み、スケジュール管理、参加者管理を行うWebサイト。Next.js App Routerを活用したモダンな構成。",
+      "technologies": ["Next.js", "Tailwind CSS", "Prisma", "SQLite"],
+      "duration": "2022年9月 - 2023年2月",
+      "role": "フルスタック開発者",
+      "url": "https://conference.example.com",
+      "imageUrl": "/images/projects/conference-site.png"
+    },
+    {
+      "id": "proj-005",
+      "name": "感情分析モデル",
+      "description": "日本語テキストの感情分析を行う深層学習モデル。PyTorchを使用してTransformerベースのモデルを実装し、高精度な感情分類を実現。",
+      "technologies": ["Python", "PyTorch", "Transformers", "scikit-learn"],
+      "duration": "2022年4月 - 2023年3月",
+      "role": "機械学習エンジニア",
+      "githubUrl": "https://github.com/research/sentiment-analysis",
+      "imageUrl": "/images/projects/sentiment-analysis.png"
+    },
+    {
+      "id": "proj-006",
+      "name": "画像キャプション生成システム",
+      "description": "画像から自動的にキャプションを生成するシステム。Vision TransformerとGPTを組み合わせたマルチモーダルモデルを開発。",
+      "technologies": ["Python", "PyTorch", "OpenCV", "Transformers"],
+      "duration": "2021年10月 - 2022年9月",
+      "role": "研究開発者",
+      "githubUrl": "https://github.com/research/image-captioning",
+      "imageUrl": "/images/projects/image-captioning.png"
+    },
+    {
+      "id": "proj-007",
+      "name": "研究データ管理プラットフォーム",
+      "description": "研究データの収集、前処理、分析、可視化を統合的に行うプラットフォーム。Python + FastAPI でバックエンドを構築。",
+      "technologies": ["Python", "FastAPI", "PostgreSQL", "Docker"],
+      "duration": "2021年1月 - 2021年12月",
+      "role": "バックエンド開発リード",
+      "githubUrl": "https://github.com/research/data-platform",
+      "imageUrl": "/images/projects/data-platform.png"
+    }
+  ]
+}

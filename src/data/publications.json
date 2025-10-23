@@ -1,0 +1,79 @@
+{
+  "publications": [
+    {
+      "id": "pub-001",
+      "title": "Deep Learning Approaches for Japanese Sentiment Analysis in Social Media",
+      "authors": ["山田太郎", "田中花子", "佐藤次郎"],
+      "venue": "International Conference on Natural Language Processing (ICNLP 2024)",
+      "year": 2024,
+      "doi": "10.1000/icnlp2024.001",
+      "isFirstAuthor": true,
+      "isPeerReviewed": true,
+      "publicationType": "conference"
+    },
+    {
+      "id": "pub-002",
+      "title": "Multimodal Learning for Image Caption Generation Using Vision Transformers",
+      "authors": ["山田太郎", "鈴木一郎"],
+      "venue": "Journal of Machine Learning Research",
+      "year": 2023,
+      "doi": "10.1000/jmlr2023.045",
+      "isFirstAuthor": true,
+      "isPeerReviewed": true,
+      "publicationType": "journal"
+    },
+    {
+      "id": "pub-003",
+      "title": "Efficient Data Management Strategies for Large-Scale Research Projects",
+      "authors": ["田中花子", "山田太郎", "高橋三郎"],
+      "venue": "ACM Transactions on Database Systems",
+      "year": 2023,
+      "doi": "10.1145/tods2023.789",
+      "isFirstAuthor": false,
+      "isPeerReviewed": true,
+      "publicationType": "journal"
+    },
+    {
+      "id": "pub-004",
+      "title": "Web Technologies for Academic Portfolio Management",
+      "authors": ["山田太郎"],
+      "venue": "Workshop on Educational Technology (WET 2022)",
+      "year": 2022,
+      "isFirstAuthor": true,
+      "isPeerReviewed": false,
+      "publicationType": "workshop"
+    },
+    {
+      "id": "pub-005",
+      "title": "A Comparative Study of Transformer Architectures for Japanese Text Processing",
+      "authors": ["山田太郎", "佐藤次郎", "田中花子", "伊藤四郎"],
+      "venue": "Asian Conference on Machine Learning (ACML 2022)",
+      "year": 2022,
+      "doi": "10.1000/acml2022.234",
+      "isFirstAuthor": true,
+      "isPeerReviewed": true,
+      "publicationType": "conference"
+    },
+    {
+      "id": "pub-006",
+      "title": "Neural Network Optimization Techniques for Resource-Constrained Environments",
+      "authors": ["佐藤次郎", "山田太郎"],
+      "venue": "International Journal of Artificial Intelligence",
+      "year": 2021,
+      "doi": "10.1000/ijai2021.567",
+      "isFirstAuthor": false,
+      "isPeerReviewed": true,
+      "publicationType": "journal"
+    },
+    {
+      "id": "pub-007",
+      "title": "Advances in Cross-lingual Natural Language Understanding",
+      "authors": ["山田太郎", "李美玲", "Smith John"],
+      "venue": "arXiv preprint",
+      "year": 2024,
+      "isFirstAuthor": true,
+      "isPeerReviewed": false,
+      "publicationType": "preprint"
+    }
+  ]
+}
