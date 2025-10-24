@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import { injectAxe, checkA11y } from '@axe-core/playwright';
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -26,12 +27,17 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    
+
     /* Take screenshot on failure */
     screenshot: 'only-on-failure',
-    
+
     /* Record video on failure */
     video: 'retain-on-failure',
+
+    /* Global test setup for accessibility testing */
+    extraHTTPHeaders: {
+      'Accept-Language': 'ja-JP,ja;q=0.9,en;q=0.8',
+    },
   },
 
   /* Configure projects for major browsers */

@@ -18,7 +18,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v6
       with:
-        node-version: '20.x'
+        node-version: '22.x'
         cache: 'npm'
         
     - name: Install dependencies
@@ -39,7 +39,7 @@ jobs:
         PLAYWRIGHT_TEST_BASE_URL: http://localhost:3000
         
     - name: Upload test results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: playwright-report
@@ -47,7 +47,7 @@ jobs:
         retention-days: 7
         
     - name: Upload test videos
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: failure()
       with:
         name: playwright-videos

@@ -10,7 +10,8 @@
 - **スタイリング**: Tailwind CSS v4
 - **言語**: TypeScript 5
 - **デプロイ**: Vercel
-- **テスト**: Jest + React Testing Library (追加予定)
+- **単体テスト**: Vitest + React Testing Library + @testing-library/jest-dom
+- **E2Eテスト**: Playwright + @axe-core/playwright
 
 ## Architecture
 
@@ -491,17 +492,25 @@ export interface ProfileInfo {
 
 ## Testing Strategy
 
-### 単体テスト
+### 単体テスト (Vitest)
 - **PublicationList コンポーネント**: 必須テスト対象
   - レンダリングテスト
   - プロパティ渡しテスト
-  - アクセシビリティテスト
+  - アクセシビリティテスト (jest-axe)
   - インタラクションテスト
+
+### E2Eテスト (Playwright)
+- **ページナビゲーション**: 全ページ間の遷移テスト
+- **インタラクティブコンポーネント**: ProjectModal、NavigationCardのテスト
+- **レスポンシブデザイン**: 異なるビューポートサイズでのテスト
+- **アクセシビリティ**: @axe-core/playwrightによる自動テスト
 
 ### テスト環境
 ```typescript
-// jest.config.js
-// Jest + React Testing Library + jsdom
+// vitest.config.ts
+// Vitest + React Testing Library + happy-dom/jsdom
+// playwright.config.ts
+// Playwright + @axe-core/playwright
 ```
 
 ### テストカバレッジ
@@ -509,6 +518,7 @@ export interface ProfileInfo {
 - プロパティの正しい表示
 - アクセシビリティ属性の検証
 - レスポンシブ動作の確認
+- ユーザーインタラクションフローの検証
 
 ## Accessibility (a11y)
 

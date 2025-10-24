@@ -37,12 +37,18 @@
   - _Requirements: 1.3, 2.1, 3.1, 4.1, 9.1_
 
 - [ ] 3.2 Implement data loading helpers
-
   - Create data/index.ts with helper functions for loading JSON data
   - Implement getProjectById and getProjectsForTech utility functions
   - Add getProfile helper function for profile data
   - Add error handling for missing data files
   - _Requirements: 1.3, 3.1, 9.1_
+
+- [ ] 3.3 Configure testing frameworks
+  - Verify vitest.config.ts configuration for unit tests
+  - Verify playwright.config.ts configuration for E2E tests
+  - Add @axe-core/playwright for accessibility testing
+  - Configure test scripts in package.json (already done)
+  - _Requirements: 6.1, 6.2, 6.3_
 
 - [x] 4. Implement Top Page components
 
@@ -133,10 +139,11 @@
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6_
 
 - [x] 7.2 Write unit tests for PublicationList component
-  - Test component rendering with mock data
+  - Vitest testing framework is configured in package.json
+  - Test component rendering with mock data using @testing-library/react
   - Verify proper display of author status and peer-review badges
   - Test DOI link functionality
-  - Validate accessibility attributes
+  - Validate accessibility attributes with @testing-library/jest-dom
   - _Requirements: 6.1, 6.2, 6.3_
 
 - [x] 7.3 Implement Publications Page layout
@@ -158,11 +165,11 @@
 
 
 - [ ] 8.2 Implement accessibility features
-  - Add proper ARIA labels and descriptions
-  - Ensure keyboard navigation for all interactive elements
-  - Verify color contrast ratios meet WCAG 2.1 AA standards
-  - Test with screen readers
-  - Validate social links accessibility and security attributes
+  - Add proper ARIA labels and descriptions to all interactive components
+  - Ensure keyboard navigation for all interactive elements (Tab, Enter, Escape keys)
+  - Implement color contrast ratios that meet WCAG 2.1 AA standards in CSS
+  - Add automated accessibility testing with jest-axe for components
+  - Validate social links accessibility and security attributes (rel="noopener noreferrer")
   - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 9.5_
 
 
@@ -204,8 +211,10 @@
   - Optimize bundle size and loading performance
   - _Requirements: 1.5_
 
-- [ ] 10.3 End-to-end testing
-  - Test complete user flows across all pages
-  - Verify responsive behavior on different devices
-  - Validate accessibility compliance
-  - _Requirements: 8.1_
+- [x] 10.3 Implement automated E2E tests
+  - Playwright testing framework is already configured in package.json
+  - Write E2E tests for navigation between all pages (/, /career, /dev-experience, /publications)
+  - Create tests for interactive components (ProjectModal open/close, NavigationCard clicks)
+  - Implement automated accessibility testing with @axe-core/playwright
+  - Write tests for responsive layout rendering at different viewport sizes
+  - _Requirements: 8.1, 1.4, 3.3_
