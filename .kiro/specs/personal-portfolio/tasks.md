@@ -36,7 +36,10 @@
   - Create profile.json with personal information and social links
   - _Requirements: 1.3, 2.1, 3.1, 4.1, 9.1_
 
-- [ ] 3.2 Implement data loading helpers
+- [x] 3.2 Implement data loading helpers
+
+
+
   - Create data/index.ts with helper functions for loading JSON data
   - Implement getProjectById and getProjectsForTech utility functions
   - Add getProfile helper function for profile data
@@ -212,6 +215,8 @@
   - _Requirements: 1.5_
 
 - [x] 10.3 Implement automated E2E tests
+
+
   - Playwright testing framework is already configured in package.json
   - Write E2E tests for navigation between all pages (/, /career, /dev-experience, /publications)
   - Create tests for interactive components (ProjectModal open/close, NavigationCard clicks)

@@ -99,7 +99,7 @@
       "role": "フルスタック開発者",
       "url": "https://portfolio.example.com",
       "githubUrl": "https://github.com/username/portfolio",
-      "imageUrl": "/images/projects/portfolio.png"
+      "imageUrl": null
     },
     {
       "id": "proj-002",
@@ -109,7 +109,7 @@
       "duration": "2023年4月 - 2023年12月",
       "role": "フロントエンド開発リード",
       "githubUrl": "https://github.com/lab/management-system",
-      "imageUrl": "/images/projects/lab-management.png"
+      "imageUrl": null
     },
     {
       "id": "proj-003",
@@ -119,7 +119,7 @@
       "duration": "2023年1月 - 2023年8月",
       "role": "バックエンド開発者",
       "githubUrl": "https://github.com/research/paper-search-api",
-      "imageUrl": "/images/projects/paper-search.png"
+      "imageUrl": null
     },
     {
       "id": "proj-004",
@@ -129,7 +129,7 @@
       "duration": "2022年9月 - 2023年2月",
       "role": "フルスタック開発者",
       "url": "https://conference.example.com",
-      "imageUrl": "/images/projects/conference-site.png"
+      "imageUrl": null
     },
     {
       "id": "proj-005",
@@ -139,7 +139,7 @@
       "duration": "2022年4月 - 2023年3月",
       "role": "機械学習エンジニア",
       "githubUrl": "https://github.com/research/sentiment-analysis",
-      "imageUrl": "/images/projects/sentiment-analysis.png"
+      "imageUrl": null
     },
     {
       "id": "proj-006",
@@ -149,7 +149,7 @@
       "duration": "2021年10月 - 2022年9月",
       "role": "研究開発者",
       "githubUrl": "https://github.com/research/image-captioning",
-      "imageUrl": "/images/projects/image-captioning.png"
+      "imageUrl": null
     },
     {
       "id": "proj-007",
@@ -159,7 +159,7 @@
       "duration": "2021年1月 - 2021年12月",
       "role": "バックエンド開発リード",
       "githubUrl": "https://github.com/research/data-platform",
-      "imageUrl": "/images/projects/data-platform.png"
+      "imageUrl": null
     }
   ]
 }

@@ -10,9 +10,13 @@ export default function DevExperiencePage() {
   const allTechItems = getTechExperience();
   const projectDetails = getProjectDetails();
   
+  // Debug: Log tech items with projects
+  console.log('Tech items with projects:', allTechItems.filter(tech => tech.projects.length > 0));
+  console.log('Available projects:', projectDetails.map(p => ({ id: p.id, name: p.name })));
+  
   // Filter states
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [selectedProficiency, setSelectedProficiency] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedProficiency, setSelectedProficiency] = useState<string>('');
   const [sortBy, setSortBy] = useState<'name' | 'proficiency' | 'experience'>('proficiency');
 
   // Get unique categories and proficiency levels
@@ -28,12 +32,12 @@ export default function DevExperiencePage() {
     let filtered = allTechItems;
 
     // Filter by category
-    if (selectedCategory !== 'all') {
+    if (selectedCategory && selectedCategory !== '') {
       filtered = filtered.filter(item => item.category === selectedCategory);
     }
 
     // Filter by proficiency
-    if (selectedProficiency !== 'all') {
+    if (selectedProficiency && selectedProficiency !== '') {
       filtered = filtered.filter(item => item.proficiency === selectedProficiency);
     }
 
@@ -87,7 +91,7 @@ export default function DevExperiencePage() {
             Development Experience
           </h1>
           <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto px-4">
-            Technologies, frameworks, and tools I work with, along with the projects where I've applied them. 
+            Technologies, frameworks, and tools I work with, along with the related projects where I've applied them. 
             Click on any technology to see related project details.
           </p>
         </div>
@@ -106,7 +110,7 @@ export default function DevExperiencePage() {
             <div className="text-xl sm:text-2xl font-bold text-green-600">
               {projectDetails.length}
             </div>
-            <div className="text-xs sm:text-sm text-gray-600">Projects</div>
+            <div className="text-xs sm:text-sm text-gray-600" data-testid="projects-count">Total Projects</div>
           </div>
           <div className="text-center">
             <div className="text-xl sm:text-2xl font-bold text-purple-600">
@@ -137,7 +141,7 @@ export default function DevExperiencePage() {
                 className="px-2 sm:px-3 py-1 border border-gray-300 rounded-md text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                 aria-label="Filter technologies by category"
               >
-                <option value="all">All Categories</option>
+                <option value="">All Categories</option>
                 {categories.map(category => (
                   <option key={category} value={category}>
                     {getCategoryDisplayName(category)}
@@ -157,7 +161,7 @@ export default function DevExperiencePage() {
                 className="px-2 sm:px-3 py-1 border border-gray-300 rounded-md text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                 aria-label="Filter technologies by proficiency level"
               >
-                <option value="all">All Levels</option>
+                <option value="">All Levels</option>
                 {proficiencyLevels.map(level => (
                   <option key={level} value={level}>
                     {level.charAt(0).toUpperCase() + level.slice(1)}
@@ -184,18 +188,17 @@ export default function DevExperiencePage() {
             </div>
 
             {/* Clear filters button */}
-            {(selectedCategory !== 'all' || selectedProficiency !== 'all') && (
-              <button
-                onClick={() => {
-                  setSelectedCategory('all');
-                  setSelectedProficiency('all');
-                }}
-                className="px-2 sm:px-3 py-1 text-xs sm:text-sm text-blue-600 hover:text-blue-800 underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded"
-                aria-label="Clear all applied filters"
-              >
-                Clear Filters
-              </button>
-            )}
+            <button
+              onClick={() => {
+                setSelectedCategory('');
+                setSelectedProficiency('');
+              }}
+              className="px-2 sm:px-3 py-1 text-xs sm:text-sm text-blue-600 hover:text-blue-800 underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label="Clear all applied filters"
+              disabled={selectedCategory === '' && selectedProficiency === ''}
+            >
+              Clear Filters
+            </button>
           </div>
 
           {/* Legend and Instructions */}
@@ -210,7 +213,7 @@ export default function DevExperiencePage() {
               </div>
             </div>
             <div className="text-xs sm:text-sm text-gray-600">
-              Click on technologies with projects to view details
+              Click on technologies with related projects to view details
             </div>
           </div>
         </div>
@@ -248,7 +251,7 @@ export default function DevExperiencePage() {
             </p>
             <p>
               The proficiency levels reflect my current comfort and expertise with each technology, 
-              while the experience years indicate how long I've been actively using them in projects.
+              while the experience years indicate how long I've been actively using them in development work.
             </p>
           </div>
         </div>

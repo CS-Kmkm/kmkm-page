@@ -1,5 +1,4 @@
 import { defineConfig, devices } from '@playwright/test';
-import { injectAxe, checkA11y } from '@axe-core/playwright';
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -82,7 +81,7 @@ export default defineConfig({
   webServer: {
     command: 'npm run build && npm run start',
     url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: true,
     timeout: 120 * 1000,
   },
 });

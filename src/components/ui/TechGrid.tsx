@@ -54,6 +54,9 @@ const TechGrid: React.FC<TechGridProps> = ({
     if (project) {
       setSelectedProject(project);
       setIsModalOpen(true);
+    } else {
+      console.warn(`No project found for technology ${tech.name} with project IDs:`, tech.projects);
+      console.warn('Available projects:', projectDetails.map(p => p.id));
     }
   };
 

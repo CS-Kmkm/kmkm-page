@@ -56,21 +56,14 @@ const TechBadge: React.FC<TechBadgeProps> = ({
   };
 
   const badgeClasses = `
-    relative flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg border-2 transition-all duration-200
+    relative flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg border-2 transition-all duration-200 text-left w-full
     ${onClick ? 'cursor-pointer hover:shadow-md hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2' : ''}
     ${getProficiencyColor(proficiency)}
     ${className}
   `.trim();
 
-  return (
-    <div
-      className={badgeClasses}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      tabIndex={onClick ? 0 : -1}
-      role={onClick ? 'button' : undefined}
-      aria-label={onClick ? `View projects using ${name}` : undefined}
-    >
+  const badgeContent = (
+    <>
       {/* Logo or Category Icon */}
       <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center">
         {logoUrl ? (
@@ -129,6 +122,25 @@ const TechBadge: React.FC<TechBadgeProps> = ({
           </svg>
         </div>
       )}
+    </>
+  );
+
+  if (onClick) {
+    return (
+      <button
+        className={badgeClasses}
+        onClick={handleClick}
+        aria-label={`View projects using ${name}`}
+        type="button"
+      >
+        {badgeContent}
+      </button>
+    );
+  }
+
+  return (
+    <div className={badgeClasses}>
+      {badgeContent}
     </div>
   );
 };

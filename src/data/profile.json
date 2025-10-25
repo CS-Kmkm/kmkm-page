@@ -5,7 +5,7 @@
   "currentPosition": "准教授",
   "bio": "機械学習とWebテクノロジーの研究に従事。特に自然言語処理と深層学習の分野で活動し、Next.jsを用いたフロントエンド開発にも興味を持つ。産学連携プロジェクトを通じて実用的な技術開発にも取り組んでいる。",
   "location": "東京, 日本",
-  "avatarUrl": "/images/avatar.jpg",
+  "avatarUrl": null,
   "socialLinks": [
     {
       "id": "social-001",

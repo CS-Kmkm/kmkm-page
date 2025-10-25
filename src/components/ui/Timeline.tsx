@@ -42,16 +42,25 @@ export default function Timeline({ entries, className = '' }: TimelineProps) {
           {/* Content */}
           <div className="flex-1 min-w-0">
             {/* Year badge */}
-            <div className="inline-block px-2 sm:px-3 py-1 bg-gray-100 text-gray-700 text-xs sm:text-sm font-medium rounded-full mb-2">
+            <div 
+              className="inline-block px-2 sm:px-3 py-1 bg-gray-100 text-gray-700 text-xs sm:text-sm font-medium rounded-full mb-2"
+              data-testid={`career-year-${entry.id}`}
+            >
               {entry.year}
             </div>
             
             {/* Organization and role */}
             <div className="mb-2">
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">
+              <h3 
+                className="text-base sm:text-lg font-semibold text-gray-900 mb-1"
+                data-testid={`career-role-${entry.id}`}
+              >
                 {entry.role}
               </h3>
-              <p className="text-sm sm:text-base text-gray-600 font-medium">
+              <p 
+                className="text-sm sm:text-base text-gray-600 font-medium"
+                data-testid={`career-org-${entry.id}`}
+              >
                 {entry.organization}
               </p>
             </div>
@@ -63,8 +72,8 @@ export default function Timeline({ entries, className = '' }: TimelineProps) {
             
             {/* Date range for screen readers */}
             <div className="sr-only">
-              期間: {entry.startDate}
-              {entry.endDate ? ` から ${entry.endDate}` : ' から現在'}
+              在職期間: {entry.startDate}
+              {entry.endDate ? ` から ${entry.endDate}` : ' から現在まで'}
             </div>
           </div>
         </div>

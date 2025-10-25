@@ -8,13 +8,13 @@ test.describe('Publications Page', () => {
   test('should load and display publications list', async ({ page }) => {
     // Check page title and heading
     await expect(page).toHaveTitle(/Publications.*Personal Portfolio/);
-    await expect(page.getByRole('heading', { name: 'Publications' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Publications', exact: true })).toBeVisible();
     
     // Check statistics section
     await expect(page.getByText('Total Publications')).toBeVisible();
-    await expect(page.getByText('First Author')).toBeVisible();
-    await expect(page.getByText('Peer Reviewed')).toBeVisible();
-    await expect(page.getByText('Journal Articles')).toBeVisible();
+    await expect(page.locator('div').filter({ hasText: /^First Author$/ })).toBeVisible();
+    await expect(page.locator('div').filter({ hasText: /^Peer Reviewed$/ })).toBeVisible();
+    await expect(page.getByText('Journal Articles', { exact: true })).toBeVisible();
     
     // Check that publications are displayed
     await expect(page.getByText('Deep Learning Approaches for Japanese Sentiment Analysis')).toBeVisible();
@@ -49,8 +49,8 @@ test.describe('Publications Page', () => {
     await expect(peerReviewedBadges.first()).toBeVisible();
     
     // Check for publication type badges
-    await expect(page.getByText('Journal')).toBeVisible();
-    await expect(page.getByText('Conference')).toBeVisible();
+    await expect(page.locator('span').filter({ hasText: 'Journal' }).first()).toBeVisible();
+    await expect(page.locator('span').filter({ hasText: 'Conference' }).first()).toBeVisible();
   });
 
   test('should have working DOI links', async ({ page }) => {
@@ -97,7 +97,7 @@ test.describe('Publications Page', () => {
     await page.setViewportSize({ width: 375, height: 667 });
     
     // Check that content is still accessible
-    await expect(page.getByRole('heading', { name: 'Publications' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Publications', exact: true })).toBeVisible();
     
     // Check that publications are still readable
     await expect(page.getByText('Deep Learning Approaches')).toBeVisible();
