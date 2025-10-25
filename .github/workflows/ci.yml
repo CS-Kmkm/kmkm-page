@@ -72,8 +72,12 @@ jobs:
       uses: actions/upload-artifact@v5
       with:
         name: build-files
-        path: .next/
+        path: |
+          .next/
+          package.json
+          package-lock.json
         retention-days: 1
+        compression-level: 6
 
   security-scan:
     name: Security Scan
@@ -127,12 +131,23 @@ jobs:
       uses: actions/download-artifact@v5
       with:
         name: build-files
-        path: .next/
+        path: ./
         
-    - name: Start application
+    - name: Wait for server to be ready
       run: |
         npm run start &
-        sleep 10
+        SERVER_PID=$!
+        echo "Server PID: $SERVER_PID"
+        
+        # Wait for server to start (max 60 seconds)
+        for i in {1..60}; do
+          if curl -s http://localhost:3000 > /dev/null; then
+            echo "Server is ready!"
+            break
+          fi
+          echo "Waiting for server... ($i/60)"
+          sleep 1
+        done
       env:
         PORT: 3000
         
