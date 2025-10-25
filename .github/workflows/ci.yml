@@ -133,30 +133,16 @@ jobs:
         NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://portfolio.vercel.app' }}
         NEXT_PUBLIC_SITE_NAME: ${{ secrets.NEXT_PUBLIC_SITE_NAME || 'Personal Portfolio' }}
         
-    - name: Start server and wait
-      run: |
-        npm run start &
-        SERVER_PID=$!
-        echo "Server PID: $SERVER_PID"
-        
-        # Wait for server to start (max 60 seconds)
-        for i in {1..60}; do
-          if curl -s http://localhost:3000 > /dev/null; then
-            echo "Server is ready!"
-            break
-          fi
-          echo "Waiting for server... ($i/60)"
-          sleep 1
-        done
-      env:
-        PORT: 3000
-        
     - name: Run Lighthouse CI
       uses: treosh/lighthouse-ci-action@v12
       with:
         configPath: './.lighthouserc.json'
         uploadArtifacts: true
         temporaryPublicStorage: true
+        startServerCommand: 'npm run start'
+        startServerReadyPattern: 'started server on|Local:|Ready in|started server'
+      env:
+        PORT: 3000
 
   deploy-preview:
     name: Deploy Preview
