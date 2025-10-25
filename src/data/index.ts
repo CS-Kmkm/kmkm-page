@@ -17,11 +17,18 @@ function safeLoadData<T>(loader: () => T, fallback: T): T {
   }
 }
 
+// Import JSON data directly
+import publicationsJson from './publications.json';
+import techExperienceJson from './tech-experience.json';
+import careerJson from './career.json';
+import updatesJson from './updates.json';
+import profileJson from './profile.json';
+
 // Lazy loading functions with error handling
 function loadPublicationsData() {
   if (!publicationsData) {
     publicationsData = safeLoadData(
-      () => require('./publications.json'),
+      () => publicationsJson as unknown as { publications: PublicationEntry[] },
       { publications: [] }
     );
   }
@@ -31,7 +38,7 @@ function loadPublicationsData() {
 function loadTechExperienceData() {
   if (!techExperienceData) {
     techExperienceData = safeLoadData(
-      () => require('./tech-experience.json'),
+      () => techExperienceJson as unknown as { technologies: TechItem[]; projects: ProjectDetail[] },
       { technologies: [], projects: [] }
     );
   }
@@ -41,7 +48,7 @@ function loadTechExperienceData() {
 function loadCareerData() {
   if (!careerData) {
     careerData = safeLoadData(
-      () => require('./career.json'),
+      () => careerJson as unknown as { entries: CareerEntry[] },
       { entries: [] }
     );
   }
@@ -51,7 +58,7 @@ function loadCareerData() {
 function loadUpdatesData() {
   if (!updatesData) {
     updatesData = safeLoadData(
-      () => require('./updates.json'),
+      () => updatesJson as unknown as { updates: UpdateItem[] },
       { updates: [] }
     );
   }
@@ -61,7 +68,7 @@ function loadUpdatesData() {
 function loadProfileData() {
   if (!profileData) {
     profileData = safeLoadData(
-      () => require('./profile.json'),
+      () => profileJson as unknown as ProfileInfo,
       {
         name: '',
         currentAffiliation: '',
@@ -118,20 +125,20 @@ export const getProjectById = (id: string): ProjectDetail | undefined => {
 export const getProjectsForTech = (techId: string): ProjectDetail[] => {
   const technologies = getTechExperience();
   const tech = technologies.find(t => t.id === techId);
-  
+
   if (!tech) {
     console.warn(`Technology with id "${techId}" not found`);
     return [];
   }
-  
+
   const projects = tech.projects
     .map(projectId => getProjectById(projectId))
     .filter((project): project is ProjectDetail => project !== undefined);
-    
+
   if (projects.length !== tech.projects.length) {
     console.warn(`Some projects for technology "${techId}" were not found`);
   }
-  
+
   return projects;
 };
 
@@ -172,13 +179,13 @@ export const validateDataIntegrity = (): {
   errors: string[];
 } => {
   const errors: string[] = [];
-  
+
   try {
     // Check if all referenced projects exist
     const technologies = getTechExperience();
     const projects = getProjectDetails();
     const projectIds = new Set(projects.map(p => p.id));
-    
+
     technologies.forEach(tech => {
       tech.projects.forEach(projectId => {
         if (!projectIds.has(projectId)) {
@@ -186,24 +193,24 @@ export const validateDataIntegrity = (): {
         }
       });
     });
-    
+
     // Check if profile data is complete
     const profile = getProfile();
     if (!profile.name || !profile.currentAffiliation || !profile.currentPosition) {
       errors.push('Profile data is incomplete (missing name, affiliation, or position)');
     }
-    
+
     // Check if social links are valid
     profile.socialLinks.forEach(link => {
       if (!link.url || !link.platform) {
         errors.push(`Invalid social link: ${JSON.stringify(link)}`);
       }
     });
-    
+
   } catch (error) {
     errors.push(`Data validation error: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
-  
+
   return {
     isValid: errors.length === 0,
     errors

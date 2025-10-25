@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { PageLayout, Timeline } from '@/components/common';
 import { getCareerEntries } from '@/data';
 import { generatePageMetadata } from '@/lib/metadata';
@@ -20,13 +21,13 @@ export default function CareerPage() {
       <nav aria-label="パンくずナビゲーション" className="mb-8">
         <ol className="flex items-center space-x-2 text-sm text-gray-600">
           <li>
-            <a 
+            <Link 
               href="/" 
               className="hover:text-gray-900 transition-colors"
               aria-label="トップページに戻る"
             >
               トップ
-            </a>
+            </Link>
           </li>
           <li aria-hidden="true" className="text-gray-400">/</li>
           <li className="text-gray-900 font-medium" aria-current="page">

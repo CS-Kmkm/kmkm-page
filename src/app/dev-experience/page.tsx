@@ -91,7 +91,7 @@ export default function DevExperiencePage() {
             Development Experience
           </h1>
           <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto px-4">
-            Technologies, frameworks, and tools I work with, along with the related projects where I've applied them. 
+            Technologies, frameworks, and tools I work with, along with the related projects where I&apos;ve applied them. 
             Click on any technology to see related project details.
           </p>
         </div>
@@ -251,7 +251,7 @@ export default function DevExperiencePage() {
             </p>
             <p>
               The proficiency levels reflect my current comfort and expertise with each technology, 
-              while the experience years indicate how long I've been actively using them in development work.
+              while the experience years indicate how long I&apos;ve been actively using them in development work.
             </p>
           </div>
         </div>

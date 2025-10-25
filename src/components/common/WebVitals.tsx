@@ -13,7 +13,7 @@ export default function WebVitals() {
     if (process.env.NODE_ENV === 'production' && typeof window !== 'undefined') {
       // Google Analytics 4
       if (process.env.NEXT_PUBLIC_GA_ID && 'gtag' in window) {
-        (window as any).gtag('event', metric.name, {
+        (window as typeof window & { gtag: (...args: unknown[]) => void }).gtag('event', metric.name, {
           event_category: 'Web Vitals',
           event_label: metric.id,
           value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),

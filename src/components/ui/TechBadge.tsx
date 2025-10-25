@@ -48,12 +48,7 @@ const TechBadge: React.FC<TechBadgeProps> = ({
     }
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (onClick && (event.key === 'Enter' || event.key === ' ')) {
-      event.preventDefault();
-      onClick();
-    }
-  };
+
 
   const badgeClasses = `
     relative flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg border-2 transition-all duration-200 text-left w-full

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 
 export default function CareerError({
   error,
@@ -38,7 +39,7 @@ export default function CareerError({
         </h2>
         
         <p className="text-gray-600 mb-6">
-          We couldn't load the career timeline. This might be due to a temporary issue.
+          We couldn&apos;t load the career timeline. This might be due to a temporary issue.
         </p>
         
         <div className="space-x-4">
@@ -49,12 +50,12 @@ export default function CareerError({
             Try again
           </button>
           
-          <a
+          <Link
             href="/"
             className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
           >
             Go back home
-          </a>
+          </Link>
         </div>
       </div>
     </div>
