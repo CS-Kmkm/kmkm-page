@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { PublicationEntry, PublicationListProps } from '@/types';
+import { PublicationListProps } from '@/types';
 
 const PublicationList: React.FC<PublicationListProps> = ({ 
   publications, 

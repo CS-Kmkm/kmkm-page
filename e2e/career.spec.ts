@@ -56,6 +56,6 @@ test.describe('Career Page', () => {
     // Click breadcrumb home link
     await page.getByRole('link', { name: 'トップページに戻る' }).click();
     await expect(page).toHaveURL('/');
-    await expect(page.getByText('山田太郎')).toBeVisible();
+    await expect(page.getByRole('heading', { name: '山田太郎' })).toBeVisible();
   });
 });

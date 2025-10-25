@@ -12,7 +12,7 @@ test.describe('Performance Tests', () => {
     expect(loadTime).toBeLessThan(3000);
     
     // Check that main content is visible
-    await expect(page.getByText('山田太郎')).toBeVisible();
+    await expect(page.getByRole('heading', { name: '山田太郎' })).toBeVisible();
   });
 
   test('Should have good Core Web Vitals', async ({ page }) => {
@@ -99,7 +99,7 @@ test.describe('Performance Tests', () => {
     await page.goto('/');
     
     // Check that page still loads and displays content
-    await expect(page.getByText('山田太郎')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: '山田太郎' })).toBeVisible({ timeout: 10000 });
   });
 
   test('Should be efficient on mobile devices', async ({ page }) => {
@@ -114,7 +114,7 @@ test.describe('Performance Tests', () => {
     expect(loadTime).toBeLessThan(5000);
     
     // Check that content is properly displayed on mobile
-    await expect(page.getByText('山田太郎')).toBeVisible();
+    await expect(page.getByRole('heading', { name: '山田太郎' })).toBeVisible();
     await expect(page.getByText('ソーシャルメディア')).toBeVisible();
   });
 

@@ -1,8 +1,8 @@
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+  webpack: (config, { isServer }) => {
     if (process.env.ANALYZE === 'true') {
       config.plugins.push(
         new BundleAnalyzerPlugin({
@@ -16,4 +16,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

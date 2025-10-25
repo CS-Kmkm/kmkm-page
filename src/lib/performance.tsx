@@ -3,7 +3,7 @@
  */
 
 // Web Vitals tracking
-export function reportWebVitals(metric: any) {
+export function reportWebVitals(metric: { name: string; value: number; id: string; label?: string }) {
   if (process.env.NODE_ENV === 'production') {
     // Log to console in development
     console.log(metric);
@@ -23,7 +23,7 @@ export function reportWebVitals(metric: any) {
 
 // Declare gtag function for TypeScript
 declare global {
-  function gtag(...args: any[]): void;
+  function gtag(...args: unknown[]): void;
 }
 
 // Image optimization helper
@@ -41,13 +41,13 @@ export function getOptimizedImageProps(src: string, alt: string, width?: number,
 }
 
 // Lazy loading helper for components
-export function createLazyComponent<T extends React.ComponentType<any>>(
-  importFunc: () => Promise<{ default: T }>,
+export function createLazyComponent<P extends Record<string, unknown>>(
+  importFunc: () => Promise<{ default: React.ComponentType<P> }>,
   fallback?: React.ComponentType
-) {
+): React.ComponentType<P> {
   const LazyComponent = React.lazy(importFunc);
   
-  return function WrappedComponent(props: React.ComponentProps<T>) {
+  return function WrappedComponent(props: P) {
     return (
       <React.Suspense fallback={fallback ? React.createElement(fallback) : <div>Loading...</div>}>
         <LazyComponent {...props} />

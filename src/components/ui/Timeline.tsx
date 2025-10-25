@@ -23,7 +23,7 @@ export default function Timeline({ entries, className = '' }: TimelineProps) {
         aria-hidden="true"
       />
       
-      {sortedEntries.map((entry, index) => (
+      {sortedEntries.map((entry) => (
         <div
           key={entry.id}
           className="relative flex flex-col md:flex-row gap-3 sm:gap-4 pb-6 sm:pb-8 last:pb-0"

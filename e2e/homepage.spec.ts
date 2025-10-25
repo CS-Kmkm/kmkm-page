@@ -13,7 +13,7 @@ test.describe('Homepage', () => {
     await expect(page.getByRole('heading', { name: '山田太郎' })).toBeVisible();
     
     // Check profile section is visible
-    await expect(page.getByText('山田太郎')).toBeVisible();
+    await expect(page.getByRole('heading', { name: '山田太郎' })).toBeVisible();
     await expect(page.getByText('○○大学 情報学部')).toBeVisible();
     
     // Check social media section
@@ -73,7 +73,7 @@ test.describe('Homepage', () => {
     await page.setViewportSize({ width: 375, height: 667 });
     
     // Check that content is still visible and properly laid out
-    await expect(page.getByText('山田太郎')).toBeVisible();
+    await expect(page.getByRole('heading', { name: '山田太郎' })).toBeVisible();
     await expect(page.getByText('ソーシャルメディア')).toBeVisible();
     
     // Check navigation cards stack vertically on mobile
