@@ -41,13 +41,13 @@ export function getOptimizedImageProps(src: string, alt: string, width?: number,
 }
 
 // Lazy loading helper for components
-export function createLazyComponent<T extends React.ComponentType<Record<string, unknown>>>(
-  importFunc: () => Promise<{ default: T }>,
+export function createLazyComponent<P extends Record<string, unknown>>(
+  importFunc: () => Promise<{ default: React.ComponentType<P> }>,
   fallback?: React.ComponentType
-) {
+): React.ComponentType<P> {
   const LazyComponent = React.lazy(importFunc);
   
-  return function WrappedComponent(props: React.ComponentProps<T>) {
+  return function WrappedComponent(props: P) {
     return (
       <React.Suspense fallback={fallback ? React.createElement(fallback) : <div>Loading...</div>}>
         <LazyComponent {...props} />
