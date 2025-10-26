@@ -181,29 +181,213 @@ export const validateDataIntegrity = (): {
   const errors: string[] = [];
 
   try {
-    // Check if all referenced projects exist
+    // Helper function to validate date format (YYYY-MM-DD)
+    const isValidDate = (dateStr: string | null): boolean => {
+      if (dateStr === null) return true; // null is valid for endDate
+      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+      if (!dateRegex.test(dateStr)) return false;
+      const date = new Date(dateStr);
+      return date instanceof Date && !isNaN(date.getTime());
+    };
+
+    // Helper function to validate URL format
+    const isValidUrl = (urlStr: string): boolean => {
+      try {
+        new URL(urlStr);
+        return true;
+      } catch {
+        return false;
+      }
+    };
+
+    // 1. Validate Profile Data
+    const profile = getProfile();
+    
+    // Check required fields
+    if (!profile.name) {
+      errors.push('Profile: Missing required field "name"');
+    }
+    if (!profile.currentAffiliation) {
+      errors.push('Profile: Missing required field "currentAffiliation"');
+    }
+    if (!profile.currentPosition) {
+      errors.push('Profile: Missing required field "currentPosition"');
+    }
+
+    // Validate social links
+    profile.socialLinks.forEach((link, index) => {
+      if (!link.id) {
+        errors.push(`Profile: Social link at index ${index} missing required field "id"`);
+      }
+      if (!link.platform) {
+        errors.push(`Profile: Social link "${link.id || index}" missing required field "platform"`);
+      }
+      if (!link.url) {
+        errors.push(`Profile: Social link "${link.id || index}" missing required field "url"`);
+      } else if (!isValidUrl(link.url)) {
+        errors.push(`Profile: Social link "${link.id}" has invalid URL format: "${link.url}"`);
+      }
+      if (!link.username) {
+        errors.push(`Profile: Social link "${link.id || index}" missing required field "username"`);
+      }
+    });
+
+    // 2. Validate Career Data
+    const careerEntries = getCareerEntries();
+    
+    careerEntries.forEach((entry, index) => {
+      if (!entry.id) {
+        errors.push(`Career: Entry at index ${index} missing required field "id"`);
+      }
+      if (!entry.organization) {
+        errors.push(`Career: Entry "${entry.id || index}" missing required field "organization"`);
+      }
+      if (!entry.role) {
+        errors.push(`Career: Entry "${entry.id || index}" missing required field "role"`);
+      }
+      if (!entry.startDate) {
+        errors.push(`Career: Entry "${entry.id || index}" missing required field "startDate"`);
+      } else if (!isValidDate(entry.startDate)) {
+        errors.push(`Career: Entry "${entry.id}" has invalid startDate format: "${entry.startDate}" (expected YYYY-MM-DD)`);
+      }
+      
+      if (entry.endDate !== undefined && entry.endDate !== null && !isValidDate(entry.endDate)) {
+        errors.push(`Career: Entry "${entry.id}" has invalid endDate format: "${entry.endDate}" (expected YYYY-MM-DD or null)`);
+      }
+
+      // Check date logic
+      if (entry.startDate && entry.endDate) {
+        const start = new Date(entry.startDate);
+        const end = new Date(entry.endDate);
+        if (start > end) {
+          errors.push(`Career: Entry "${entry.id}" has startDate after endDate`);
+        }
+      }
+    });
+
+    // 3. Validate Publications Data
+    const publications = getPublications();
+    
+    publications.forEach((pub, index) => {
+      if (!pub.id) {
+        errors.push(`Publication: Entry at index ${index} missing required field "id"`);
+      }
+      if (!pub.title) {
+        errors.push(`Publication: Entry "${pub.id || index}" missing required field "title"`);
+      }
+      if (!pub.authors || pub.authors.length === 0) {
+        errors.push(`Publication: Entry "${pub.id || index}" missing required field "authors" or authors array is empty`);
+      }
+      if (!pub.venue) {
+        errors.push(`Publication: Entry "${pub.id || index}" missing required field "venue"`);
+      }
+      if (!pub.year) {
+        errors.push(`Publication: Entry "${pub.id || index}" missing required field "year"`);
+      }
+      if (pub.isFirstAuthor === undefined) {
+        errors.push(`Publication: Entry "${pub.id || index}" missing required field "isFirstAuthor"`);
+      }
+      if (pub.isPeerReviewed === undefined) {
+        errors.push(`Publication: Entry "${pub.id || index}" missing required field "isPeerReviewed"`);
+      }
+      if (!pub.publicationType) {
+        errors.push(`Publication: Entry "${pub.id || index}" missing required field "publicationType"`);
+      }
+
+      // Validate optional URL fields
+      if (pub.url && !isValidUrl(pub.url)) {
+        errors.push(`Publication: Entry "${pub.id}" has invalid URL format: "${pub.url}"`);
+      }
+      if (pub.doi && typeof pub.doi !== 'string') {
+        errors.push(`Publication: Entry "${pub.id}" has invalid DOI format`);
+      }
+    });
+
+    // 4. Validate Tech Experience Data
     const technologies = getTechExperience();
     const projects = getProjectDetails();
     const projectIds = new Set(projects.map(p => p.id));
 
-    technologies.forEach(tech => {
-      tech.projects.forEach(projectId => {
-        if (!projectIds.has(projectId)) {
-          errors.push(`Technology "${tech.name}" references non-existent project "${projectId}"`);
-        }
-      });
+    technologies.forEach((tech, index) => {
+      if (!tech.id) {
+        errors.push(`Technology: Entry at index ${index} missing required field "id"`);
+      }
+      if (!tech.name) {
+        errors.push(`Technology: Entry "${tech.id || index}" missing required field "name"`);
+      }
+      if (!tech.category) {
+        errors.push(`Technology: Entry "${tech.id || index}" missing required field "category"`);
+      }
+      if (!tech.proficiency) {
+        errors.push(`Technology: Entry "${tech.id || index}" missing required field "proficiency"`);
+      }
+      if (tech.experienceYears === undefined) {
+        errors.push(`Technology: Entry "${tech.id || index}" missing required field "experienceYears"`);
+      }
+      if (!tech.projects) {
+        errors.push(`Technology: Entry "${tech.id || index}" missing required field "projects"`);
+      }
+
+      // Check reference integrity
+      if (tech.projects) {
+        tech.projects.forEach(projectId => {
+          if (!projectIds.has(projectId)) {
+            errors.push(`Technology: "${tech.name}" (${tech.id}) references non-existent project "${projectId}"`);
+          }
+        });
+      }
     });
 
-    // Check if profile data is complete
-    const profile = getProfile();
-    if (!profile.name || !profile.currentAffiliation || !profile.currentPosition) {
-      errors.push('Profile data is incomplete (missing name, affiliation, or position)');
-    }
+    // 5. Validate Projects Data
+    projects.forEach((project, index) => {
+      if (!project.id) {
+        errors.push(`Project: Entry at index ${index} missing required field "id"`);
+      }
+      if (!project.name) {
+        errors.push(`Project: Entry "${project.id || index}" missing required field "name"`);
+      }
+      if (!project.description) {
+        errors.push(`Project: Entry "${project.id || index}" missing required field "description"`);
+      }
+      if (!project.technologies || project.technologies.length === 0) {
+        errors.push(`Project: Entry "${project.id || index}" missing required field "technologies" or technologies array is empty`);
+      }
+      if (!project.duration) {
+        errors.push(`Project: Entry "${project.id || index}" missing required field "duration"`);
+      }
+      if (!project.role) {
+        errors.push(`Project: Entry "${project.id || index}" missing required field "role"`);
+      }
 
-    // Check if social links are valid
-    profile.socialLinks.forEach(link => {
-      if (!link.url || !link.platform) {
-        errors.push(`Invalid social link: ${JSON.stringify(link)}`);
+      // Validate optional URL fields
+      if (project.url && !isValidUrl(project.url)) {
+        errors.push(`Project: Entry "${project.id}" has invalid URL format: "${project.url}"`);
+      }
+      if (project.githubUrl && !isValidUrl(project.githubUrl)) {
+        errors.push(`Project: Entry "${project.id}" has invalid githubUrl format: "${project.githubUrl}"`);
+      }
+    });
+
+    // 6. Validate Updates Data
+    const updates = getUpdates();
+    
+    updates.forEach((update, index) => {
+      if (!update.id) {
+        errors.push(`Update: Entry at index ${index} missing required field "id"`);
+      }
+      if (!update.date) {
+        errors.push(`Update: Entry "${update.id || index}" missing required field "date"`);
+      } else if (!isValidDate(update.date)) {
+        errors.push(`Update: Entry "${update.id}" has invalid date format: "${update.date}" (expected YYYY-MM-DD)`);
+      }
+      if (!update.title) {
+        errors.push(`Update: Entry "${update.id || index}" missing required field "title"`);
+      }
+      if (!update.description) {
+        errors.push(`Update: Entry "${update.id || index}" missing required field "description"`);
+      }
+      if (!update.category) {
+        errors.push(`Update: Entry "${update.id || index}" missing required field "category"`);
       }
     });
 

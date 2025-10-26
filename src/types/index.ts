@@ -15,7 +15,7 @@ export interface CareerEntry {
   year: string;
   organization: string;
   role: string;
-  description: string;
+  description?: string;
   startDate: string;
   endDate?: string;
 }
@@ -51,6 +51,7 @@ export interface PublicationEntry {
   venue: string;
   year: number;
   doi?: string;
+  url?: string;
   isFirstAuthor: boolean;
   isPeerReviewed: boolean;
   publicationType: 'journal' | 'conference' | 'workshop' | 'preprint' | 'other';
@@ -66,7 +67,8 @@ export interface SocialLink {
 
 export interface ProfileInfo {
   name: string;
-  nameJa?: string; // Japanese name (optional)
+  nameEn?: string; // English name (optional)
+  nameJa?: string; // Japanese reading (optional)
   currentAffiliation: string;
   currentPosition: string;
   bio?: string;

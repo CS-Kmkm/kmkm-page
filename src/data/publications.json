@@ -2,78 +2,47 @@
   "publications": [
     {
       "id": "pub-001",
-      "title": "Deep Learning Approaches for Japanese Sentiment Analysis in Social Media",
-      "authors": ["山田太郎", "田中花子", "佐藤次郎"],
-      "venue": "International Conference on Natural Language Processing (ICNLP 2024)",
-      "year": 2024,
-      "doi": "10.1000/icnlp2024.001",
+      "title": "Where Did the Research Data Originate? Acquiring Provenance of Research Data from Scholarly Papers",
+      "authors": [
+        "Koshi Motegi",
+        "Koichiro Ito",
+        "Shigeki Matsubara"
+      ],
+      "venue": "The 27th International Conference on Asia-Pacific Digital Libraries (ICADL 2025)",
+      "year": 2025,
       "isFirstAuthor": true,
       "isPeerReviewed": true,
       "publicationType": "conference"
     },
     {
       "id": "pub-002",
-      "title": "Multimodal Learning for Image Caption Generation Using Vision Transformers",
-      "authors": ["山田太郎", "鈴木一郎"],
-      "venue": "Journal of Machine Learning Research",
-      "year": 2023,
-      "doi": "10.1000/jmlr2023.045",
-      "isFirstAuthor": true,
-      "isPeerReviewed": true,
-      "publicationType": "journal"
-    },
-    {
-      "id": "pub-003",
-      "title": "Efficient Data Management Strategies for Large-Scale Research Projects",
-      "authors": ["田中花子", "山田太郎", "高橋三郎"],
-      "venue": "ACM Transactions on Database Systems",
-      "year": 2023,
-      "doi": "10.1145/tods2023.789",
-      "isFirstAuthor": false,
-      "isPeerReviewed": true,
-      "publicationType": "journal"
-    },
-    {
-      "id": "pub-004",
-      "title": "Web Technologies for Academic Portfolio Management",
-      "authors": ["山田太郎"],
-      "venue": "Workshop on Educational Technology (WET 2022)",
-      "year": 2022,
+      "title": "語り手の発話の言い換えにより語りに傾聴を示す応答の生成",
+      "authors": [
+        "茂木光志",
+        "伊藤滉一朗",
+        "村田匡輝",
+        "松原茂樹"
+      ],
+      "venue": "第31回言語処理学会年次大会 (NLP2025)",
+      "year": 2025,
+      "url": "https://www.anlp.jp/proceedings/annual_meeting/2025/pdf_dir/P10-10.pdf",
       "isFirstAuthor": true,
       "isPeerReviewed": false,
-      "publicationType": "workshop"
-    },
-    {
-      "id": "pub-005",
-      "title": "A Comparative Study of Transformer Architectures for Japanese Text Processing",
-      "authors": ["山田太郎", "佐藤次郎", "田中花子", "伊藤四郎"],
-      "venue": "Asian Conference on Machine Learning (ACML 2022)",
-      "year": 2022,
-      "doi": "10.1000/acml2022.234",
-      "isFirstAuthor": true,
-      "isPeerReviewed": true,
       "publicationType": "conference"
     },
     {
-      "id": "pub-006",
-      "title": "Neural Network Optimization Techniques for Resource-Constrained Environments",
-      "authors": ["佐藤次郎", "山田太郎"],
-      "venue": "International Journal of Artificial Intelligence",
-      "year": 2021,
-      "doi": "10.1000/ijai2021.567",
+      "id": "pub-003",
+      "title": "研究データのオープンアクセスを加速化する：生成AIを用いたメタデータ生成と機関レポジトリへの収載",
+      "authors": [
+        "渡邉優",
+        "茂木光志",
+        "松原茂樹"
+      ],
+      "venue": "大学ICT推進協議会 2025年度 年次大会 (AXIES2025)",
+      "year": 2025,
       "isFirstAuthor": false,
-      "isPeerReviewed": true,
-      "publicationType": "journal"
-    },
-    {
-      "id": "pub-007",
-      "title": "Advances in Cross-lingual Natural Language Understanding",
-      "authors": ["山田太郎", "李美玲", "Smith John"],
-      "venue": "arXiv preprint",
-      "year": 2024,
-      "isFirstAuthor": true,
       "isPeerReviewed": false,
-      "publicationType": "preprint"
+      "publicationType": "conference"
     }
   ]
 }

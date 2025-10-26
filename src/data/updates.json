@@ -2,38 +2,38 @@
   "updates": [
     {
       "id": "update-001",
-      "date": "2024-03-15",
-      "title": "個人ポートフォリオサイトを公開",
-      "description": "Next.js 16.0とTailwind CSS v4を使用して新しいポートフォリオサイトを構築し、公開しました。レスポンシブデザインとアクセシビリティに配慮した設計となっています。",
-      "category": "development"
+      "date": "2025-03-10",
+      "title": "NLP2025で研究発表",
+      "description": "第31回言語処理学会年次大会（NLP2025）にて「語り手の発話の言い換えにより語りに傾聴を示す応答の生成」を発表しました。",
+      "category": "publication"
     },
     {
       "id": "update-002",
-      "date": "2024-02-28",
-      "title": "機械学習に関する論文を投稿",
-      "description": "深層学習を用いた自然言語処理に関する研究成果を国際会議に投稿しました。査読結果を待っている状況です。",
+      "date": "2025-02-15",
+      "title": "ICADL 2025で論文採択",
+      "description": "The 27th International Conference on Asia-Pacific Digital Libraries (ICADL 2025)に第一著者として投稿した論文「Where Did the Research Data Originate? Acquiring Provenance of Research Data from Scholarly Papers」が採択されました。",
       "category": "publication"
     },
     {
       "id": "update-003",
-      "date": "2024-02-10",
-      "title": "准教授に昇進",
-      "description": "○○大学情報学部にて准教授に昇進いたしました。引き続き研究と教育に励んでまいります。",
-      "category": "career"
+      "date": "2025-01-20",
+      "title": "AXIES2025で共著論文発表",
+      "description": "大学ICT推進協議会2025年度年次大会（AXIES2025）にて「研究データのオープンアクセスを加速化する：生成AIを用いたメタデータ生成と機関レポジトリへの収載」を共著者として発表しました。",
+      "category": "publication"
     },
     {
       "id": "update-004",
-      "date": "2024-01-20",
-      "title": "オープンソースプロジェクトに貢献",
-      "description": "TypeScript関連のオープンソースライブラリにプルリクエストを送り、マージされました。コミュニティへの貢献を継続していきます。",
-      "category": "development"
+      "date": "2024-04-01",
+      "title": "名古屋大学大学院に進学",
+      "description": "名古屋大学大学院情報学研究科知能システム学専攻松原研究室に修士課程学生として入学しました。自然言語処理の研究に取り組んでいます。",
+      "category": "career"
     },
     {
       "id": "update-005",
-      "date": "2024-01-05",
-      "title": "新年のご挨拶",
-      "description": "新年明けましておめでとうございます。本年も研究活動と技術開発に精進してまいります。",
-      "category": "other"
+      "date": "2024-03-25",
+      "title": "学部卒業",
+      "description": "名古屋大学工学部を卒業しました。学部での学びを活かし、大学院での研究活動に励みます。",
+      "category": "career"
     }
   ]
 }
