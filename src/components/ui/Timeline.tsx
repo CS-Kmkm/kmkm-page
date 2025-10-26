@@ -66,9 +66,11 @@ export default function Timeline({ entries, className = '' }: TimelineProps) {
             </div>
             
             {/* Description */}
-            <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-              {entry.description}
-            </p>
+            {entry.description && (
+              <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                {entry.description}
+              </p>
+            )}
             
             {/* Date range for screen readers */}
             <div className="sr-only">

@@ -19,7 +19,8 @@
     "analyze": "ANALYZE=true next build",
     "build:analyze": "npm run analyze",
     "export": "next build && next export",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "validate-data": "node scripts/validate-data.mjs"
   },
   "dependencies": {
     "next": "16.0.0",

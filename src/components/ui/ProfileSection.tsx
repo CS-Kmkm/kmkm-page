@@ -38,11 +38,11 @@ export default function ProfileSection({
           {profile.name}
         </h1>
         
-        {/* Japanese Name */}
-        {profile.nameJa && (
+        {/* English Name */}
+        {profile.nameEn && (
           <p className="text-base sm:text-lg text-gray-600 mb-2 sm:mb-3">
-            <span className="sr-only">読み方: </span>
-            {profile.nameJa}
+            <span className="sr-only">英語名: </span>
+            {profile.nameEn}
           </p>
         )}
 
