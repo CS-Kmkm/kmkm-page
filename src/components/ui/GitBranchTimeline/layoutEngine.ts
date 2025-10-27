@@ -9,7 +9,7 @@ import {
   getRootNodes,
   sortEntriesByDate,
 } from '@/lib/career';
-import { LAYOUT } from './constants';
+import { LAYOUT, COLORS } from './constants';
 import {
   calculateStartY,
   calculateEndY,
@@ -237,7 +237,7 @@ export function computeLayout(entries: ExtendedCareerEntry[]): LayoutNode[] {
       startY,
       endY,
       lane,
-      color: branchTree.allBranches.get(entry.id)?.color ?? LAYOUT.DEFAULT_BRANCH,
+      color: branchTree.allBranches.get(entry.id)?.color ?? COLORS.DEFAULT_BRANCH,
       parentId: entry.parentId ?? null,
       mergeTargets: entry.mergeTargets,
       branchLineStartY,
