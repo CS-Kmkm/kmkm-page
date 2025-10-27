@@ -1,44 +1,14 @@
 {
   "entries": [
     {
-      "id": "career-001",
-      "year": "2025",
-      "organization": "名古屋大学大学院 情報学研究科 知能システム学専攻",
-      "role": "大学院生（松原研究室）",
-      "startDate": "2025-04-01",
-      "endDate": null
-    },
-    {
-      "id": "career-002",
-      "year": "2024-2025",
-      "organization": "名古屋大学 情報学部 コンピュータ科学科",
-      "role": "学部学生（松原研究室）",
-      "startDate": "2024-04-01",
-      "endDate": "2025-03-31"
-    },
-    {
-      "id": "career-003",
-      "year": "2023-2024",
-      "organization": "名古屋大学 情報学部 コンピュータ科学科",
-      "role": "学部学生（知能システム系）",
-      "startDate": "2023-04-01",
-      "endDate": "2024-03-31"
-    },
-    {
-      "id": "career-004",
-      "year": "2021-2023",
-      "organization": "名古屋大学 情報学部 コンピュータ科学科",
-      "role": "学部学生",
-      "startDate": "2021-04-01",
-      "endDate": "2023-03-31"
-    },
-    {
-      "id": "career-005",
-      "year": "2018-2021",
-      "organization": "岐阜県立岐阜高等学校",
+      "id": "career-007",
+      "year": "2009-2015",
+      "organization": "某公立小学校",
       "role": "生徒",
-      "startDate": "2018-04-01",
-      "endDate": "2021-03-31"
+      "startDate": "2009-04-01",
+      "endDate": "2015-03-31",
+      "parentId": null,
+      "description": "小学校での基礎教育"
     },
     {
       "id": "career-006",
@@ -46,15 +16,69 @@
       "organization": "某公立中学校",
       "role": "生徒",
       "startDate": "2015-04-01",
-      "endDate": "2018-03-31"
+      "endDate": "2018-03-31",
+      "parentId": null,
+      "description": "中学校での学習"
     },
     {
-      "id": "career-007",
-      "year": "2009-2015",
-      "organization": "某公立小学校",
+      "id": "career-005",
+      "year": "2018-2021",
+      "organization": "岐阜県立岐阜高等学校",
       "role": "生徒",
-      "startDate": "2009-04-01",
-      "endDate": "2015-03-31"
+      "startDate": "2018-04-01",
+      "endDate": "2021-03-31",
+      "parentId": null,
+      "description": "高等学校での学習"
+    },
+    {
+      "id": "career-004",
+      "year": "2021-2025",
+      "organization": "名古屋大学 情報学部 コンピュータ科学科",
+      "role": "学部学生",
+      "startDate": "2021-04-01",
+      "endDate": "2025-03-31",
+      "parentId": null,
+      "description": "大学での学習"
+    },
+    {
+      "id": "career-003",
+      "year": "2023-2025",
+      "organization": "知能システム系",
+      "role": "配属",
+      "startDate": "2023-04-01",
+      "endDate": "2025-03-31",
+      "parentId": "career-004",
+      "description": "知能システム系への配属"
+    },
+    {
+      "id": "career-002",
+      "year": "2024-現在",
+      "organization": "松原研究室",
+      "role": "配属",
+      "startDate": "2024-04-01",
+      "endDate": null,
+      "parentId": "career-003",
+      "description": "松原研究室への配属"
+    },
+    {
+      "id": "career-001",
+      "year": "2025-現在",
+      "organization": "名古屋大学大学院 情報学研究科 知能システム学専攻",
+      "role": "大学院生（松原研究室）",
+      "startDate": "2025-04-01",
+      "endDate": null,
+      "parentId": null,
+      "description": "大学院での研究活動"
+    },
+    {
+      "id": "career-000",
+      "year": "2025-現在",
+      "organization": "東海国立大学機構 情報環境部",
+      "role": "技術補佐員",
+      "startDate": "2025-04-01",
+      "endDate": null,
+      "parentId": null,
+      "description": "情報環境部での技術補佐業務"
     }
   ]
 }

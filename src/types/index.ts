@@ -20,6 +20,66 @@ export interface CareerEntry {
   endDate?: string;
 }
 
+/**
+ * Extended CareerEntry with branch structure support for Git-style timeline
+ */
+export interface MergeTarget {
+  type: 'main' | 'entry';
+  id?: string;               // Target entry ID when type is 'entry'
+  at?: 'start' | 'end';      // Merge reference point
+}
+
+export interface ExtendedCareerEntry extends CareerEntry {
+  parentId?: string | null;      // Parent entry ID (null = branch from main)
+  branchColor?: string;          // Branch color (auto-assigned)
+  branchLevel?: number;          // Hierarchy level (0=main, 1=branch, 2=sub-branch)
+  mergeTargets?: MergeTarget[];  // Optional merge destinations
+}
+
+/**
+ * Branch node in the career timeline tree structure
+ */
+export interface BranchNode {
+  entry: ExtendedCareerEntry;
+  parent: BranchNode | null;
+  children: BranchNode[];
+  level: number;
+  color: string;
+}
+
+/**
+ * Complete branch tree structure
+ */
+export interface BranchTree {
+  mainBranch: BranchNode | null;
+  allBranches: Map<string, BranchNode>;
+}
+
+/**
+ * Computed branch data with layout information
+ */
+export interface ComputedBranch {
+  id: string;
+  entry: ExtendedCareerEntry;
+  color: string;
+  level: number;
+  xOffset: number;           // Horizontal offset (branch position)
+  yPosition: number;         // Vertical position (timeline position)
+  parentBranch?: ComputedBranch;
+  childBranches: ComputedBranch[];
+  startY: number;            // Branch start position
+  endY: number;              // Merge end position
+}
+
+/**
+ * Validation error for career data
+ */
+export interface ValidationError {
+  type: 'missing_field' | 'invalid_date' | 'circular_reference' | 'invalid_parent' | 'invalid_merge_target';
+  entryId: string;
+  message: string;
+}
+
 export interface ProjectDetail {
   id: string;
   name: string;

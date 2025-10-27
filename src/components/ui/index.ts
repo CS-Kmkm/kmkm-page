@@ -8,3 +8,7 @@ export {
   DevExperienceNavigationCard,
   PublicationsNavigationCard
 } from './NavigationCard';
+export { default as GitBranchTimeline } from './GitBranchTimeline';
+export { default as BranchLine } from './BranchLine';
+export { default as BranchNode } from './BranchNode';
+export { default as BranchLabel } from './BranchLabel';
