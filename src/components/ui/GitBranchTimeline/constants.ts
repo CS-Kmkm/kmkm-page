@@ -1,0 +1,36 @@
+/**
+ * Layout constants for Git Branch Timeline
+ */
+
+export const LAYOUT = {
+  MAIN_LINE_X: 70,
+  LANE_WIDTH: 30,
+  SIBLING_OFFSET: 30,
+  TOP_PADDING: 80,
+  PIXELS_PER_YEAR: 50,
+  MIN_NODE_SPACING: 100,
+  NODE_RADIUS: 7,
+  LABEL_HEIGHT: 50,
+  COLUMN_WIDTH: 200,
+  VERTICAL_OFFSET: 30,
+  CURVE_RADIUS: 15,
+} as const;
+
+export const COLORS = {
+  MAIN_LINE: '#9CA3AF',
+  TICK: '#6B7280',
+  DEFAULT_BRANCH: '#6B7280',
+} as const;
+
+export const OPACITY = {
+  MAIN_LINE: 0.5,
+  BRANCH_LINE: 0.7,
+  BRANCH_PATH: 0.8,
+  MERGE_PATH: 0.8,
+  AUTO_MERGE: 0.75,
+  COMBINED_MERGE: 0.85,
+  MAIN_POINT: 0.6,
+  CONNECTOR_LINE: 0.4,
+  START_TICK: 0.45,
+  END_TICK: 0.8,
+} as const;
