@@ -1,20 +1,20 @@
 "use client";
 
 import React, { useMemo } from 'react';
-import { LanguageIconGridProps, TechItem } from '@/types';
-import LanguageIcon from './LanguageIcon';
+import { TechIconGridProps, TechItem } from '@/types';
+import TechIcon from './TechIcon';
 
 /**
- * LanguageIconGrid component displays a responsive grid of tech icons
+ * TechIconGrid component displays a responsive grid of technology icons
  * sorted by proficiency and experience years
  */
-const LanguageIconGrid: React.FC<LanguageIconGridProps> = ({
-  languages,
-  onLanguageSelect
+const TechIconGrid: React.FC<TechIconGridProps> = ({
+  techItems,
+  onTechSelect
 }) => {
-  // Sort languages by proficiency (expert > advanced > intermediate > beginner)
+  // Sort tech items by proficiency (expert > advanced > intermediate > beginner)
   // then by experience years (descending)
-  const sortedLanguages = useMemo(() => {
+  const sortedTechItems = useMemo(() => {
     const proficiencyOrder = {
       expert: 4,
       advanced: 3,
@@ -22,7 +22,7 @@ const LanguageIconGrid: React.FC<LanguageIconGridProps> = ({
       beginner: 1
     };
 
-    return [...languages].sort((a, b) => {
+    return [...techItems].sort((a, b) => {
       const aProficiency = proficiencyOrder[a.proficiency];
       const bProficiency = proficiencyOrder[b.proficiency];
 
@@ -32,13 +32,13 @@ const LanguageIconGrid: React.FC<LanguageIconGridProps> = ({
 
       return b.experienceYears - a.experienceYears;
     });
-  }, [languages]);
+  }, [techItems]);
 
-  const handleLanguageClick = (language: TechItem) => {
-    onLanguageSelect(language);
+  const handleTechClick = (tech: TechItem) => {
+    onTechSelect(tech);
   };
 
-  if (sortedLanguages.length === 0) {
+  if (sortedTechItems.length === 0) {
     return (
       <div className="text-center py-12">
         <div className="text-gray-500 text-lg mb-2">技術データが見つかりません</div>
@@ -59,18 +59,18 @@ const LanguageIconGrid: React.FC<LanguageIconGridProps> = ({
       role="list"
       aria-label="Technology stack"
     >
-      {sortedLanguages.map((language, index) => (
+      {sortedTechItems.map((tech, index) => (
         <div
-          key={language.id}
+          key={tech.id}
           role="listitem"
           className="animate-fade-in"
           style={{
             animationDelay: `${index * 50}ms`
           }}
         >
-          <LanguageIcon
-            language={language}
-            onClick={() => handleLanguageClick(language)}
+          <TechIcon
+            tech={tech}
+            onClick={() => handleTechClick(tech)}
           />
         </div>
       ))}
@@ -78,4 +78,4 @@ const LanguageIconGrid: React.FC<LanguageIconGridProps> = ({
   );
 };
 
-export default LanguageIconGrid;
+export default TechIconGrid;

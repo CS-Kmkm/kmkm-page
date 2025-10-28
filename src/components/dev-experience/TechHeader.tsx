@@ -2,12 +2,12 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { LanguageHeaderProps } from '@/types';
+import { TechHeaderProps } from '@/types';
 
 /**
- * LanguageHeader component displays tech logo, name, proficiency badge, and experience years
+ * TechHeader component displays technology logo, name, proficiency badge, and experience years
  */
-const LanguageHeader: React.FC<LanguageHeaderProps> = ({ language }) => {
+const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case 'language':
@@ -57,17 +57,17 @@ const LanguageHeader: React.FC<LanguageHeaderProps> = ({ language }) => {
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-6 bg-white rounded-lg border border-gray-200">
       {/* Logo */}
       <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
-        {language.logoUrl ? (
+        {tech.logoUrl ? (
           <Image
-            src={language.logoUrl}
-            alt={language.logoAlt || `${language.name} logo`}
+            src={tech.logoUrl}
+            alt={tech.logoAlt || `${tech.name} logo`}
             width={80}
             height={80}
             className="object-contain w-full h-full"
           />
         ) : (
-          <span className="text-4xl sm:text-5xl" role="img" aria-label={`${language.name} icon`}>
-            {getCategoryIcon(language.category)}
+          <span className="text-4xl sm:text-5xl" role="img" aria-label={`${tech.name} icon`}>
+            {getCategoryIcon(tech.category)}
           </span>
         )}
       </div>
@@ -75,7 +75,7 @@ const LanguageHeader: React.FC<LanguageHeaderProps> = ({ language }) => {
       {/* Info */}
       <div className="flex-grow">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-          {language.name}
+          {tech.name}
         </h2>
         
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
@@ -83,10 +83,10 @@ const LanguageHeader: React.FC<LanguageHeaderProps> = ({ language }) => {
           <span
             className={`
               px-3 py-1 rounded-full text-sm font-medium border-2
-              ${getProficiencyColor(language.proficiency)}
+              ${getProficiencyColor(tech.proficiency)}
             `}
           >
-            {getProficiencyLabel(language.proficiency)}
+            {getProficiencyLabel(tech.proficiency)}
           </span>
 
           {/* Experience Years */}
@@ -106,7 +106,7 @@ const LanguageHeader: React.FC<LanguageHeaderProps> = ({ language }) => {
               />
             </svg>
             <span className="text-sm font-medium">
-              {language.experienceYears}年の経験
+              {tech.experienceYears}年の経験
             </span>
           </span>
         </div>
@@ -115,4 +115,4 @@ const LanguageHeader: React.FC<LanguageHeaderProps> = ({ language }) => {
   );
 };
 
-export default LanguageHeader;
+export default TechHeader;

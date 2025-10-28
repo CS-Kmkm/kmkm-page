@@ -1,12 +1,12 @@
 "use client";
 
 import React from 'react';
-import { LanguageDescriptionProps } from '@/types';
+import { TechDescriptionProps } from '@/types';
 
 /**
- * LanguageDescription component displays the description text for a language
+ * TechDescription component displays the description text for a technology
  */
-const LanguageDescription: React.FC<LanguageDescriptionProps> = ({ description }) => {
+const TechDescription: React.FC<TechDescriptionProps> = ({ description }) => {
   if (!description) {
     return null;
   }
@@ -23,4 +23,4 @@ const LanguageDescription: React.FC<LanguageDescriptionProps> = ({ description }
   );
 };
 
-export default LanguageDescription;
+export default TechDescription;

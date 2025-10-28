@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { TechItem } from '@/types';
-import LanguageIconGrid from './LanguageIconGrid';
+import TechIconGrid from './TechIconGrid';
 
 interface TechCategorySectionProps {
   title: string;
@@ -42,9 +42,9 @@ const TechCategorySection: React.FC<TechCategorySectionProps> = ({
       </div>
 
       {/* Tech Grid */}
-      <LanguageIconGrid
-        languages={techItems}
-        onLanguageSelect={onTechSelect}
+      <TechIconGrid
+        techItems={techItems}
+        onTechSelect={onTechSelect}
       />
     </section>
   );

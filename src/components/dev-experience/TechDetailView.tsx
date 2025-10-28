@@ -1,18 +1,18 @@
 "use client";
 
 import React, { useEffect } from 'react';
-import { LanguageDetailViewProps } from '@/types';
-import LanguageHeader from './LanguageHeader';
-import LanguageDescription from './LanguageDescription';
+import { TechDetailViewProps } from '@/types';
+import TechHeader from './TechHeader';
+import TechDescription from './TechDescription';
 import ProjectList from './ProjectList';
 import RelatedFrameworks from './RelatedFrameworks';
 
 /**
- * LanguageDetailView component displays detailed information about a technology
+ * TechDetailView component displays detailed information about a technology
  * including header, description, related frameworks, and related projects
  */
-const LanguageDetailView: React.FC<LanguageDetailViewProps> = ({
-  language,
+const TechDetailView: React.FC<TechDetailViewProps> = ({
+  tech,
   projects,
   relatedFrameworks = [],
   onBack,
@@ -36,7 +36,7 @@ const LanguageDetailView: React.FC<LanguageDetailViewProps> = ({
 
   // Focus on back button when view is mounted
   useEffect(() => {
-    const backButton = document.getElementById('language-detail-back-button');
+    const backButton = document.getElementById('tech-detail-back-button');
     if (backButton) {
       backButton.focus();
     }
@@ -46,11 +46,11 @@ const LanguageDetailView: React.FC<LanguageDetailViewProps> = ({
     <div
       className="animate-slide-in-right"
       role="region"
-      aria-label={`${language.name}の詳細`}
+      aria-label={`${tech.name}の詳細`}
     >
       {/* Back Button */}
       <button
-        id="language-detail-back-button"
+        id="tech-detail-back-button"
         onClick={onBack}
         className="
           inline-flex items-center gap-2 mb-6
@@ -81,16 +81,16 @@ const LanguageDetailView: React.FC<LanguageDetailViewProps> = ({
 
       {/* Content */}
       <div className="space-y-6">
-        {/* Language Header */}
-        <LanguageHeader language={language} />
+        {/* Tech Header */}
+        <TechHeader tech={tech} />
 
-        {/* Language Description */}
-        {language.description && (
-          <LanguageDescription description={language.description} />
+        {/* Tech Description */}
+        {tech.description && (
+          <TechDescription description={tech.description} />
         )}
 
         {/* Related Frameworks (only for languages) */}
-        {language.category === 'language' && relatedFrameworks.length > 0 && (
+        {tech.category === 'language' && relatedFrameworks.length > 0 && (
           <RelatedFrameworks
             frameworks={relatedFrameworks}
             onFrameworkSelect={onFrameworkSelect}
@@ -107,4 +107,4 @@ const LanguageDetailView: React.FC<LanguageDetailViewProps> = ({
   );
 };
 
-export default LanguageDetailView;
+export default TechDetailView;

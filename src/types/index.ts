@@ -214,21 +214,21 @@ export interface SocialLinksProps {
 }
 
 // Dev Experience component prop interfaces
-export interface LanguageIconProps {
-  language: TechItem;
+export interface TechIconProps {
+  tech: TechItem;
   onClick: () => void;
 }
 
-export interface LanguageIconGridProps {
-  languages: TechItem[];
-  onLanguageSelect: (language: TechItem) => void;
+export interface TechIconGridProps {
+  techItems: TechItem[];
+  onTechSelect: (tech: TechItem) => void;
 }
 
-export interface LanguageHeaderProps {
-  language: TechItem;
+export interface TechHeaderProps {
+  tech: TechItem;
 }
 
-export interface LanguageDescriptionProps {
+export interface TechDescriptionProps {
   description: string;
 }
 
@@ -242,8 +242,8 @@ export interface ProjectListProps {
   onProjectSelect: (project: ProjectDetail) => void;
 }
 
-export interface LanguageDetailViewProps {
-  language: TechItem;
+export interface TechDetailViewProps {
+  tech: TechItem;
   projects: ProjectDetail[];
   relatedFrameworks?: TechItem[];
   onBack: () => void;

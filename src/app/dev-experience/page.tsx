@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
 import TechCategorySection from '@/components/dev-experience/TechCategorySection';
-import LanguageDetailView from '@/components/dev-experience/LanguageDetailView';
+import TechDetailView from '@/components/dev-experience/TechDetailView';
 import ProjectModal from '@/components/ui/ProjectModal';
 import { getTechExperience, getProjectDetails } from '@/data';
 import { TechItem, ProjectDetail } from '@/types';
@@ -14,7 +14,7 @@ export default function DevExperiencePage() {
   const allProjects = getProjectDetails();
   
   // Page state
-  const [selectedLanguage, setSelectedLanguage] = useState<TechItem | null>(null);
+  const [selectedTech, setSelectedTech] = useState<TechItem | null>(null);
   const [selectedProject, setSelectedProject] = useState<ProjectDetail | null>(null);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
 
@@ -29,35 +29,35 @@ export default function DevExperiencePage() {
   }, [allTechItems]);
 
   // Get related frameworks for a language based on shared projects
-  const getRelatedFrameworks = (language: TechItem) => {
-    const languageProjects = new Set(language.projects);
+  const getRelatedFrameworks = (tech: TechItem) => {
+    const techProjects = new Set(tech.projects);
     return categorizedTech.frameworks.filter(framework =>
-      framework.projects.some(projectId => languageProjects.has(projectId))
+      framework.projects.some(projectId => techProjects.has(projectId))
     );
   };
 
   // Get projects for selected tech
   const selectedTechProjects = useMemo(() => {
-    if (!selectedLanguage) return [];
+    if (!selectedTech) return [];
     
-    return selectedLanguage.projects
+    return selectedTech.projects
       .map(projectId => allProjects.find(p => p.id === projectId))
       .filter((project): project is ProjectDetail => project !== undefined);
-  }, [selectedLanguage, allProjects]);
+  }, [selectedTech, allProjects]);
 
-  // Get related frameworks for selected language
+  // Get related frameworks for selected tech (if it's a language)
   const relatedFrameworks = useMemo(() => {
-    if (!selectedLanguage || selectedLanguage.category !== 'language') return [];
-    return getRelatedFrameworks(selectedLanguage);
-  }, [selectedLanguage]);
+    if (!selectedTech || selectedTech.category !== 'language') return [];
+    return getRelatedFrameworks(selectedTech);
+  }, [selectedTech]);
 
   // Event handlers
-  const handleLanguageSelect = (language: TechItem) => {
-    setSelectedLanguage(language);
+  const handleTechSelect = (tech: TechItem) => {
+    setSelectedTech(tech);
   };
 
   const handleBackToGrid = () => {
-    setSelectedLanguage(null);
+    setSelectedTech(null);
   };
 
   const handleProjectSelect = (project: ProjectDetail) => {
@@ -83,51 +83,51 @@ export default function DevExperiencePage() {
           </h1>
           <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto px-4">
             使用している技術スタック（言語、フレームワーク、ツール、データベース）と、それらを使った開発経験をご覧いただけます。
-            {!selectedLanguage && 'アイコンをクリックして詳細を表示してください。'}
+            {!selectedTech && 'アイコンをクリックして詳細を表示してください。'}
           </p>
         </div>
 
         {/* Main Content */}
-        {!selectedLanguage ? (
+        {!selectedTech ? (
           // Category Sections View
           <div className="space-y-12">
             <TechCategorySection
               title="プログラミング言語"
               description="使用しているプログラミング言語"
               techItems={categorizedTech.languages}
-              onTechSelect={handleLanguageSelect}
+              onTechSelect={handleTechSelect}
             />
 
             <TechCategorySection
               title="フレームワーク・ライブラリ"
               description="Webアプリケーション開発に使用しているフレームワーク"
               techItems={categorizedTech.frameworks}
-              onTechSelect={handleLanguageSelect}
+              onTechSelect={handleTechSelect}
             />
 
             <TechCategorySection
               title="ツール・プラットフォーム"
               description="開発環境やインフラに使用しているツール"
               techItems={categorizedTech.tools}
-              onTechSelect={handleLanguageSelect}
+              onTechSelect={handleTechSelect}
             />
 
             <TechCategorySection
               title="データベース"
               description="データ管理に使用しているデータベース"
               techItems={categorizedTech.databases}
-              onTechSelect={handleLanguageSelect}
+              onTechSelect={handleTechSelect}
             />
           </div>
         ) : (
           // Tech Detail View
-          <LanguageDetailView
-            language={selectedLanguage}
+          <TechDetailView
+            tech={selectedTech}
             projects={selectedTechProjects}
             relatedFrameworks={relatedFrameworks}
             onBack={handleBackToGrid}
             onProjectSelect={handleProjectSelect}
-            onFrameworkSelect={handleLanguageSelect}
+            onFrameworkSelect={handleTechSelect}
           />
         )}
       </div>

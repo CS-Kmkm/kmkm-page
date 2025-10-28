@@ -2,13 +2,13 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { LanguageIconProps } from '@/types';
+import { TechIconProps } from '@/types';
 
 /**
- * LanguageIcon component displays a clickable tech icon
+ * TechIcon component displays a clickable technology icon
  * with hover effects and tooltip
  */
-const LanguageIcon: React.FC<LanguageIconProps> = ({ language, onClick }) => {
+const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const getCategoryIcon = (category: string) => {
@@ -54,23 +54,23 @@ const LanguageIcon: React.FC<LanguageIconProps> = ({ language, onClick }) => {
           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
           active:scale-95
         "
-        aria-label={`View ${language.name} details`}
+        aria-label={`View ${tech.name} details`}
         role="button"
         type="button"
       >
         {/* Logo Image */}
         <div className="w-full h-full flex items-center justify-center">
-          {language.logoUrl ? (
+          {tech.logoUrl ? (
             <Image
-              src={language.logoUrl}
-              alt={language.logoAlt || `${language.name} logo`}
+              src={tech.logoUrl}
+              alt={tech.logoAlt || `${tech.name} logo`}
               width={48}
               height={48}
               className="object-contain w-full h-full"
             />
           ) : (
-            <span className="text-2xl sm:text-3xl" role="img" aria-label={`${language.name} icon`}>
-              {getCategoryIcon(language.category)}
+            <span className="text-2xl sm:text-3xl" role="img" aria-label={`${tech.name} icon`}>
+              {getCategoryIcon(tech.category)}
             </span>
           )}
         </div>
@@ -87,7 +87,7 @@ const LanguageIcon: React.FC<LanguageIconProps> = ({ language, onClick }) => {
           "
           role="tooltip"
         >
-          {language.name}
+          {tech.name}
           <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900" />
         </div>
       )}
@@ -95,4 +95,4 @@ const LanguageIcon: React.FC<LanguageIconProps> = ({ language, onClick }) => {
   );
 };
 
-export default LanguageIcon;
+export default TechIcon;
