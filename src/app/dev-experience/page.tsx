@@ -36,6 +36,14 @@ export default function DevExperiencePage() {
     );
   };
 
+  // Get related languages for a framework based on shared projects
+  const getRelatedLanguages = (tech: TechItem) => {
+    const techProjects = new Set(tech.projects);
+    return categorizedTech.languages.filter(language =>
+      language.projects.some(projectId => techProjects.has(projectId))
+    );
+  };
+
   // Get projects for selected tech
   const selectedTechProjects = useMemo(() => {
     if (!selectedTech) return [];
@@ -49,6 +57,12 @@ export default function DevExperiencePage() {
   const relatedFrameworks = useMemo(() => {
     if (!selectedTech || selectedTech.category !== 'language') return [];
     return getRelatedFrameworks(selectedTech);
+  }, [selectedTech]);
+
+  // Get related languages for selected tech (if it's a framework)
+  const relatedLanguages = useMemo(() => {
+    if (!selectedTech || selectedTech.category !== 'framework') return [];
+    return getRelatedLanguages(selectedTech);
   }, [selectedTech]);
 
   // Event handlers
@@ -125,9 +139,10 @@ export default function DevExperiencePage() {
             tech={selectedTech}
             projects={selectedTechProjects}
             relatedFrameworks={relatedFrameworks}
+            relatedLanguages={relatedLanguages}
             onBack={handleBackToGrid}
             onProjectSelect={handleProjectSelect}
-            onFrameworkSelect={handleTechSelect}
+            onRelatedTechSelect={handleTechSelect}
           />
         )}
       </div>

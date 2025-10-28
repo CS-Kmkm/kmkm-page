@@ -6,18 +6,20 @@ import TechHeader from './TechHeader';
 import TechDescription from './TechDescription';
 import ProjectList from './ProjectList';
 import RelatedFrameworks from './RelatedFrameworks';
+import RelatedLanguages from './RelatedLanguages';
 
 /**
  * TechDetailView component displays detailed information about a technology
- * including header, description, related frameworks, and related projects
+ * including header, description, related frameworks/languages, and related projects
  */
 const TechDetailView: React.FC<TechDetailViewProps> = ({
   tech,
   projects,
   relatedFrameworks = [],
+  relatedLanguages = [],
   onBack,
   onProjectSelect,
-  onFrameworkSelect
+  onRelatedTechSelect
 }) => {
   // Handle Escape key to go back
   useEffect(() => {
@@ -93,7 +95,15 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
         {tech.category === 'language' && relatedFrameworks.length > 0 && (
           <RelatedFrameworks
             frameworks={relatedFrameworks}
-            onFrameworkSelect={onFrameworkSelect}
+            onFrameworkSelect={onRelatedTechSelect}
+          />
+        )}
+
+        {/* Related Languages (only for frameworks) */}
+        {tech.category === 'framework' && relatedLanguages.length > 0 && (
+          <RelatedLanguages
+            languages={relatedLanguages}
+            onLanguageSelect={onRelatedTechSelect}
           />
         )}
 

@@ -246,9 +246,10 @@ export interface TechDetailViewProps {
   tech: TechItem;
   projects: ProjectDetail[];
   relatedFrameworks?: TechItem[];
+  relatedLanguages?: TechItem[];
   onBack: () => void;
   onProjectSelect: (project: ProjectDetail) => void;
-  onFrameworkSelect?: (framework: TechItem) => void;
+  onRelatedTechSelect?: (tech: TechItem) => void;
 }
 
 // View state enum for Dev Experience page

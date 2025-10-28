@@ -9,4 +9,7 @@ export { default as TechCategorySection } from './TechCategorySection';
 // Project-related components
 export { default as ProjectList } from './ProjectList';
 export { default as ProjectListItem } from './ProjectListItem';
+
+// Related tech components
 export { default as RelatedFrameworks } from './RelatedFrameworks';
+export { default as RelatedLanguages } from './RelatedLanguages';
