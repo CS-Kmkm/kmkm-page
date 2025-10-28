@@ -12,22 +12,6 @@ export default function ProfileSection({
       className={`flex flex-col md:flex-row items-center md:items-start gap-4 sm:gap-6 md:gap-8 ${className}`}
       aria-labelledby="profile-heading"
     >
-      {/* Avatar */}
-      {profile.avatarUrl && (
-        <div className="flex-shrink-0">
-          <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full overflow-hidden bg-gray-100">
-            <Image
-              src={profile.avatarUrl}
-              alt={`${profile.name}のプロフィール写真`}
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 640px) 96px, (max-width: 768px) 128px, 160px"
-            />
-          </div>
-        </div>
-      )}
-
       {/* Profile Information */}
       <div className="flex-1 text-center md:text-left">
         {/* Name */}
@@ -95,6 +79,22 @@ export default function ProfileSection({
           </div>
         )}
       </div>
+
+      {/* Portrait Image - Landscape orientation */}
+      {profile.avatarUrl && (
+        <div className="flex-shrink-0">
+          <div className="relative w-48 h-32 sm:w-64 sm:h-40 md:w-80 md:h-48 rounded-lg overflow-hidden bg-gray-100 shadow-md">
+            <Image
+              src={profile.avatarUrl}
+              alt={`${profile.name}のプロフィール写真`}
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 640px) 192px, (max-width: 768px) 256px, 320px"
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 }

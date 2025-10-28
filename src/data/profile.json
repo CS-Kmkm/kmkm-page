@@ -6,7 +6,7 @@
   "currentPosition": "修士課程学生",
   "bio": "名古屋大学大学院情報学研究科知能システム学専攻松原研究室に所属。",
   "location": "日本",
-  "avatarUrl": null,
+  "avatarUrl": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='192'%3E%3Crect width='320' height='192' fill='%23000000'/%3E%3C/svg%3E",
   "socialLinks": [
     {
       "id": "social-001",
