@@ -11,13 +11,13 @@ import {
 } from '@/components/ui/NavigationCard';
 
 export const metadata: Metadata = {
-  title: '山田太郎 - 個人ポートフォリオ',
-  description: '○○大学情報学部准教授の山田太郎の個人ポートフォリオサイトです。研究活動、開発経験、論文投稿履歴をご紹介しています。',
-  keywords: ['山田太郎', '機械学習', 'Web開発', 'Next.js', '自然言語処理', '深層学習'],
-  authors: [{ name: '山田太郎' }],
+  title: '茂木光志 - 個人ポートフォリオ',
+  description: '名古屋大学大学院情報学研究科知能システム学専攻松原研究室の茂木光志の個人ポートフォリオサイトです。自然言語処理の研究活動、論文投稿履歴をご紹介しています。',
+  keywords: ['茂木光志', 'Koshi Motegi', '自然言語処理', 'NLP', '名古屋大学', '松原研究室', '機械学習', '研究'],
+  authors: [{ name: '茂木光志' }],
   openGraph: {
-    title: '山田太郎 - 個人ポートフォリオ',
-    description: '○○大学情報学部准教授の山田太郎の個人ポートフォリオサイト',
+    title: '茂木光志 - 個人ポートフォリオ',
+    description: '名古屋大学大学院情報学研究科知能システム学専攻松原研究室の茂木光志の個人ポートフォリオサイト',
     type: 'website',
     locale: 'ja_JP',
   },
