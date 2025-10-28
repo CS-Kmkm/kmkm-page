@@ -155,6 +155,7 @@ export interface PageLayoutProps {
 export interface UpdatesListProps {
   updates: UpdateItem[];
   maxItems?: number;
+  showScrollable?: boolean;
 }
 
 export interface TimelineProps {

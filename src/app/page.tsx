@@ -4,10 +4,10 @@ import PageLayout from '@/components/layout/PageLayout';
 import ProfileSection from '@/components/ui/ProfileSection';
 import SocialLinks from '@/components/ui/SocialLinks';
 import UpdatesList from '@/components/ui/UpdatesList';
-import { 
-  CareerNavigationCard, 
-  DevExperienceNavigationCard, 
-  PublicationsNavigationCard 
+import {
+  CareerNavigationCard,
+  DevExperienceNavigationCard,
+  PublicationsNavigationCard
 } from '@/components/ui/NavigationCard';
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   const profile = getProfile();
-  const recentUpdates = getRecentUpdates(5);
+  const recentUpdates = getRecentUpdates(10);
 
   return (
     <PageLayout title="トップページ">
@@ -33,18 +33,15 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           {/* Hero Section with Profile and Social Links */}
           <section className="bg-white rounded-lg shadow-sm p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
-            <ProfileSection 
+            <ProfileSection
               profile={profile}
               showBio={true}
               showLocation={true}
               className="mb-4 sm:mb-6"
             />
-            
+
             <div className="border-t border-gray-200 pt-4 sm:pt-6">
-              <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">
-                ソーシャルメディア
-              </h2>
-              <SocialLinks 
+              <SocialLinks
                 socialLinks={profile.socialLinks}
                 showLabels={true}
                 orientation="horizontal"
@@ -57,9 +54,10 @@ export default function Home() {
             {/* Left Column - Updates */}
             <div className="lg:col-span-2">
               <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 lg:p-8">
-                <UpdatesList 
+                <UpdatesList
                   updates={recentUpdates}
-                  maxItems={5}
+                  maxItems={3}
+                  showScrollable={true}
                 />
               </div>
             </div>
@@ -78,20 +76,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-
-          {/* Additional Information Section */}
-          <section className="mt-8 sm:mt-12 bg-white rounded-lg shadow-sm p-4 sm:p-6 lg:p-8">
-            <div className="text-center">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
-                ポートフォリオサイトについて
-              </h2>
-              <p className="text-sm sm:text-base text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                このサイトは、私の研究活動、開発経験、論文投稿履歴をまとめた個人ポートフォリオです。
-                Next.js 16.0とTailwind CSS v4を使用して構築され、レスポンシブデザインとアクセシビリティに配慮しています。
-                各セクションでは、詳細な情報をご覧いただけます。
-              </p>
-            </div>
-          </section>
         </div>
       </div>
     </PageLayout>
