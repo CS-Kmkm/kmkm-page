@@ -32,10 +32,7 @@ function CategoryBadge({ category }: { category: UpdateItem['category'] }) {
   
   return (
     <span 
-      className={`
-        inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium
-        ${config.color}
-      `}
+      className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${config.color}`}
       aria-label={`カテゴリ: ${config.label}`}
     >
       <span aria-hidden="true">{config.icon}</span>
@@ -118,12 +115,7 @@ function UpdateCard({ update, onClick }: { update: UpdateItem; onClick: () => vo
   
   return (
     <article 
-      className="
-        bg-white border border-gray-200 rounded-lg p-3 sm:p-4 md:p-6
-        hover:shadow-md hover:border-blue-300 transition-all duration-200
-        cursor-pointer
-        focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2
-      "
+      className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 md:p-6 hover:shadow-md hover:border-blue-300 transition-all duration-200 cursor-pointer focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2"
       aria-labelledby={titleId}
       onClick={onClick}
       role="button"
