@@ -1,0 +1,110 @@
+"use client";
+
+import React, { useEffect } from 'react';
+import { LanguageDetailViewProps } from '@/types';
+import LanguageHeader from './LanguageHeader';
+import LanguageDescription from './LanguageDescription';
+import ProjectList from './ProjectList';
+import RelatedFrameworks from './RelatedFrameworks';
+
+/**
+ * LanguageDetailView component displays detailed information about a technology
+ * including header, description, related frameworks, and related projects
+ */
+const LanguageDetailView: React.FC<LanguageDetailViewProps> = ({
+  language,
+  projects,
+  relatedFrameworks = [],
+  onBack,
+  onProjectSelect,
+  onFrameworkSelect
+}) => {
+  // Handle Escape key to go back
+  useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onBack();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscapeKey);
+
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [onBack]);
+
+  // Focus on back button when view is mounted
+  useEffect(() => {
+    const backButton = document.getElementById('language-detail-back-button');
+    if (backButton) {
+      backButton.focus();
+    }
+  }, []);
+
+  return (
+    <div
+      className="animate-slide-in-right"
+      role="region"
+      aria-label={`${language.name}の詳細`}
+    >
+      {/* Back Button */}
+      <button
+        id="language-detail-back-button"
+        onClick={onBack}
+        className="
+          inline-flex items-center gap-2 mb-6
+          px-4 py-2 text-gray-700 bg-white rounded-lg border border-gray-300
+          transition-all duration-150
+          hover:bg-gray-50 hover:border-gray-400
+          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+        "
+        aria-label="技術一覧に戻る"
+        type="button"
+      >
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+        <span className="font-medium">戻る</span>
+      </button>
+
+      {/* Content */}
+      <div className="space-y-6">
+        {/* Language Header */}
+        <LanguageHeader language={language} />
+
+        {/* Language Description */}
+        {language.description && (
+          <LanguageDescription description={language.description} />
+        )}
+
+        {/* Related Frameworks (only for languages) */}
+        {language.category === 'language' && relatedFrameworks.length > 0 && (
+          <RelatedFrameworks
+            frameworks={relatedFrameworks}
+            onFrameworkSelect={onFrameworkSelect}
+          />
+        )}
+
+        {/* Project List */}
+        <ProjectList
+          projects={projects}
+          onProjectSelect={onProjectSelect}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default LanguageDetailView;

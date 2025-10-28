@@ -53,7 +53,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black bg-opacity-50"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-white/80 backdrop-blur-sm"
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
@@ -62,13 +62,13 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
     >
       <div
         id="project-modal"
-        className="relative w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] bg-white rounded-lg shadow-xl overflow-hidden focus:outline-none"
+        className="relative w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] bg-white rounded-lg shadow-2xl overflow-hidden focus:outline-none border border-gray-200"
         tabIndex={-1}
       >
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10 p-1.5 sm:p-2 rounded-full bg-white/80 hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10 p-1.5 sm:p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-md"
           aria-label="Close modal"
         >
           <svg
