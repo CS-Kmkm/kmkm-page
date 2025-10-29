@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { PublicationDetailModalProps } from '@/types';
+import { getPublicationTypeLabel, getPublicationTypeColor } from '@/lib/publications/utils';
 
 const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
   publication,
@@ -22,9 +23,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
 
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
-      // Focus close button when modal opens
       closeButtonRef.current?.focus();
-      // Prevent body scroll
       document.body.style.overflow = 'hidden';
     }
 
@@ -64,28 +63,6 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
     }
     
     return authors.join(', ');
-  };
-
-  const getPublicationTypeLabel = (type: string) => {
-    const labels: Record<string, string> = {
-      journal: 'Journal',
-      conference: 'Conference',
-      workshop: 'Workshop',
-      preprint: 'Preprint',
-      other: 'Other'
-    };
-    return labels[type] || type.charAt(0).toUpperCase() + type.slice(1);
-  };
-
-  const getPublicationTypeColor = (type: string) => {
-    const colors: Record<string, string> = {
-      journal: 'bg-blue-100 text-blue-900 border border-blue-200',
-      conference: 'bg-green-100 text-green-900 border border-green-200',
-      workshop: 'bg-yellow-100 text-yellow-900 border border-yellow-200',
-      preprint: 'bg-gray-100 text-gray-900 border border-gray-200',
-      other: 'bg-purple-100 text-purple-900 border border-purple-200'
-    };
-    return colors[type] || 'bg-gray-100 text-gray-900 border border-gray-200';
   };
 
   return (
