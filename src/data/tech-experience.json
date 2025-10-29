@@ -41,7 +41,7 @@
       "experienceYears": 2,
       "projects": [],
       "description": "講義、競技プログラミングで使用。アルゴリズムとデータ構造の実装に活用。",
-      "logoUrl": "/images/tech-logos/cpp.svg",
+      "logoUrl": "/images/tech-logos/cplusplus.svg",
       "logoAlt": "C++ logo"
     },
     {
@@ -74,7 +74,7 @@
       "experienceYears": 1,
       "projects": ["proj-006"],
       "description": "ハッカソン（JPHACKS2025）で使用。Reactベースのフルスタックフレームワーク。",
-      "logoUrl": "/images/tech-logos/nextjs.svg",
+      "logoUrl": "/images/tech-logos/nextdotjs.svg",
       "logoAlt": "Next.js logo"
     },
     {
@@ -96,7 +96,7 @@
       "experienceYears": 1,
       "projects": ["proj-010"],
       "description": "インターンシップで使用。システム機能の追加開発を実施。",
-      "logoUrl": "/images/tech-logos/rails.svg",
+      "logoUrl": "/images/tech-logos/rubyonrails.svg",
       "logoAlt": "Ruby on Rails logo"
     },
     {
@@ -129,7 +129,7 @@
       "experienceYears": 1,
       "projects": ["proj-001"],
       "description": "アルバイトで使用。S3、Lambda、CloudWatchを活用したサーバーレスアーキテクチャ。",
-      "logoUrl": "/images/tech-logos/aws.svg",
+      "logoUrl": "/images/tech-logos/amazonwebservices.svg",
       "logoAlt": "AWS logo"
     },
     {
