@@ -90,7 +90,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black bg-opacity-30 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md p-4"
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
