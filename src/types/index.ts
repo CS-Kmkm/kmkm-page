@@ -212,3 +212,48 @@ export interface SocialLinksProps {
   orientation?: 'horizontal' | 'vertical';
   className?: string;
 }
+
+// Dev Experience component prop interfaces
+export interface TechIconProps {
+  tech: TechItem;
+  onClick: () => void;
+}
+
+export interface TechIconGridProps {
+  techItems: TechItem[];
+  onTechSelect: (tech: TechItem) => void;
+}
+
+export interface TechHeaderProps {
+  tech: TechItem;
+}
+
+export interface TechDescriptionProps {
+  description: string;
+}
+
+export interface ProjectListItemProps {
+  project: ProjectDetail;
+  onClick: () => void;
+}
+
+export interface ProjectListProps {
+  projects: ProjectDetail[];
+  onProjectSelect: (project: ProjectDetail) => void;
+}
+
+export interface TechDetailViewProps {
+  tech: TechItem;
+  projects: ProjectDetail[];
+  relatedFrameworks?: TechItem[];
+  relatedLanguages?: TechItem[];
+  onBack: () => void;
+  onProjectSelect: (project: ProjectDetail) => void;
+  onRelatedTechSelect?: (tech: TechItem) => void;
+}
+
+// View state enum for Dev Experience page
+export enum ViewState {
+  ICON_GRID = 'icon_grid',
+  LANGUAGE_DETAIL = 'language_detail'
+}
