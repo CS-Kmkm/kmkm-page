@@ -110,11 +110,15 @@ export interface PublicationEntry {
   authors: string[];
   venue: string;
   year: number;
+  date?: string;            // 発表・公開日（YYYY-MM-DD形式）
   doi?: string;
   url?: string;
   isFirstAuthor: boolean;
   isPeerReviewed: boolean;
   publicationType: 'journal' | 'conference' | 'workshop' | 'preprint' | 'other';
+  abstract?: string;        // 論文の抄録
+  imageUrl?: string;        // 説明用画像のURL
+  imageAlt?: string;        // 画像の代替テキスト
 }
 
 export interface SocialLink {
@@ -167,6 +171,30 @@ export interface TechGridProps {
   techItems: TechItem[];
   projectDetails: ProjectDetail[];
   showProjects?: boolean;
+}
+
+export interface PublicationFilters {
+  authorshipType: 'all' | 'first-author' | 'co-author';
+  publicationTypes: string[];  // 選択された論文タイプの配列
+}
+
+export interface FilterModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onApply: (filters: PublicationFilters) => void;
+  currentFilters: PublicationFilters;
+  availableTypes: string[];
+}
+
+export interface PublicationDetailModalProps {
+  publication: PublicationEntry | null;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export interface PublicationItemProps {
+  publication: PublicationEntry;
+  onClick: () => void;
 }
 
 export interface PublicationListProps {
