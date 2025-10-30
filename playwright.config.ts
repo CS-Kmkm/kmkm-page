@@ -66,6 +66,15 @@ export default defineConfig({
       use: { ...devices['iPhone 12'] },
     },
 
+    /* Test against tablet viewports. */
+    {
+      name: 'Tablet',
+      use: { 
+        ...devices['iPad Pro'],
+        viewport: { width: 768, height: 1024 },
+      },
+    },
+
     /* Test against branded browsers. */
     // {
     //   name: 'Microsoft Edge',
