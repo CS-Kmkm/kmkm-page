@@ -133,6 +133,6 @@ test.describe('Accessibility Tests', () => {
     await page.goto('/');
 
     // Check that the page loads without errors
-    await expect(page.getByRole('heading', { name: '山田太郎' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
   });
 });
