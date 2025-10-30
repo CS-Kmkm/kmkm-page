@@ -67,7 +67,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md p-0 sm:p-4"
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
@@ -75,18 +75,18 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
     >
       <div
         ref={modalRef}
-        className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-none sm:rounded-lg shadow-xl w-full h-full sm:max-w-3xl sm:w-full sm:max-h-[90vh] sm:h-auto overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header with Close Button */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-start">
-          <h2 id="publication-detail-title" className="text-xl font-semibold text-gray-900 pr-8">
+        <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-start z-10">
+          <h2 id="publication-detail-title" className="text-lg sm:text-xl font-semibold text-gray-900 pr-8">
             Publication Details
           </h2>
           <button
             ref={closeButtonRef}
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full p-1"
+            className="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full p-1 min-h-[44px] min-w-[44px] flex items-center justify-center"
             aria-label="Close modal"
           >
             <svg
@@ -107,21 +107,21 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="px-6 py-6 space-y-6">
+        <div className="px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
           {/* Bibliographic Information */}
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {/* Title */}
-            <h3 className="text-2xl font-bold text-gray-900 leading-tight">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 leading-tight">
               {publication.title}
             </h3>
 
             {/* Authors */}
-            <p className="text-base text-gray-700">
+            <p className="text-sm sm:text-base text-gray-700">
               {formatAuthors(publication.authors, publication.isFirstAuthor)}
             </p>
 
             {/* Venue and Year */}
-            <p className="text-base text-gray-600">
+            <p className="text-sm sm:text-base text-gray-600">
               <em>{publication.venue}</em>, {publication.year}
             </p>
 
@@ -152,13 +152,13 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
             </div>
 
             {/* Links */}
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2 sm:gap-3">
               {publication.doi && (
                 <a
                   href={`https://doi.org/${publication.doi}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 min-h-[44px]"
                 >
                   <svg
                     className="w-4 h-4 mr-2"
@@ -182,7 +182,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
                   href={publication.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 min-h-[44px]"
                 >
                   <svg
                     className="w-4 h-4 mr-2"
@@ -206,9 +206,9 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
 
           {/* Abstract Section */}
           {publication.abstract && (
-            <div className="border-t border-gray-200 pt-6">
-              <h4 className="text-lg font-semibold text-gray-900 mb-3">Abstract</h4>
-              <p className="text-base text-gray-700 leading-relaxed whitespace-pre-wrap">
+            <div className="border-t border-gray-200 pt-4 sm:pt-6">
+              <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3">Abstract</h4>
+              <p className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-wrap">
                 {publication.abstract}
               </p>
             </div>
@@ -216,8 +216,8 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
 
           {/* Image Section */}
           {publication.imageUrl && !imageError && (
-            <div className="border-t border-gray-200 pt-6">
-              <h4 className="text-lg font-semibold text-gray-900 mb-3">Figure</h4>
+            <div className="border-t border-gray-200 pt-4 sm:pt-6">
+              <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3">Figure</h4>
               <img
                 src={publication.imageUrl}
                 alt={publication.imageAlt || 'Publication figure'}

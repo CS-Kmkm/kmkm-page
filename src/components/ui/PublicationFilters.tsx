@@ -32,16 +32,16 @@ const PublicationFilters: React.FC<PublicationFiltersProps> = ({
   totalCount
 }) => {
   const filterButtonClass = (isActive: boolean) =>
-    `px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+    `px-3 sm:px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 min-h-[44px] ${
       isActive
         ? 'bg-blue-600 text-white hover:bg-blue-700'
         : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
     }`;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 sm:space-y-4">
       {/* Filter Buttons */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
         {/* Authorship Filters */}
         <button
           onClick={onToggleFirstAuthor}
@@ -80,10 +80,10 @@ const PublicationFilters: React.FC<PublicationFiltersProps> = ({
         {/* Clear Filters Button */}
         {hasActiveFilters && (
           <>
-            <div className="h-6 w-px bg-gray-300 mx-1" aria-hidden="true"></div>
+            <div className="hidden sm:block h-6 w-px bg-gray-300 mx-1" aria-hidden="true"></div>
             <button
               onClick={onClearFilters}
-              className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 min-h-[44px]"
             >
               <svg
                 className="w-4 h-4 mr-1.5"
