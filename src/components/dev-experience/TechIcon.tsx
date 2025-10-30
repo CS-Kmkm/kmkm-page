@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { TechIconProps } from '@/types';
 
 /**
@@ -58,11 +59,15 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
         {/* Logo Image */}
         <div className="w-full h-full flex items-center justify-center">
           {tech.logoUrl && !imageError ? (
-            <img
+            <Image
               src={tech.logoUrl}
               alt={tech.logoAlt || `${tech.name} logo`}
+              width={48}
+              height={48}
               onError={handleImageError}
               className="object-contain w-full h-full max-w-[48px] max-h-[48px]"
+              priority={false}
+              unoptimized={true}
             />
           ) : (
             <span className="text-2xl sm:text-3xl" role="img" aria-label={`${tech.name} icon`}>
