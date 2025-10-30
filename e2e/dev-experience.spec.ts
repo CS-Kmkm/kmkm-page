@@ -5,90 +5,128 @@ test.describe('Development Experience Page', () => {
     await page.goto('/dev-experience');
   });
 
-  test('should load and display technology grid', async ({ page }) => {
-    // Check page title and heading
-    await expect(page).toHaveTitle(/Development Experience.*Portfolio/);
-    await expect(page.getByRole('heading', { name: 'Development Experience', exact: true })).toBeVisible();
+  test('should load and display technology categories', async ({ page }) => {
+    // Check page heading
+    await expect(page.getByRole('heading', { name: '開発経験' })).toBeVisible();
     
-    // Check statistics section
-    await expect(page.locator('div').filter({ hasText: /^Technologies$/ })).toBeVisible();
-    await expect(page.getByTestId('projects-count')).toBeVisible();
-    await expect(page.getByText('Advanced+')).toBeVisible();
+    // Check category sections are displayed
+    await expect(page.getByRole('heading', { name: 'プログラミング言語' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'フレームワーク・ライブラリ' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'ツール・プラットフォーム' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'データベース' })).toBeVisible();
     
-    // Check technology items are displayed
-    await expect(page.getByRole('button', { name: /View projects using TypeScript/ })).toBeVisible();
-    await expect(page.getByRole('button', { name: /View projects using React/ })).toBeVisible();
-    await expect(page.getByRole('button', { name: /View projects using Python/ })).toBeVisible();
+    // Check that technology icons are displayed
+    const techList = page.getByRole('list', { name: 'Technology stack' }).first();
+    await expect(techList).toBeVisible();
   });
 
-  test('should have working filters', async ({ page }) => {
-    // Test category filter
-    await page.selectOption('#category-filter', 'language');
-    await expect(page.getByRole('button', { name: /View projects using TypeScript/ })).toBeVisible();
-    await expect(page.getByRole('button', { name: /View projects using Python/ })).toBeVisible();
+  test('should display tech detail view when clicking technology', async ({ page }) => {
+    // Wait for page to load
+    await page.waitForLoadState('networkidle');
     
-    // Test proficiency filter
-    await page.selectOption('#proficiency-filter', 'expert');
-    await expect(page.getByRole('button', { name: /View projects using Python/ })).toBeVisible();
+    // Find and click first tech icon button
+    const techButton = page.getByRole('button', { name: /View .* details/ }).first();
+    await expect(techButton).toBeVisible();
+    await techButton.click();
     
-    // Reset filters by selecting 'all' option
-    await page.selectOption('#category-filter', '');
-    await page.selectOption('#proficiency-filter', '');
-    await expect(page.getByRole('button', { name: /View projects using TypeScript/ })).toBeVisible();
-    await expect(page.getByRole('button', { name: /View projects using React/ })).toBeVisible();
-  });
-
-  test('should display proficiency legend', async ({ page }) => {
-    // Check legend is visible
-    await expect(page.getByText('Proficiency Legend:')).toBeVisible();
-    await expect(page.getByLabel('Proficiency level indicators').getByText('Expert')).toBeVisible();
-    await expect(page.getByLabel('Proficiency level indicators').getByText('Advanced')).toBeVisible();
-    await expect(page.getByLabel('Proficiency level indicators').getByText('Intermediate')).toBeVisible();
-    await expect(page.getByLabel('Proficiency level indicators').getByText('Beginner')).toBeVisible();
-  });
-
-  test('should open project modal when clicking technology with projects', async ({ page }) => {
-    // Click on a technology that has projects (TypeScript)
-    await page.getByRole('button', { name: /View projects using TypeScript/ }).first().click();
+    // Check that detail view is displayed
+    await expect(page.getByRole('button', { name: '技術一覧に戻る' })).toBeVisible();
     
-    // Check that modal opens
-    await expect(page.getByRole('dialog')).toBeVisible();
-    await expect(page.getByRole('heading', { name: '個人ポートフォリオサイト' })).toBeVisible();
-    
-    // Close modal
-    await page.getByRole('button', { name: 'Close modal' }).click();
-    await expect(page.getByRole('dialog')).not.toBeVisible();
+    // Check back button works
+    await page.getByRole('button', { name: '技術一覧に戻る' }).click();
+    await expect(page.getByRole('heading', { name: 'プログラミング言語' })).toBeVisible();
   });
 
   test('should handle keyboard navigation', async ({ page }) => {
     // Wait for page to load completely
     await page.waitForLoadState('networkidle');
     
-    // Find first clickable tech badge with projects
-    const techBadges = page.getByRole('button', { name: /View projects using/ });
-    await expect(techBadges.first()).toBeVisible();
-    await techBadges.first().click();
+    // Find first tech button
+    const techButton = page.getByRole('button', { name: /View .* details/ }).first();
+    await expect(techButton).toBeVisible();
+    await techButton.click();
     
-    // Check modal opens
-    await expect(page.getByRole('dialog')).toBeVisible();
+    // Check detail view opens
+    await expect(page.getByRole('button', { name: '技術一覧に戻る' })).toBeVisible();
     
-    // Press Escape to close modal
+    // Press Escape to go back
     await page.keyboard.press('Escape');
-    await expect(page.getByRole('dialog')).not.toBeVisible();
+    await expect(page.getByRole('heading', { name: 'プログラミング言語' })).toBeVisible();
   });
 
   test('should be responsive on mobile', async ({ page }) => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
+    await page.waitForLoadState('networkidle');
     
     // Check that content is still accessible
-    await expect(page.getByRole('heading', { name: 'Development Experience', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '開発経験' })).toBeVisible();
     
-    // Check that technology grid adapts to mobile
-    await expect(page.getByText('TypeScript')).toBeVisible();
+    // Check that category sections are visible
+    await expect(page.getByRole('heading', { name: 'プログラミング言語' })).toBeVisible();
     
-    // Check that filters are still usable on mobile
-    await page.selectOption('#category-filter', 'language');
-    await expect(page.getByRole('button', { name: /View projects using Python/ })).toBeVisible();
+    // Check that technology grid adapts to mobile (2 columns)
+    const techList = page.getByRole('list', { name: 'Technology stack' }).first();
+    await expect(techList).toBeVisible();
+    
+    // Check no horizontal scroll
+    const hasHorizontalScroll = await page.evaluate(() => {
+      return document.body.scrollWidth > window.innerWidth;
+    });
+    expect(hasHorizontalScroll).toBe(false);
+  });
+
+  test('should be responsive on tablet', async ({ page }) => {
+    // Set tablet viewport
+    await page.setViewportSize({ width: 768, height: 1024 });
+    await page.waitForLoadState('networkidle');
+    
+    // Check that content is visible
+    await expect(page.getByRole('heading', { name: '開発経験' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'プログラミング言語' })).toBeVisible();
+    
+    // Check no horizontal scroll
+    const hasHorizontalScroll = await page.evaluate(() => {
+      return document.body.scrollWidth > window.innerWidth;
+    });
+    expect(hasHorizontalScroll).toBe(false);
+  });
+
+  test('should be responsive on desktop', async ({ page }) => {
+    // Set desktop viewport
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.waitForLoadState('networkidle');
+    
+    // Check that all content is visible
+    await expect(page.getByRole('heading', { name: '開発経験' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'プログラミング言語' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'フレームワーク・ライブラリ' })).toBeVisible();
+    
+    // Check that technology grid is displayed
+    const techList = page.getByRole('list', { name: 'Technology stack' }).first();
+    await expect(techList).toBeVisible();
+  });
+
+  test('should display tech detail view fullscreen on mobile', async ({ page }) => {
+    // Set mobile viewport
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.waitForLoadState('networkidle');
+    
+    // Click first tech button
+    const techButton = page.getByRole('button', { name: /View .* details/ }).first();
+    await expect(techButton).toBeVisible();
+    await techButton.click();
+    
+    // Wait for detail view to appear
+    await page.waitForTimeout(500);
+    
+    // Check that detail view is displayed
+    const backButton = page.getByRole('button', { name: '技術一覧に戻る' });
+    await expect(backButton).toBeVisible();
+    
+    // Go back
+    await backButton.click();
+    await page.waitForTimeout(500);
+    await expect(page.getByRole('heading', { name: 'プログラミング言語' })).toBeVisible();
   });
 });

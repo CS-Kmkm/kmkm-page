@@ -4,13 +4,13 @@
 
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import type { ExtendedCareerEntry } from '@/types';
 import { validateCareerData } from '@/lib/career';
 import Timeline from '../Timeline';
 import { computeLayout, groupNodesByLane } from './layoutEngine';
 import { formatRange, extractYear } from './utils';
-import { LAYOUT, COLORS, OPACITY } from './constants';
+import { LAYOUT, MOBILE_LAYOUT, COLORS, OPACITY } from './constants';
 import { createBranchPath, createMergePath } from '../BranchLine';
 import type { LayoutNode, Tick, YearLabel } from './types';
 
@@ -73,13 +73,15 @@ function collectYearLabels(nodes: LayoutNode[]): YearLabel[] {
  */
 function collectTicks(
   nodes: LayoutNode[],
-  nodeMap: Map<string, LayoutNode>
+  nodeMap: Map<string, LayoutNode>,
+  isMobile: boolean
 ): { startTicks: Tick[]; endTicks: Tick[] } {
   const startTickMap = new Map<string, Tick>();
   const endTickMap = new Map<string, Tick>();
 
   nodes.forEach(n => {
-    const parentX = n.parentId ? (nodeMap.get(n.parentId)?.x ?? LAYOUT.MAIN_LINE_X) : LAYOUT.MAIN_LINE_X;
+    const mainLineX = isMobile ? MOBILE_LAYOUT.MAIN_LINE_X : LAYOUT.MAIN_LINE_X;
+    const parentX = n.parentId ? (nodeMap.get(n.parentId)?.x ?? mainLineX) : mainLineX;
     const yStart = Math.round(n.startY);
     const keyStart = `${parentX}_${yStart}`;
     if (!startTickMap.has(keyStart)) {
@@ -135,7 +137,22 @@ export default function GitBranchTimeline({
   isReversed = false
 }: GitBranchTimelineProps) {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const errors = useMemo(() => validateCareerData(entries), [entries]);
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Use mobile or desktop layout constants
+  const layoutConstants = isMobile ? MOBILE_LAYOUT : LAYOUT;
 
   if (errors.length > 0) {
     return (
@@ -159,27 +176,33 @@ export default function GitBranchTimeline({
   const maxEndY = nodes.reduce((max, node) => Math.max(max, node.endY), 0);
   const maxLabelX = nodes.reduce((max, node) => Math.max(max, node.labelX ?? 0), 0);
   const svgWidth = Math.max(
-    LAYOUT.MAIN_LINE_X + (maxLane + 1) * LAYOUT.LANE_WIDTH + 320,
-    maxLabelX + 250
+    layoutConstants.MAIN_LINE_X + (maxLane + 1) * layoutConstants.LANE_WIDTH + (isMobile ? 250 : 320),
+    maxLabelX + (isMobile ? 200 : 250)
   );
   const svgHeight = maxEndY + 20;
-  const mainLineY1 = Math.max(LAYOUT.TOP_PADDING - 60, 20);
+  const mainLineY1 = Math.max(layoutConstants.TOP_PADDING - 60, 20);
   const mainLineY2 = maxEndY;
 
   const yearLabels = collectYearLabels(nodes);
-  const { startTicks, endTicks } = collectTicks(nodes, nodeMap);
+  const { startTicks, endTicks } = collectTicks(nodes, nodeMap, isMobile);
   const { combinedChildIds, combinedParentIds } = findCombinedPairs(nodes, nodeMap);
 
   return (
     <div className={className}>
-      <div className="overflow-x-auto p-6">
-        <svg width={svgWidth} height={svgHeight} className="min-w-full">
+      <div className="overflow-x-auto p-3 sm:p-6">
+        <svg 
+          width={svgWidth} 
+          height={svgHeight} 
+          className="min-w-full"
+          viewBox={isMobile ? `0 0 ${svgWidth} ${svgHeight}` : undefined}
+          preserveAspectRatio={isMobile ? "xMinYMin meet" : undefined}
+        >
           <g transform={isReversed ? `scale(1, -1) translate(0, -${svgHeight})` : undefined}>
             {/* Main line */}
             <line
-              x1={LAYOUT.MAIN_LINE_X}
+              x1={layoutConstants.MAIN_LINE_X}
               y1={mainLineY1}
-              x2={LAYOUT.MAIN_LINE_X}
+              x2={layoutConstants.MAIN_LINE_X}
               y2={mainLineY2}
               stroke={COLORS.MAIN_LINE}
               strokeWidth={2}
@@ -190,10 +213,10 @@ export default function GitBranchTimeline({
             {yearLabels.map(({ y, label }, index) => (
               <text
                 key={`year-label-${label}-${index}`}
-                x={LAYOUT.MAIN_LINE_X - 16}
+                x={layoutConstants.MAIN_LINE_X - (isMobile ? 12 : 16)}
                 y={y + 4}
                 textAnchor="end"
-                className="text-xs font-medium fill-slate-500"
+                className={isMobile ? "text-[10px] font-medium fill-slate-500" : "text-xs font-medium fill-slate-500"}
                 transform={isReversed ? `translate(0, ${2 * (y + 4)}) scale(1, -1)` : undefined}
               >
                 {label}年
@@ -250,7 +273,7 @@ export default function GitBranchTimeline({
             {/* Branch paths */}
             {nodes.map(node => {
               if (!node.parentId) {
-                const path = createBranchPath(LAYOUT.MAIN_LINE_X, node.startY, node.x, node.startY);
+                const path = createBranchPath(layoutConstants.MAIN_LINE_X, node.startY, node.x, node.startY);
                 return (
                   <path
                     key={`branch-main-${node.entry.id}`}
@@ -308,7 +331,7 @@ export default function GitBranchTimeline({
                 if (target.type === 'main') {
                   if (combinedParentIds.has(node.entry.id)) return null;
                   const mergeY = target.at === 'start' ? node.startY : node.endY;
-                  const path = createMergePath(node.x, node.endY, LAYOUT.MAIN_LINE_X, mergeY);
+                  const path = createMergePath(node.x, node.endY, layoutConstants.MAIN_LINE_X, mergeY);
 
                   return (
                     <path
@@ -332,7 +355,7 @@ export default function GitBranchTimeline({
               if (combinedChildIds.has(node.entry.id)) return null;
               
               const parent = node.parentId ? nodeMap.get(node.parentId) : undefined;
-              const targetX = parent ? parent.x : LAYOUT.MAIN_LINE_X;
+              const targetX = parent ? parent.x : layoutConstants.MAIN_LINE_X;
               const targetY = parent
                 ? Math.min(Math.max(node.endY, parent.startY), parent.endY)
                 : node.endY;
@@ -354,7 +377,7 @@ export default function GitBranchTimeline({
             {Array.from(combinedChildIds).map((childId) => {
               const child = nodeMap.get(childId);
               if (!child) return null;
-              const path = createMergePath(child.x, child.endY, LAYOUT.MAIN_LINE_X, child.endY);
+              const path = createMergePath(child.x, child.endY, layoutConstants.MAIN_LINE_X, child.endY);
               return (
                 <path
                   key={`combined-merge-${childId}`}
@@ -373,7 +396,7 @@ export default function GitBranchTimeline({
               .map(node => (
                 <circle
                   key={`mainpoint-${node.entry.id}`}
-                  cx={LAYOUT.MAIN_LINE_X}
+                  cx={layoutConstants.MAIN_LINE_X}
                   cy={(node.startY + node.endY) / 2}
                   r={3}
                   fill={COLORS.MAIN_LINE}
@@ -392,7 +415,7 @@ export default function GitBranchTimeline({
                   <circle
                     cx={node.x}
                     cy={midY}
-                    r={LAYOUT.NODE_RADIUS}
+                    r={layoutConstants.NODE_RADIUS}
                     fill={node.color}
                     stroke="#FFFFFF"
                     strokeWidth={2}
@@ -405,7 +428,7 @@ export default function GitBranchTimeline({
                   {/* Connector line */}
                   {(Math.abs(labelY - midY) > 5 || Math.abs(labelX - node.x - 18) > 5) && (
                     <line
-                      x1={node.x + LAYOUT.NODE_RADIUS}
+                      x1={node.x + layoutConstants.NODE_RADIUS}
                       y1={midY}
                       x2={labelX - 2}
                       y2={labelY}
@@ -420,7 +443,7 @@ export default function GitBranchTimeline({
                   <text
                     x={labelX}
                     y={isReversed ? labelY + 18 : labelY - 14}
-                    className="text-sm font-semibold fill-slate-900"
+                    className={isMobile ? "text-xs font-semibold fill-slate-900" : "text-sm font-semibold fill-slate-900"}
                     transform={isReversed ? `translate(0, ${2 * (labelY + 18)}) scale(1, -1)` : undefined}
                   >
                     {node.entry.organization}
@@ -430,7 +453,7 @@ export default function GitBranchTimeline({
                   <text
                     x={labelX}
                     y={labelY + 2}
-                    className="text-xs fill-slate-500"
+                    className={isMobile ? "text-[10px] fill-slate-500" : "text-xs fill-slate-500"}
                     transform={isReversed ? `translate(0, ${2 * (labelY + 2)}) scale(1, -1)` : undefined}
                   >
                     {node.entry.role}
@@ -440,7 +463,7 @@ export default function GitBranchTimeline({
                   <text
                     x={labelX}
                     y={isReversed ? labelY - 14 : labelY + 18}
-                    className="text-xs fill-slate-400"
+                    className={isMobile ? "text-[10px] fill-slate-400" : "text-xs fill-slate-400"}
                     transform={isReversed ? `translate(0, ${2 * (labelY - 14)}) scale(1, -1)` : undefined}
                   >
                     {formatRange(node.entry)}
@@ -451,7 +474,7 @@ export default function GitBranchTimeline({
                     <text
                       x={labelX}
                       y={isReversed ? labelY - 30 : labelY + 34}
-                      className="text-xs fill-slate-600"
+                      className={isMobile ? "text-[10px] fill-slate-600" : "text-xs fill-slate-600"}
                       transform={isReversed ? `translate(0, ${2 * (labelY - 30)}) scale(1, -1)` : undefined}
                     >
                       {node.entry.description}

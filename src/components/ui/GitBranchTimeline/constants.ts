@@ -16,6 +16,21 @@ export const LAYOUT = {
   CURVE_RADIUS: 15,
 } as const;
 
+// Mobile-optimized layout constants
+export const MOBILE_LAYOUT = {
+  MAIN_LINE_X: 50,
+  LANE_WIDTH: 25,
+  SIBLING_OFFSET: 25,
+  TOP_PADDING: 60,
+  PIXELS_PER_YEAR: 40,
+  MIN_NODE_SPACING: 80,
+  NODE_RADIUS: 6,
+  LABEL_HEIGHT: 45,
+  COLUMN_WIDTH: 150,
+  VERTICAL_OFFSET: 25,
+  CURVE_RADIUS: 12,
+} as const;
+
 export const COLORS = {
   MAIN_LINE: '#9CA3AF',
   TICK: '#6B7280',

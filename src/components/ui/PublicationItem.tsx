@@ -37,7 +37,7 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
       tabIndex={0}
       onClick={onClick}
       onKeyDown={handleKeyDown}
-      className="border-l-4 border-gray-200 pl-3 sm:pl-4 hover:border-gray-400 hover:bg-gray-50 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      className="border-l-4 border-gray-200 pl-3 sm:pl-4 py-2 hover:border-gray-400 hover:bg-gray-50 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 min-h-[44px]"
       aria-label={`View details for ${publication.title}`}
     >
       {/* Title */}

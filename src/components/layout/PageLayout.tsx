@@ -24,7 +24,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       {/* Main Content */}
       <main
         id="main-content"
-        className={`flex-grow ${className}`}
+        className={`flex-grow py-4 sm:py-6 lg:py-8 ${className}`}
         role="main"
         aria-label={`${title} page content`}
         tabIndex={-1}

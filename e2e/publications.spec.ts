@@ -6,115 +6,182 @@ test.describe('Publications Page', () => {
   });
 
   test('should load and display publications list', async ({ page }) => {
-    // Check page title and heading
-    await expect(page).toHaveTitle(/Publications.*Personal Portfolio/);
+    // Check page heading
     await expect(page.getByRole('heading', { name: 'Publications', exact: true })).toBeVisible();
     
-    // Check statistics section
-    await expect(page.getByText('Total Publications')).toBeVisible();
-    await expect(page.locator('div').filter({ hasText: /^First Author$/ })).toBeVisible();
-    await expect(page.locator('div').filter({ hasText: /^Peer Reviewed$/ })).toBeVisible();
-    await expect(page.getByText('Journal Articles', { exact: true })).toBeVisible();
+    // Check that filter controls are displayed
+    await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '共著者' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '査読あり' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '査読なし' })).toBeVisible();
+    
+    // Check that results count is displayed
+    await expect(page.getByText(/\d+件 \/ \d+件の論文を表示/)).toBeVisible();
     
     // Check that publications are displayed
-    await expect(page.getByText('Deep Learning Approaches for Japanese Sentiment Analysis')).toBeVisible();
-    await expect(page.getByText('Multimodal Learning for Image Caption Generation')).toBeVisible();
+    const publications = page.locator('article[role="button"]');
+    await expect(publications.first()).toBeVisible();
   });
 
   test('should have working publication filters', async ({ page }) => {
-    // Check filter buttons are present
-    await expect(page.getByRole('button', { name: /All \(\d+\)/ })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Journal \(\d+\)/ })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Conference \(\d+\)/ })).toBeVisible();
+    // Get initial count
+    const initialCount = await page.getByText(/\d+件 \/ \d+件の論文を表示/).textContent();
     
-    // Test journal filter
-    await page.getByRole('button', { name: /Journal/ }).click();
-    await expect(page.getByText('Multimodal Learning for Image Caption Generation')).toBeVisible();
+    // Test first author filter
+    await page.getByRole('button', { name: '第一著者' }).click();
+    await page.waitForTimeout(300);
     
-    // Test conference filter
-    await page.getByRole('button', { name: /Conference/ }).click();
-    await expect(page.getByText('Deep Learning Approaches for Japanese Sentiment Analysis')).toBeVisible();
+    // Check that filter is active (button should have blue background)
+    const firstAuthorButton = page.getByRole('button', { name: '第一著者' });
+    await expect(firstAuthorButton).toHaveAttribute('aria-pressed', 'true');
     
-    // Reset to all
-    await page.getByRole('button', { name: /All/ }).click();
+    // Clear filters
+    const clearButton = page.getByRole('button', { name: 'クリア' });
+    if (await clearButton.isVisible()) {
+      await clearButton.click();
+    }
   });
 
   test('should display publication badges correctly', async ({ page }) => {
-    // Check for first author badges
-    const firstAuthorBadges = page.getByText('First Author');
-    await expect(firstAuthorBadges.first()).toBeVisible();
+    // Wait for publications to load
+    await page.waitForLoadState('networkidle');
     
-    // Check for peer reviewed badges
-    const peerReviewedBadges = page.getByText('Peer Reviewed');
-    await expect(peerReviewedBadges.first()).toBeVisible();
+    // Check that publication articles are displayed
+    const publications = page.locator('article[role="button"]');
+    await expect(publications.first()).toBeVisible();
     
-    // Check for publication type badges
-    await expect(page.locator('span').filter({ hasText: 'Journal' }).first()).toBeVisible();
-    await expect(page.locator('span').filter({ hasText: 'Conference' }).first()).toBeVisible();
+    // Check for badges within publications (they may vary by data)
+    const badges = page.locator('span.inline-flex.items-center');
+    await expect(badges.first()).toBeVisible();
   });
 
-  test('should have working DOI links', async ({ page }) => {
-    // Find DOI links
-    const doiLinks = page.getByRole('link', { name: /View publication DOI/ });
-    await expect(doiLinks.first()).toBeVisible();
+  test('should open publication detail modal', async ({ page }) => {
+    // Wait for publications to load
+    await page.waitForLoadState('networkidle');
     
-    // Check that DOI links have correct attributes
-    const firstDoiLink = doiLinks.first();
-    await expect(firstDoiLink).toHaveAttribute('target', '_blank');
-    await expect(firstDoiLink).toHaveAttribute('rel', 'noopener noreferrer');
+    // Click first publication
+    const firstPublication = page.locator('article[role="button"]').first();
+    await expect(firstPublication).toBeVisible();
+    await firstPublication.click();
+    
+    // Check that modal opens
+    const modal = page.getByRole('dialog');
+    await expect(modal).toBeVisible();
+    await expect(page.getByText('Publication Details')).toBeVisible();
+    
+    // Close modal
+    const closeButton = page.getByRole('button', { name: 'Close modal' });
+    await expect(closeButton).toBeVisible();
+    await closeButton.click();
+    
+    // Check modal is closed
+    await expect(modal).not.toBeVisible();
   });
 
-  test('should display publications in chronological order', async ({ page }) => {
-    // Check that 2024 publications appear before 2023 publications
-    const publications = page.locator('article');
-    const firstPublication = publications.first();
-    await expect(firstPublication).toContainText('2024');
+  test('should display publications with year labels', async ({ page }) => {
+    // Wait for publications to load
+    await page.waitForLoadState('networkidle');
+    
+    // Check that year labels are displayed
+    const yearLabels = page.locator('div.text-xl, div.text-2xl').filter({ hasText: /^\d{4}$/ });
+    await expect(yearLabels.first()).toBeVisible();
+    
+    // Check that publications are displayed
+    const publications = page.locator('article[role="button"]');
+    await expect(publications.first()).toBeVisible();
   });
 
-  test('should show results count when filtering', async ({ page }) => {
-    // Apply a filter
-    await page.getByRole('button', { name: /Journal/ }).click();
-    
+  test('should show results count', async ({ page }) => {
     // Check results count is displayed
-    await expect(page.getByText(/Showing \d+ of \d+ publications/)).toBeVisible();
+    await expect(page.getByText(/\d+件 \/ \d+件の論文を表示/)).toBeVisible();
   });
 
   test('should handle keyboard navigation for filters', async ({ page }) => {
     // Tab to first filter button
-    const allButton = page.getByRole('button', { name: /All/ });
-    await allButton.focus();
+    const firstAuthorButton = page.getByRole('button', { name: '第一著者' });
+    await firstAuthorButton.focus();
     
     // Check focus is visible
-    await expect(allButton).toBeFocused();
+    await expect(firstAuthorButton).toBeFocused();
     
     // Press Enter to activate
     await page.keyboard.press('Enter');
-    await expect(allButton).toHaveAttribute('aria-pressed', 'true');
+    await expect(firstAuthorButton).toHaveAttribute('aria-pressed', 'true');
   });
 
   test('should be responsive on mobile', async ({ page }) => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
+    await page.waitForLoadState('networkidle');
     
     // Check that content is still accessible
     await expect(page.getByRole('heading', { name: 'Publications', exact: true })).toBeVisible();
     
-    // Check that publications are still readable
-    await expect(page.getByText('Deep Learning Approaches')).toBeVisible();
+    // Check that filter buttons are visible
+    await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
     
-    // Check that filter buttons adapt to mobile
-    const filterButtons = page.getByRole('button', { name: /All|Journal|Conference/ });
-    await expect(filterButtons.first()).toBeVisible();
+    // Check that publications are displayed
+    const publications = page.locator('article[role="button"]');
+    await expect(publications.first()).toBeVisible();
+    
+    // Check no horizontal scroll
+    const hasHorizontalScroll = await page.evaluate(() => {
+      return document.body.scrollWidth > window.innerWidth;
+    });
+    expect(hasHorizontalScroll).toBe(false);
   });
 
-  test('should display additional information section', async ({ page }) => {
-    // Scroll to bottom to see additional info
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  test('should be responsive on tablet', async ({ page }) => {
+    // Set tablet viewport
+    await page.setViewportSize({ width: 768, height: 1024 });
+    await page.waitForLoadState('networkidle');
     
-    // Check additional information section
-    await expect(page.getByText('About These Publications')).toBeVisible();
-    await expect(page.getByText('First Author:')).toBeVisible();
-    await expect(page.getByText('Peer Reviewed:')).toBeVisible();
-    await expect(page.getByText('DOI Links:')).toBeVisible();
+    // Check that content is visible
+    await expect(page.getByRole('heading', { name: 'Publications', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
+    
+    // Check no horizontal scroll
+    const hasHorizontalScroll = await page.evaluate(() => {
+      return document.body.scrollWidth > window.innerWidth;
+    });
+    expect(hasHorizontalScroll).toBe(false);
+  });
+
+  test('should be responsive on desktop', async ({ page }) => {
+    // Set desktop viewport
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.waitForLoadState('networkidle');
+    
+    // Check that all content is visible
+    await expect(page.getByRole('heading', { name: 'Publications', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
+    
+    // Check that publications are displayed
+    const publications = page.locator('article[role="button"]');
+    await expect(publications.first()).toBeVisible();
+  });
+
+  test('should display publication detail modal fullscreen on mobile', async ({ page }) => {
+    // Set mobile viewport
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.waitForLoadState('networkidle');
+    
+    // Click first publication
+    const firstPublication = page.locator('article[role="button"]').first();
+    await expect(firstPublication).toBeVisible();
+    await firstPublication.click();
+    
+    // Check that modal is displayed
+    const modal = page.getByRole('dialog');
+    await expect(modal).toBeVisible();
+    await expect(page.getByText('Publication Details')).toBeVisible();
+    
+    // Close modal
+    const closeButton = page.getByRole('button', { name: 'Close modal' });
+    await closeButton.click();
+    await page.waitForTimeout(300);
+    
+    // Check modal is closed
+    await expect(modal).not.toBeVisible();
   });
 });

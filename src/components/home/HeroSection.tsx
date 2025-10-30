@@ -16,7 +16,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
         className="mb-4 sm:mb-6"
       />
 
-      <div className="border-t border-gray-200 pt-4 sm:pt-6">
+      <div className="border-t border-gray-200 pt-4 sm:pt-6 mt-4 sm:mt-6">
         <SocialLinks
           socialLinks={profile.socialLinks}
           showLabels={true}

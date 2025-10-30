@@ -89,13 +89,13 @@ export default function DevExperiencePage() {
       title="Development Experience"
       className="max-w-6xl mx-auto"
     >
-      <div className="space-y-8">
+      <div className="space-y-6 sm:space-y-8">
         {/* Page header */}
-        <div className="text-center space-y-3 sm:space-y-4">
+        <div className="text-center space-y-3 sm:space-y-4 px-4">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
             開発経験
           </h1>
-          <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto px-4">
+          <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
             使用している技術スタック（言語、フレームワーク、ツール、データベース）と、それらを使った開発経験をご覧いただけます。
             {!selectedTech && 'アイコンをクリックして詳細を表示してください。'}
           </p>
@@ -104,7 +104,7 @@ export default function DevExperiencePage() {
         {/* Main Content */}
         {!selectedTech ? (
           // Category Sections View
-          <div className="space-y-12">
+          <div className="space-y-8 sm:space-y-12 px-4">
             <TechCategorySection
               title="プログラミング言語"
               description="使用しているプログラミング言語"

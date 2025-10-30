@@ -79,14 +79,14 @@ const PublicationList: React.FC<PublicationListProps> = ({ publications }) => {
             return (
               <div key={publication.id}>
                 {showYear && (
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="text-2xl font-bold text-gray-900 min-w-[80px]">
+                  <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                    <div className="text-xl sm:text-2xl font-bold text-gray-900 min-w-[60px] sm:min-w-[80px]">
                       {publication.year}
                     </div>
                     <div className="flex-1 h-px bg-gray-300"></div>
                   </div>
                 )}
-                <div className="ml-0 sm:ml-24">
+                <div className="ml-0 sm:ml-20 md:ml-24">
                   <PublicationItem
                     publication={publication}
                     onClick={() => handlePublicationClick(publication)}

@@ -44,7 +44,7 @@ const RelatedLanguages: React.FC<RelatedLanguagesProps> = ({
         このフレームワークと一緒に使用した言語
       </p>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         {languages.map((language) => (
           <button
             key={language.id}
@@ -54,6 +54,7 @@ const RelatedLanguages: React.FC<RelatedLanguagesProps> = ({
               transition-all duration-150
               hover:shadow-md hover:border-green-400
               focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2
+              min-h-[44px]
             "
             type="button"
           >
