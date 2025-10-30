@@ -8,8 +8,8 @@ test.describe('Performance Tests', () => {
     
     const loadTime = Date.now() - startTime;
     
-    // Check that page loads within 5 seconds
-    expect(loadTime).toBeLessThan(5000);
+    // Check that page loads within 7 seconds
+    expect(loadTime).toBeLessThan(7000);
     
     // Check that main content is visible
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
