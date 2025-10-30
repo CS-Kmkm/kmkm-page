@@ -44,7 +44,7 @@ const RelatedFrameworks: React.FC<RelatedFrameworksProps> = ({
         この言語と一緒に使用したフレームワーク
       </p>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         {frameworks.map((framework) => (
           <button
             key={framework.id}
@@ -54,6 +54,7 @@ const RelatedFrameworks: React.FC<RelatedFrameworksProps> = ({
               transition-all duration-150
               hover:shadow-md hover:border-blue-400
               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+              min-h-[44px]
             "
             type="button"
           >
