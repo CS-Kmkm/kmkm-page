@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import Image from 'next/image';
 import { TechIconProps } from '@/types';
 
 /**
@@ -10,6 +9,7 @@ import { TechIconProps } from '@/types';
  */
 const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -37,6 +37,10 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
     }
   };
 
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
   return (
     <div className="relative">
       <button
@@ -53,13 +57,12 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
       >
         {/* Logo Image */}
         <div className="w-full h-full flex items-center justify-center">
-          {tech.logoUrl ? (
-            <Image
+          {tech.logoUrl && !imageError ? (
+            <img
               src={tech.logoUrl}
               alt={tech.logoAlt || `${tech.name} logo`}
-              width={48}
-              height={48}
-              className="object-contain w-full h-full"
+              onError={handleImageError}
+              className="object-contain w-full h-full max-w-[48px] max-h-[48px]"
             />
           ) : (
             <span className="text-2xl sm:text-3xl" role="img" aria-label={`${tech.name} icon`}>
