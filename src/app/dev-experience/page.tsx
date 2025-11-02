@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
 import TechCategorySection from '@/components/dev-experience/TechCategorySection';
 import TechDetailView from '@/components/dev-experience/TechDetailView';
+import ProficiencyFilter from '@/components/dev-experience/ProficiencyFilter';
 import ProjectModal from '@/components/ui/ProjectModal';
 import { getTechExperience, getProjectDetails } from '@/data';
 import { TechItem, ProjectDetail } from '@/types';
@@ -17,30 +18,45 @@ export default function DevExperiencePage() {
   const [selectedTech, setSelectedTech] = useState<TechItem | null>(null);
   const [selectedProject, setSelectedProject] = useState<ProjectDetail | null>(null);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
+  
+  // Filter states
+  const [showHigh, setShowHigh] = useState(true);
+  const [showMedium, setShowMedium] = useState(true);
+  const [showLow, setShowLow] = useState(true);
+
+  // Filter tech items by proficiency level
+  const filteredTechItems = useMemo(() => {
+    return allTechItems.filter(item => {
+      if (item.proficiencyLevel === '高' && !showHigh) return false;
+      if (item.proficiencyLevel === '中' && !showMedium) return false;
+      if (item.proficiencyLevel === '低' && !showLow) return false;
+      return true;
+    });
+  }, [allTechItems, showHigh, showMedium, showLow]);
 
   // Categorize tech items
   const categorizedTech = useMemo(() => {
-    const languages = allTechItems.filter(item => item.category === 'language');
-    const frameworks = allTechItems.filter(item => item.category === 'framework');
-    const tools = allTechItems.filter(item => item.category === 'tool');
-    const databases = allTechItems.filter(item => item.category === 'database');
+    const languages = filteredTechItems.filter(item => item.category === 'language');
+    const frameworks = filteredTechItems.filter(item => item.category === 'framework');
+    const tools = filteredTechItems.filter(item => item.category === 'tool');
+    const databases = filteredTechItems.filter(item => item.category === 'database');
 
     return { languages, frameworks, tools, databases };
-  }, [allTechItems]);
+  }, [filteredTechItems]);
 
-  // Get related frameworks for a language based on shared projects
+  // Get related frameworks for a language based on explicit relationships
   const getRelatedFrameworks = (tech: TechItem) => {
-    const techProjects = new Set(tech.projects);
+    if (!tech.relatedFrameworks) return [];
     return categorizedTech.frameworks.filter(framework =>
-      framework.projects.some(projectId => techProjects.has(projectId))
+      tech.relatedFrameworks!.includes(framework.name)
     );
   };
 
-  // Get related languages for a framework based on shared projects
+  // Get related languages for a framework based on explicit relationships
   const getRelatedLanguages = (tech: TechItem) => {
-    const techProjects = new Set(tech.projects);
+    if (!tech.relatedLanguages) return [];
     return categorizedTech.languages.filter(language =>
-      language.projects.some(projectId => techProjects.has(projectId))
+      tech.relatedLanguages!.includes(language.name)
     );
   };
 
@@ -84,6 +100,19 @@ export default function DevExperiencePage() {
     setSelectedProject(null);
   };
 
+  // Filter handlers
+  const handleToggleHigh = () => setShowHigh(!showHigh);
+  const handleToggleMedium = () => setShowMedium(!showMedium);
+  const handleToggleLow = () => setShowLow(!showLow);
+  
+  const handleClearFilters = () => {
+    setShowHigh(true);
+    setShowMedium(true);
+    setShowLow(true);
+  };
+  
+  const hasActiveFilters = !showHigh || !showMedium || !showLow;
+
   return (
     <PageLayout
       title="Development Experience"
@@ -95,11 +124,23 @@ export default function DevExperiencePage() {
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
             開発経験
           </h1>
-          <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
-            使用している技術スタック（言語、フレームワーク、ツール、データベース）と、それらを使った開発経験をご覧いただけます。
-            {!selectedTech && 'アイコンをクリックして詳細を表示してください。'}
-          </p>
         </div>
+
+        {/* Proficiency Filter */}
+        {!selectedTech && (
+          <ProficiencyFilter
+            showHigh={showHigh}
+            showMedium={showMedium}
+            showLow={showLow}
+            onToggleHigh={handleToggleHigh}
+            onToggleMedium={handleToggleMedium}
+            onToggleLow={handleToggleLow}
+            onClearFilters={handleClearFilters}
+            hasActiveFilters={hasActiveFilters}
+            resultCount={filteredTechItems.length}
+            totalCount={allTechItems.length}
+          />
+        )}
 
         {/* Main Content */}
         {!selectedTech ? (

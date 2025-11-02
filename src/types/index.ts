@@ -97,11 +97,16 @@ export interface TechItem {
   name: string;
   category: 'language' | 'framework' | 'tool' | 'database';
   proficiency: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  proficiencyLevel: '低' | '中' | '高';
   experienceYears: number;
   projects: string[]; // ProjectDetail IDs
   description?: string;
   logoUrl?: string;
   logoAlt?: string;
+  showOnWeb?: boolean; // Whether to display this tech on the website (default: true)
+  relatedFrameworks?: string[]; // For languages: related framework names
+  relatedLanguages?: string[]; // For frameworks: related language names
+  relatedPlatforms?: string[]; // For languages: related platform/environment names
 }
 
 export interface PublicationEntry {

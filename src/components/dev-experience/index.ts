@@ -5,6 +5,7 @@ export { default as TechHeader } from './TechHeader';
 export { default as TechDescription } from './TechDescription';
 export { default as TechDetailView } from './TechDetailView';
 export { default as TechCategorySection } from './TechCategorySection';
+export { default as ProficiencyFilter } from './ProficiencyFilter';
 
 // Project-related components
 export { default as ProjectList } from './ProjectList';
