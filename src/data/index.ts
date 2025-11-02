@@ -93,7 +93,32 @@ export const getTechExperience = (): TechItem[] => {
 
 export const getProjectDetails = (): ProjectDetail[] => {
   const data = loadTechExperienceData();
-  return data?.projects || [];
+  const projects = data?.projects || [];
+  
+  // Sort projects by duration (most recent first)
+  return projects.sort((a, b) => {
+    // Extract year from duration string (e.g., "2025年9月" -> 2025)
+    const getYear = (duration: string): number => {
+      const match = duration.match(/(\d{4})/);
+      return match ? parseInt(match[1]) : 0;
+    };
+    
+    const getMonth = (duration: string): number => {
+      const match = duration.match(/(\d{4})年(\d{1,2})月/);
+      return match ? parseInt(match[2]) : 0;
+    };
+    
+    const aYear = getYear(a.duration);
+    const bYear = getYear(b.duration);
+    const aMonth = getMonth(a.duration);
+    const bMonth = getMonth(b.duration);
+    
+    // Sort by year first, then by month (most recent first)
+    if (aYear !== bYear) {
+      return bYear - aYear;
+    }
+    return bMonth - aMonth;
+  });
 };
 
 export const getCareerEntries = (): CareerEntry[] => {

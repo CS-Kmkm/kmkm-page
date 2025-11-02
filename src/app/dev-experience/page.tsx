@@ -4,7 +4,8 @@ import { useState, useMemo } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
 import TechCategorySection from '@/components/dev-experience/TechCategorySection';
 import TechDetailView from '@/components/dev-experience/TechDetailView';
-import ProficiencyFilter from '@/components/dev-experience/ProficiencyFilter';
+
+import ProjectListItem from '@/components/dev-experience/ProjectListItem';
 import ProjectModal from '@/components/ui/ProjectModal';
 import { getTechExperience, getProjectDetails } from '@/data';
 import { TechItem, ProjectDetail } from '@/types';
@@ -19,20 +20,8 @@ export default function DevExperiencePage() {
   const [selectedProject, setSelectedProject] = useState<ProjectDetail | null>(null);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   
-  // Filter states
-  const [showHigh, setShowHigh] = useState(true);
-  const [showMedium, setShowMedium] = useState(true);
-  const [showLow, setShowLow] = useState(true);
-
-  // Filter tech items by proficiency level
-  const filteredTechItems = useMemo(() => {
-    return allTechItems.filter(item => {
-      if (item.proficiencyLevel === '高' && !showHigh) return false;
-      if (item.proficiencyLevel === '中' && !showMedium) return false;
-      if (item.proficiencyLevel === '低' && !showLow) return false;
-      return true;
-    });
-  }, [allTechItems, showHigh, showMedium, showLow]);
+  // Use all tech items without filtering
+  const filteredTechItems = allTechItems;
 
   // Categorize tech items
   const categorizedTech = useMemo(() => {
@@ -100,18 +89,7 @@ export default function DevExperiencePage() {
     setSelectedProject(null);
   };
 
-  // Filter handlers
-  const handleToggleHigh = () => setShowHigh(!showHigh);
-  const handleToggleMedium = () => setShowMedium(!showMedium);
-  const handleToggleLow = () => setShowLow(!showLow);
-  
-  const handleClearFilters = () => {
-    setShowHigh(true);
-    setShowMedium(true);
-    setShowLow(true);
-  };
-  
-  const hasActiveFilters = !showHigh || !showMedium || !showLow;
+
 
   return (
     <PageLayout
@@ -126,53 +104,72 @@ export default function DevExperiencePage() {
           </h1>
         </div>
 
-        {/* Proficiency Filter */}
-        {!selectedTech && (
-          <ProficiencyFilter
-            showHigh={showHigh}
-            showMedium={showMedium}
-            showLow={showLow}
-            onToggleHigh={handleToggleHigh}
-            onToggleMedium={handleToggleMedium}
-            onToggleLow={handleToggleLow}
-            onClearFilters={handleClearFilters}
-            hasActiveFilters={hasActiveFilters}
-            resultCount={filteredTechItems.length}
-            totalCount={allTechItems.length}
-          />
-        )}
+
 
         {/* Main Content */}
         {!selectedTech ? (
-          // Category Sections View
-          <div className="space-y-8 sm:space-y-12 px-4">
-            <TechCategorySection
-              title="プログラミング言語"
-              description="使用しているプログラミング言語"
-              techItems={categorizedTech.languages}
-              onTechSelect={handleTechSelect}
-            />
+          // Two Column Layout - Tech Categories and Projects
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8 px-4 xl:items-start">
+            {/* Left Column - Tech Categories */}
+            <div className="space-y-8 sm:space-y-12">
+              <TechCategorySection
+                title="プログラミング言語"
+                description="使用しているプログラミング言語"
+                techItems={categorizedTech.languages}
+                onTechSelect={handleTechSelect}
+              />
 
-            <TechCategorySection
-              title="フレームワーク・ライブラリ"
-              description="Webアプリケーション開発に使用しているフレームワーク"
-              techItems={categorizedTech.frameworks}
-              onTechSelect={handleTechSelect}
-            />
+              <TechCategorySection
+                title="フレームワーク・ライブラリ"
+                description="Webアプリケーション開発に使用しているフレームワーク"
+                techItems={categorizedTech.frameworks}
+                onTechSelect={handleTechSelect}
+              />
 
-            <TechCategorySection
-              title="ツール・プラットフォーム"
-              description="開発環境やインフラに使用しているツール"
-              techItems={categorizedTech.tools}
-              onTechSelect={handleTechSelect}
-            />
+              <TechCategorySection
+                title="ツール・プラットフォーム"
+                description="開発環境やインフラに使用しているツール"
+                techItems={categorizedTech.tools}
+                onTechSelect={handleTechSelect}
+              />
 
-            <TechCategorySection
-              title="データベース"
-              description="データ管理に使用しているデータベース"
-              techItems={categorizedTech.databases}
-              onTechSelect={handleTechSelect}
-            />
+              <TechCategorySection
+                title="データベース"
+                description="データ管理に使用しているデータベース"
+                techItems={categorizedTech.databases}
+                onTechSelect={handleTechSelect}
+              />
+            </div>
+
+            {/* Right Column - All Projects */}
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  全プロジェクト ({allProjects.length})
+                </h3>
+                {allProjects.length > 0 ? (
+                  <div
+                    className="space-y-3 overflow-y-auto pr-2 custom-scrollbar"
+                    style={{ maxHeight: `${Math.min(10, allProjects.length) * 120}px` }}
+                    role="list"
+                    aria-label="All projects"
+                  >
+                    {allProjects.map((project) => (
+                      <div key={project.id} role="listitem">
+                        <ProjectListItem
+                          project={project}
+                          onClick={() => handleProjectSelect(project)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-4 bg-gray-50 rounded-lg text-center">
+                    <p className="text-gray-500 text-sm">プロジェクトがありません</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         ) : (
           // Tech Detail View
