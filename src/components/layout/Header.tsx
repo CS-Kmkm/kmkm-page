@@ -15,6 +15,7 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
     { href: '/career', label: 'Career', ariaLabel: 'Go to career page' },
     { href: '/dev-experience', label: 'Dev Experience', ariaLabel: 'Go to development experience page' },
     { href: '/publications', label: 'Publications', ariaLabel: 'Go to publications page' },
+    { href: '/events', label: 'Events', ariaLabel: 'Go to events page' },
   ];
 
   const toggleMobileMenu = () => {

@@ -1,10 +1,9 @@
-import { UpdateItem, CareerEntry, TechItem, ProjectDetail, PublicationEntry, ProfileInfo } from '@/types';
+import { UpdateItem, CareerEntry, ExtendedCareerEntry, TechItem, ProjectDetail, PublicationEntry, ProfileInfo, EventEntry, EventFilters, EventCategory } from '@/types';
 
 // Import JSON data with error handling
 let publicationsData: { publications: PublicationEntry[] } | null = null;
 let techExperienceData: { technologies: TechItem[]; projects: ProjectDetail[] } | null = null;
 let careerData: { entries: CareerEntry[] } | null = null;
-let updatesData: { updates: UpdateItem[] } | null = null;
 let profileData: ProfileInfo | null = null;
 
 // Helper function to safely load JSON data
@@ -21,7 +20,6 @@ function safeLoadData<T>(loader: () => T, fallback: T): T {
 import publicationsJson from './publications.json';
 import techExperienceJson from './tech-experience.json';
 import careerJson from './career.json';
-import updatesJson from './updates.json';
 import profileJson from './profile.json';
 
 // Lazy loading functions with error handling
@@ -55,15 +53,7 @@ function loadCareerData() {
   return careerData;
 }
 
-function loadUpdatesData() {
-  if (!updatesData) {
-    updatesData = safeLoadData(
-      () => updatesJson as unknown as { updates: UpdateItem[] },
-      { updates: [] }
-    );
-  }
-  return updatesData;
-}
+
 
 function loadProfileData() {
   if (!profileData) {
@@ -79,6 +69,8 @@ function loadProfileData() {
   }
   return profileData;
 }
+
+
 
 // Export data loading functions
 export const getPublications = (): PublicationEntry[] => {
@@ -127,9 +119,34 @@ export const getCareerEntries = (): CareerEntry[] => {
 };
 
 export const getUpdates = (): UpdateItem[] => {
-  const data = loadUpdatesData();
-  return data?.updates || [];
+  // Generate updates from events data
+  const events = getEvents();
+  
+  return events.map(event => ({
+    id: event.id,
+    date: event.date,
+    title: event.title,
+    description: event.description,
+    category: mapEventCategoryToUpdateCategory(event.category)
+  }));
 };
+
+// Helper function to map event categories to update categories
+function mapEventCategoryToUpdateCategory(eventCategory: EventCategory): UpdateItem['category'] {
+  switch (eventCategory) {
+    case EventCategory.AFFILIATION:
+      return 'career';
+    case EventCategory.PUBLICATION:
+      return 'publication';
+    case EventCategory.EVENT:
+    case EventCategory.INTERNSHIP:
+    case EventCategory.AWARD:
+      return 'development';
+    case EventCategory.OTHER:
+    default:
+      return 'other';
+  }
+}
 
 export const getProfile = (): ProfileInfo => {
   const profile = loadProfileData();
@@ -139,6 +156,185 @@ export const getProfile = (): ProfileInfo => {
     currentPosition: '',
     socialLinks: []
   } as ProfileInfo;
+};
+
+export const getEvents = (): EventEntry[] => {
+  // Generate events from existing data sources
+  const events: EventEntry[] = [];
+  
+  // 1. Generate events from career data (affiliation changes)
+  const careerEntries = getCareerEntries();
+  careerEntries.forEach(career => {
+    // Only include main career entries (not sub-entries with parentId)
+    const extendedCareer = career as ExtendedCareerEntry;
+    if (!extendedCareer.parentId) {
+      const startYear = new Date(career.startDate).getFullYear();
+      
+      // Generate start event (入学/着任)
+      let startTitle = '';
+      let startDescription = career.description || '';
+      
+      if (career.organization.includes('小学校') || career.organization.includes('中学校') || career.organization.includes('高等学校')) {
+        startTitle = `${career.organization} ${career.role === '生徒' ? '入学' : '着任'}`;
+      } else if (career.organization.includes('大学')) {
+        startTitle = `${career.organization} ${career.role === '学部学生' ? '入学' : career.role.includes('大学院生') ? '入学' : '着任'}`;
+      } else {
+        startTitle = `${career.organization} ${career.role} 着任`;
+      }
+      
+      const location = career.organization.includes('名古屋大学') ? '名古屋大学' : 
+                      career.organization.includes('岐阜') ? '岐阜県' : undefined;
+      
+      events.push({
+        id: `career-start-${career.id}`,
+        title: startTitle,
+        description: startDescription,
+        date: career.startDate,
+        year: startYear,
+        category: EventCategory.AFFILIATION,
+        location,
+        tags: ['education', 'career', 'start']
+      });
+      
+      // Generate end event (卒業/退職) if endDate exists
+      if (career.endDate) {
+        const endYear = new Date(career.endDate).getFullYear();
+        let endTitle = '';
+        let endDescription = '';
+        
+        if (career.organization.includes('小学校') || career.organization.includes('中学校') || career.organization.includes('高等学校')) {
+          endTitle = `${career.organization} ${career.role === '生徒' ? '卒業' : '退職'}`;
+          endDescription = `${career.organization}を卒業`;
+        } else if (career.organization.includes('大学')) {
+          if (career.role === '学部学生') {
+            endTitle = `${career.organization} 卒業`;
+            endDescription = `${career.organization}を卒業`;
+          } else if (career.role.includes('大学院生')) {
+            endTitle = `${career.organization} 修了`;
+            endDescription = `${career.organization}を修了`;
+          } else {
+            endTitle = `${career.organization} ${career.role} 退職`;
+            endDescription = `${career.organization}での${career.role}を終了`;
+          }
+        } else {
+          endTitle = `${career.organization} ${career.role} 退職`;
+          endDescription = `${career.organization}での${career.role}を終了`;
+        }
+        
+        events.push({
+          id: `career-end-${career.id}`,
+          title: endTitle,
+          description: endDescription,
+          date: career.endDate,
+          year: endYear,
+          category: EventCategory.AFFILIATION,
+          location,
+          tags: ['education', 'career', 'end']
+        });
+      }
+    }
+  });
+  
+  // 2. Generate events from publications data
+  const publications = getPublications();
+  publications.forEach(pub => {
+    if (pub.date) {
+      const pubYear = new Date(pub.date).getFullYear();
+      const authorshipType = pub.isFirstAuthor ? 'first-author' : 'co-author';
+      const reviewType = pub.isPeerReviewed ? 'peer-reviewed' : 'non-peer-reviewed';
+      
+      events.push({
+        id: `pub-${pub.id}`,
+        title: `${pub.venue} 論文発表`,
+        description: `「${pub.title}」を${pub.isFirstAuthor ? '第一著者として' : '共著者として'}発表`,
+        date: pub.date,
+        year: pubYear,
+        category: EventCategory.PUBLICATION,
+        location: pub.venue,
+        relatedLinks: pub.url ? [pub.url] : undefined,
+        tags: ['research', 'publication', authorshipType, reviewType, pub.publicationType]
+      });
+    }
+  });
+  
+  // 3. Generate events from tech experience projects (internships and events)
+  const projects = getProjectDetails();
+  projects.forEach(project => {
+    // Extract year from duration string
+    const yearMatch = project.duration.match(/(\d{4})/);
+    if (yearMatch) {
+      const projectYear = parseInt(yearMatch[1]);
+      const monthMatch = project.duration.match(/(\d{1,2})月/);
+      const projectMonth = monthMatch ? monthMatch[1].padStart(2, '0') : '01';
+      const projectDate = `${projectYear}-${projectMonth}-01`;
+      
+      let category: EventCategory = EventCategory.OTHER;
+      let title = project.name;
+      
+      // Skip personal development projects and coursework
+      if (project.name.includes('個人開発') || 
+          project.name.includes('Webスクレイピング') ||
+          project.name.includes('Chrome拡張機能') ||
+          project.name.includes('競技プログラミング') ||
+          project.name.includes('データ分析・実験') ||
+          project.name.includes('PBL') ||
+          project.name.includes('生成AIチャットボット開発')) {
+        return;
+      }
+      
+      // Categorize based on project name
+      if (project.name.includes('インターンシップ')) {
+        category = EventCategory.INTERNSHIP;
+      } else if (project.name.includes('JPHACKS') || project.name.includes('技育祭')) {
+        category = EventCategory.EVENT;
+        if (project.name.includes('JPHACKS')) {
+          title = `${project.name} 参加`;
+        } else if (project.name.includes('技育祭')) {
+          title = project.name;
+        }
+      } else if (project.name.includes('アルバイト')) {
+        // Include work projects as 'other' category instead of skipping
+        category = EventCategory.OTHER;
+        title = project.name;
+      }
+      
+      // Determine location
+      let location = undefined;
+      if (project.name.includes('SmartHR')) {
+        location = 'SmartHR';
+      } else if (project.name.includes('トヨタシステムズ')) {
+        location = 'トヨタシステムズ';
+      } else if (project.name.includes('ラクスル')) {
+        location = 'ラクスル';
+      } else if (project.name.includes('JPHACKS')) {
+        location = 'ハッカソン会場';
+      }
+      
+      events.push({
+        id: `project-${project.id}`,
+        title,
+        description: project.description,
+        date: projectDate,
+        year: projectYear,
+        category,
+        location,
+        duration: project.duration,
+        relatedLinks: project.githubUrl ? [project.githubUrl] : undefined,
+        tags: ['development', ...project.technologies.slice(0, 3)]
+      });
+    }
+  });
+  
+  // Sort events by date in descending order (most recent first)
+  const sortedEvents = events.sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateB.getTime() - dateA.getTime();
+  });
+  
+
+  
+  return sortedEvents;
 };
 
 // Utility functions for project and technology relationships
@@ -196,6 +392,47 @@ export const getTechByCategory = (category: TechItem['category']): TechItem[] =>
 
 export const getTechByProficiency = (proficiency: TechItem['proficiency']): TechItem[] => {
   return getTechExperience().filter(tech => tech.proficiency === proficiency);
+};
+
+// Event utility functions
+export const filterEvents = (events: EventEntry[], filters: EventFilters): EventEntry[] => {
+  return events.filter(event => {
+    // If no filters are active, show all events
+    const hasActiveFilters = Object.values(filters).some(filter => filter);
+    if (!hasActiveFilters) {
+      return true;
+    }
+
+    // Check if event matches any active filter
+    switch (event.category) {
+      case 'affiliation':
+        return filters.showAffiliation;
+      case 'publication':
+        return filters.showPublication;
+      case 'event':
+        return filters.showEvent;
+      case 'internship':
+        return filters.showInternship;
+      case 'award':
+        return filters.showAward;
+      case 'other':
+        return filters.showOther;
+      default:
+        return false;
+    }
+  });
+};
+
+export const getEventsByCategory = (category: EventEntry['category']): EventEntry[] => {
+  return getEvents().filter(event => event.category === category);
+};
+
+export const getEventsByYear = (year: number): EventEntry[] => {
+  return getEvents().filter(event => event.year === year);
+};
+
+export const getRecentEvents = (limit: number = 5): EventEntry[] => {
+  return getEvents().slice(0, limit);
 };
 
 // Data validation helpers
@@ -393,28 +630,79 @@ export const validateDataIntegrity = (): {
       }
     });
 
-    // 6. Validate Updates Data
-    const updates = getUpdates();
-    
-    updates.forEach((update, index) => {
-      if (!update.id) {
-        errors.push(`Update: Entry at index ${index} missing required field "id"`);
-      }
-      if (!update.date) {
-        errors.push(`Update: Entry "${update.id || index}" missing required field "date"`);
-      } else if (!isValidDate(update.date)) {
-        errors.push(`Update: Entry "${update.id}" has invalid date format: "${update.date}" (expected YYYY-MM-DD)`);
-      }
-      if (!update.title) {
-        errors.push(`Update: Entry "${update.id || index}" missing required field "title"`);
-      }
-      if (!update.description) {
-        errors.push(`Update: Entry "${update.id || index}" missing required field "description"`);
-      }
-      if (!update.category) {
-        errors.push(`Update: Entry "${update.id || index}" missing required field "category"`);
-      }
-    });
+    // 6. Validate Updates Data (dynamically generated from events)
+    try {
+      const updates = getUpdates();
+      
+      updates.forEach((update, index) => {
+        if (!update.id) {
+          errors.push(`Update: Entry at index ${index} missing required field "id"`);
+        }
+        if (!update.date) {
+          errors.push(`Update: Entry "${update.id || index}" missing required field "date"`);
+        } else if (!isValidDate(update.date)) {
+          errors.push(`Update: Entry "${update.id}" has invalid date format: "${update.date}" (expected YYYY-MM-DD)`);
+        }
+        if (!update.title) {
+          errors.push(`Update: Entry "${update.id || index}" missing required field "title"`);
+        }
+        if (!update.description) {
+          errors.push(`Update: Entry "${update.id || index}" missing required field "description"`);
+        }
+        if (!update.category) {
+          errors.push(`Update: Entry "${update.id || index}" missing required field "category"`);
+        }
+      });
+    } catch (updateError) {
+      errors.push(`Update generation error: ${updateError instanceof Error ? updateError.message : 'Unknown error'}`);
+    }
+
+    // 7. Validate Events Data (dynamically generated)
+    try {
+      const events = getEvents();
+      
+      events.forEach((event, index) => {
+        if (!event.id) {
+          errors.push(`Event: Entry at index ${index} missing required field "id"`);
+        }
+        if (!event.title) {
+          errors.push(`Event: Entry "${event.id || index}" missing required field "title"`);
+        }
+        if (!event.description) {
+          errors.push(`Event: Entry "${event.id || index}" missing required field "description"`);
+        }
+        if (!event.date) {
+          errors.push(`Event: Entry "${event.id || index}" missing required field "date"`);
+        } else if (!isValidDate(event.date)) {
+          errors.push(`Event: Entry "${event.id}" has invalid date format: "${event.date}" (expected YYYY-MM-DD)`);
+        }
+        if (!event.year) {
+          errors.push(`Event: Entry "${event.id || index}" missing required field "year"`);
+        }
+        if (!event.category) {
+          errors.push(`Event: Entry "${event.id || index}" missing required field "category"`);
+        }
+
+        // Validate year consistency with date
+        if (event.date && event.year) {
+          const dateYear = new Date(event.date).getFullYear();
+          if (dateYear !== event.year) {
+            errors.push(`Event: Entry "${event.id}" has inconsistent year (date: ${dateYear}, year field: ${event.year})`);
+          }
+        }
+
+        // Validate optional URL fields
+        if (event.relatedLinks) {
+          event.relatedLinks.forEach((link, linkIndex) => {
+            if (!isValidUrl(link)) {
+              errors.push(`Event: Entry "${event.id}" has invalid URL format in relatedLinks[${linkIndex}]: "${link}"`);
+            }
+          });
+        }
+      });
+    } catch (eventError) {
+      errors.push(`Event generation error: ${eventError instanceof Error ? eventError.message : 'Unknown error'}`);
+    }
 
   } catch (error) {
     errors.push(`Data validation error: ${error instanceof Error ? error.message : 'Unknown error'}`);

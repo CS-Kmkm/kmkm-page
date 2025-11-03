@@ -489,7 +489,7 @@
     {
       "id": "proj-007",
       "name": "SmartHRインターンシップ",
-      "description": "株式会社SmartHRでのハッカソン型インターンシップ（フロントエンド）。特定のテーマに基づいてTypeScript、Reactを利用した開発を実施。ユーザヒアリングを行い、機能の改善を実施。",
+      "description": "株式会社SmartHRでのハッカソン型インターンシップ（フロントエンド）。TypeScript、Reactを利用したフロントエンド開発を実施。ユーザヒアリングから機能開発までの一連のプロセスを経験。",
       "technologies": [
         "TypeScript",
         "HTML",
@@ -517,7 +517,7 @@
     {
       "id": "proj-009",
       "name": "トヨタシステムズインターンシップ",
-      "description": "株式会社トヨタシステムズでのインターンシップ。C#とOracleDBを用いた従業員管理システムを開発。",
+      "description": "株式会社トヨタシステムズでのインターンシップ。C#とOracleDBを用いたシステム開発を実施。",
       "technologies": [
         "C#",
         "SQL",
@@ -530,7 +530,7 @@
     {
       "id": "proj-010",
       "name": "ラクスルインターンシップ",
-      "description": "ラクスル株式会社でのハッカソン型インターンシップ（バックエンド）。Ruby on Railsを利用したシステム機能の追加開発。ユーザヒアリングから実際の機能開発までの一連のプロセスを実施。",
+      "description": "ラクスル株式会社でのハッカソン型インターンシップ（バックエンド）。Ruby on Railsを利用したバックエンド開発を実施。ユーザヒアリングから機能開発までの一連のプロセスを経験。",
       "technologies": [
         "Ruby",
         "Ruby on Rails",
@@ -550,6 +550,37 @@
       ],
       "duration": "2023年6月-2023年7月",
       "role": "PM、PG",
+      "imageUrl": null
+    },
+    {
+      "id": "proj-012",
+      "name": "技育祭2025[春]現地参加",
+      "description": "技育祭2025[春]に現地参加しました。技術系学生向けのイベントで、企業ブースの見学や技術セッションへの参加を行いました。",
+      "technologies": [],
+      "duration": "2025年3月",
+      "role": "参加者",
+      "imageUrl": null
+    },
+    {
+      "id": "proj-013",
+      "name": "BIPROGYインターンシップ",
+      "description": "BIPROGY株式会社でのデータサイエンティスト/AIエンジニアインターンシップ（1週間）。AIを活用したシステム開発を4名チームで実施。",
+      "technologies": [
+        "Python"
+      ],
+      "duration": "2025年8月",
+      "role": "DS/AIエンジニア",
+      "imageUrl": null
+    },
+    {
+      "id": "proj-014",
+      "name": "MonotaRoインターンシップ",
+      "description": "株式会社MonotaRoでのデータサイエンティスト/AIエンジニアインターンシップ（1週間）。生成AIを活用したシステム開発を実施。",
+      "technologies": [
+        "Python"
+      ],
+      "duration": "2025年8月",
+      "role": "DS/AIエンジニア",
       "imageUrl": null
     }
   ]

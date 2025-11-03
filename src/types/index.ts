@@ -134,6 +134,37 @@ export interface SocialLink {
   iconUrl?: string;
 }
 
+export enum EventCategory {
+  AFFILIATION = 'affiliation',
+  PUBLICATION = 'publication',
+  EVENT = 'event',
+  INTERNSHIP = 'internship',
+  AWARD = 'award',
+  OTHER = 'other'
+}
+
+export interface EventEntry {
+  id: string;
+  title: string;
+  description: string;
+  date: string;              // YYYY-MM-DD format
+  year: number;              // Extracted from date
+  category: EventCategory;
+  location?: string;
+  duration?: string;         // For events with duration
+  relatedLinks?: string[];   // URLs to related resources
+  tags?: string[];          // Additional categorization
+}
+
+export interface EventFilters {
+  showAffiliation: boolean;
+  showPublication: boolean;
+  showEvent: boolean;
+  showInternship: boolean;
+  showAward: boolean;
+  showOther: boolean;
+}
+
 export interface ProfileInfo {
   name: string;
   nameEn?: string; // English name (optional)
@@ -289,4 +320,45 @@ export interface TechDetailViewProps {
 export enum ViewState {
   ICON_GRID = 'icon_grid',
   LANGUAGE_DETAIL = 'language_detail'
+}
+
+// Event component prop interfaces
+export interface EventItemProps {
+  event: EventEntry;
+  onClick?: () => void;
+}
+
+export interface EventListProps {
+  events: EventEntry[];
+  showFilters?: boolean;
+}
+
+export interface EventFiltersProps {
+  showAffiliation: boolean;
+  showPublication: boolean;
+  showEvent: boolean;
+  showInternship: boolean;
+  showAward: boolean;
+  showOther: boolean;
+  onToggleAffiliation: () => void;
+  onTogglePublication: () => void;
+  onToggleEvent: () => void;
+  onToggleInternship: () => void;
+  onToggleAward: () => void;
+  onToggleOther: () => void;
+  onClearFilters: () => void;
+  hasActiveFilters: boolean;
+  resultCount: number;
+  totalCount: number;
+}
+
+export interface EventEmptyStateProps {
+  hasActiveFilters: boolean;
+  onClearFilters: () => void;
+}
+
+export interface EventDetailModalProps {
+  event: EventEntry | null;
+  isOpen: boolean;
+  onClose: () => void;
 }
