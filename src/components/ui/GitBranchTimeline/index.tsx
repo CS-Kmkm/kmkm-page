@@ -218,33 +218,35 @@ export default function GitBranchTimeline({
   const { combinedChildIds, combinedParentIds } = findCombinedPairs(nodes, nodeMap);
 
   // Process events for timeline
-  const yearEventGroups = useMemo(() => {
-    if (!enableEventPoints || events.length === 0) return [];
-    return groupEventsByYear(events);
-  }, [events, enableEventPoints]);
+  const { eventPointPositions, eventHandlers } = useMemo(() => {
+    if (!enableEventPoints || events.length === 0) {
+      return { eventPointPositions: [], eventHandlers: {} };
+    }
 
-  // Calculate event point positions based on year labels
-  const eventPointPositions = useMemo(() => {
-    if (!enableEventPoints || yearEventGroups.length === 0 || yearLabels.length === 0) return [];
+    const yearEventGroups = groupEventsByYear(events);
     
+    if (yearEventGroups.length === 0 || yearLabels.length === 0) {
+      return { eventPointPositions: [], eventHandlers: {} };
+    }
+
     // Create a map of year to Y position from year labels
     const yearToYMap = new Map<string, number>();
     yearLabels.forEach(({ y, label }) => {
       yearToYMap.set(label, y);
     });
-    
+
     // Calculate positions for each year group
-    return yearEventGroups.map(yearGroup => {
+    const positions = yearEventGroups.map(yearGroup => {
       const yearY = yearToYMap.get(yearGroup.year);
       if (yearY !== undefined) {
         return {
           yearGroup,
-          x: layoutConstants.MAIN_LINE_X, // Directly on the main line
+          x: layoutConstants.MAIN_LINE_X,
           y: yearY
         };
       }
-      
-      // Fallback: if year not found in labels, calculate approximate position
+
+      // Fallback calculation for years not in labels
       const minDate = new Date(Math.min(...nodes.map(n => new Date(n.entry.startDate).getTime())));
       const maxDate = new Date(Math.max(...nodes.map(n => 
         n.entry.endDate ? new Date(n.entry.endDate).getTime() : Date.now()
@@ -255,44 +257,42 @@ export default function GitBranchTimeline({
       const yearDate = new Date(`${yearGroup.year}-07-01`);
       const yearsDiff = (yearDate.getTime() - minDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25);
       const y = layoutConstants.TOP_PADDING + (yearsDiff * pixelsPerYear);
-      
+
       return {
         yearGroup,
-        x: layoutConstants.MAIN_LINE_X, // Directly on the main line
+        x: layoutConstants.MAIN_LINE_X,
         y: y
       };
-    }).filter(position => position !== null);
-  }, [yearEventGroups, yearLabels, layoutConstants, enableEventPoints, nodes, maxEndY]);
+    }).filter(Boolean);
 
-  // Event click handlers
-  const handleEventPointClick = useCallback((yearGroup: YearEventGroup) => {
-    if (yearGroup.events.length === 1) {
-      // Single event: show detail modal directly
-      setSelectedEvent(yearGroup.events[0]);
-      setIsEventModalOpen(true);
-    } else {
-      // Multiple events: show list modal first
-      setSelectedYearGroup(yearGroup);
-      setIsEventListModalOpen(true);
-    }
-  }, []);
+    // Event handlers
+    const handlers = {
+      handleEventPointClick: (yearGroup: YearEventGroup) => {
+        if (yearGroup.events.length === 1) {
+          setSelectedEvent(yearGroup.events[0]);
+          setIsEventModalOpen(true);
+        } else {
+          setSelectedYearGroup(yearGroup);
+          setIsEventListModalOpen(true);
+        }
+      },
+      handleEventSelect: (event: TimelineEventEntry) => {
+        setIsEventListModalOpen(false);
+        setSelectedEvent(event);
+        setIsEventModalOpen(true);
+      },
+      handleEventModalClose: () => {
+        setIsEventModalOpen(false);
+        setTimeout(() => setSelectedEvent(null), 300);
+      },
+      handleEventListModalClose: () => {
+        setIsEventListModalOpen(false);
+        setTimeout(() => setSelectedYearGroup(null), 300);
+      }
+    };
 
-  const handleEventSelect = useCallback((event: TimelineEventEntry) => {
-    // Transition from list modal to detail modal
-    setIsEventListModalOpen(false);
-    setSelectedEvent(event);
-    setIsEventModalOpen(true);
-  }, []);
-
-  const handleEventModalClose = useCallback(() => {
-    setIsEventModalOpen(false);
-    setTimeout(() => setSelectedEvent(null), 300);
-  }, []);
-
-  const handleEventListModalClose = useCallback(() => {
-    setIsEventListModalOpen(false);
-    setTimeout(() => setSelectedYearGroup(null), 300);
-  }, []);
+    return { eventPointPositions: positions, eventHandlers: handlers };
+  }, [events, enableEventPoints, yearLabels, layoutConstants, nodes, maxEndY]);
 
   return (
     <div className={className}>
@@ -512,7 +512,7 @@ export default function GitBranchTimeline({
               ))}
 
             {/* Event Points */}
-            {enableEventPoints && eventPointPositions.map((position, index) => (
+            {enableEventPoints && eventPointPositions.map((position) => (
               <EventPoint
                 key={`event-point-${position.yearGroup.year}`}
                 x={position.x}
@@ -520,7 +520,7 @@ export default function GitBranchTimeline({
                 eventCount={position.yearGroup.events.length}
                 isMultiple={position.yearGroup.events.length > 1}
                 isReversed={isReversed}
-                onClick={() => handleEventPointClick(position.yearGroup)}
+                onClick={() => eventHandlers.handleEventPointClick?.(position.yearGroup)}
               />
             ))}
 
@@ -612,15 +612,15 @@ export default function GitBranchTimeline({
         <>
           <EventModal
             isOpen={isEventModalOpen}
-            onClose={handleEventModalClose}
+            onClose={eventHandlers.handleEventModalClose}
             event={selectedEvent}
           />
           
           <EventListModal
             isOpen={isEventListModalOpen}
-            onClose={handleEventListModalClose}
+            onClose={eventHandlers.handleEventListModalClose}
             yearGroup={selectedYearGroup}
-            onEventSelect={handleEventSelect}
+            onEventSelect={eventHandlers.handleEventSelect}
           />
         </>
       )}
