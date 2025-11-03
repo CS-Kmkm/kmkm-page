@@ -4,71 +4,42 @@ import { useState, useMemo } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
 import TechCategorySection from '@/components/dev-experience/TechCategorySection';
 import TechDetailView from '@/components/dev-experience/TechDetailView';
-
-import ProjectListItem from '@/components/dev-experience/ProjectListItem';
+import AllProjectsSection from '@/components/dev-experience/AllProjectsSection';
 import ProjectModal from '@/components/ui/ProjectModal';
-import { getTechExperience, getProjectDetails } from '@/data';
+import { useTechExperience } from '@/hooks/useTechExperience';
 import { TechItem, ProjectDetail } from '@/types';
 
-
 export default function DevExperiencePage() {
-  const allTechItems = getTechExperience();
-  const allProjects = getProjectDetails();
-  
+  const {
+    allProjects,
+    categorizedTech,
+    getRelatedFrameworks,
+    getRelatedLanguages,
+    getProjectsForTech,
+  } = useTechExperience();
+
   // Page state
   const [selectedTech, setSelectedTech] = useState<TechItem | null>(null);
   const [selectedProject, setSelectedProject] = useState<ProjectDetail | null>(null);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
-  
-  // Use all tech items without filtering
-  const filteredTechItems = allTechItems;
-
-  // Categorize tech items
-  const categorizedTech = useMemo(() => {
-    const languages = filteredTechItems.filter(item => item.category === 'language');
-    const frameworks = filteredTechItems.filter(item => item.category === 'framework');
-    const tools = filteredTechItems.filter(item => item.category === 'tool');
-    const databases = filteredTechItems.filter(item => item.category === 'database');
-
-    return { languages, frameworks, tools, databases };
-  }, [filteredTechItems]);
-
-  // Get related frameworks for a language based on explicit relationships
-  const getRelatedFrameworks = (tech: TechItem) => {
-    if (!tech.relatedFrameworks) return [];
-    return categorizedTech.frameworks.filter(framework =>
-      tech.relatedFrameworks!.includes(framework.name)
-    );
-  };
-
-  // Get related languages for a framework based on explicit relationships
-  const getRelatedLanguages = (tech: TechItem) => {
-    if (!tech.relatedLanguages) return [];
-    return categorizedTech.languages.filter(language =>
-      tech.relatedLanguages!.includes(language.name)
-    );
-  };
 
   // Get projects for selected tech
   const selectedTechProjects = useMemo(() => {
     if (!selectedTech) return [];
-    
-    return selectedTech.projects
-      .map(projectId => allProjects.find(p => p.id === projectId))
-      .filter((project): project is ProjectDetail => project !== undefined);
-  }, [selectedTech, allProjects]);
+    return getProjectsForTech(selectedTech);
+  }, [selectedTech, getProjectsForTech]);
 
   // Get related frameworks for selected tech (if it's a language)
   const relatedFrameworks = useMemo(() => {
     if (!selectedTech || selectedTech.category !== 'language') return [];
     return getRelatedFrameworks(selectedTech);
-  }, [selectedTech]);
+  }, [selectedTech, getRelatedFrameworks]);
 
   // Get related languages for selected tech (if it's a framework)
   const relatedLanguages = useMemo(() => {
     if (!selectedTech || selectedTech.category !== 'framework') return [];
     return getRelatedLanguages(selectedTech);
-  }, [selectedTech]);
+  }, [selectedTech, getRelatedLanguages]);
 
   // Event handlers
   const handleTechSelect = (tech: TechItem) => {
@@ -89,8 +60,6 @@ export default function DevExperiencePage() {
     setSelectedProject(null);
   };
 
-
-
   return (
     <PageLayout
       title="Development Experience"
@@ -103,8 +72,6 @@ export default function DevExperiencePage() {
             開発経験
           </h1>
         </div>
-
-
 
         {/* Main Content */}
         {!selectedTech ? (
@@ -142,34 +109,10 @@ export default function DevExperiencePage() {
             </div>
 
             {/* Right Column - All Projects */}
-            <div className="space-y-6">
-              <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  全プロジェクト ({allProjects.length})
-                </h3>
-                {allProjects.length > 0 ? (
-                  <div
-                    className="space-y-3 overflow-y-auto pr-2 custom-scrollbar"
-                    style={{ maxHeight: `${Math.min(10, allProjects.length) * 120}px` }}
-                    role="list"
-                    aria-label="All projects"
-                  >
-                    {allProjects.map((project) => (
-                      <div key={project.id} role="listitem">
-                        <ProjectListItem
-                          project={project}
-                          onClick={() => handleProjectSelect(project)}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="p-4 bg-gray-50 rounded-lg text-center">
-                    <p className="text-gray-500 text-sm">プロジェクトがありません</p>
-                  </div>
-                )}
-              </div>
-            </div>
+            <AllProjectsSection
+              projects={allProjects}
+              onProjectSelect={handleProjectSelect}
+            />
           </div>
         ) : (
           // Tech Detail View

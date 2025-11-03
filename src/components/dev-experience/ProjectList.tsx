@@ -3,9 +3,10 @@
 import React from 'react';
 import { ProjectListProps } from '@/types';
 import ProjectListItem from './ProjectListItem';
+import { getProjectListStyle } from '@/utils/projectList';
 
 /**
- * ProjectList component displays a list of projects
+ * ProjectList component displays a list of projects with scrollable container
  */
 const ProjectList: React.FC<ProjectListProps> = ({ projects, onProjectSelect }) => {
   if (projects.length === 0) {
@@ -19,7 +20,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, onProjectSelect }) 
   return (
     <div
       className="space-y-3 overflow-y-auto pr-2 custom-scrollbar"
-      style={{ maxHeight: `${Math.min(10, projects.length) * 120}px` }}
+      style={getProjectListStyle(projects.length)}
       role="list"
       aria-label="Related projects"
     >

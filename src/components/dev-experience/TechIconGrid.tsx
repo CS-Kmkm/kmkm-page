@@ -22,7 +22,7 @@ const TechIconGrid: React.FC<TechIconGridProps> = ({
     };
 
     // Custom order for languages
-    const languageOrder = {
+    const languageOrder: Record<string, number> = {
       'Python': 1,
       'TypeScript': 2,
       'JavaScript': 3,
