@@ -1,4 +1,4 @@
-import { UpdateItem, CareerEntry, ExtendedCareerEntry, TechItem, ProjectDetail, PublicationEntry, ProfileInfo, EventEntry, EventFilters, EventCategory } from '@/types';
+import { UpdateItem, CareerEntry, ExtendedCareerEntry, TechItem, ProjectDetail, PublicationEntry, ProfileInfo, EventEntry, EventFilters, EventCategory, TimelineEventEntry } from '@/types';
 
 // Import JSON data with error handling
 let publicationsData: { publications: PublicationEntry[] } | null = null;
@@ -72,6 +72,8 @@ function loadProfileData() {
 
 
 
+
+
 // Export data loading functions
 export const getPublications = (): PublicationEntry[] => {
   const data = loadPublicationsData();
@@ -86,7 +88,7 @@ export const getTechExperience = (): TechItem[] => {
 export const getProjectDetails = (): ProjectDetail[] => {
   const data = loadTechExperienceData();
   const projects = data?.projects || [];
-  
+
   // Sort projects by duration (most recent first)
   return projects.sort((a, b) => {
     // Extract year from duration string (e.g., "2025年9月" -> 2025)
@@ -94,17 +96,17 @@ export const getProjectDetails = (): ProjectDetail[] => {
       const match = duration.match(/(\d{4})/);
       return match ? parseInt(match[1]) : 0;
     };
-    
+
     const getMonth = (duration: string): number => {
       const match = duration.match(/(\d{4})年(\d{1,2})月/);
       return match ? parseInt(match[2]) : 0;
     };
-    
+
     const aYear = getYear(a.duration);
     const bYear = getYear(b.duration);
     const aMonth = getMonth(a.duration);
     const bMonth = getMonth(b.duration);
-    
+
     // Sort by year first, then by month (most recent first)
     if (aYear !== bYear) {
       return bYear - aYear;
@@ -121,7 +123,7 @@ export const getCareerEntries = (): CareerEntry[] => {
 export const getUpdates = (): UpdateItem[] => {
   // Generate updates from events data
   const events = getEvents();
-  
+
   return events.map(event => ({
     id: event.id,
     date: event.date,
@@ -158,10 +160,103 @@ export const getProfile = (): ProfileInfo => {
   } as ProfileInfo;
 };
 
+export const getTimelineEvents = (): TimelineEventEntry[] => {
+  const events: TimelineEventEntry[] = [];
+
+  // 1. Generate events from publications
+  const publications = getPublications();
+  publications.forEach(pub => {
+    if (pub.date) {
+      const pubYear = new Date(pub.date).getFullYear();
+
+      // Include all publications as research achievements
+      events.push({
+        id: `timeline-pub-${pub.id}`,
+        title: `論文発表: ${pub.venue}`,
+        description: `「${pub.title}」を${pub.isFirstAuthor ? '第一著者として' : '共著者として'}発表`,
+        date: pub.date,
+        year: pubYear.toString(),
+        category: '研究成果'
+      });
+    }
+  });
+
+  // 2. Generate events from projects and activities
+  const projects = getProjectDetails();
+  projects.forEach(project => {
+    // Extract year and month from duration string
+    const yearMatch = project.duration.match(/(\d{4})/);
+    if (yearMatch) {
+      const projectYear = parseInt(yearMatch[1]);
+      let monthMatch = project.duration.match(/(\d{1,2})月/);
+      let dayMatch = project.duration.match(/(\d{1,2})日/);
+
+      // Handle special date formats
+      if (project.duration.includes('10月27日')) {
+        monthMatch = ['', '10'];
+        dayMatch = ['', '27'];
+      }
+
+      const projectMonth = monthMatch ? monthMatch[1].padStart(2, '0') : '01';
+      const projectDay = dayMatch ? dayMatch[1].padStart(2, '0') : '01';
+      const projectDate = `${projectYear}-${projectMonth}-${projectDay}`;
+
+      let shouldInclude = false;
+      let title = project.name;
+      let category = '個人開発';
+
+      // Include hackathons, tech events, internships, and personal projects
+      if (project.name.includes('JPHACKS')) {
+        shouldInclude = true;
+        title = project.name;
+        category = 'ハッカソン';
+      } else if (project.name.includes('技育祭')) {
+        shouldInclude = true;
+        title = project.name;
+        category = '技術イベント';
+      } else if (project.name.includes('インターンシップ')) {
+        shouldInclude = true;
+        title = project.name;
+        category = 'インターンシップ';
+      } else if (project.name.includes('ポートフォリオサイト')) {
+        shouldInclude = true;
+        title = '個人ポートフォリオサイト開発';
+        category = '個人開発';
+      } else if (project.name.includes('Chrome拡張機能')) {
+        shouldInclude = true;
+        title = 'Chrome拡張機能開発';
+        category = '個人開発';
+      }
+
+      if (shouldInclude) {
+        events.push({
+          id: `timeline-project-${project.id}`,
+          title,
+          description: project.description,
+          date: projectDate,
+          year: projectYear.toString(),
+          category
+        });
+      }
+    }
+  });
+
+
+
+  // Sort events by date in descending order (most recent first)
+  const sortedEvents = events.sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateB.getTime() - dateA.getTime();
+  });
+
+  return sortedEvents;
+};
+
 export const getEvents = (): EventEntry[] => {
   // Generate events from existing data sources
   const events: EventEntry[] = [];
-  
+
   // 1. Generate events from career data (affiliation changes)
   const careerEntries = getCareerEntries();
   careerEntries.forEach(career => {
@@ -169,11 +264,11 @@ export const getEvents = (): EventEntry[] => {
     const extendedCareer = career as ExtendedCareerEntry;
     if (!extendedCareer.parentId) {
       const startYear = new Date(career.startDate).getFullYear();
-      
+
       // Generate start event (入学/着任)
       let startTitle = '';
       let startDescription = career.description || '';
-      
+
       if (career.organization.includes('小学校') || career.organization.includes('中学校') || career.organization.includes('高等学校')) {
         startTitle = `${career.organization} ${career.role === '生徒' ? '入学' : '着任'}`;
       } else if (career.organization.includes('大学')) {
@@ -181,10 +276,10 @@ export const getEvents = (): EventEntry[] => {
       } else {
         startTitle = `${career.organization} ${career.role} 着任`;
       }
-      
-      const location = career.organization.includes('名古屋大学') ? '名古屋大学' : 
-                      career.organization.includes('岐阜') ? '岐阜県' : undefined;
-      
+
+      const location = career.organization.includes('名古屋大学') ? '名古屋大学' :
+        career.organization.includes('岐阜') ? '岐阜県' : undefined;
+
       events.push({
         id: `career-start-${career.id}`,
         title: startTitle,
@@ -195,13 +290,13 @@ export const getEvents = (): EventEntry[] => {
         location,
         tags: ['education', 'career', 'start']
       });
-      
+
       // Generate end event (卒業/退職) if endDate exists
       if (career.endDate) {
         const endYear = new Date(career.endDate).getFullYear();
         let endTitle = '';
         let endDescription = '';
-        
+
         if (career.organization.includes('小学校') || career.organization.includes('中学校') || career.organization.includes('高等学校')) {
           endTitle = `${career.organization} ${career.role === '生徒' ? '卒業' : '退職'}`;
           endDescription = `${career.organization}を卒業`;
@@ -220,7 +315,7 @@ export const getEvents = (): EventEntry[] => {
           endTitle = `${career.organization} ${career.role} 退職`;
           endDescription = `${career.organization}での${career.role}を終了`;
         }
-        
+
         events.push({
           id: `career-end-${career.id}`,
           title: endTitle,
@@ -234,7 +329,7 @@ export const getEvents = (): EventEntry[] => {
       }
     }
   });
-  
+
   // 2. Generate events from publications data
   const publications = getPublications();
   publications.forEach(pub => {
@@ -242,7 +337,7 @@ export const getEvents = (): EventEntry[] => {
       const pubYear = new Date(pub.date).getFullYear();
       const authorshipType = pub.isFirstAuthor ? 'first-author' : 'co-author';
       const reviewType = pub.isPeerReviewed ? 'peer-reviewed' : 'non-peer-reviewed';
-      
+
       events.push({
         id: `pub-${pub.id}`,
         title: `${pub.venue} 論文発表`,
@@ -256,7 +351,7 @@ export const getEvents = (): EventEntry[] => {
       });
     }
   });
-  
+
   // 3. Generate events from tech experience projects (internships and events)
   const projects = getProjectDetails();
   projects.forEach(project => {
@@ -269,21 +364,21 @@ export const getEvents = (): EventEntry[] => {
       const projectMonth = monthMatch ? monthMatch[1].padStart(2, '0') : '01';
       const projectDay = dayMatch ? dayMatch[1].padStart(2, '0') : '01';
       const projectDate = `${projectYear}-${projectMonth}-${projectDay}`;
-      
+
       let category: EventCategory = EventCategory.OTHER;
       let title = project.name;
-      
+
       // Skip personal development projects and coursework (except portfolio site)
-      if ((project.name.includes('個人開発') && !project.name.includes('ポートフォリオ')) || 
-          project.name.includes('Webスクレイピング') ||
-          project.name.includes('Chrome拡張機能') ||
-          project.name.includes('競技プログラミング') ||
-          project.name.includes('データ分析・実験') ||
-          project.name.includes('PBL') ||
-          project.name.includes('生成AIチャットボット開発')) {
+      if ((project.name.includes('個人開発') && !project.name.includes('ポートフォリオ')) ||
+        project.name.includes('Webスクレイピング') ||
+        project.name.includes('Chrome拡張機能') ||
+        project.name.includes('競技プログラミング') ||
+        project.name.includes('データ分析・実験') ||
+        project.name.includes('PBL') ||
+        project.name.includes('生成AIチャットボット開発')) {
         return;
       }
-      
+
       // Categorize based on project name
       if (project.name.includes('インターンシップ')) {
         category = EventCategory.INTERNSHIP;
@@ -302,7 +397,7 @@ export const getEvents = (): EventEntry[] => {
         category = EventCategory.OTHER;
         title = project.name;
       }
-      
+
       // Determine location
       let location = undefined;
       if (project.name.includes('SmartHR')) {
@@ -314,7 +409,7 @@ export const getEvents = (): EventEntry[] => {
       } else if (project.name.includes('JPHACKS')) {
         location = 'ハッカソン会場';
       }
-      
+
       events.push({
         id: `project-${project.id}`,
         title,
@@ -329,16 +424,16 @@ export const getEvents = (): EventEntry[] => {
       });
     }
   });
-  
+
   // Sort events by date in descending order (most recent first)
   const sortedEvents = events.sort((a, b) => {
     const dateA = new Date(a.date);
     const dateB = new Date(b.date);
     return dateB.getTime() - dateA.getTime();
   });
-  
 
-  
+
+
   return sortedEvents;
 };
 
@@ -469,7 +564,7 @@ export const validateDataIntegrity = (): {
 
     // 1. Validate Profile Data
     const profile = getProfile();
-    
+
     // Check required fields
     if (!profile.name) {
       errors.push('Profile: Missing required field "name"');
@@ -501,7 +596,7 @@ export const validateDataIntegrity = (): {
 
     // 2. Validate Career Data
     const careerEntries = getCareerEntries();
-    
+
     careerEntries.forEach((entry, index) => {
       if (!entry.id) {
         errors.push(`Career: Entry at index ${index} missing required field "id"`);
@@ -517,7 +612,7 @@ export const validateDataIntegrity = (): {
       } else if (!isValidDate(entry.startDate)) {
         errors.push(`Career: Entry "${entry.id}" has invalid startDate format: "${entry.startDate}" (expected YYYY-MM-DD)`);
       }
-      
+
       if (entry.endDate !== undefined && entry.endDate !== null && !isValidDate(entry.endDate)) {
         errors.push(`Career: Entry "${entry.id}" has invalid endDate format: "${entry.endDate}" (expected YYYY-MM-DD or null)`);
       }
@@ -534,7 +629,7 @@ export const validateDataIntegrity = (): {
 
     // 3. Validate Publications Data
     const publications = getPublications();
-    
+
     publications.forEach((pub, index) => {
       if (!pub.id) {
         errors.push(`Publication: Entry at index ${index} missing required field "id"`);
@@ -638,7 +733,7 @@ export const validateDataIntegrity = (): {
     // 6. Validate Updates Data (dynamically generated from events)
     try {
       const updates = getUpdates();
-      
+
       updates.forEach((update, index) => {
         if (!update.id) {
           errors.push(`Update: Entry at index ${index} missing required field "id"`);
@@ -665,7 +760,7 @@ export const validateDataIntegrity = (): {
     // 7. Validate Events Data (dynamically generated)
     try {
       const events = getEvents();
-      
+
       events.forEach((event, index) => {
         if (!event.id) {
           errors.push(`Event: Entry at index ${index} missing required field "id"`);

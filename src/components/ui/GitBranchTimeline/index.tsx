@@ -4,18 +4,24 @@
 
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
-import type { ExtendedCareerEntry } from '@/types';
+import { useMemo, useState, useEffect, useCallback } from 'react';
+import type { ExtendedCareerEntry, TimelineEventEntry, YearEventGroup, EventPointPosition } from '@/types';
 import { validateCareerData } from '@/lib/career';
+import { groupEventsByYear, calculateEventPointPositions, validateEventData } from '@/lib/career/eventUtils';
 import Timeline from '../Timeline';
 import { computeLayout, groupNodesByLane } from './layoutEngine';
 import { formatRange, extractYear } from './utils';
 import { LAYOUT, MOBILE_LAYOUT, COLORS, OPACITY } from './constants';
 import { createBranchPath, createMergePath } from '../BranchLine';
+import EventPoint from '../EventPoint';
+import EventModal from '../EventModal';
+import EventListModal from '../EventListModal';
 import type { LayoutNode, Tick, YearLabel } from './types';
 
 export interface GitBranchTimelineProps {
   entries: ExtendedCareerEntry[];
+  events?: TimelineEventEntry[];
+  enableEventPoints?: boolean;
   className?: string;
   isReversed?: boolean;
 }
@@ -133,12 +139,22 @@ function findCombinedPairs(
  */
 export default function GitBranchTimeline({
   entries,
+  events = [],
+  enableEventPoints = true,
   className = '',
   isReversed = false
 }: GitBranchTimelineProps) {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  
+  // Event modal states
+  const [selectedEvent, setSelectedEvent] = useState<TimelineEventEntry | null>(null);
+  const [selectedYearGroup, setSelectedYearGroup] = useState<YearEventGroup | null>(null);
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+  const [isEventListModalOpen, setIsEventListModalOpen] = useState(false);
+  
   const errors = useMemo(() => validateCareerData(entries), [entries]);
+  const eventErrors = useMemo(() => validateEventData(events), [events]);
 
   // Detect mobile viewport
   useEffect(() => {
@@ -154,10 +170,24 @@ export default function GitBranchTimeline({
   // Use mobile or desktop layout constants
   const layoutConstants = isMobile ? MOBILE_LAYOUT : LAYOUT;
 
-  if (errors.length > 0) {
+  if (errors.length > 0 || eventErrors.length > 0) {
     return (
       <div className={className}>
-        <ErrorDisplay errors={errors} />
+        {errors.length > 0 && <ErrorDisplay errors={errors} />}
+        {eventErrors.length > 0 && (
+          <div className="mb-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4">
+            <h3 className="mb-2 font-semibold text-yellow-800">
+              イベントデータにエラーがあります
+            </h3>
+            <ul className="list-inside list-disc space-y-1">
+              {eventErrors.map((error, index) => (
+                <li key={index} className="text-sm text-yellow-700">
+                  {error.eventId}: {error.message}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <Timeline entries={entries} />
       </div>
     );
@@ -186,6 +216,83 @@ export default function GitBranchTimeline({
   const yearLabels = collectYearLabels(nodes);
   const { startTicks, endTicks } = collectTicks(nodes, nodeMap, isMobile);
   const { combinedChildIds, combinedParentIds } = findCombinedPairs(nodes, nodeMap);
+
+  // Process events for timeline
+  const yearEventGroups = useMemo(() => {
+    if (!enableEventPoints || events.length === 0) return [];
+    return groupEventsByYear(events);
+  }, [events, enableEventPoints]);
+
+  // Calculate event point positions based on year labels
+  const eventPointPositions = useMemo(() => {
+    if (!enableEventPoints || yearEventGroups.length === 0 || yearLabels.length === 0) return [];
+    
+    // Create a map of year to Y position from year labels
+    const yearToYMap = new Map<string, number>();
+    yearLabels.forEach(({ y, label }) => {
+      yearToYMap.set(label, y);
+    });
+    
+    // Calculate positions for each year group
+    return yearEventGroups.map(yearGroup => {
+      const yearY = yearToYMap.get(yearGroup.year);
+      if (yearY !== undefined) {
+        return {
+          yearGroup,
+          x: layoutConstants.MAIN_LINE_X, // Directly on the main line
+          y: yearY
+        };
+      }
+      
+      // Fallback: if year not found in labels, calculate approximate position
+      const minDate = new Date(Math.min(...nodes.map(n => new Date(n.entry.startDate).getTime())));
+      const maxDate = new Date(Math.max(...nodes.map(n => 
+        n.entry.endDate ? new Date(n.entry.endDate).getTime() : Date.now()
+      )));
+      const timeSpan = maxDate.getTime() - minDate.getTime();
+      const pixelsPerYear = (maxEndY - layoutConstants.TOP_PADDING) / (timeSpan / (1000 * 60 * 60 * 24 * 365.25));
+      
+      const yearDate = new Date(`${yearGroup.year}-07-01`);
+      const yearsDiff = (yearDate.getTime() - minDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25);
+      const y = layoutConstants.TOP_PADDING + (yearsDiff * pixelsPerYear);
+      
+      return {
+        yearGroup,
+        x: layoutConstants.MAIN_LINE_X, // Directly on the main line
+        y: y
+      };
+    }).filter(position => position !== null);
+  }, [yearEventGroups, yearLabels, layoutConstants, enableEventPoints, nodes, maxEndY]);
+
+  // Event click handlers
+  const handleEventPointClick = useCallback((yearGroup: YearEventGroup) => {
+    if (yearGroup.events.length === 1) {
+      // Single event: show detail modal directly
+      setSelectedEvent(yearGroup.events[0]);
+      setIsEventModalOpen(true);
+    } else {
+      // Multiple events: show list modal first
+      setSelectedYearGroup(yearGroup);
+      setIsEventListModalOpen(true);
+    }
+  }, []);
+
+  const handleEventSelect = useCallback((event: TimelineEventEntry) => {
+    // Transition from list modal to detail modal
+    setIsEventListModalOpen(false);
+    setSelectedEvent(event);
+    setIsEventModalOpen(true);
+  }, []);
+
+  const handleEventModalClose = useCallback(() => {
+    setIsEventModalOpen(false);
+    setTimeout(() => setSelectedEvent(null), 300);
+  }, []);
+
+  const handleEventListModalClose = useCallback(() => {
+    setIsEventListModalOpen(false);
+    setTimeout(() => setSelectedYearGroup(null), 300);
+  }, []);
 
   return (
     <div className={className}>
@@ -404,6 +511,19 @@ export default function GitBranchTimeline({
                 />
               ))}
 
+            {/* Event Points */}
+            {enableEventPoints && eventPointPositions.map((position, index) => (
+              <EventPoint
+                key={`event-point-${position.yearGroup.year}`}
+                x={position.x}
+                y={position.y}
+                eventCount={position.yearGroup.events.length}
+                isMultiple={position.yearGroup.events.length > 1}
+                isReversed={isReversed}
+                onClick={() => handleEventPointClick(position.yearGroup)}
+              />
+            ))}
+
             {/* Nodes and labels */}
             {nodes.map(node => {
               const midY = (node.startY + node.endY) / 2;
@@ -486,6 +606,24 @@ export default function GitBranchTimeline({
           </g>
         </svg>
       </div>
+
+      {/* Event Modals */}
+      {enableEventPoints && (
+        <>
+          <EventModal
+            isOpen={isEventModalOpen}
+            onClose={handleEventModalClose}
+            event={selectedEvent}
+          />
+          
+          <EventListModal
+            isOpen={isEventListModalOpen}
+            onClose={handleEventListModalClose}
+            yearGroup={selectedYearGroup}
+            onEventSelect={handleEventSelect}
+          />
+        </>
+      )}
     </div>
   );
 }

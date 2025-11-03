@@ -4,11 +4,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { PageLayout } from '@/components/common';
 import GitBranchTimeline from '@/components/ui/GitBranchTimeline';
-import { getCareerEntries } from '@/data';
+import { getCareerEntries, getTimelineEvents } from '@/data';
 import { ExtendedCareerEntry } from '@/types';
 
 export default function CareerPage() {
   const careerEntries = getCareerEntries() as ExtendedCareerEntry[];
+  const timelineEvents = getTimelineEvents();
   const [isReversed, setIsReversed] = useState(false);
 
   return (
@@ -63,6 +64,8 @@ export default function CareerPage() {
         {careerEntries.length > 0 ? (
           <GitBranchTimeline
             entries={careerEntries}
+            events={timelineEvents}
+            enableEventPoints={true}
             className="px-2 sm:px-4"
             isReversed={isReversed}
           />
