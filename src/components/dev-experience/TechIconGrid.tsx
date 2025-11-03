@@ -12,8 +12,7 @@ const TechIconGrid: React.FC<TechIconGridProps> = ({
   techItems,
   onTechSelect
 }) => {
-  // Sort tech items by proficiency (expert > advanced > intermediate > beginner)
-  // then by experience years (descending)
+  // Sort tech items with custom order for languages, then by proficiency and experience years
   const sortedTechItems = useMemo(() => {
     const proficiencyOrder = {
       expert: 4,
@@ -22,7 +21,29 @@ const TechIconGrid: React.FC<TechIconGridProps> = ({
       beginner: 1
     };
 
+    // Custom order for languages
+    const languageOrder: Record<string, number> = {
+      'Python': 1,
+      'TypeScript': 2,
+      'JavaScript': 3,
+      'C': 4,
+      'C++': 5,
+      'C#': 6,
+      'R': 7,
+      'Haskell': 8,
+      'HTML': 9,
+      'SQL': 10
+    };
+
     return [...techItems].sort((a, b) => {
+      // If both are languages, use custom language order
+      if (a.category === 'language' && b.category === 'language') {
+        const aOrder = languageOrder[a.name] || 999;
+        const bOrder = languageOrder[b.name] || 999;
+        return aOrder - bOrder;
+      }
+
+      // For non-languages, sort by proficiency then experience years
       const aProficiency = proficiencyOrder[a.proficiency];
       const bProficiency = proficiencyOrder[b.proficiency];
 
@@ -51,7 +72,7 @@ const TechIconGrid: React.FC<TechIconGridProps> = ({
 
   return (
     <div
-      className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3 sm:gap-4 animate-fade-in"
+      className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 xl:grid-cols-5 gap-3 sm:gap-4 animate-fade-in"
       role="list"
       aria-label="Technology stack"
     >

@@ -5,8 +5,18 @@
       "name": "Python",
       "category": "language",
       "proficiency": "expert",
+      "proficiencyLevel": "高",
       "experienceYears": 4,
-      "projects": ["proj-001", "proj-002", "proj-003", "proj-004"],
+      "projects": [
+        "proj-001",
+        "proj-002",
+        "proj-003",
+        "proj-004",
+        "proj-005"
+      ],
+      "relatedFrameworks": [
+        "FastAPI"
+      ],
       "description": "研究におけるデータ分析・実験、個人開発（Webスクレイピング）、競技プログラミング（AtCoder）、講義、アルバイト（チャットボット開発、データ管理）で使用。最も得意な技術。",
       "logoUrl": "/images/tech-logos/python.svg",
       "logoAlt": "Python logo"
@@ -16,9 +26,18 @@
       "name": "TypeScript",
       "category": "language",
       "proficiency": "intermediate",
+      "proficiencyLevel": "中",
       "experienceYears": 1,
-      "projects": ["proj-005", "proj-006", "proj-007"],
-      "description": "ハッカソン（JPHACKS2024, JPHACKS2025）、インターンシップで使用。型安全なJavaScript開発に活用。",
+      "projects": [
+        "proj-005",
+        "proj-006",
+        "proj-007"
+      ],
+      "relatedFrameworks": [
+        "React",
+        "Next.js"
+      ],
+      "description": "ハッカソン（JPHACKS2024, JPHACKS2025）、インターンシップ、本ホームページ作成で使用。",
       "logoUrl": "/images/tech-logos/typescript.svg",
       "logoAlt": "TypeScript logo"
     },
@@ -27,8 +46,15 @@
       "name": "JavaScript",
       "category": "language",
       "proficiency": "intermediate",
+      "proficiencyLevel": "中",
       "experienceYears": 2,
-      "projects": ["proj-001", "proj-008"],
+      "projects": [
+        "proj-001",
+        "proj-008"
+      ],
+      "relatedFrameworks": [
+        "React"
+      ],
       "description": "個人開発（Chrome拡張機能の開発）、アルバイト（チャットボット開発）で使用。",
       "logoUrl": "/images/tech-logos/javascript.svg",
       "logoAlt": "JavaScript logo"
@@ -38,8 +64,11 @@
       "name": "C++",
       "category": "language",
       "proficiency": "intermediate",
+      "proficiencyLevel": "中",
       "experienceYears": 2,
-      "projects": [],
+      "projects": [
+        "proj-004"
+      ],
       "description": "講義、競技プログラミングで使用。アルゴリズムとデータ構造の実装に活用。",
       "logoUrl": "/images/tech-logos/cplusplus.svg",
       "logoAlt": "C++ logo"
@@ -49,19 +78,151 @@
       "name": "C#",
       "category": "language",
       "proficiency": "beginner",
+      "proficiencyLevel": "低",
       "experienceYears": 1,
-      "projects": ["proj-009"],
+      "projects": [
+        "proj-009"
+      ],
       "description": "インターンシップで使用。OracleDBと連携した従業員管理システムの開発。",
       "logoUrl": "/images/tech-logos/csharp.svg",
       "logoAlt": "C# logo"
+    },
+    {
+      "id": "tech-015",
+      "name": "C",
+      "category": "language",
+      "proficiency": "intermediate",
+      "proficiencyLevel": "中",
+      "experienceYears": 2,
+      "projects": [],
+      "relatedPlatforms": [
+        "Arduino"
+      ],
+      "description": "講義、システムプログラミングで使用。低レベルプログラミングとメモリ管理の理解に活用。Arduinoプログラミングのベースとしても使用。",
+      "logoUrl": "/images/tech-logos/c.svg",
+      "logoAlt": "C logo"
+    },
+    {
+      "id": "tech-016",
+      "name": "Haskell",
+      "category": "language",
+      "proficiency": "beginner",
+      "proficiencyLevel": "低",
+      "experienceYears": 1,
+      "projects": [],
+      "description": "関数型プログラミングの学習で使用。一番書けないけど一番好きな言語です。",
+      "logoUrl": "/images/tech-logos/haskell.svg",
+      "logoAlt": "Haskell logo"
+    },
+    {
+      "id": "tech-017",
+      "name": "R",
+      "category": "language",
+      "proficiency": "intermediate",
+      "proficiencyLevel": "中",
+      "experienceYears": 2,
+      "projects": [
+        "proj-002"
+      ],
+      "description": "講義で使用。統計解析とデータ可視化に活用。",
+      "logoUrl": "/images/tech-logos/r.svg",
+      "logoAlt": "R logo"
+    },
+    {
+      "id": "tech-018",
+      "name": "HTML",
+      "category": "language",
+      "proficiency": "intermediate",
+      "proficiencyLevel": "中",
+      "experienceYears": 2,
+      "projects": [
+        "proj-001",
+        "proj-005",
+        "proj-006",
+        "proj-007",
+        "proj-008"
+      ],
+      "description": "Webアプリケーション開発で使用。マークアップ言語としてWebページの構造を定義。",
+      "logoUrl": "/images/tech-logos/html5.svg",
+      "logoAlt": "HTML5 logo"
+    },
+    {
+      "id": "tech-023",
+      "name": "Ruby",
+      "category": "language",
+      "proficiency": "beginner",
+      "proficiencyLevel": "低",
+      "experienceYears": 1,
+      "projects": [
+        "proj-010"
+      ],
+      "relatedFrameworks": [
+        "Ruby on Rails"
+      ],
+      "description": "インターンシップでRuby on Railsフレームワークと共に使用。Cursorとか使いながら書いていたのであまり自信はないです。",
+      "logoUrl": "/images/tech-logos/ruby.svg",
+      "logoAlt": "Ruby logo"
+    },
+    {
+      "id": "tech-019",
+      "name": "SQL",
+      "category": "language",
+      "proficiency": "intermediate",
+      "proficiencyLevel": "中",
+      "experienceYears": 2,
+      "projects": [
+        "proj-005",
+        "proj-009"
+      ],
+      "description": "データベース操作で使用。MySQL、OracleDBでのデータ操作とクエリ最適化に活用。",
+      "logoUrl": "/images/tech-logos/sql.svg",
+      "logoAlt": "SQL logo"
+    },
+    {
+      "id": "tech-024",
+      "name": "CSS",
+      "category": "language",
+      "proficiency": "intermediate",
+      "proficiencyLevel": "中",
+      "experienceYears": 2,
+      "projects": [
+        "proj-008"
+      ],
+      "description": "Webアプリケーションのスタイリングで使用。レスポンシブデザインとUI/UXの実装に活用。",
+      "logoUrl": "/images/tech-logos/css.svg",
+      "logoAlt": "CSS logo"
+    },
+    {
+      "id": "tech-025",
+      "name": "Arduino",
+      "category": "language",
+      "proficiency": "beginner",
+      "proficiencyLevel": "低",
+      "experienceYears": 1,
+      "projects": [],
+      "relatedLanguages": [
+        "C"
+      ],
+      "description": "講義やPBLでマイコンプログラミングに使用。IoTデバイスやセンサー制御の実装に活用。",
+      "logoUrl": "/images/tech-logos/arduino.svg",
+      "logoAlt": "Arduino logo"
     },
     {
       "id": "tech-006",
       "name": "React",
       "category": "framework",
       "proficiency": "intermediate",
+      "proficiencyLevel": "中",
       "experienceYears": 1,
-      "projects": ["proj-001", "proj-005", "proj-007"],
+      "projects": [
+        "proj-001",
+        "proj-005",
+        "proj-007"
+      ],
+      "relatedLanguages": [
+        "JavaScript",
+        "TypeScript"
+      ],
       "description": "ハッカソン、インターンシップ、アルバイトで使用。モダンなWebアプリケーション開発に活用。",
       "logoUrl": "/images/tech-logos/react.svg",
       "logoAlt": "React logo"
@@ -71,8 +232,15 @@
       "name": "Next.js",
       "category": "framework",
       "proficiency": "beginner",
+      "proficiencyLevel": "低",
       "experienceYears": 1,
-      "projects": ["proj-006"],
+      "projects": [
+        "proj-006"
+      ],
+      "relatedLanguages": [
+        "TypeScript",
+        "JavaScript"
+      ],
       "description": "ハッカソン（JPHACKS2025）で使用。Reactベースのフルスタックフレームワーク。",
       "logoUrl": "/images/tech-logos/nextdotjs.svg",
       "logoAlt": "Next.js logo"
@@ -82,8 +250,14 @@
       "name": "FastAPI",
       "category": "framework",
       "proficiency": "beginner",
+      "proficiencyLevel": "低",
       "experienceYears": 1,
-      "projects": ["proj-005"],
+      "projects": [
+        "proj-005"
+      ],
+      "relatedLanguages": [
+        "Python"
+      ],
       "description": "ハッカソンで使用。PythonによるWeb API開発フレームワーク。",
       "logoUrl": "/images/tech-logos/fastapi.svg",
       "logoAlt": "FastAPI logo"
@@ -93,8 +267,14 @@
       "name": "Ruby on Rails",
       "category": "framework",
       "proficiency": "beginner",
+      "proficiencyLevel": "低",
       "experienceYears": 1,
-      "projects": ["proj-010"],
+      "projects": [
+        "proj-010"
+      ],
+      "relatedLanguages": [
+        "Ruby"
+      ],
       "description": "インターンシップで使用。システム機能の追加開発を実施。",
       "logoUrl": "/images/tech-logos/rubyonrails.svg",
       "logoAlt": "Ruby on Rails logo"
@@ -104,9 +284,12 @@
       "name": "Docker",
       "category": "tool",
       "proficiency": "intermediate",
+      "proficiencyLevel": "中",
       "experienceYears": 2,
-      "projects": ["proj-001"],
-      "description": "講義、ハッカソン、研究で使用。コンテナ化による開発環境の構築。",
+      "projects": [
+        "proj-001"
+      ],
+      "description": "講義、ハッカソン、研究で使用。コンテナ化による開発環境の構築。研究室の開発環境管理をしているので人並には使えます。",
       "logoUrl": "/images/tech-logos/docker.svg",
       "logoAlt": "Docker logo"
     },
@@ -115,8 +298,13 @@
       "name": "GitHub",
       "category": "tool",
       "proficiency": "intermediate",
+      "proficiencyLevel": "中",
       "experienceYears": 2,
-      "projects": ["proj-001", "proj-005", "proj-006"],
+      "projects": [
+        "proj-001",
+        "proj-005",
+        "proj-006"
+      ],
       "description": "講義、ハッカソン、研究で使用。バージョン管理とチーム開発に活用。",
       "logoUrl": "/images/tech-logos/github.svg",
       "logoAlt": "GitHub logo"
@@ -126,8 +314,11 @@
       "name": "AWS",
       "category": "tool",
       "proficiency": "beginner",
+      "proficiencyLevel": "低",
       "experienceYears": 1,
-      "projects": ["proj-001"],
+      "projects": [
+        "proj-001"
+      ],
       "description": "アルバイトで使用。S3、Lambda、CloudWatchを活用したサーバーレスアーキテクチャ。",
       "logoUrl": "/images/tech-logos/amazonwebservices.svg",
       "logoAlt": "AWS logo"
@@ -137,8 +328,11 @@
       "name": "MySQL",
       "category": "database",
       "proficiency": "beginner",
+      "proficiencyLevel": "低",
       "experienceYears": 1,
-      "projects": ["proj-005"],
+      "projects": [
+        "proj-005"
+      ],
       "description": "ハッカソンで使用。リレーショナルデータベース管理システム。",
       "logoUrl": "/images/tech-logos/mysql.svg",
       "logoAlt": "MySQL logo"
@@ -148,11 +342,58 @@
       "name": "OracleDB",
       "category": "database",
       "proficiency": "beginner",
+      "proficiencyLevel": "低",
       "experienceYears": 1,
-      "projects": ["proj-009"],
+      "projects": [
+        "proj-009"
+      ],
       "description": "インターンシップで使用。C#と連携した従業員管理システムの開発。",
       "logoUrl": "/images/tech-logos/oracle.svg",
       "logoAlt": "Oracle Database logo"
+    },
+    {
+      "id": "tech-022",
+      "name": "SQLite",
+      "category": "database",
+      "proficiency": "beginner",
+      "proficiencyLevel": "低",
+      "experienceYears": 1,
+      "projects": [],
+      "description": "軽量なリレーショナルデータベース。個人開発やプロトタイプ開発で使用。",
+      "logoUrl": "/images/tech-logos/sqlite.svg",
+      "logoAlt": "SQLite logo"
+    },
+    {
+      "id": "tech-020",
+      "name": "Git",
+      "category": "tool",
+      "proficiency": "intermediate",
+      "proficiencyLevel": "中",
+      "experienceYears": 3,
+      "projects": [
+        "proj-001",
+        "proj-005",
+        "proj-006",
+        "proj-007",
+        "proj-010"
+      ],
+      "description": "バージョン管理システムとして全ての開発プロジェクトで使用。ブランチ管理、マージ、コンフリクト解決に活用。",
+      "logoUrl": "/images/tech-logos/git.svg",
+      "logoAlt": "Git logo"
+    },
+    {
+      "id": "tech-021",
+      "name": "Vercel",
+      "category": "tool",
+      "proficiency": "intermediate",
+      "proficiencyLevel": "中",
+      "experienceYears": 1,
+      "projects": [
+        "proj-006"
+      ],
+      "description": "Webアプリケーションのデプロイメントプラットフォームとして使用。Next.jsアプリケーションの継続的デプロイメントに活用。",
+      "logoUrl": "/images/tech-logos/vercel.svg",
+      "logoAlt": "Vercel logo"
     }
   ],
   "projects": [
@@ -160,7 +401,16 @@
       "id": "proj-001",
       "name": "生成AIチャットボット開発（アルバイト）",
       "description": "学術研究の成果物（研究データ）の管理手法に関する質問に解答する生成AIチャットボット。研究データ管理を行う人をサポートすることを目的としたプロダクト。Web検索を用いた回答生成機能の不具合修正、ベクトルデータベースのサービス移行（Pinecone→AWS S3 Vector）、データの追加を担当。",
-      "technologies": ["Python", "JavaScript", "React", "AWS", "Docker", "GitHub"],
+      "technologies": [
+        "Python",
+        "JavaScript",
+        "HTML",
+        "React",
+        "AWS",
+        "Docker",
+        "Git",
+        "GitHub"
+      ],
       "duration": "2025年4月 - 2025年9月",
       "role": "フルスタック開発者",
       "imageUrl": null
@@ -168,8 +418,11 @@
     {
       "id": "proj-002",
       "name": "データ分析・実験（研究）",
-      "description": "研究活動におけるデータ分析と実験の実施。Pythonを用いた統計分析、データ可視化、実験結果の評価を行う。",
-      "technologies": ["Python"],
+      "description": "研究活動におけるデータ分析と実験の実施。PythonとRを用いた統計分析、データ可視化、実験結果の評価を行う。",
+      "technologies": [
+        "Python",
+        "R"
+      ],
       "duration": "2021年4月 - 現在",
       "role": "研究者",
       "imageUrl": null
@@ -178,7 +431,9 @@
       "id": "proj-003",
       "name": "Webスクレイピング（個人開発）",
       "description": "Pythonを用いたWebスクレイピングツールの開発。データ収集の自動化と分析に活用。",
-      "technologies": ["Python"],
+      "technologies": [
+        "Python"
+      ],
       "duration": "2021年4月 - 現在",
       "role": "個人開発者",
       "imageUrl": null
@@ -187,7 +442,10 @@
       "id": "proj-004",
       "name": "競技プログラミング（AtCoder）",
       "description": "AtCoderでの競技プログラミング活動。アルゴリズムとデータ構造の実装スキルを向上。",
-      "technologies": ["Python"],
+      "technologies": [
+        "Python",
+        "C++"
+      ],
       "duration": "2021年4月 - 現在",
       "role": "競技プログラマー",
       "imageUrl": null
@@ -196,9 +454,19 @@
       "id": "proj-005",
       "name": "JPHACKS2024",
       "description": "ハッカソンイベントJPHACKS2024での開発プロジェクト。チームでWebアプリケーションを開発。",
-      "technologies": ["TypeScript", "React", "FastAPI", "MySQL"],
+      "technologies": [
+        "Python",
+        "TypeScript",
+        "HTML",
+        "React",
+        "FastAPI",
+        "MySQL",
+        "SQL",
+        "Git",
+        "GitHub"
+      ],
       "duration": "2024年10月",
-      "role": "開発者",
+      "role": "バックエンド, PM",
       "githubUrl": "https://github.com/jphacks/ng_2405",
       "imageUrl": null
     },
@@ -206,9 +474,15 @@
       "id": "proj-006",
       "name": "JPHACKS2025",
       "description": "ハッカソンイベントJPHACKS2025での開発プロジェクト。Next.jsを活用したWebアプリケーションを開発。",
-      "technologies": ["TypeScript", "Next.js"],
+      "technologies": [
+        "TypeScript",
+        "HTML",
+        "Next.js",
+        "Git",
+        "GitHub"
+      ],
       "duration": "2025年10月",
-      "role": "開発者",
+      "role": "フロントエンド、PM",
       "githubUrl": "https://github.com/jphacks/ng_2511",
       "imageUrl": null
     },
@@ -216,7 +490,13 @@
       "id": "proj-007",
       "name": "SmartHRインターンシップ",
       "description": "株式会社SmartHRでのハッカソン型インターンシップ（フロントエンド）。特定のテーマに基づいてTypeScript、Reactを利用した開発を実施。ユーザヒアリングを行い、機能の改善を実施。",
-      "technologies": ["TypeScript", "React"],
+      "technologies": [
+        "TypeScript",
+        "HTML",
+        "React",
+        "Git",
+        "GitHub"
+      ],
       "duration": "2025年9月",
       "role": "フロントエンド開発者",
       "imageUrl": null
@@ -225,7 +505,11 @@
       "id": "proj-008",
       "name": "Chrome拡張機能開発（個人開発）",
       "description": "JavaScriptを用いたChrome拡張機能の開発。ブラウザの機能拡張とユーザビリティの向上を実現。",
-      "technologies": ["JavaScript"],
+      "technologies": [
+        "JavaScript",
+        "HTML",
+        "CSS"
+      ],
       "duration": "2023年8月 - 2025年4月",
       "role": "個人開発者",
       "imageUrl": null
@@ -234,7 +518,11 @@
       "id": "proj-009",
       "name": "トヨタシステムズインターンシップ",
       "description": "株式会社トヨタシステムズでのインターンシップ。C#とOracleDBを用いた従業員管理システムを開発。",
-      "technologies": ["C#", "OracleDB"],
+      "technologies": [
+        "C#",
+        "SQL",
+        "OracleDB"
+      ],
       "duration": "2023年8月",
       "role": "開発者",
       "imageUrl": null
@@ -243,9 +531,25 @@
       "id": "proj-010",
       "name": "ラクスルインターンシップ",
       "description": "ラクスル株式会社でのハッカソン型インターンシップ（バックエンド）。Ruby on Railsを利用したシステム機能の追加開発。ユーザヒアリングから実際の機能開発までの一連のプロセスを実施。",
-      "technologies": ["Ruby on Rails"],
+      "technologies": [
+        "Ruby",
+        "Ruby on Rails",
+        "Git",
+        "GitHub"
+      ],
       "duration": "2025年9月",
       "role": "バックエンド開発者",
+      "imageUrl": null
+    },
+    {
+      "id": "proj-011",
+      "name": "PBL",
+      "description": "PBL(Project Based Learning)で４名チームで開発しました。Arduinoで車を走らせたりしてました。要件定義なども担当しました。",
+      "technologies": [
+        "Arduino"
+      ],
+      "duration": "2023年6月-2023年7月",
+      "role": "PM、PG",
       "imageUrl": null
     }
   ]

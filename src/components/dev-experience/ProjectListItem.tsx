@@ -2,12 +2,37 @@
 
 import React from 'react';
 import { ProjectListItemProps } from '@/types';
+import { getTechExperience } from '@/data';
 
 /**
  * ProjectListItem component displays a clickable project list item
  * with project name, duration, and role
  */
 const ProjectListItem: React.FC<ProjectListItemProps> = ({ project, onClick }) => {
+  const allTechItems = getTechExperience();
+  
+  // Sort technologies by category priority
+  const sortedTechs = React.useMemo(() => {
+    const categoryOrder = {
+      'language': 1,
+      'framework': 2,
+      'database': 3,
+      'tool': 4
+    };
+    
+    return project.technologies
+      .map(techName => {
+        const techItem = allTechItems.find(item => item.name === techName);
+        return {
+          name: techName,
+          category: techItem?.category || 'tool',
+          order: categoryOrder[techItem?.category as keyof typeof categoryOrder] || 5
+        };
+      })
+      .sort((a, b) => a.order - b.order)
+      .map(tech => tech.name);
+  }, [project.technologies, allTechItems]);
+
   const handleClick = () => {
     onClick();
   };
@@ -23,13 +48,7 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ project, onClick }) =
     <button
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      className="
-        w-full text-left p-4 rounded-lg border border-gray-200
-        transition-all duration-150
-        hover:bg-gray-50 hover:border-blue-300 hover:shadow-sm
-        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-        active:scale-[0.98]
-      "
+      className="w-full text-left p-4 rounded-lg border border-gray-200 transition-all duration-150 hover:bg-gray-50 hover:border-blue-300 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 active:scale-[0.98]"
       aria-label={`View details for ${project.name}`}
       type="button"
     >
@@ -41,7 +60,7 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ project, onClick }) =
           </h4>
 
           {/* Duration and Role */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-sm text-gray-600">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-sm text-gray-600 mb-3">
             <span className="flex items-center gap-1.5">
               <svg
                 className="w-4 h-4 flex-shrink-0"
@@ -79,6 +98,23 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ project, onClick }) =
               </svg>
               {project.role}
             </span>
+          </div>
+
+          {/* Technologies */}
+          <div className="flex flex-wrap gap-1.5">
+            {sortedTechs.slice(0, 6).map((tech) => (
+              <span
+                key={tech}
+                className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-md font-medium"
+              >
+                {tech}
+              </span>
+            ))}
+            {sortedTechs.length > 6 && (
+              <span className="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-md">
+                +{sortedTechs.length - 6}
+              </span>
+            )}
           </div>
         </div>
 

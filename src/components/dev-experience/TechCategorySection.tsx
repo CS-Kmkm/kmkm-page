@@ -29,16 +29,13 @@ const TechCategorySection: React.FC<TechCategorySectionProps> = ({
       {/* Section Header */}
       <div className="border-b border-gray-200 pb-3">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-          {title}
+          {title} <span className="text-xs text-gray-500 font-normal">({techItems.length}件)</span>
         </h2>
         {description && (
           <p className="text-sm text-gray-600 mt-1">
             {description}
           </p>
         )}
-        <p className="text-xs text-gray-500 mt-1">
-          {techItems.length}件
-        </p>
       </div>
 
       {/* Tech Grid */}

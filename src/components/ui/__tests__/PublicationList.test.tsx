@@ -42,17 +42,17 @@ const mockPublications: PublicationEntry[] = [
 describe('PublicationList', () => {
   it('renders publications correctly', () => {
     render(<PublicationList publications={mockPublications} />)
-    
+
     // Check that all publication titles are rendered
     expect(screen.getByText('Test Publication 1')).toBeInTheDocument()
     expect(screen.getByText('Test Publication 2')).toBeInTheDocument()
     expect(screen.getByText('Test Publication 3')).toBeInTheDocument()
-    
+
     // Check that venues are displayed
     expect(screen.getByText('Test Journal')).toBeInTheDocument()
     expect(screen.getByText('Test Conference')).toBeInTheDocument()
     expect(screen.getByText('Test Workshop')).toBeInTheDocument()
-    
+
     // Check that years are displayed (using regex to be more flexible)
     expect(screen.getByText(/2024/)).toBeInTheDocument()
     expect(screen.getByText(/2023/)).toBeInTheDocument()
@@ -61,11 +61,11 @@ describe('PublicationList', () => {
 
   it('displays author status badges correctly', () => {
     render(<PublicationList publications={mockPublications} />)
-    
+
     // Check for first author badges
     const firstAuthorBadges = screen.getAllByText('First Author')
     expect(firstAuthorBadges).toHaveLength(2) // pub-001 and pub-003 are first author
-    
+
     // Check that first author names are wrapped in strong tags
     const johnDoeElement = screen.getByText('John Doe')
     const aliceBrownElement = screen.getByText('Alice Brown')
@@ -75,7 +75,7 @@ describe('PublicationList', () => {
 
   it('displays peer-review badges correctly', () => {
     render(<PublicationList publications={mockPublications} />)
-    
+
     // Check for peer reviewed badges
     const peerReviewedBadges = screen.getAllByText('Peer Reviewed')
     expect(peerReviewedBadges).toHaveLength(2) // pub-001 and pub-003 are peer reviewed
@@ -83,52 +83,48 @@ describe('PublicationList', () => {
 
   it('displays publication type badges correctly', () => {
     render(<PublicationList publications={mockPublications} />)
-    
+
     // Check for publication type badges
     expect(screen.getByText('Journal')).toBeInTheDocument()
     expect(screen.getByText('Conference')).toBeInTheDocument()
     expect(screen.getByText('Workshop')).toBeInTheDocument()
   })
 
-  it('renders DOI links correctly', () => {
+  it('renders publication items correctly', () => {
     render(<PublicationList publications={mockPublications} />)
-    
-    // Check for DOI links
-    const doiLinks = screen.getAllByText('DOI')
-    expect(doiLinks).toHaveLength(2) // pub-001 and pub-003 have DOI
-    
-    // Check that DOI links have correct href attributes
-    const firstDoiLink = doiLinks[0].closest('a')
-    expect(firstDoiLink).toHaveAttribute('href', 'https://doi.org/10.1000/test.001')
-    expect(firstDoiLink).toHaveAttribute('target', '_blank')
-    expect(firstDoiLink).toHaveAttribute('rel', 'noopener noreferrer')
-    
-    const secondDoiLink = doiLinks[1].closest('a')
-    expect(secondDoiLink).toHaveAttribute('href', 'https://doi.org/10.1000/test.003')
+
+    // Check that publication items are clickable
+    const publicationButtons = screen.getAllByRole('button', { name: /View details for/ })
+    expect(publicationButtons).toHaveLength(3)
+
+    // Check that publication items have correct aria-labels
+    expect(screen.getByRole('button', { name: 'View details for Test Publication 1' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'View details for Test Publication 2' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'View details for Test Publication 3' })).toBeInTheDocument()
   })
 
   it('has proper accessibility attributes', () => {
     render(<PublicationList publications={mockPublications} />)
-    
-    // Check for proper ARIA labels on DOI links
-    const doiLinks = screen.getAllByLabelText(/View publication DOI/)
-    expect(doiLinks).toHaveLength(2)
-    expect(doiLinks[0]).toHaveAttribute('aria-label', 'View publication DOI: 10.1000/test.001')
-    expect(doiLinks[1]).toHaveAttribute('aria-label', 'View publication DOI: 10.1000/test.003')
-    
-    // Check that publications are wrapped in article elements for semantic structure
-    const articles = screen.getAllByRole('article')
-    expect(articles).toHaveLength(3)
+
+    // Check that publication items have proper accessibility attributes
+    const publicationButtons = screen.getAllByRole('button', { name: /View details for/ })
+    expect(publicationButtons).toHaveLength(3)
+
+    // Check that each publication button has proper tabindex and aria-label
+    publicationButtons.forEach((button, index) => {
+      expect(button).toHaveAttribute('tabindex', '0')
+      expect(button).toHaveAttribute('aria-label', `View details for Test Publication ${index + 1}`)
+    })
   })
 
   it('sorts publications by year (newest first)', () => {
     render(<PublicationList publications={mockPublications} />)
-    
-    const articles = screen.getAllByRole('article')
-    const titles = articles.map(article => 
-      article.querySelector('h3')?.textContent
+
+    const publicationButtons = screen.getAllByRole('button', { name: /View details for/ })
+    const titles = publicationButtons.map(button =>
+      button.querySelector('h3')?.textContent
     )
-    
+
     // Should be sorted by year: 2024, 2023, 2022
     expect(titles).toEqual([
       'Test Publication 1', // 2024
@@ -137,72 +133,72 @@ describe('PublicationList', () => {
     ])
   })
 
-  it('displays filters when showFilters is true', () => {
-    render(<PublicationList publications={mockPublications} showFilters={true} />)
-    
+  it('displays filters correctly', () => {
+    render(<PublicationList publications={mockPublications} />)
+
     // Check for filter buttons
-    expect(screen.getByText('All (3)')).toBeInTheDocument()
-    expect(screen.getByText('Journal (1)')).toBeInTheDocument()
-    expect(screen.getByText('Conference (1)')).toBeInTheDocument()
-    expect(screen.getByText('Workshop (1)')).toBeInTheDocument()
+    expect(screen.getByText('第一著者')).toBeInTheDocument()
+    expect(screen.getByText('共著者')).toBeInTheDocument()
+    expect(screen.getByText('査読あり')).toBeInTheDocument()
+    expect(screen.getByText('査読なし')).toBeInTheDocument()
   })
 
   it('filters publications correctly when filter is selected', () => {
-    render(<PublicationList publications={mockPublications} showFilters={true} />)
-    
-    // Click on Journal filter
-    fireEvent.click(screen.getByText('Journal (1)'))
-    
-    // Should only show journal publication
+    render(<PublicationList publications={mockPublications} />)
+
+    // Click on first author filter
+    fireEvent.click(screen.getByText('第一著者'))
+
+    // Should only show first author publications
     expect(screen.getByText('Test Publication 1')).toBeInTheDocument()
     expect(screen.queryByText('Test Publication 2')).not.toBeInTheDocument()
-    expect(screen.queryByText('Test Publication 3')).not.toBeInTheDocument()
-    
+    expect(screen.getByText('Test Publication 3')).toBeInTheDocument()
+
     // Check results count
-    expect(screen.getByText('Showing 1 of 3 publications')).toBeInTheDocument()
+    expect(screen.getByText('2件 / 3件の論文を表示')).toBeInTheDocument()
   })
 
   it('has proper aria-pressed attributes on filter buttons', () => {
-    render(<PublicationList publications={mockPublications} showFilters={true} />)
-    
-    const allButton = screen.getByText('All (3)')
-    const journalButton = screen.getByText('Journal (1)')
-    
-    // Initially "All" should be pressed
-    expect(allButton).toHaveAttribute('aria-pressed', 'true')
-    expect(journalButton).toHaveAttribute('aria-pressed', 'false')
-    
-    // Click journal filter
-    fireEvent.click(journalButton)
-    
-    // Now journal should be pressed
-    expect(allButton).toHaveAttribute('aria-pressed', 'false')
-    expect(journalButton).toHaveAttribute('aria-pressed', 'true')
+    render(<PublicationList publications={mockPublications} />)
+
+    const firstAuthorButton = screen.getByText('第一著者')
+    const peerReviewedButton = screen.getByText('査読あり')
+
+    // Initially filters should not be pressed
+    expect(firstAuthorButton).toHaveAttribute('aria-pressed', 'false')
+    expect(peerReviewedButton).toHaveAttribute('aria-pressed', 'false')
+
+    // Click first author filter
+    fireEvent.click(firstAuthorButton)
+
+    // Now first author should be pressed
+    expect(firstAuthorButton).toHaveAttribute('aria-pressed', 'true')
+    expect(peerReviewedButton).toHaveAttribute('aria-pressed', 'false')
   })
 
   it('displays empty state when no publications match filter', () => {
-    render(<PublicationList publications={mockPublications} showFilters={true} />)
-    
-    // Click on Workshop filter - should show only 1 publication
-    fireEvent.click(screen.getByText('Workshop (1)'))
-    
-    // Should show only the workshop publication
-    expect(screen.getByText('Test Publication 3')).toBeInTheDocument()
+    render(<PublicationList publications={mockPublications} />)
+
+    // Click on non-peer-reviewed filter - should show only 1 publication
+    fireEvent.click(screen.getByText('査読なし'))
+
+    // Should show only the non-peer-reviewed publication
+    expect(screen.getByText('Test Publication 2')).toBeInTheDocument()
     expect(screen.queryByText('Test Publication 1')).not.toBeInTheDocument()
-    expect(screen.queryByText('Test Publication 2')).not.toBeInTheDocument()
-    expect(screen.getByText('Showing 1 of 3 publications')).toBeInTheDocument()
+    expect(screen.queryByText('Test Publication 3')).not.toBeInTheDocument()
+    expect(screen.getByText('1件 / 3件の論文を表示')).toBeInTheDocument()
   })
 
   it('handles empty publications array', () => {
     render(<PublicationList publications={[]} />)
-    
+
     // Should show empty state
-    expect(screen.getByText('No publications found for the selected filter.')).toBeInTheDocument()
+    expect(screen.getByText('論文が見つかりません')).toBeInTheDocument()
   })
 
   it('formats authors correctly for non-first-author publications', () => {
     render(<PublicationList publications={mockPublications} />)
-    
+
     // For pub-002 (not first author), authors should be plain text
     const authorText = screen.getByText('Jane Smith, John Doe, Bob Wilson')
     expect(authorText).toBeInTheDocument()

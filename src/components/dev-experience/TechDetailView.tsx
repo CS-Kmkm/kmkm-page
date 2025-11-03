@@ -83,38 +83,50 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
           <span className="font-medium">戻る</span>
         </button>
 
-        {/* Content */}
-        <div className="space-y-6">
-        {/* Tech Header */}
-        <TechHeader tech={tech} />
+        {/* Content - Two Column Layout */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8 xl:items-stretch">
+          {/* Left Column - Tech Information */}
+          <div className="space-y-6">
+            {/* Tech Header */}
+            <TechHeader tech={tech} />
 
-        {/* Tech Description */}
-        {tech.description && (
-          <TechDescription description={tech.description} />
-        )}
+            {/* Tech Description */}
+            {tech.description && (
+              <TechDescription description={tech.description} />
+            )}
 
-        {/* Related Frameworks (only for languages) */}
-        {tech.category === 'language' && relatedFrameworks.length > 0 && (
-          <RelatedFrameworks
-            frameworks={relatedFrameworks}
-            onFrameworkSelect={onRelatedTechSelect}
-          />
-        )}
+            {/* Related Frameworks (only for languages) */}
+            {tech.category === 'language' && relatedFrameworks.length > 0 && (
+              <RelatedFrameworks
+                frameworks={relatedFrameworks}
+                onFrameworkSelect={onRelatedTechSelect}
+              />
+            )}
 
-        {/* Related Languages (only for frameworks) */}
-        {tech.category === 'framework' && relatedLanguages.length > 0 && (
-          <RelatedLanguages
-            languages={relatedLanguages}
-            onLanguageSelect={onRelatedTechSelect}
-          />
-        )}
+            {/* Related Languages (only for frameworks) */}
+            {tech.category === 'framework' && relatedLanguages.length > 0 && (
+              <RelatedLanguages
+                languages={relatedLanguages}
+                onLanguageSelect={onRelatedTechSelect}
+              />
+            )}
+          </div>
 
-        {/* Project List */}
-        <ProjectList
-          projects={projects}
-          onProjectSelect={onProjectSelect}
-        />
-      </div>
+          {/* Right Column - Project List */}
+          <div className="xl:h-full">
+            <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 xl:h-full xl:flex xl:flex-col">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 xl:flex-shrink-0">
+                関連プロジェクト ({projects.length})
+              </h3>
+              <div className="xl:flex-1 xl:overflow-y-auto custom-scrollbar">
+                <ProjectList
+                  projects={projects}
+                  onProjectSelect={onProjectSelect}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
