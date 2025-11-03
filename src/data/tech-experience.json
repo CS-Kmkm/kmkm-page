@@ -465,7 +465,7 @@
         "Git",
         "GitHub"
       ],
-      "duration": "2024年10月",
+      "duration": "2024年10月27日",
       "role": "バックエンド, PM",
       "githubUrl": "https://github.com/jphacks/ng_2405",
       "imageUrl": null
@@ -581,6 +581,20 @@
       ],
       "duration": "2025年8月",
       "role": "DS/AIエンジニア",
+      "imageUrl": null
+    },
+    {
+      "id": "proj-015",
+      "name": "個人ポートフォリオサイト開設",
+      "description": "個人ポートフォリオサイトを開設しました。Next.jsとTypeScriptを使用してモダンなWebサイトを構築。",
+      "technologies": [
+        "TypeScript",
+        "Next.js",
+        "Git",
+        "GitHub"
+      ],
+      "duration": "2025年10月",
+      "role": "個人開発者",
       "imageUrl": null
     }
   ]

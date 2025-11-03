@@ -265,14 +265,16 @@ export const getEvents = (): EventEntry[] => {
     if (yearMatch) {
       const projectYear = parseInt(yearMatch[1]);
       const monthMatch = project.duration.match(/(\d{1,2})月/);
+      const dayMatch = project.duration.match(/(\d{1,2})日/);
       const projectMonth = monthMatch ? monthMatch[1].padStart(2, '0') : '01';
-      const projectDate = `${projectYear}-${projectMonth}-01`;
+      const projectDay = dayMatch ? dayMatch[1].padStart(2, '0') : '01';
+      const projectDate = `${projectYear}-${projectMonth}-${projectDay}`;
       
       let category: EventCategory = EventCategory.OTHER;
       let title = project.name;
       
-      // Skip personal development projects and coursework
-      if (project.name.includes('個人開発') || 
+      // Skip personal development projects and coursework (except portfolio site)
+      if ((project.name.includes('個人開発') && !project.name.includes('ポートフォリオ')) || 
           project.name.includes('Webスクレイピング') ||
           project.name.includes('Chrome拡張機能') ||
           project.name.includes('競技プログラミング') ||
@@ -292,6 +294,9 @@ export const getEvents = (): EventEntry[] => {
         } else if (project.name.includes('技育祭')) {
           title = project.name;
         }
+      } else if (project.name.includes('ポートフォリオサイト')) {
+        category = EventCategory.OTHER;
+        title = project.name;
       } else if (project.name.includes('アルバイト')) {
         // Include work projects as 'other' category instead of skipping
         category = EventCategory.OTHER;
