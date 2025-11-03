@@ -362,3 +362,86 @@ export interface EventDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+/**
+ * Interactive timeline event types for Git branch timeline
+ */
+export interface TimelineEventEntry {
+  id: string;
+  title: string;
+  date: string;           // ISO 8601 format (YYYY-MM-DD)
+  description: string;
+  category?: string;      // Optional: event category
+  year: string;          // Display year (auto-calculated from date)
+}
+
+/**
+ * Year-grouped events for timeline display
+ */
+export interface YearEventGroup {
+  year: string;
+  events: TimelineEventEntry[];
+}
+
+/**
+ * Validation error for timeline event data
+ */
+export interface TimelineEventValidationError {
+  type: 'missing_field' | 'invalid_date' | 'duplicate_id';
+  eventId: string;
+  message: string;
+}
+
+/**
+ * Event point position on timeline
+ */
+export interface EventPointPosition {
+  yearGroup: YearEventGroup;
+  x: number;
+  y: number;
+}
+
+/**
+ * Props for EventPoint component
+ */
+export interface EventPointProps {
+  x: number;
+  y: number;
+  eventCount: number;
+  isMultiple: boolean;
+  onClick: () => void;
+  onHover?: (isHovered: boolean) => void;
+  className?: string;
+}
+
+/**
+ * Props for EventModal component
+ */
+export interface EventModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  event: TimelineEventEntry | null;
+  className?: string;
+}
+
+/**
+ * Props for EventListModal component
+ */
+export interface EventListModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  yearGroup: YearEventGroup | null;
+  onEventSelect: (event: TimelineEventEntry) => void;
+  className?: string;
+}
+
+/**
+ * Enhanced GitBranchTimeline props with events
+ */
+export interface EnhancedGitBranchTimelineProps {
+  entries: ExtendedCareerEntry[];
+  events?: TimelineEventEntry[];
+  enableEventPoints?: boolean;
+  className?: string;
+  isReversed?: boolean;
+}
