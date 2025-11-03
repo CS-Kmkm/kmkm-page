@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   const profile = getProfile();
-  const recentUpdates = getRecentUpdates(10);
+  const recentUpdates = getRecentUpdates(15);
 
   return (
     <PageLayout title="トップページ">
