@@ -219,14 +219,22 @@ export default function GitBranchTimeline({
 
   // Process events for timeline
   const { eventPointPositions, eventHandlers } = useMemo(() => {
+    // Default handlers for when events are disabled
+    const defaultHandlers = {
+      handleEventPointClick: () => {},
+      handleEventSelect: () => {},
+      handleEventModalClose: () => {},
+      handleEventListModalClose: () => {}
+    };
+
     if (!enableEventPoints || events.length === 0) {
-      return { eventPointPositions: [], eventHandlers: {} };
+      return { eventPointPositions: [], eventHandlers: defaultHandlers };
     }
 
     const yearEventGroups = groupEventsByYear(events);
     
     if (yearEventGroups.length === 0 || yearLabels.length === 0) {
-      return { eventPointPositions: [], eventHandlers: {} };
+      return { eventPointPositions: [], eventHandlers: defaultHandlers };
     }
 
     // Create a map of year to Y position from year labels
@@ -520,7 +528,7 @@ export default function GitBranchTimeline({
                 eventCount={position.yearGroup.events.length}
                 isMultiple={position.yearGroup.events.length > 1}
                 isReversed={isReversed}
-                onClick={() => eventHandlers.handleEventPointClick?.(position.yearGroup)}
+                onClick={() => eventHandlers.handleEventPointClick(position.yearGroup)}
               />
             ))}
 
