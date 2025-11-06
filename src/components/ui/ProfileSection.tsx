@@ -80,21 +80,7 @@ export default function ProfileSection({
         )}
       </div>
 
-      {/* Portrait Image - Landscape orientation */}
-      {profile.avatarUrl && (
-        <div className="flex-shrink-0">
-          <div className="relative w-48 h-32 sm:w-64 sm:h-40 md:w-80 md:h-48 rounded-lg overflow-hidden bg-gray-100 shadow-md">
-            <Image
-              src={profile.avatarUrl}
-              alt={`${profile.name}のプロフィール写真`}
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 640px) 192px, (max-width: 768px) 256px, 320px"
-            />
-          </div>
-        </div>
-      )}
+
     </section>
   );
 }

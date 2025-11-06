@@ -8,7 +8,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   className = '',
 }) => {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="h-screen flex flex-col bg-white overflow-auto">
       {/* Skip to main content link for accessibility */}
       <a
         href="#main-content"
@@ -24,7 +24,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       {/* Main Content */}
       <main
         id="main-content"
-        className={`flex-grow py-4 sm:py-6 lg:py-8 ${className}`}
+        className={`flex-1 py-4 sm:py-6 lg:py-8 ${className}`}
         role="main"
         aria-label={`${title} page content`}
         tabIndex={-1}
