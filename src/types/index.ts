@@ -331,6 +331,7 @@ export interface EventItemProps {
 export interface EventListProps {
   events: EventEntry[];
   showFilters?: boolean;
+  onEventClick?: (event: EventEntry, eventIndex: number, filteredEvents: EventEntry[]) => void;
 }
 
 export interface EventFiltersProps {
@@ -360,7 +361,10 @@ export interface EventEmptyStateProps {
 export interface EventDetailModalProps {
   event: EventEntry | null;
   isOpen: boolean;
+  eventIndex: number;
+  filteredEvents: EventEntry[];
   onClose: () => void;
+  onNavigate?: (newIndex: number) => void;
 }
 
 /**

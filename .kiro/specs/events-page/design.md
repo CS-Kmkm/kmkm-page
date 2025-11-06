@@ -22,7 +22,7 @@ EventsPage
 │   │   ├── YearSection (multiple)
 │   │   │   └── EventItem (multiple)
 │   │   └── EventEmptyState
-│   └── EventDetailModal (optional)
+│   └── EventDetailModal
 ```
 
 ## Components and Interfaces
@@ -84,16 +84,55 @@ interface EventFilters {
 - Shows active filter status and result counts
 
 #### EventItem Component
-- Displays individual event information
+- Displays individual event information in a clickable card format
 - Supports different layouts based on event category
-- Handles click interactions for detailed views
+- Handles click interactions to open EventDetailModal
+- Shows preview information (title, date, category, brief description)
+- Provides visual feedback on hover and focus states
+- Implements proper accessibility attributes for interactive elements
 
-#### EventDetailModal Component (Optional)
-- Provides expanded view of event details
-- Similar to PublicationDetailModal pattern
-- Shows additional information like location, duration, links
+#### EventDetailModal Component
+- Provides expanded view of event details when an event is clicked
+- Displays comprehensive event information including extended descriptions
+- Shows additional metadata like location, duration, related links, and tags
+- Supports navigation between events within the same context
+- Implements proper modal accessibility patterns with focus management
+- Provides multiple close options (X button, ESC key, backdrop click)
+- Prevents background scrolling when open
 
-### 3. Utility Functions
+### 3. Modal Design and Interaction
+
+#### Modal State Management
+```typescript
+interface ModalState {
+  isOpen: boolean;
+  selectedEvent: EventEntry | null;
+  eventIndex: number;        // For navigation between events
+  filteredEvents: EventEntry[]; // Current filtered event list for navigation
+}
+```
+
+#### Modal Content Layout
+- Header: Event title, category badge, close button
+- Main content: Full description, date, location, duration
+- Footer: Related links, tags, navigation controls
+- Navigation: Previous/Next buttons when multiple events available
+
+#### Modal Interaction Patterns
+- Click on EventItem opens modal with selected event
+- ESC key closes modal
+- Click on backdrop closes modal  
+- Arrow keys navigate between events in the same filtered set
+- Tab navigation stays within modal when open
+- Focus returns to triggering element when closed
+
+#### Modal Responsive Behavior
+- Full screen on mobile devices
+- Centered overlay on desktop
+- Maintains readability across all screen sizes
+- Scrollable content area when content exceeds viewport
+
+### 4. Utility Functions
 
 #### Event Filtering
 ```typescript
@@ -189,13 +228,17 @@ function processEventData(rawEvents: any[]): EventEntry[] {
 - Event list rendering with real data
 - Filter interactions and state updates
 - Modal opening and closing behavior
+- Event navigation within modal
+- Modal accessibility and focus management
 - Responsive design across breakpoints
 
 ### Accessibility Tests
-- Keyboard navigation support
-- Screen reader compatibility
-- Color contrast validation
-- Focus management in modals
+- Keyboard navigation support throughout the page and modal
+- Screen reader compatibility with proper ARIA labels
+- Color contrast validation for all interactive elements
+- Focus management and focus trapping in modal
+- Modal announcement to screen readers when opened
+- Proper heading hierarchy within modal content
 
 ## Implementation Considerations
 

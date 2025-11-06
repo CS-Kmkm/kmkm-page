@@ -1,16 +1,37 @@
-import { Metadata } from 'next';
+'use client';
+
+import { useState } from 'react';
 import { PageLayout } from '@/components/common';
 import EventList from '@/components/ui/EventList';
+import EventDetailModal from '@/components/ui/EventDetailModal';
 import { getEvents } from '@/data';
-
-export const metadata: Metadata = {
-  title: 'Events | Personal Portfolio',
-  description: 'Academic and professional events including affiliation changes, publications, event participation, and internships.',
-  keywords: ['events', 'timeline', 'career', 'academic events', 'professional activities', 'publications', 'internships'],
-};
+import { EventEntry } from '@/types';
 
 export default function EventsPage() {
   const events = getEvents();
+  const [selectedEvent, setSelectedEvent] = useState<EventEntry | null>(null);
+  const [eventIndex, setEventIndex] = useState<number>(0);
+  const [filteredEvents, setFilteredEvents] = useState<EventEntry[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleEventClick = (event: EventEntry, index: number, filtered: EventEntry[]) => {
+    setSelectedEvent(event);
+    setEventIndex(index);
+    setFilteredEvents(filtered);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedEvent(null);
+  };
+
+  const handleNavigate = (newIndex: number) => {
+    if (newIndex >= 0 && newIndex < filteredEvents.length) {
+      setSelectedEvent(filteredEvents[newIndex]);
+      setEventIndex(newIndex);
+    }
+  };
 
   return (
     <PageLayout title="Events">
@@ -26,7 +47,7 @@ export default function EventsPage() {
         {/* Events List */}
         <div className="bg-white">
           {events.length > 0 ? (
-            <EventList events={events} />
+            <EventList events={events} onEventClick={handleEventClick} />
           ) : (
             <div className="text-center py-12">
               <div className="text-gray-400 mb-4">
@@ -54,6 +75,16 @@ export default function EventsPage() {
             </div>
           )}
         </div>
+
+        {/* Event Detail Modal */}
+        <EventDetailModal
+          isOpen={isModalOpen}
+          event={selectedEvent}
+          eventIndex={eventIndex}
+          filteredEvents={filteredEvents}
+          onClose={handleCloseModal}
+          onNavigate={handleNavigate}
+        />
       </div>
     </PageLayout>
   );

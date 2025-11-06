@@ -11,6 +11,7 @@
 - **Event_Filter**: イベントをカテゴリ別に絞り込む機能
 - **Year_Section**: 年代別にグループ化されたイベント表示セクション
 - **Event_Category**: イベントの種類（所属、論文、イベント、インターンシップなど）
+- **Event_Modal**: 個別のイベントの詳細情報を表示するモーダルダイアログ
 
 ## Requirements
 
@@ -63,6 +64,18 @@
 5. THE Event_System SHALL provide clear visual distinction between different event categories
 
 ### Requirement 5
+
+**User Story:** ユーザーとして、イベントの詳細情報をより詳しく確認したいので、クリックしてモーダルで詳細を表示できるようにしたい
+
+#### Acceptance Criteria
+
+1. WHEN an event is clicked, THE Event_System SHALL open an Event_Modal displaying detailed information
+2. THE Event_Modal SHALL display all available event information including extended descriptions, links, and metadata
+3. THE Event_Modal SHALL provide easy navigation between events within the same year or category
+4. WHEN the Event_Modal is open, THE Event_System SHALL prevent background scrolling and provide clear close options
+5. THE Event_Modal SHALL be accessible via keyboard navigation and screen readers
+
+### Requirement 6
 
 **User Story:** ユーザーとして、論文ページと同様の使いやすさを期待するので、一貫したUI/UXパターンを提供してほしい
 
