@@ -6,6 +6,7 @@ let techExperienceData: { technologies: TechItem[]; projects: ProjectDetail[] } 
 let careerData: { entries: CareerEntry[] } | null = null;
 let profileData: ProfileInfo | null = null;
 
+
 // Helper function to safely load JSON data
 function safeLoadData<T>(loader: () => T, fallback: T): T {
   try {
@@ -21,6 +22,7 @@ import publicationsJson from './publications.json';
 import techExperienceJson from './tech-experience.json';
 import careerJson from './career.json';
 import profileJson from './profile.json';
+
 
 // Lazy loading functions with error handling
 function loadPublicationsData() {
@@ -69,6 +71,8 @@ function loadProfileData() {
   }
   return profileData;
 }
+
+
 
 
 
@@ -361,23 +365,25 @@ export const getEvents = (): EventEntry[] => {
       const projectYear = parseInt(yearMatch[1]);
       const monthMatch = project.duration.match(/(\d{1,2})月/);
       const dayMatch = project.duration.match(/(\d{1,2})日/);
-      const projectMonth = monthMatch ? monthMatch[1].padStart(2, '0') : '01';
-      const projectDay = dayMatch ? dayMatch[1].padStart(2, '0') : '01';
+      
+      // Handle special date formats
+      let projectMonth = '01';
+      let projectDay = '01';
+      
+      if (project.duration.includes('10月27日')) {
+        projectMonth = '10';
+        projectDay = '27';
+      } else if (monthMatch) {
+        projectMonth = monthMatch[1].padStart(2, '0');
+        if (dayMatch) {
+          projectDay = dayMatch[1].padStart(2, '0');
+        }
+      }
+      
       const projectDate = `${projectYear}-${projectMonth}-${projectDay}`;
 
       let category: EventCategory = EventCategory.OTHER;
       let title = project.name;
-
-      // Skip personal development projects and coursework (except portfolio site)
-      if ((project.name.includes('個人開発') && !project.name.includes('ポートフォリオ')) ||
-        project.name.includes('Webスクレイピング') ||
-        project.name.includes('Chrome拡張機能') ||
-        project.name.includes('競技プログラミング') ||
-        project.name.includes('データ分析・実験') ||
-        project.name.includes('PBL') ||
-        project.name.includes('生成AIチャットボット開発')) {
-        return;
-      }
 
       // Categorize based on project name
       if (project.name.includes('インターンシップ')) {
@@ -393,9 +399,20 @@ export const getEvents = (): EventEntry[] => {
         category = EventCategory.OTHER;
         title = project.name;
       } else if (project.name.includes('アルバイト')) {
-        // Include work projects as 'other' category instead of skipping
+        // Include work projects as 'other' category
         category = EventCategory.OTHER;
         title = project.name;
+      } else {
+        // Skip personal development projects and coursework that are not significant events
+        if (project.name.includes('個人開発') ||
+            project.name.includes('Webスクレイピング') ||
+            project.name.includes('Chrome拡張機能') ||
+            project.name.includes('競技プログラミング') ||
+            project.name.includes('データ分析・実験') ||
+            project.name.includes('PBL')) {
+          return; // Skip these projects
+        }
+        category = EventCategory.OTHER;
       }
 
       // Determine location
@@ -406,8 +423,14 @@ export const getEvents = (): EventEntry[] => {
         location = 'トヨタシステムズ';
       } else if (project.name.includes('ラクスル')) {
         location = 'ラクスル';
+      } else if (project.name.includes('BIPROGY')) {
+        location = 'BIPROGY';
+      } else if (project.name.includes('MonotaRo')) {
+        location = 'MonotaRo';
       } else if (project.name.includes('JPHACKS')) {
         location = 'ハッカソン会場';
+      } else if (project.name.includes('技育祭')) {
+        location = 'イベント会場';
       }
 
       events.push({
@@ -431,8 +454,6 @@ export const getEvents = (): EventEntry[] => {
     const dateB = new Date(b.date);
     return dateB.getTime() - dateA.getTime();
   });
-
-
 
   return sortedEvents;
 };
@@ -505,17 +526,17 @@ export const filterEvents = (events: EventEntry[], filters: EventFilters): Event
 
     // Check if event matches any active filter
     switch (event.category) {
-      case 'affiliation':
+      case EventCategory.AFFILIATION:
         return filters.showAffiliation;
-      case 'publication':
+      case EventCategory.PUBLICATION:
         return filters.showPublication;
-      case 'event':
+      case EventCategory.EVENT:
         return filters.showEvent;
-      case 'internship':
+      case EventCategory.INTERNSHIP:
         return filters.showInternship;
-      case 'award':
+      case EventCategory.AWARD:
         return filters.showAward;
-      case 'other':
+      case EventCategory.OTHER:
         return filters.showOther;
       default:
         return false;
@@ -533,6 +554,36 @@ export const getEventsByYear = (year: number): EventEntry[] => {
 
 export const getRecentEvents = (limit: number = 5): EventEntry[] => {
   return getEvents().slice(0, limit);
+};
+
+// Additional event processing utilities
+export const processEventData = (rawEvents: any[]): EventEntry[] => {
+  return rawEvents.map(event => ({
+    ...event,
+    year: new Date(event.date).getFullYear(),
+    // Ensure required fields have fallback values
+    description: event.description || '',
+    tags: event.tags || [],
+    relatedLinks: event.relatedLinks || undefined,
+    location: event.location || undefined,
+    duration: event.duration || undefined
+  }));
+};
+
+export const groupEventsByYear = (events: EventEntry[]): Record<number, EventEntry[]> => {
+  return events.reduce((groups, event) => {
+    const year = event.year;
+    if (!groups[year]) {
+      groups[year] = [];
+    }
+    groups[year].push(event);
+    return groups;
+  }, {} as Record<number, EventEntry[]>);
+};
+
+export const getEventYears = (events: EventEntry[]): number[] => {
+  const years = [...new Set(events.map(event => event.year))];
+  return years.sort((a, b) => b - a); // Descending order
 };
 
 // Data validation helpers

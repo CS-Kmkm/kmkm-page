@@ -7,7 +7,7 @@ import EventFilters from './EventFilters';
 import EventEmptyState from './EventEmptyState';
 import { filterEvents } from '@/data';
 
-const EventList: React.FC<EventListProps> = ({ events }) => {
+const EventList: React.FC<EventListProps> = ({ events, onEventClick }) => {
   const [showAffiliation, setShowAffiliation] = useState(false);
   const [showPublication, setShowPublication] = useState(false);
   const [showEvent, setShowEvent] = useState(false);
@@ -37,6 +37,12 @@ const EventList: React.FC<EventListProps> = ({ events }) => {
     setShowInternship(false);
     setShowAward(false);
     setShowOther(false);
+  };
+
+  const handleEventClick = (event: EventEntry, eventIndex: number) => {
+    if (onEventClick) {
+      onEventClick(event, eventIndex, filteredEvents);
+    }
   };
 
   return (
@@ -84,7 +90,10 @@ const EventList: React.FC<EventListProps> = ({ events }) => {
                   </div>
                 )}
                 <div className="ml-0 sm:ml-20 md:ml-24">
-                  <EventItem event={event} />
+                  <EventItem 
+                    event={event} 
+                    onClick={() => handleEventClick(event, index)}
+                  />
                 </div>
               </div>
             );

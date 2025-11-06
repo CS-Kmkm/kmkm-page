@@ -18,3 +18,8 @@ export { default as PublicationFilters } from './PublicationFilters';
 export { default as PublicationEmptyState } from './PublicationEmptyState';
 export { default as FilterModal } from './FilterModal';
 export { default as PublicationDetailModal } from './PublicationDetailModal';
+export { default as EventList } from './EventList';
+export { default as EventItem } from './EventItem';
+export { default as EventFilters } from './EventFilters';
+export { default as EventEmptyState } from './EventEmptyState';
+export { default as EventDetailModal } from './EventDetailModal';
