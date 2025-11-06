@@ -14,7 +14,7 @@ test.describe('Homepage', () => {
     
     // Check profile section is visible
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
-    await expect(page.getByText(/名古屋大学大学院/)).toBeVisible();
+    await expect(page.getByText('名古屋大学大学院情報学研究科知能システム学専攻松原研究室')).toBeVisible();
     
     // Check social media section
     await expect(page.getByLabel('ソーシャルメディアリンク')).toBeVisible();

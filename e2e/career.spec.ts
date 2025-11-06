@@ -15,7 +15,7 @@ test.describe('Career Page', () => {
 
     // Check timeline entries are visible (using actual data)
     await expect(page.getByText('名古屋大学大学院 情報学研究科 知能システム学専攻')).toBeVisible();
-    await expect(page.getByText('松原研究室', { exact: true })).toBeVisible();
+    await expect(page.getByText('大学院生（松原研究室）')).toBeVisible();
   });
 
   test('should display timeline in chronological order', async ({ page }) => {
@@ -49,7 +49,7 @@ test.describe('Career Page', () => {
 
     // Check that timeline is still readable on mobile
     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
-    await expect(page.getByText('松原研究室', { exact: true })).toBeVisible();
+    await expect(page.getByText('大学院生（松原研究室）')).toBeVisible();
 
     // Check that timeline content is still accessible on mobile
     await expect(page.getByText(/2025\.04 - 現在/).first()).toBeVisible();
@@ -81,7 +81,7 @@ test.describe('Career Page', () => {
 
     // Check that content is visible
     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
-    await expect(page.getByText('松原研究室', { exact: true })).toBeVisible();
+    await expect(page.getByText('大学院生（松原研究室）')).toBeVisible();
 
     // Check SVG timeline is rendered
     const timelineSection = page.locator('section[aria-labelledby="timeline-heading"]');
@@ -103,7 +103,7 @@ test.describe('Career Page', () => {
     // Check that all content is visible
     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
     await expect(page.getByText('名古屋大学大学院 情報学研究科 知能システム学専攻')).toBeVisible();
-    await expect(page.getByText('松原研究室', { exact: true })).toBeVisible();
+    await expect(page.getByText('大学院生（松原研究室）')).toBeVisible();
 
     // Check SVG timeline is rendered
     const timelineSection = page.locator('section[aria-labelledby="timeline-heading"]');
@@ -120,15 +120,15 @@ test.describe('Career Page', () => {
     const reverseButton = page.getByRole('button', { name: 'ブランチの順序を反転' });
     await expect(reverseButton).toBeVisible();
 
-    // Check initial button text
-    await expect(reverseButton).toContainText('↑');
+    // Check initial button text (default is reversed, so should show ↓)
+    await expect(reverseButton).toContainText('↓');
 
     // Click to reverse
     await reverseButton.click();
     await page.waitForTimeout(500); // Wait for animation
 
     // Check button text changed
-    await expect(reverseButton).toContainText('↓');
+    await expect(reverseButton).toContainText('↑');
 
     // Timeline should still be visible
     const timelineSection = page.locator('section[aria-labelledby="timeline-heading"]');
