@@ -36,11 +36,11 @@ const RelatedFrameworks: React.FC<RelatedFrameworksProps> = ({
   };
 
   return (
-    <div className="p-6 bg-blue-50 rounded-lg border border-blue-200">
-      <h3 className="text-lg font-semibold text-gray-900 mb-3">
+    <div className="p-6 bg-blue-50 dark:bg-blue-900/10 rounded-lg border border-blue-200 dark:border-blue-800 transition-colors duration-200">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
         関連フレームワーク
       </h3>
-      <p className="text-sm text-gray-600 mb-4">
+      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
         この言語と一緒に使用したフレームワーク
       </p>
 
@@ -50,10 +50,10 @@ const RelatedFrameworks: React.FC<RelatedFrameworksProps> = ({
             key={framework.id}
             onClick={() => onFrameworkSelect?.(framework)}
             className="
-              flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-200
+              flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-blue-200 dark:border-blue-700
               transition-all duration-150
-              hover:shadow-md hover:border-blue-400
-              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+              hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500
+              focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900
               min-h-[44px]
             "
             type="button"
@@ -77,7 +77,7 @@ const RelatedFrameworks: React.FC<RelatedFrameworksProps> = ({
 
             {/* Name */}
             <div className="flex-grow text-left min-w-0">
-              <div className="text-sm font-medium text-gray-900 truncate">
+              <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                 {framework.name}
               </div>
             </div>

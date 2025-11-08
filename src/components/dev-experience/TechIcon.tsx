@@ -65,7 +65,7 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
               width={64}
               height={64}
               onError={handleImageError}
-              className="object-contain w-full h-full max-w-[64px] max-h-[64px]"
+              className="object-contain w-full h-full max-w-[64px] max-h-[64px] dark:mix-blend-multiply"
               priority={false}
               unoptimized={true}
             />

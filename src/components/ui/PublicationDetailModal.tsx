@@ -67,7 +67,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md p-0 sm:p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black/50 p-0 sm:p-4"
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
@@ -75,18 +75,18 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
     >
       <div
         ref={modalRef}
-        className="bg-white rounded-none sm:rounded-lg shadow-xl w-full h-full sm:max-w-3xl sm:w-full sm:max-h-[90vh] sm:h-auto overflow-y-auto"
+        className="bg-white dark:bg-gray-800 rounded-none sm:rounded-lg shadow-xl w-full h-full sm:max-w-3xl sm:w-full sm:max-h-[90vh] sm:h-auto overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header with Close Button */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-start z-10">
-          <h2 id="publication-detail-title" className="text-lg sm:text-xl font-semibold text-gray-900 pr-8">
+        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-start z-10">
+          <h2 id="publication-detail-title" className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 pr-8">
             Publication Details
           </h2>
           <button
             ref={closeButtonRef}
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full p-1 min-h-[44px] min-w-[44px] flex items-center justify-center"
+            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 rounded-full p-1 min-h-[44px] min-w-[44px] flex items-center justify-center"
             aria-label="Close modal"
           >
             <svg
@@ -111,17 +111,17 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
           {/* Bibliographic Information */}
           <div className="space-y-3 sm:space-y-4">
             {/* Title */}
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 leading-tight">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
               {publication.title}
             </h3>
 
             {/* Authors */}
-            <p className="text-sm sm:text-base text-gray-700">
+            <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300">
               {formatAuthors(publication.authors, publication.isFirstAuthor)}
             </p>
 
             {/* Venue and Year */}
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
               <em>{publication.venue}</em>, {publication.year}
             </p>
 
@@ -206,9 +206,9 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
 
           {/* Abstract Section */}
           {publication.abstract && (
-            <div className="border-t border-gray-200 pt-4 sm:pt-6">
-              <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3">Abstract</h4>
-              <p className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-wrap">
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
+              <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">Abstract</h4>
+              <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
                 {publication.abstract}
               </p>
             </div>
@@ -216,16 +216,16 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
 
           {/* Image Section */}
           {publication.imageUrl && !imageError && (
-            <div className="border-t border-gray-200 pt-4 sm:pt-6">
-              <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3">Figure</h4>
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
+              <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">Figure</h4>
               <img
                 src={publication.imageUrl}
                 alt={publication.imageAlt || 'Publication figure'}
                 onError={() => setImageError(true)}
-                className="w-full rounded-lg border border-gray-200"
+                className="w-full rounded-lg border border-gray-200 dark:border-gray-700"
               />
               {publication.imageAlt && (
-                <p className="text-sm text-gray-600 mt-2 italic">{publication.imageAlt}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 italic">{publication.imageAlt}</p>
               )}
             </div>
           )}

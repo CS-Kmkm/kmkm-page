@@ -26,15 +26,15 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
   const getProficiencyColor = (level: string) => {
     switch (level) {
       case 'expert':
-        return 'bg-green-100 text-green-900 border-green-300';
+        return 'bg-green-100 dark:bg-green-900/20 text-green-900 dark:text-green-300 border-green-300 dark:border-green-700';
       case 'advanced':
-        return 'bg-blue-100 text-blue-900 border-blue-300';
+        return 'bg-blue-100 dark:bg-blue-900/20 text-blue-900 dark:text-blue-300 border-blue-300 dark:border-blue-700';
       case 'intermediate':
-        return 'bg-yellow-100 text-yellow-900 border-yellow-300';
+        return 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-900 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700';
       case 'beginner':
-        return 'bg-gray-100 text-gray-900 border-gray-300';
+        return 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border-gray-300 dark:border-gray-600';
       default:
-        return 'bg-gray-100 text-gray-900 border-gray-300';
+        return 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border-gray-300 dark:border-gray-600';
     }
   };
 
@@ -54,7 +54,7 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-6 bg-white rounded-lg border border-gray-200">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-200">
       {/* Logo */}
       <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
         {tech.logoUrl ? (
@@ -74,7 +74,7 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
 
       {/* Info */}
       <div className="flex-grow">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           {tech.name}
         </h2>
         
@@ -90,7 +90,7 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
           </span>
 
           {/* Experience Years */}
-          <span className="flex items-center gap-1.5 text-gray-700">
+          <span className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
             <svg
               className="w-4 h-4"
               fill="none"

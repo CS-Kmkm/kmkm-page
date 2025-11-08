@@ -54,8 +54,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   const [systemPreference, setSystemPreference] = useState<ResolvedTheme>('light');
   const [isLoading, setIsLoading] = useState(true);
 
-  // Compute resolved theme
-  const resolvedTheme = resolveTheme(theme);
+  // Compute resolved theme based on current theme and system preference
+  const resolvedTheme = React.useMemo(() => {
+    if (theme === 'system') {
+      return systemPreference;
+    }
+    return theme as ResolvedTheme;
+  }, [theme, systemPreference]);
 
   /**
    * Initialize theme on component mount
@@ -63,12 +68,16 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   useEffect(() => {
     const initializeTheme = () => {
       try {
+        console.log('Initializing theme...');
+        
         // Get system preference
         const systemPref = getSystemPreference();
+        console.log('System preference:', systemPref);
         setSystemPreference(systemPref);
 
         // Try to load stored preference
         const storedTheme = getStoredThemePreference();
+        console.log('Stored theme:', storedTheme);
         
         if (storedTheme) {
           setThemeState(storedTheme);
@@ -92,15 +101,19 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
    */
   useEffect(() => {
     if (!isLoading) {
+      console.log('Applying theme:', resolvedTheme);
       applyCSSVariables(resolvedTheme);
       
       // Update document class for Tailwind dark mode
       const root = document.documentElement;
       if (resolvedTheme === 'dark') {
+        console.log('Adding dark class to root');
         root.classList.add('dark');
       } else {
+        console.log('Removing dark class from root');
         root.classList.remove('dark');
       }
+      console.log('Root classes:', root.className);
     }
   }, [resolvedTheme, isLoading]);
 
@@ -134,10 +147,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
    * Toggle between light and dark themes
    */
   const toggleTheme = useCallback(() => {
-    const currentResolved = resolveTheme(theme);
-    const newTheme: Theme = currentResolved === 'light' ? 'dark' : 'light';
+    console.log('Toggle theme called. Current theme:', theme, 'Resolved:', resolvedTheme);
+    const newTheme: Theme = resolvedTheme === 'light' ? 'dark' : 'light';
+    console.log('Setting new theme:', newTheme);
     setTheme(newTheme);
-  }, [theme, setTheme]);
+  }, [theme, resolvedTheme, setTheme]);
 
   /**
    * Context value
