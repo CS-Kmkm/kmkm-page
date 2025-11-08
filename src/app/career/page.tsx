@@ -3,14 +3,17 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { PageLayout } from '@/components/common';
-import GitBranchTimeline from '@/components/ui/GitBranchTimeline';
-import { getCareerEntries, getTimelineEvents } from '@/data';
-import { ExtendedCareerEntry, TimelineEventEntry } from '@/types';
+import TimelineView from '@/components/timeline/TimelineView';
+import ListView from '@/components/timeline/ListView';
+import ViewToggleButton, { ViewMode } from '@/components/ui/ViewToggleButton';
+import EventDetailModal from '@/components/ui/EventDetailModal';
+import { getCareerEntries, getTimelineEvents, getEvents } from '@/data';
+import { ExtendedCareerEntry, TimelineEventEntry, EventEntry } from '@/types';
 
 // Constants
+const DEFAULT_VIEW_MODE: ViewMode = 'timeline';
 const DEFAULT_REVERSED_STATE = true;
 const PAGE_TITLE = '経歴';
-const TIMELINE_HEADING_ID = 'timeline-heading';
 
 // Component for breadcrumb navigation
 function BreadcrumbNavigation() {
@@ -35,121 +38,180 @@ function BreadcrumbNavigation() {
   );
 }
 
-// Component for page header with reverse toggle
+// Component for page header with view toggle
 interface PageHeaderProps {
-  isReversed: boolean;
-  onToggleReverse: () => void;
+  viewMode: ViewMode;
+  onToggleView: () => void;
 }
 
-function PageHeader({ isReversed, onToggleReverse }: PageHeaderProps) {
+function PageHeader({ viewMode, onToggleView }: PageHeaderProps) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-0">
-      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">
-        {PAGE_TITLE}
-      </h1>
-      <button
-        onClick={onToggleReverse}
-        className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-slate-300 dark:border-gray-600 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-600 transition-colors min-h-[44px] self-start sm:self-auto focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
-        aria-label="ブランチの順序を反転"
-        type="button"
-      >
-        {isReversed ? "↓" : "↑"} 順序反転
-      </button>
+    <div className="mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 flex-shrink-0">
+          {PAGE_TITLE}
+        </h1>
+        <div className="sm:ml-auto flex-shrink-0">
+          <ViewToggleButton
+            currentView={viewMode}
+            onToggle={onToggleView}
+          />
+        </div>
+      </div>
     </div>
   );
 }
 
-// Component for empty state
-function EmptyState() {
-  return (
-    <div className="text-center py-8 sm:py-12">
-      <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg">
-        経歴情報が見つかりませんでした。
-      </p>
-    </div>
-  );
-}
-
-// Component for timeline section
-interface TimelineSectionProps {
+// Component for view content
+interface ViewContentProps {
+  viewMode: ViewMode;
   careerEntries: ExtendedCareerEntry[];
   timelineEvents: TimelineEventEntry[];
+  events: EventEntry[];
   isReversed: boolean;
+  onToggleReverse: () => void;
+  onEventClick: (event: EventEntry, index: number, filtered: EventEntry[]) => void;
 }
 
-function TimelineSection({ careerEntries, timelineEvents, isReversed }: TimelineSectionProps) {
-  const hasCareerData = careerEntries.length > 0;
+function ViewContent({
+  viewMode,
+  careerEntries,
+  timelineEvents,
+  events,
+  isReversed,
+  onToggleReverse,
+  onEventClick
+}: ViewContentProps) {
+  if (viewMode === 'timeline') {
+    return (
+      <TimelineView
+        careerEntries={careerEntries}
+        timelineEvents={timelineEvents}
+        isReversed={isReversed}
+        onToggleReverse={onToggleReverse}
+      />
+    );
+  }
 
-  return (
-    <section aria-labelledby={TIMELINE_HEADING_ID}>
-      <h2 id={TIMELINE_HEADING_ID} className="sr-only">
-        経歴タイムライン
-      </h2>
-
-      {hasCareerData ? (
-        <GitBranchTimeline
-          entries={careerEntries}
-          events={timelineEvents}
-          enableEventPoints={true}
-          className="px-2 sm:px-4"
-          isReversed={isReversed}
-        />
-      ) : (
-        <EmptyState />
-      )}
-    </section>
-  );
+  return <ListView events={events} onEventClick={onEventClick} />;
 }
 
-// Custom hook for career data
+// Custom hook for career and event data
 function useCareerData() {
   return useMemo(() => {
     const careerEntries = getCareerEntries() as ExtendedCareerEntry[];
     const timelineEvents = getTimelineEvents();
+    const events = getEvents();
     
     return {
       careerEntries,
-      timelineEvents
+      timelineEvents,
+      events
     };
   }, []);
 }
 
-// Custom hook for reverse state management
-function useReverseState() {
+// Custom hook for view state management
+function useViewState() {
+  const [viewMode, setViewMode] = useState<ViewMode>(DEFAULT_VIEW_MODE);
   const [isReversed, setIsReversed] = useState(DEFAULT_REVERSED_STATE);
+  const [selectedEvent, setSelectedEvent] = useState<EventEntry | null>(null);
+  const [eventIndex, setEventIndex] = useState<number>(0);
+  const [filteredEvents, setFilteredEvents] = useState<EventEntry[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleViewMode = () => {
+    setViewMode(prev => prev === 'timeline' ? 'list' : 'timeline');
+  };
   
   const toggleReverse = () => {
     setIsReversed(prev => !prev);
   };
 
+  const handleEventClick = (event: EventEntry, index: number, filtered: EventEntry[]) => {
+    setSelectedEvent(event);
+    setEventIndex(index);
+    setFilteredEvents(filtered);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedEvent(null);
+  };
+
+  const handleNavigate = (newIndex: number) => {
+    if (newIndex >= 0 && newIndex < filteredEvents.length) {
+      setSelectedEvent(filteredEvents[newIndex]);
+      setEventIndex(newIndex);
+    }
+  };
+
   return {
+    viewMode,
     isReversed,
-    toggleReverse
+    selectedEvent,
+    eventIndex,
+    filteredEvents,
+    isModalOpen,
+    toggleViewMode,
+    toggleReverse,
+    handleEventClick,
+    handleCloseModal,
+    handleNavigate
   };
 }
 
 // Main component
 export default function CareerPage() {
-  const { careerEntries, timelineEvents } = useCareerData();
-  const { isReversed, toggleReverse } = useReverseState();
+  const { careerEntries, timelineEvents, events } = useCareerData();
+  const {
+    viewMode,
+    isReversed,
+    selectedEvent,
+    eventIndex,
+    filteredEvents,
+    isModalOpen,
+    toggleViewMode,
+    toggleReverse,
+    handleEventClick,
+    handleCloseModal,
+    handleNavigate
+  } = useViewState();
 
   return (
     <PageLayout
       title={PAGE_TITLE}
-      className="max-w-6xl mx-auto"
+      className="max-w-6xl mx-auto px-4"
     >
-      <BreadcrumbNavigation />
-      
-      <PageHeader 
-        isReversed={isReversed} 
-        onToggleReverse={toggleReverse} 
-      />
-      
-      <TimelineSection
-        careerEntries={careerEntries}
-        timelineEvents={timelineEvents}
-        isReversed={isReversed}
-      />
+      <div className="w-full">
+        <BreadcrumbNavigation />
+        
+        <PageHeader 
+          viewMode={viewMode}
+          onToggleView={toggleViewMode}
+        />
+        
+        <ViewContent
+          viewMode={viewMode}
+          careerEntries={careerEntries}
+          timelineEvents={timelineEvents}
+          events={events}
+          isReversed={isReversed}
+          onToggleReverse={toggleReverse}
+          onEventClick={handleEventClick}
+        />
+
+        {/* Event Detail Modal for List View */}
+        <EventDetailModal
+          isOpen={isModalOpen}
+          event={selectedEvent}
+          eventIndex={eventIndex}
+          filteredEvents={filteredEvents}
+          onClose={handleCloseModal}
+          onNavigate={handleNavigate}
+        />
+      </div>
     </PageLayout>
   );
 }
