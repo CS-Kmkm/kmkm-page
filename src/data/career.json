@@ -8,7 +8,8 @@
       "startDate": "2009-04-01",
       "endDate": "2015-03-31",
       "parentId": null,
-      "description": "小学校での基礎教育"
+      "description": "小学校での基礎教育",
+      "displayDate": "2009-04-01"
     },
     {
       "id": "career-006",
@@ -18,7 +19,8 @@
       "startDate": "2015-04-01",
       "endDate": "2018-03-31",
       "parentId": null,
-      "description": "中学校での学習"
+      "description": "中学校での学習",
+      "displayDate": "2015-04-01"
     },
     {
       "id": "career-005",
@@ -28,7 +30,8 @@
       "startDate": "2018-04-01",
       "endDate": "2021-03-31",
       "parentId": null,
-      "description": "高等学校での学習"
+      "description": "高等学校での学習",
+      "displayDate": "2018-04-01"
     },
     {
       "id": "career-004",
@@ -38,7 +41,8 @@
       "startDate": "2021-04-01",
       "endDate": "2025-03-31",
       "parentId": null,
-      "description": "大学での学習"
+      "description": "大学での学習",
+      "displayDate": "2021-04-01"
     },
     {
       "id": "career-003",
@@ -48,7 +52,8 @@
       "startDate": "2023-04-01",
       "endDate": "2025-03-31",
       "parentId": "career-004",
-      "description": "知能システム系への配属"
+      "description": "知能システム系への配属",
+      "displayDate": "2023-04-01"
     },
     {
       "id": "career-002",
@@ -58,7 +63,8 @@
       "startDate": "2024-04-01",
       "endDate": null,
       "parentId": "career-003",
-      "description": "松原研究室への配属"
+      "description": "松原研究室への配属",
+      "displayDate": "2024-04-01"
     },
     {
       "id": "career-001",
@@ -68,7 +74,8 @@
       "startDate": "2025-04-01",
       "endDate": null,
       "parentId": null,
-      "description": "大学院での研究活動"
+      "description": "大学院での研究活動",
+      "displayDate": "2025-04-01"
     },
     {
       "id": "career-000",
@@ -78,7 +85,8 @@
       "startDate": "2025-04-01",
       "endDate": null,
       "parentId": null,
-      "description": "情報環境部での技術補佐業務"
+      "description": "情報環境部での技術補佐業務",
+      "displayDate": "2025-04-01"
     }
   ]
 }

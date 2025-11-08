@@ -48,19 +48,19 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ project, onClick }) =
     <button
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      className="w-full text-left p-4 rounded-lg border border-gray-200 transition-all duration-150 hover:bg-gray-50 hover:border-blue-300 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 active:scale-[0.98]"
+      className="w-full text-left p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-all duration-150 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 active:scale-[0.98]"
       aria-label={`View details for ${project.name}`}
       type="button"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-grow min-w-0">
           {/* Project Name */}
-          <h4 className="text-base font-semibold text-gray-900 mb-2 line-clamp-2">
+          <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2">
             {project.name}
           </h4>
 
           {/* Duration and Role */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-sm text-gray-600 mb-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-sm text-gray-600 dark:text-gray-400 mb-3">
             <span className="flex items-center gap-1.5">
               <svg
                 className="w-4 h-4 flex-shrink-0"
@@ -79,7 +79,7 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ project, onClick }) =
               {project.duration}
             </span>
 
-            <span className="hidden sm:inline text-gray-400">•</span>
+            <span className="hidden sm:inline text-gray-400 dark:text-gray-500">•</span>
 
             <span className="flex items-center gap-1.5">
               <svg
@@ -105,13 +105,13 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ project, onClick }) =
             {sortedTechs.slice(0, 6).map((tech) => (
               <span
                 key={tech}
-                className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-md font-medium"
+                className="inline-block px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 rounded-md font-medium"
               >
                 {tech}
               </span>
             ))}
             {sortedTechs.length > 6 && (
-              <span className="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-md">
+              <span className="inline-block px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-md">
                 +{sortedTechs.length - 6}
               </span>
             )}
@@ -119,7 +119,7 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ project, onClick }) =
         </div>
 
         {/* Arrow Icon */}
-        <div className="flex-shrink-0 text-gray-400 mt-1">
+        <div className="flex-shrink-0 text-gray-400 dark:text-gray-500 mt-1">
           <svg
             className="w-5 h-5"
             fill="none"

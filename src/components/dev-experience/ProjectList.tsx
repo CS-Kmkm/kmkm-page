@@ -11,8 +11,8 @@ import { getProjectListStyle } from '@/utils/projectList';
 const ProjectList: React.FC<ProjectListProps> = ({ projects, onProjectSelect }) => {
   if (projects.length === 0) {
     return (
-      <div className="p-4 bg-gray-50 rounded-lg text-center">
-        <p className="text-gray-500 text-sm">関連プロジェクトがありません</p>
+      <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg text-center">
+        <p className="text-gray-500 dark:text-gray-400 text-sm">関連プロジェクトがありません</p>
       </div>
     );
   }

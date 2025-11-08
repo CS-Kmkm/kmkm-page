@@ -1,21 +1,108 @@
 @import "tailwindcss";
 
 :root {
+  /* Legacy variables for backward compatibility */
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Comprehensive theme system variables */
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+  --color-primary: #3b82f6;
+  --color-secondary: #6b7280;
+  --color-accent: #f3f4f6;
+  --color-border: #e5e7eb;
+  --color-muted: #9ca3af;
+  --color-card: #ffffff;
+  --color-card-hover: #f9fafb;
+  
+  /* Additional semantic colors */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+  
+  /* Focus and interaction colors */
+  --color-focus: #3b82f6;
+  --color-focus-ring: rgba(59, 130, 246, 0.5);
+  
+  /* Shadow colors */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Color system using CSS custom properties */
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+  --color-border: var(--color-border);
+  --color-muted: var(--color-muted);
+  --color-card: var(--color-card);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
+  --color-info: var(--color-info);
+  
+  /* Font families */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  /* Box shadows */
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
 }
 
+/* Dark theme variables applied via JavaScript */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  
+  --color-background: #0a0a0a;
+  --color-foreground: #ededed;
+  --color-primary: #60a5fa;
+  --color-secondary: #9ca3af;
+  --color-accent: #1f2937;
+  --color-border: #374151;
+  --color-muted: #6b7280;
+  --color-card: #111827;
+  --color-card-hover: #1f2937;
+  
+  /* Dark theme semantic colors */
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
+  --color-info: #60a5fa;
+  
+  /* Dark theme focus colors */
+  --color-focus: #60a5fa;
+  --color-focus-ring: rgba(96, 165, 250, 0.5);
+  
+  /* Dark theme shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+}
+
+/* System preference fallback (when JavaScript is disabled) */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.dark) {
     --background: #0a0a0a;
     --foreground: #ededed;
+    
+    --color-background: #0a0a0a;
+    --color-foreground: #ededed;
+    --color-primary: #60a5fa;
+    --color-secondary: #9ca3af;
+    --color-accent: #1f2937;
+    --color-border: #374151;
+    --color-muted: #6b7280;
+    --color-card: #111827;
+    --color-card-hover: #1f2937;
   }
 }
 
@@ -24,11 +111,25 @@ body {
   margin: 0;
   padding: 0;
   height: 100vh;
-  background: #ffffff;
-  color: var(--foreground);
+  background: var(--color-background);
+  color: var(--color-foreground);
   font-family: Arial, Helvetica, sans-serif;
   overflow: hidden;
   max-width: 100vw;
+  transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
+}
+
+/* Disable transitions for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body,
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Prevent horizontal scroll on all containers */

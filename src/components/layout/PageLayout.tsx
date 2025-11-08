@@ -8,7 +8,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   className = '',
 }) => {
   return (
-    <div className="h-screen flex flex-col bg-white overflow-auto">
+    <div className="h-screen flex flex-col bg-white dark:bg-gray-900 overflow-auto transition-colors duration-200">
       {/* Skip to main content link for accessibility */}
       <a
         href="#main-content"

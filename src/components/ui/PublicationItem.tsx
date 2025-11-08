@@ -37,21 +37,21 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
       tabIndex={0}
       onClick={onClick}
       onKeyDown={handleKeyDown}
-      className="border-l-4 border-gray-200 pl-3 sm:pl-4 py-2 hover:border-gray-400 hover:bg-gray-50 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 min-h-[44px]"
+      className="border-l-4 border-gray-200 dark:border-gray-700 pl-3 sm:pl-4 py-2 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 min-h-[44px]"
       aria-label={`View details for ${publication.title}`}
     >
       {/* Title */}
-      <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 leading-tight">
+      <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 leading-tight">
         {publication.title}
       </h3>
 
       {/* Authors */}
-      <p className="text-sm sm:text-base text-gray-700 mb-2">
+      <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 mb-2">
         {formatAuthors(publication.authors, publication.isFirstAuthor)}
       </p>
 
       {/* Venue */}
-      <p className="text-sm sm:text-base text-gray-600 mb-3">
+      <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-3">
         <em>{publication.venue}</em>
       </p>
 

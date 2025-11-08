@@ -32,10 +32,10 @@ const PublicationFilters: React.FC<PublicationFiltersProps> = ({
   totalCount
 }) => {
   const filterButtonClass = (isActive: boolean) =>
-    `px-3 sm:px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 min-h-[44px] ${
+    `px-3 sm:px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 min-h-[44px] ${
       isActive
-        ? 'bg-blue-600 text-white hover:bg-blue-700'
-        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
+        ? 'bg-blue-600 dark:bg-blue-700 text-white hover:bg-blue-700 dark:hover:bg-blue-800'
+        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600'
     }`;
 
   return (
@@ -59,7 +59,7 @@ const PublicationFilters: React.FC<PublicationFiltersProps> = ({
         </button>
 
         {/* Divider */}
-        <div className="h-6 w-px bg-gray-300 mx-1" aria-hidden="true"></div>
+        <div className="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1" aria-hidden="true"></div>
 
         {/* Peer Reviewed Filters */}
         <button
@@ -80,10 +80,10 @@ const PublicationFilters: React.FC<PublicationFiltersProps> = ({
         {/* Clear Filters Button */}
         {hasActiveFilters && (
           <>
-            <div className="hidden sm:block h-6 w-px bg-gray-300 mx-1" aria-hidden="true"></div>
+            <div className="hidden sm:block h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1" aria-hidden="true"></div>
             <button
               onClick={onClearFilters}
-              className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 min-h-[44px]"
+              className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 min-h-[44px]"
             >
               <svg
                 className="w-4 h-4 mr-1.5"
@@ -106,7 +106,7 @@ const PublicationFilters: React.FC<PublicationFiltersProps> = ({
       </div>
 
       {/* Results Count */}
-      <div className="text-sm text-gray-600">
+      <div className="text-sm text-gray-600 dark:text-gray-400">
         {resultCount}件 / {totalCount}件の論文を表示
       </div>
     </div>

@@ -7,22 +7,22 @@ import { UpdatesListProps, UpdateItem } from '@/types';
 const categoryConfig = {
   career: {
     label: 'キャリア',
-    color: 'bg-blue-100 text-blue-900 border border-blue-200',
+    color: 'bg-blue-100 dark:bg-blue-900/20 text-blue-900 dark:text-blue-300 border border-blue-200 dark:border-blue-800',
     icon: '👔'
   },
   development: {
     label: '開発',
-    color: 'bg-green-100 text-green-900 border border-green-200',
+    color: 'bg-green-100 dark:bg-green-900/20 text-green-900 dark:text-green-300 border border-green-200 dark:border-green-800',
     icon: '💻'
   },
   publication: {
     label: '論文',
-    color: 'bg-purple-100 text-purple-900 border border-purple-200',
+    color: 'bg-purple-100 dark:bg-purple-900/20 text-purple-900 dark:text-purple-300 border border-purple-200 dark:border-purple-800',
     icon: '📄'
   },
   other: {
     label: 'その他',
-    color: 'bg-gray-100 text-gray-900 border border-gray-200',
+    color: 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-300 border border-gray-200 dark:border-gray-700',
     icon: '📝'
   }
 };
@@ -55,7 +55,7 @@ function UpdateModal({ update, onClose }: { update: UpdateItem | null; onClose: 
 
   return (
     <div 
-      className="fixed inset-0 flex items-center justify-center z-50 p-4 backdrop-blur-sm bg-white/30"
+      className="fixed inset-0 flex items-center justify-center z-50 p-4 backdrop-blur-sm bg-white/30 dark:bg-black/50"
       onClick={onClose}
       style={{
         backdropFilter: 'blur(8px)',
@@ -63,7 +63,7 @@ function UpdateModal({ update, onClose }: { update: UpdateItem | null; onClose: 
       }}
     >
       <div 
-        className="bg-white/95 backdrop-blur-md rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-gray-200/50"
+        className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-gray-200/50 dark:border-gray-700/50"
         onClick={(e) => e.stopPropagation()}
         style={{
           backdropFilter: 'blur(12px)',
@@ -77,19 +77,19 @@ function UpdateModal({ update, onClose }: { update: UpdateItem | null; onClose: 
               <div className="flex items-center gap-3 mb-3">
                 <time 
                   dateTime={update.date}
-                  className="text-sm text-gray-500 font-medium"
+                  className="text-sm text-gray-500 dark:text-gray-400 font-medium"
                 >
                   {formatDate(update.date)}
                 </time>
                 <CategoryBadge category={update.category} />
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
                 {update.title}
               </h3>
             </div>
             <button
               onClick={onClose}
-              className="ml-4 text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100"
+              className="ml-4 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
               aria-label="閉じる"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,7 +100,7 @@ function UpdateModal({ update, onClose }: { update: UpdateItem | null; onClose: 
 
           {/* Description */}
           <div className="prose prose-gray max-w-none">
-            <p className="text-base text-gray-700 leading-relaxed">
+            <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
               {update.description}
             </p>
           </div>
@@ -115,7 +115,7 @@ function UpdateCard({ update, onClick }: { update: UpdateItem; onClick: () => vo
   
   return (
     <article 
-      className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 md:p-6 hover:shadow-md hover:border-blue-300 transition-all duration-200 cursor-pointer focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2"
+      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-4 md:p-6 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200 cursor-pointer focus-within:ring-2 focus-within:ring-blue-500 dark:focus-within:ring-blue-400 focus-within:ring-offset-2 dark:focus-within:ring-offset-gray-900"
       aria-labelledby={titleId}
       onClick={onClick}
       role="button"
@@ -131,7 +131,7 @@ function UpdateCard({ update, onClick }: { update: UpdateItem; onClick: () => vo
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
         <time 
           dateTime={update.date}
-          className="text-xs sm:text-sm text-gray-500 font-medium"
+          className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium"
         >
           <span className="sr-only">投稿日: </span>
           {formatDate(update.date)}
@@ -142,10 +142,10 @@ function UpdateCard({ update, onClick }: { update: UpdateItem; onClick: () => vo
       {/* Title */}
       <h3 
         id={titleId}
-        className="text-base sm:text-lg font-semibold text-gray-900 leading-tight flex items-center justify-between"
+        className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 leading-tight flex items-center justify-between"
       >
         <span>{update.title}</span>
-        <svg className="w-5 h-5 text-gray-400 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </h3>
@@ -168,7 +168,7 @@ export default function UpdatesList({
   if (sortedUpdates.length === 0) {
     return (
       <div className={`text-center py-8 ${className}`}>
-        <p className="text-gray-500">最新の更新情報はありません。</p>
+        <p className="text-gray-500 dark:text-gray-400">最新の更新情報はありません。</p>
       </div>
     );
   }
@@ -181,7 +181,7 @@ export default function UpdatesList({
       <section className={className} aria-labelledby="updates-heading">
         <h2 
           id="updates-heading" 
-          className="text-2xl font-bold text-gray-900 mb-6"
+          className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6"
         >
           最新の更新情報
         </h2>
@@ -201,7 +201,7 @@ export default function UpdatesList({
 
         {!showScrollable && updates.length > maxItems && (
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               {updates.length - maxItems}件の更新情報があります
             </p>
           </div>

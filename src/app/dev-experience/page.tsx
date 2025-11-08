@@ -68,7 +68,7 @@ export default function DevExperiencePage() {
       <div className="space-y-6 sm:space-y-8">
         {/* Page header */}
         <div className="text-center space-y-3 sm:space-y-4 px-4">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">
             開発経験
           </h1>
         </div>
