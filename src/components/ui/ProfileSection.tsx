@@ -17,14 +17,14 @@ export default function ProfileSection({
         {/* Name */}
         <h1 
           id="profile-heading"
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2"
         >
           {profile.name}
         </h1>
         
         {/* English Name */}
         {profile.nameEn && (
-          <p className="text-base sm:text-lg text-gray-600 mb-2 sm:mb-3">
+          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-2 sm:mb-3">
             <span className="sr-only">英語名: </span>
             {profile.nameEn}
           </p>
@@ -32,17 +32,17 @@ export default function ProfileSection({
 
         {/* Current Position and Affiliation */}
         <div className="mb-3 sm:mb-4">
-          <p className="text-lg sm:text-xl font-semibold text-gray-800 mb-1">
+          <p className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-200 mb-1">
             {profile.currentPosition}
           </p>
-          <p className="text-base sm:text-lg text-gray-700">
+          <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300">
             {profile.currentAffiliation}
           </p>
         </div>
 
         {/* Location */}
         {showLocation && profile.location && (
-          <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 flex items-center justify-center md:justify-start gap-2">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-3 sm:mb-4 flex items-center justify-center md:justify-start gap-2">
             <svg 
               className="w-4 h-4 flex-shrink-0" 
               fill="none" 
@@ -73,7 +73,7 @@ export default function ProfileSection({
         {/* Bio */}
         {showBio && profile.bio && (
           <div className="prose prose-gray max-w-none">
-            <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+            <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
               {profile.bio}
             </p>
           </div>

@@ -12,11 +12,11 @@ const TechDescription: React.FC<TechDescriptionProps> = ({ description }) => {
   }
 
   return (
-    <div className="p-6 bg-gray-50 rounded-lg">
-      <h3 className="text-lg font-semibold text-gray-900 mb-3">
+    <div className="p-6 bg-gray-50 dark:bg-gray-800 rounded-lg transition-colors duration-200">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
         概要
       </h3>
-      <p className="text-gray-700 leading-relaxed">
+      <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
         {description}
       </p>
     </div>

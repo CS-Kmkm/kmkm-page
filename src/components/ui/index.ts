@@ -23,3 +23,4 @@ export { default as EventItem } from './EventItem';
 export { default as EventFilters } from './EventFilters';
 export { default as EventEmptyState } from './EventEmptyState';
 export { default as EventDetailModal } from './EventDetailModal';
+export { default as ThemeToggle } from './ThemeToggle';

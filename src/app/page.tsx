@@ -22,7 +22,7 @@ export default function Home() {
 
   return (
     <PageLayout title="トップページ">
-      <div className="bg-gray-50">
+      <div className="bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           <HeroSection profile={profile} />
 

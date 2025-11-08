@@ -16,18 +16,18 @@ const TIMELINE_HEADING_ID = 'timeline-heading';
 function BreadcrumbNavigation() {
   return (
     <nav aria-label="パンくずナビゲーション" className="mb-8">
-      <ol className="flex items-center space-x-2 text-sm text-gray-600">
+      <ol className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
         <li>
           <Link
             href="/"
-            className="hover:text-gray-900 transition-colors"
+            className="hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
             aria-label="トップページに戻る"
           >
             トップ
           </Link>
         </li>
-        <li aria-hidden="true" className="text-gray-400">/</li>
-        <li className="text-gray-900 font-medium" aria-current="page">
+        <li aria-hidden="true" className="text-gray-400 dark:text-gray-500">/</li>
+        <li className="text-gray-900 dark:text-gray-100 font-medium" aria-current="page">
           {PAGE_TITLE}
         </li>
       </ol>
@@ -44,12 +44,12 @@ interface PageHeaderProps {
 function PageHeader({ isReversed, onToggleReverse }: PageHeaderProps) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-0">
-      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">
         {PAGE_TITLE}
       </h1>
       <button
         onClick={onToggleReverse}
-        className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors min-h-[44px] self-start sm:self-auto"
+        className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-slate-300 dark:border-gray-600 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-600 transition-colors min-h-[44px] self-start sm:self-auto focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
         aria-label="ブランチの順序を反転"
         type="button"
       >
@@ -63,7 +63,7 @@ function PageHeader({ isReversed, onToggleReverse }: PageHeaderProps) {
 function EmptyState() {
   return (
     <div className="text-center py-8 sm:py-12">
-      <p className="text-gray-500 text-base sm:text-lg">
+      <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg">
         経歴情報が見つかりませんでした。
       </p>
     </div>

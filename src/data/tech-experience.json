@@ -413,6 +413,8 @@
       ],
       "duration": "2025年4月 - 2025年9月",
       "role": "フルスタック開発者",
+      "displayDate": "2025-04-01",
+      "isDisplayOnTop": false,
       "imageUrl": null
     },
     {
@@ -425,6 +427,7 @@
       ],
       "duration": "2021年4月 - 現在",
       "role": "研究者",
+      "displayDate": "2021-04-01",
       "imageUrl": null
     },
     {
@@ -436,6 +439,7 @@
       ],
       "duration": "2021年4月 - 現在",
       "role": "個人開発者",
+      "displayDate": "2021-04-01",
       "imageUrl": null
     },
     {
@@ -448,6 +452,7 @@
       ],
       "duration": "2021年4月 - 現在",
       "role": "競技プログラマー",
+      "displayDate": "2021-04-01",
       "imageUrl": null
     },
     {
@@ -467,6 +472,7 @@
       ],
       "duration": "2024年10月27日",
       "role": "バックエンド, PM",
+      "displayDate": "2024-10-27",
       "githubUrl": "https://github.com/jphacks/ng_2405",
       "imageUrl": null
     },
@@ -483,6 +489,7 @@
       ],
       "duration": "2025年10月",
       "role": "フロントエンド、PM",
+      "displayDate": "2025-10-01",
       "githubUrl": "https://github.com/jphacks/ng_2511",
       "imageUrl": null
     },
@@ -499,6 +506,7 @@
       ],
       "duration": "2025年9月",
       "role": "フロントエンド開発者",
+      "displayDate": "2025-09-01",
       "imageUrl": null
     },
     {
@@ -512,6 +520,7 @@
       ],
       "duration": "2023年8月 - 2025年4月",
       "role": "個人開発者",
+      "displayDate": "2023-08-01",
       "imageUrl": null
     },
     {
@@ -525,6 +534,7 @@
       ],
       "duration": "2023年8月",
       "role": "開発者",
+      "displayDate": "2023-08-01",
       "imageUrl": null
     },
     {
@@ -539,6 +549,7 @@
       ],
       "duration": "2025年9月",
       "role": "バックエンド開発者",
+      "displayDate": "2025-09-01",
       "imageUrl": null
     },
     {
@@ -550,15 +561,19 @@
       ],
       "duration": "2023年6月-2023年7月",
       "role": "PM、PG",
+      "displayDate": "2023-06-01",
       "imageUrl": null
     },
     {
       "id": "proj-012",
       "name": "技育祭2025[春]現地参加",
       "description": "技育祭2025[春]に現地参加しました。技術系学生向けのイベントで、企業ブースの見学や技術セッションへの参加を行いました。",
-      "technologies": [],
+      "technologies": [
+        "Event Participation"
+      ],
       "duration": "2025年3月",
       "role": "参加者",
+      "displayDate": "2025-03-01",
       "imageUrl": null
     },
     {
@@ -570,6 +585,7 @@
       ],
       "duration": "2025年8月",
       "role": "DS/AIエンジニア",
+      "displayDate": "2025-08-01",
       "imageUrl": null
     },
     {
@@ -581,6 +597,7 @@
       ],
       "duration": "2025年8月",
       "role": "DS/AIエンジニア",
+      "displayDate": "2025-08-01",
       "imageUrl": null
     },
     {
@@ -595,6 +612,7 @@
       ],
       "duration": "2025年10月",
       "role": "個人開発者",
+      "displayDate": "2025-10-01",
       "imageUrl": null
     }
   ]

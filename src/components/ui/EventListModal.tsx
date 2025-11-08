@@ -186,7 +186,7 @@ export default function EventListModal({
           {/* Modal Content */}
           <motion.div
             ref={modalRef}
-            className={`relative bg-white rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-hidden ${className}`}
+            className={`relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-hidden ${className}`}
             {...animationProps}
             role="dialog"
             aria-modal="true"
@@ -198,14 +198,14 @@ export default function EventListModal({
               <div className="flex justify-between items-center mb-4">
                 <h2
                   id="event-list-modal-title"
-                  className="text-xl font-bold text-gray-900"
+                  className="text-xl font-bold text-gray-900 dark:text-gray-100"
                 >
                   {yearGroup.year}年のイベント
                 </h2>
                 <button
                   ref={closeButtonRef}
                   onClick={onClose}
-                  className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="flex-shrink-0 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                   aria-label="モーダルを閉じる"
                 >
                   <svg
@@ -227,7 +227,7 @@ export default function EventListModal({
               {/* Description */}
               <p
                 id="event-list-modal-description"
-                className="text-sm text-gray-600 mb-4"
+                className="text-sm text-gray-600 dark:text-gray-400 mb-4"
               >
                 {yearGroup.events.length}件のイベントがあります。詳細を見るにはイベントをクリックしてください。
               </p>
@@ -245,10 +245,10 @@ export default function EventListModal({
                       variants={prefersReducedMotion ? {} : listItemVariants}
                     >
                       <button
-                        className={`w-full p-3 text-left border rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                        className={`w-full p-3 text-left border rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${
                           focusedIndex === index
-                            ? 'bg-blue-50 border-blue-200'
-                            : 'bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                            ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700'
+                            : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                         }`}
                         onClick={() => onEventSelect(event)}
                         onMouseEnter={() => setFocusedIndex(index)}
@@ -256,21 +256,21 @@ export default function EventListModal({
                       >
                         <div className="flex justify-between items-start">
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-medium text-gray-900 truncate">
+                            <h3 className="font-medium text-gray-900 dark:text-gray-100 truncate">
                               {event.title}
                             </h3>
-                            <p className="text-sm text-gray-500 mt-1">
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                               {formatEventDate(event.date)}
                             </p>
                             {event.category && (
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 mt-2">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 mt-2">
                                 {event.category}
                               </span>
                             )}
                           </div>
                           <div className="flex-shrink-0 ml-3">
                             <svg
-                              className="w-5 h-5 text-gray-400"
+                              className="w-5 h-5 text-gray-400 dark:text-gray-500"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -292,12 +292,12 @@ export default function EventListModal({
 
               {/* Footer */}
               <div className="mt-6 flex justify-between items-center">
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
                   矢印キーで移動、Enterで選択
                 </p>
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors"
                 >
                   閉じる
                 </button>

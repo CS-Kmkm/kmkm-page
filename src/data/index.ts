@@ -1,4 +1,5 @@
 import { UpdateItem, CareerEntry, ExtendedCareerEntry, TechItem, ProjectDetail, PublicationEntry, ProfileInfo, EventEntry, EventFilters, EventCategory, TimelineEventEntry } from '@/types';
+import { filterByDisplayDate } from '@/utils/dateUtils';
 
 // Import JSON data with error handling
 let publicationsData: { publications: PublicationEntry[] } | null = null;
@@ -79,9 +80,15 @@ function loadProfileData() {
 
 
 // Export data loading functions
-export const getPublications = (): PublicationEntry[] => {
+// Internal function to get unfiltered publications
+function getPublicationsRaw(): PublicationEntry[] {
   const data = loadPublicationsData();
   return data?.publications || [];
+}
+
+export const getPublications = (): PublicationEntry[] => {
+  const publications = getPublicationsRaw();
+  return filterByDisplayDate(publications);
 };
 
 export const getTechExperience = (): TechItem[] => {
@@ -89,12 +96,20 @@ export const getTechExperience = (): TechItem[] => {
   return data?.technologies || [];
 };
 
-export const getProjectDetails = (): ProjectDetail[] => {
+// Internal function to get unfiltered project details
+function getProjectDetailsRaw(): ProjectDetail[] {
   const data = loadTechExperienceData();
-  const projects = data?.projects || [];
+  return data?.projects || [];
+}
+
+export const getProjectDetails = (): ProjectDetail[] => {
+  const projects = getProjectDetailsRaw();
+
+  // Apply display date filtering first
+  const filteredProjects = filterByDisplayDate(projects);
 
   // Sort projects by duration (most recent first)
-  return projects.sort((a, b) => {
+  return filteredProjects.sort((a, b) => {
     // Extract year from duration string (e.g., "2025年9月" -> 2025)
     const getYear = (duration: string): number => {
       const match = duration.match(/(\d{4})/);
@@ -119,9 +134,15 @@ export const getProjectDetails = (): ProjectDetail[] => {
   });
 };
 
-export const getCareerEntries = (): CareerEntry[] => {
+// Internal function to get unfiltered career entries
+function getCareerEntriesRaw(): CareerEntry[] {
   const data = loadCareerData();
   return data?.entries || [];
+}
+
+export const getCareerEntries = (): CareerEntry[] => {
+  const entries = getCareerEntriesRaw();
+  return filterByDisplayDate(entries);
 };
 
 export const getUpdates = (): UpdateItem[] => {
@@ -262,7 +283,7 @@ export const getEvents = (): EventEntry[] => {
   const events: EventEntry[] = [];
 
   // 1. Generate events from career data (affiliation changes)
-  const careerEntries = getCareerEntries();
+  const careerEntries = getCareerEntriesRaw();
   careerEntries.forEach(career => {
     // Only include main career entries (not sub-entries with parentId)
     const extendedCareer = career as ExtendedCareerEntry;
@@ -291,6 +312,7 @@ export const getEvents = (): EventEntry[] => {
         date: career.startDate,
         year: startYear,
         category: EventCategory.AFFILIATION,
+        displayDate: career.displayDate,
         location,
         tags: ['education', 'career', 'start']
       });
@@ -327,6 +349,7 @@ export const getEvents = (): EventEntry[] => {
           date: career.endDate,
           year: endYear,
           category: EventCategory.AFFILIATION,
+          displayDate: career.displayDate,
           location,
           tags: ['education', 'career', 'end']
         });
@@ -335,7 +358,7 @@ export const getEvents = (): EventEntry[] => {
   });
 
   // 2. Generate events from publications data
-  const publications = getPublications();
+  const publications = getPublicationsRaw();
   publications.forEach(pub => {
     if (pub.date) {
       const pubYear = new Date(pub.date).getFullYear();
@@ -349,6 +372,8 @@ export const getEvents = (): EventEntry[] => {
         date: pub.date,
         year: pubYear,
         category: EventCategory.PUBLICATION,
+        displayDate: pub.displayDate,
+        toBeAppear: pub.toBeAppear,
         location: pub.venue,
         relatedLinks: pub.url ? [pub.url] : undefined,
         tags: ['research', 'publication', authorshipType, reviewType, pub.publicationType]
@@ -357,7 +382,7 @@ export const getEvents = (): EventEntry[] => {
   });
 
   // 3. Generate events from tech experience projects (internships and events)
-  const projects = getProjectDetails();
+  const projects = getProjectDetailsRaw();
   projects.forEach(project => {
     // Extract year from duration string
     const yearMatch = project.duration.match(/(\d{4})/);
@@ -381,6 +406,11 @@ export const getEvents = (): EventEntry[] => {
       }
       
       const projectDate = `${projectYear}-${projectMonth}-${projectDay}`;
+
+      // Skip projects that are not meant to be displayed on top page
+      if (project.isDisplayOnTop === false) {
+        return; // Skip projects with isDisplayOnTop: false
+      }
 
       let category: EventCategory = EventCategory.OTHER;
       let title = project.name;
@@ -440,6 +470,7 @@ export const getEvents = (): EventEntry[] => {
         date: projectDate,
         year: projectYear,
         category,
+        displayDate: project.displayDate,
         location,
         duration: project.duration,
         relatedLinks: project.githubUrl ? [project.githubUrl] : undefined,
@@ -448,8 +479,11 @@ export const getEvents = (): EventEntry[] => {
     }
   });
 
+  // Apply display date filtering
+  const filteredEvents = filterByDisplayDate(events);
+
   // Sort events by date in descending order (most recent first)
-  const sortedEvents = events.sort((a, b) => {
+  const sortedEvents = filteredEvents.sort((a, b) => {
     const dateA = new Date(a.date);
     const dateB = new Date(b.date);
     return dateB.getTime() - dateA.getTime();
@@ -613,6 +647,19 @@ export const validateDataIntegrity = (): {
       }
     };
 
+    // Helper function to validate displayDate field
+    const isValidDisplayDate = (dateStr: string): boolean => {
+      if (!dateStr) return false;
+      if (!isValidDate(dateStr)) return false;
+      
+      // Check date range constraints (2000-01-01 to 2099-12-31)
+      const date = new Date(dateStr);
+      const minDate = new Date('2000-01-01');
+      const maxDate = new Date('2099-12-31');
+      
+      return date >= minDate && date <= maxDate;
+    };
+
     // 1. Validate Profile Data
     const profile = getProfile();
 
@@ -668,6 +715,13 @@ export const validateDataIntegrity = (): {
         errors.push(`Career: Entry "${entry.id}" has invalid endDate format: "${entry.endDate}" (expected YYYY-MM-DD or null)`);
       }
 
+      // Validate displayDate field
+      if (!entry.displayDate) {
+        errors.push(`Career: Entry "${entry.id || index}" missing required field "displayDate"`);
+      } else if (!isValidDisplayDate(entry.displayDate)) {
+        errors.push(`Career: Entry "${entry.id}" has invalid displayDate format: "${entry.displayDate}" (expected YYYY-MM-DD within 2000-2099)`);
+      }
+
       // Check date logic
       if (entry.startDate && entry.endDate) {
         const start = new Date(entry.startDate);
@@ -705,6 +759,13 @@ export const validateDataIntegrity = (): {
       }
       if (!pub.publicationType) {
         errors.push(`Publication: Entry "${pub.id || index}" missing required field "publicationType"`);
+      }
+
+      // Validate displayDate field
+      if (!pub.displayDate) {
+        errors.push(`Publication: Entry "${pub.id || index}" missing required field "displayDate"`);
+      } else if (!isValidDisplayDate(pub.displayDate)) {
+        errors.push(`Publication: Entry "${pub.id}" has invalid displayDate format: "${pub.displayDate}" (expected YYYY-MM-DD within 2000-2099)`);
       }
 
       // Validate optional URL fields
@@ -770,6 +831,13 @@ export const validateDataIntegrity = (): {
       }
       if (!project.role) {
         errors.push(`Project: Entry "${project.id || index}" missing required field "role"`);
+      }
+
+      // Validate displayDate field
+      if (!project.displayDate) {
+        errors.push(`Project: Entry "${project.id || index}" missing required field "displayDate"`);
+      } else if (!isValidDisplayDate(project.displayDate)) {
+        errors.push(`Project: Entry "${project.id}" has invalid displayDate format: "${project.displayDate}" (expected YYYY-MM-DD within 2000-2099)`);
       }
 
       // Validate optional URL fields

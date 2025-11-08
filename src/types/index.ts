@@ -18,6 +18,7 @@ export interface CareerEntry {
   description?: string;
   startDate: string;
   endDate?: string;
+  displayDate: string;      // 表示日（YYYY-MM-DD形式）
 }
 
 /**
@@ -87,6 +88,8 @@ export interface ProjectDetail {
   technologies: string[];
   duration: string;
   role: string;
+  displayDate: string;      // 表示日（YYYY-MM-DD形式）
+  isDisplayOnTop?: boolean; // トップページでの表示制御（デフォルト: true）
   url?: string;
   githubUrl?: string;
   imageUrl?: string;
@@ -116,6 +119,8 @@ export interface PublicationEntry {
   venue: string;
   year: number;
   date?: string;            // 発表・公開日（YYYY-MM-DD形式）
+  displayDate: string;      // 表示日（YYYY-MM-DD形式）
+  toBeAppear?: boolean;     // 公開日前でも表示する（デフォルト: false）
   doi?: string;
   url?: string;
   isFirstAuthor: boolean;
@@ -150,6 +155,8 @@ export interface EventEntry {
   date: string;              // YYYY-MM-DD format
   year: number;              // Extracted from date
   category: EventCategory;
+  displayDate: string;       // 表示日（YYYY-MM-DD形式）
+  toBeAppear?: boolean;      // 公開日前でも表示する（デフォルト: false）
   location?: string;
   duration?: string;         // For events with duration
   relatedLinks?: string[];   // URLs to related resources
@@ -448,4 +455,53 @@ export interface EnhancedGitBranchTimelineProps {
   enableEventPoints?: boolean;
   className?: string;
   isReversed?: boolean;
+}
+
+/**
+ * Date filtering utility types
+ */
+export interface DateFilterOptions {
+  referenceDate?: string;   // デフォルトは現在日
+  includeToday?: boolean;   // 当日を含むかどうか
+}
+
+/**
+ * Generic type for items that can be filtered by display date
+ */
+export interface DisplayDateFilterable {
+  displayDate: string;
+}
+
+// Theme System Types
+export type Theme = 'light' | 'dark' | 'system';
+export type ResolvedTheme = 'light' | 'dark';
+
+/**
+ * Theme context interface for managing application theme state
+ */
+export interface ThemeContextType {
+  theme: Theme;
+  resolvedTheme: ResolvedTheme;
+  setTheme: (theme: Theme) => void;
+  toggleTheme: () => void;
+  systemPreference: ResolvedTheme;
+  isLoading: boolean;
+}
+
+/**
+ * Props for ThemeToggle component
+ */
+export interface ThemeToggleProps {
+  size?: 'sm' | 'md' | 'lg';
+  showLabel?: boolean;
+  className?: string;
+}
+
+/**
+ * Stored theme preference in localStorage
+ */
+export interface StoredThemePreference {
+  theme: Theme;
+  timestamp: number;
+  version: string;
 }

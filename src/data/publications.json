@@ -11,6 +11,8 @@
       "venue": "The 27th International Conference on Asia-Pacific Digital Libraries (ICADL 2025)",
       "year": 2025,
       "date": "2025-12-04",
+      "displayDate": "2025-12-04",
+      "toBeAppear": true,
       "isFirstAuthor": true,
       "isPeerReviewed": true,
       "publicationType": "conference"
@@ -27,6 +29,7 @@
       "venue": "第31回言語処理学会年次大会 (NLP2025)",
       "year": 2025,
       "date": "2025-03-11",
+      "displayDate": "2025-03-11",
       "url": "https://www.anlp.jp/proceedings/annual_meeting/2025/pdf_dir/P10-10.pdf",
       "isFirstAuthor": true,
       "isPeerReviewed": false,
@@ -43,6 +46,8 @@
       "venue": "大学ICT推進協議会 2025年度 年次大会 (AXIES2025)",
       "year": 2025,
       "date": "2025-12-03",
+      "displayDate": "2025-12-03",
+      "toBeAppear": true,
       "isFirstAuthor": false,
       "isPeerReviewed": false,
       "publicationType": "conference"

@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { defaultMetadata } from "@/lib/metadata";
 import WebVitals from "@/components/common/WebVitals";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
 // Optimize font loading with display swap and preload
 const inter = Inter({
@@ -24,7 +25,7 @@ export const viewport: Viewport = {
   userScalable: true,
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
   ],
 };
 
@@ -51,8 +52,10 @@ export default function RootLayout({
         {/* Web app manifest */}
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className={`font-sans antialiased bg-white text-gray-900`}>
-        {children}
+      <body className={`font-sans antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200`}>
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
         
         {/* Web Vitals reporting */}
         <WebVitals />

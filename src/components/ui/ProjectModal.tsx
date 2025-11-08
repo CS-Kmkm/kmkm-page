@@ -53,7 +53,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-white/80 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-white/80 dark:bg-black/50 backdrop-blur-sm"
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
@@ -62,13 +62,13 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
     >
       <div
         id="project-modal"
-        className="relative w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] bg-white rounded-lg shadow-2xl overflow-hidden focus:outline-none border border-gray-200"
+        className="relative w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] bg-white dark:bg-gray-800 rounded-lg shadow-2xl overflow-hidden focus:outline-none border border-gray-200 dark:border-gray-700"
         tabIndex={-1}
       >
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10 p-1.5 sm:p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-md"
+          className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10 p-1.5 sm:p-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 shadow-md"
           aria-label="Close modal"
         >
           <svg
@@ -106,10 +106,10 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           <div className="p-4 sm:p-6 md:p-8">
             {/* Title and duration */}
             <div className="mb-4 sm:mb-6">
-              <h2 id="modal-title" className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+              <h2 id="modal-title" className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 {project.name}
               </h2>
-              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                 <span className="flex items-center gap-1">
                   <svg
                     className="w-4 h-4"
@@ -149,20 +149,20 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
 
             {/* Description */}
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Project Description</h3>
-              <p id="modal-description" className="text-gray-700 leading-relaxed">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">Project Description</h3>
+              <p id="modal-description" className="text-gray-700 dark:text-gray-300 leading-relaxed">
                 {project.description}
               </p>
             </div>
 
             {/* Technology stack */}
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Technology Stack</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">Technology Stack</h3>
               <div className="flex flex-wrap gap-2">
                 {project.technologies.map((tech, index) => (
                   <span
                     key={index}
-                    className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+                    className="px-3 py-1 bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 rounded-full text-sm font-medium"
                   >
                     {tech}
                   </span>

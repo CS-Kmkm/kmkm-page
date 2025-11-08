@@ -20,12 +20,12 @@ const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
   if (projects.length === 0) {
     return (
       <div className="space-y-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors duration-200">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
             全プロジェクト (0)
           </h3>
-          <div className="p-4 bg-gray-50 rounded-lg text-center">
-            <p className="text-gray-500 text-sm">プロジェクトがありません</p>
+          <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg text-center">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">プロジェクトがありません</p>
           </div>
         </div>
       </div>
@@ -34,8 +34,8 @@ const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors duration-200">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
           全プロジェクト ({projects.length})
         </h3>
         <div

@@ -36,11 +36,11 @@ const RelatedLanguages: React.FC<RelatedLanguagesProps> = ({
   };
 
   return (
-    <div className="p-6 bg-green-50 rounded-lg border border-green-200">
-      <h3 className="text-lg font-semibold text-gray-900 mb-3">
+    <div className="p-6 bg-green-50 dark:bg-green-900/10 rounded-lg border border-green-200 dark:border-green-800 transition-colors duration-200">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
         関連言語
       </h3>
-      <p className="text-sm text-gray-600 mb-4">
+      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
         このフレームワークと一緒に使用した言語
       </p>
 
@@ -50,10 +50,10 @@ const RelatedLanguages: React.FC<RelatedLanguagesProps> = ({
             key={language.id}
             onClick={() => onLanguageSelect?.(language)}
             className="
-              flex items-center gap-3 p-3 bg-white rounded-lg border border-green-200
+              flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-green-200 dark:border-green-700
               transition-all duration-150
-              hover:shadow-md hover:border-green-400
-              focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2
+              hover:shadow-md hover:border-green-400 dark:hover:border-green-500
+              focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900
               min-h-[44px]
             "
             type="button"
@@ -77,7 +77,7 @@ const RelatedLanguages: React.FC<RelatedLanguagesProps> = ({
 
             {/* Name */}
             <div className="flex-grow text-left min-w-0">
-              <div className="text-sm font-medium text-gray-900 truncate">
+              <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                 {language.name}
               </div>
             </div>

@@ -15,9 +15,14 @@ export default function NavigationCard({
     <Link
       href={href}
       className={`
-        group block p-4 sm:p-6 bg-white border border-gray-200 rounded-lg
-        hover:shadow-lg hover:border-gray-300
-        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+        group block p-4 sm:p-6 
+        bg-white dark:bg-gray-800 
+        border border-gray-200 dark:border-gray-700 
+        rounded-lg
+        hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-600
+        hover:bg-gray-50 dark:hover:bg-gray-700
+        focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 
+        focus:ring-offset-2 dark:focus:ring-offset-gray-900
         transition-all duration-200
         ${className}
       `}
@@ -32,8 +37,8 @@ export default function NavigationCard({
               className="
                 flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 
                 flex items-center justify-center
-                bg-gray-100 rounded-lg
-                group-hover:bg-blue-50
+                bg-gray-100 dark:bg-gray-700 rounded-lg
+                group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20
                 transition-colors duration-200
               "
               aria-hidden="true"
@@ -43,7 +48,7 @@ export default function NavigationCard({
           )}
           <h3 
             id={cardId}
-            className="text-lg sm:text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200"
+            className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
           >
             {title}
           </h3>
@@ -52,13 +57,13 @@ export default function NavigationCard({
         {/* Description */}
         <p 
           id={descriptionId}
-          className="text-sm sm:text-base text-gray-600 leading-relaxed flex-1"
+          className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed flex-1"
         >
           {description}
         </p>
 
         {/* Arrow indicator */}
-        <div className="mt-3 sm:mt-4 flex items-center text-blue-600 group-hover:text-blue-700">
+        <div className="mt-3 sm:mt-4 flex items-center text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300">
           <span className="text-xs sm:text-sm font-medium mr-2">詳しく見る</span>
           <svg 
             className="w-3 h-3 sm:w-4 sm:h-4 transform group-hover:translate-x-1 transition-transform duration-200" 
@@ -88,7 +93,7 @@ export function CareerNavigationCard({ className }: { className?: string }) {
       description="所属の変化や経歴を時系列で確認できます。学歴から現在のポジションまでの変遷をご覧ください。"
       href="/career"
       icon={
-        <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6" />
         </svg>
       }
@@ -104,7 +109,7 @@ export function DevExperienceNavigationCard({ className }: { className?: string 
       description="使用できるプログラミング言語や技術スタック、開発実績をご紹介します。プロジェクトの詳細もご覧いただけます。"
       href="/dev-experience"
       icon={
-        <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
         </svg>
       }
@@ -120,7 +125,7 @@ export function PublicationsNavigationCard({ className }: { className?: string }
       description="投稿した論文の書誌情報を一覧で確認できます。主著・共著の区別や査読の有無も表示されています。"
       href="/publications"
       icon={
-        <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
       }

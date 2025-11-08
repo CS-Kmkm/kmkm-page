@@ -16,19 +16,19 @@ export default function PublicationsPage() {
       <div className="max-w-4xl mx-auto px-4">
         {/* Page Header */}
         <div className="mb-4 sm:mb-6 md:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4">Publications</h1>
-          <p className="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3 md:mb-4">Publications</h1>
+          <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
             Academic publications and research papers, organized chronologically with the most recent work first.
           </p>
         </div>
 
         {/* Publications List */}
-        <div className="bg-white">
+        <div className="bg-white dark:bg-gray-900 transition-colors duration-200">
           {publications.length > 0 ? (
             <PublicationList publications={publications} />
           ) : (
             <div className="text-center py-12">
-              <div className="text-gray-400 mb-4">
+              <div className="text-gray-400 dark:text-gray-500 mb-4">
                 <svg
                   className="mx-auto h-12 w-12"
                   fill="none"
@@ -44,10 +44,10 @@ export default function PublicationsPage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
                 No Publications Available
               </h3>
-              <p className="text-gray-500">
+              <p className="text-gray-500 dark:text-gray-400">
                 Publications will be displayed here once they are added to the system.
               </p>
             </div>

@@ -142,7 +142,7 @@ export default function EventModal({
           {/* Modal Content */}
           <motion.div
             ref={modalRef}
-            className={`relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto ${className}`}
+            className={`relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto ${className}`}
             {...animationProps}
             role="dialog"
             aria-modal="true"
@@ -154,14 +154,14 @@ export default function EventModal({
               <div className="flex justify-between items-start mb-4">
                 <h2
                   id="event-modal-title"
-                  className="text-xl font-bold text-gray-900 pr-4 leading-tight"
+                  className="text-xl font-bold text-gray-900 dark:text-gray-100 pr-4 leading-tight"
                 >
                   {event.title}
                 </h2>
                 <button
                   ref={closeButtonRef}
                   onClick={onClose}
-                  className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="flex-shrink-0 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                   aria-label="モーダルを閉じる"
                 >
                   <svg
@@ -183,14 +183,14 @@ export default function EventModal({
               {/* Content */}
               <div className="space-y-4">
                 {/* Date */}
-                <div className="text-sm text-gray-500 font-medium">
+                <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">
                   {formatEventDate(event.date)}
                 </div>
 
                 {/* Category Badge */}
                 {event.category && (
                   <div className="inline-block">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300">
                       {event.category}
                     </span>
                   </div>
@@ -199,7 +199,7 @@ export default function EventModal({
                 {/* Description */}
                 <div
                   id="event-modal-description"
-                  className="text-gray-700 leading-relaxed whitespace-pre-wrap"
+                  className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap"
                 >
                   {event.description}
                 </div>
@@ -209,7 +209,7 @@ export default function EventModal({
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors"
                 >
                   閉じる
                 </button>

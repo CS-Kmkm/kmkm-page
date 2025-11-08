@@ -101,10 +101,11 @@ function SocialLinkItem({
       rel="noopener noreferrer"
       className={`
         inline-flex items-center gap-2 p-2 rounded-lg
-        text-gray-600 ${config.color}
+        text-gray-600 dark:text-gray-400 ${config.color}
         transition-colors duration-200
-        hover:bg-gray-50
-        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+        hover:bg-gray-50 dark:hover:bg-gray-800
+        focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 
+        focus:ring-offset-2 dark:focus:ring-offset-gray-900
         ${orientation === 'vertical' ? 'w-full justify-start' : 'justify-center'}
       `}
       aria-label={`${config.name}で${link.username || 'プロフィール'}を見る`}
