@@ -247,8 +247,8 @@ export default function EventListModal({
                       <button
                         className={`w-full p-3 text-left border rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${
                           focusedIndex === index
-                            ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700'
-                            : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                            ? 'bg-white dark:bg-gray-700 border-blue-500 dark:border-blue-400'
+                            : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
                         }`}
                         onClick={() => onEventSelect(event)}
                         onMouseEnter={() => setFocusedIndex(index)}

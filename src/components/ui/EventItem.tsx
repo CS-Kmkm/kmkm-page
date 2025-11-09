@@ -2,24 +2,30 @@
 
 import React from 'react';
 import { EventItemProps, EventCategory } from '@/types';
+import {
+  getListItemContainerClasses,
+  getBadgeClasses,
+  getTitleClasses,
+  getDescriptionClasses,
+  getMetaClasses,
+} from '@/lib/ui/listItemStyles';
 
 const EventItem: React.FC<EventItemProps> = ({ event, onClick }) => {
-  const getCategoryColor = (category: EventCategory): string => {
+  const getCategoryVariant = (category: EventCategory): 'blue' | 'green' | 'purple' | 'orange' | 'yellow' | 'gray' => {
     switch (category) {
       case EventCategory.AFFILIATION:
-        return 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800';
+        return 'blue';
       case EventCategory.PUBLICATION:
-        return 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800';
+        return 'green';
       case EventCategory.EVENT:
-        return 'bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-800';
+        return 'purple';
       case EventCategory.INTERNSHIP:
-        return 'bg-orange-100 dark:bg-orange-900/20 text-orange-800 dark:text-orange-300 border-orange-200 dark:border-orange-800';
+        return 'orange';
       case EventCategory.AWARD:
-        return 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800';
+        return 'yellow';
       case EventCategory.OTHER:
-        return 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700';
       default:
-        return 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700';
+        return 'gray';
     }
   };
 
@@ -66,9 +72,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, onClick }) => {
 
   return (
     <div
-      className={`bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 sm:p-4 shadow-sm hover:shadow-md transition-shadow duration-200 ${
-        onClick ? 'cursor-pointer hover:border-gray-300 dark:hover:border-gray-600' : ''
-      }`}
+      className={getListItemContainerClasses()}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       tabIndex={onClick ? 0 : undefined}
@@ -78,36 +82,32 @@ const EventItem: React.FC<EventItemProps> = ({ event, onClick }) => {
       {/* Header with category and date */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-2">
         <div className="flex items-center gap-2">
-          <span
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getCategoryColor(
-              event.category
-            )}`}
-          >
+          <span className={getBadgeClasses(getCategoryVariant(event.category))}>
             {getCategoryLabel(event.category)}
           </span>
           {event.location && (
-            <span className="text-sm text-gray-500 dark:text-gray-400 hidden sm:inline">
+            <span className={`${getMetaClasses()} hidden sm:inline`}>
               @ {event.location}
             </span>
           )}
         </div>
-        <time className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+        <time className={`${getMetaClasses()} font-medium`}>
           {formatDate(event.date)}
         </time>
       </div>
 
       {/* Title */}
-      <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1.5 leading-tight">
+      <h3 className={`${getTitleClasses()} mb-1.5`}>
         {event.title}
       </h3>
 
       {/* Description */}
-      <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-2">
+      <p className={`${getDescriptionClasses()} mb-2`}>
         {event.description}
       </p>
 
       {/* Additional info */}
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm text-gray-500 dark:text-gray-400">
+      <div className={`flex flex-col sm:flex-row gap-2 sm:gap-4 ${getMetaClasses()}`}>
         {event.location && (
           <span className="sm:hidden">
             📍 {event.location}
@@ -129,7 +129,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, onClick }) => {
               </span>
             ))}
             {event.tags.length > 3 && (
-              <span className="text-xs text-gray-500 dark:text-gray-400">
+              <span className="text-xs">
                 +{event.tags.length - 3} more
               </span>
             )}

@@ -8,6 +8,16 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { EventModalProps, TimelineEventEntry } from '@/types';
 import { formatEventDate } from '@/lib/career/eventUtils';
+import {
+  getBackdropClassesWithFallback,
+  getModalContainerClasses,
+  getModalHeaderClasses,
+  getModalTitleClasses,
+  getCloseButtonClasses,
+  getModalContentClasses,
+  getModalTextClasses,
+  getFooterButtonClasses,
+} from '@/lib/ui/modalStyles';
 
 /**
  * EventModal component for displaying detailed event information
@@ -126,7 +136,7 @@ export default function EventModal({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          className={getBackdropClassesWithFallback()}
           initial="hidden"
           animate="visible"
           exit="hidden"
@@ -134,7 +144,7 @@ export default function EventModal({
         >
           {/* Overlay */}
           <div
-            className="absolute inset-0 bg-black bg-opacity-50"
+            className="absolute inset-0"
             onClick={onClose}
             aria-hidden="true"
           />
@@ -142,7 +152,7 @@ export default function EventModal({
           {/* Modal Content */}
           <motion.div
             ref={modalRef}
-            className={`relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto ${className}`}
+            className={`${getModalContainerClasses('max-w-md')} mx-4 ${className}`}
             {...animationProps}
             role="dialog"
             aria-modal="true"
@@ -151,17 +161,17 @@ export default function EventModal({
           >
             <div className="p-6">
               {/* Header */}
-              <div className="flex justify-between items-start mb-4">
+              <div className={getModalHeaderClasses()}>
                 <h2
                   id="event-modal-title"
-                  className="text-xl font-bold text-gray-900 dark:text-gray-100 pr-4 leading-tight"
+                  className={getModalTitleClasses()}
                 >
                   {event.title}
                 </h2>
                 <button
                   ref={closeButtonRef}
                   onClick={onClose}
-                  className="flex-shrink-0 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                  className={getCloseButtonClasses()}
                   aria-label="モーダルを閉じる"
                 >
                   <svg
@@ -181,7 +191,7 @@ export default function EventModal({
               </div>
 
               {/* Content */}
-              <div className="space-y-4">
+              <div className={getModalContentClasses()}>
                 {/* Date */}
                 <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">
                   {formatEventDate(event.date)}
@@ -199,7 +209,7 @@ export default function EventModal({
                 {/* Description */}
                 <div
                   id="event-modal-description"
-                  className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap"
+                  className={getModalTextClasses()}
                 >
                   {event.description}
                 </div>
@@ -209,7 +219,7 @@ export default function EventModal({
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors"
+                  className={getFooterButtonClasses()}
                 >
                   閉じる
                 </button>
