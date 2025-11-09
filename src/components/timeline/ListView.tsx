@@ -13,13 +13,13 @@ const ListView: React.FC<ListViewProps> = ({ events, onEventClick }) => {
   return (
     <section aria-labelledby="list-heading">
       <h2 id="list-heading" className="sr-only">
-        イベントリスト
+        Event List
       </h2>
 
       {/* Description - Fixed height to match TimelineView */}
       <div className="mb-6 min-h-[52px]">
         <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
-          学術・職業活動における重要なイベントを時系列で表示しています。所属の変化、論文の投稿、イベントへの参加、インターンシップなどの情報をカテゴリ別にフィルタリングできます。
+          Displaying important events in academic and professional activities in chronological order. You can filter information by category including affiliations, publications, event participation, and internships.
         </p>
       </div>
 
