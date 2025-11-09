@@ -15,7 +15,7 @@ test.describe('Career Page', () => {
 
     // Check timeline entries are visible (using actual English data)
     await expect(page.getByText('Nagoya University, Graduate School of Informatics')).toBeVisible();
-    await expect(page.getByText('graduate_student')).toBeVisible();
+    await expect(page.getByText('graduate_student', { exact: true }).first()).toBeVisible();
   });
 
   test('should display timeline in chronological order', async ({ page }) => {
@@ -49,7 +49,7 @@ test.describe('Career Page', () => {
 
     // Check that timeline is still readable on mobile
     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
-    await expect(page.getByText('graduate_student')).toBeVisible();
+    await expect(page.getByText('graduate_student', { exact: true }).first()).toBeVisible();
 
     // Check that timeline content is still accessible on mobile
     await expect(page.getByText(/2025\.04 - 現在/).first()).toBeVisible();
@@ -81,7 +81,7 @@ test.describe('Career Page', () => {
 
     // Check that content is visible
     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
-    await expect(page.getByText('graduate_student')).toBeVisible();
+    await expect(page.getByText('graduate_student', { exact: true }).first()).toBeVisible();
 
     // Check SVG timeline is rendered
     const timelineSection = page.locator('section[aria-labelledby="timeline-heading"]');
@@ -103,7 +103,7 @@ test.describe('Career Page', () => {
     // Check that all content is visible
     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
     await expect(page.getByText('Nagoya University, Graduate School of Informatics')).toBeVisible();
-    await expect(page.getByText('graduate_student')).toBeVisible();
+    await expect(page.getByText('graduate_student', { exact: true }).first()).toBeVisible();
 
     // Check SVG timeline is rendered
     const timelineSection = page.locator('section[aria-labelledby="timeline-heading"]');
