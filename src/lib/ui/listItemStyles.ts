@@ -44,7 +44,7 @@ export const listItemStyles: ListItemStyleConfig = {
     border: `border ${tokens.border.default}`,
     shadow: tokens.shadow.sm,
     padding: 'p-3 sm:p-4',
-    hover: tokens.surface.secondary.replace('bg-', 'hover:bg-'),
+    hover: 'hover:bg-gray-300 dark:hover:bg-gray-600',
     focus: tokens.focus.ringFull,
     transition: tokens.transition.normal,
   },
@@ -140,7 +140,7 @@ export const gridItemStyles = {
   container: `flex items-center gap-3 p-3 ${tokens.radius.lg} border ${tokens.transition.fast} min-h-[44px]`,
   background: tokens.surface.primary,
   border: tokens.border.default,
-  hover: tokens.surface.secondary.replace('bg-', 'hover:bg-'),
+  hover: 'hover:bg-gray-300 dark:hover:bg-gray-600',
   focus: tokens.focus.ringFull,
 };
 
