@@ -1,0 +1,127 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - banner [ref=e4]:
+      - generic [ref=e6]:
+        - link "Go to home page" [ref=e8] [cursor=pointer]:
+          - /url: /
+          - text: Portfolio
+        - navigation "Main navigation" [ref=e9]:
+          - list [ref=e10]:
+            - listitem [ref=e11]:
+              - link "Go to home page" [ref=e12] [cursor=pointer]:
+                - /url: /
+                - text: Home
+            - listitem [ref=e13]:
+              - link "Go to career page" [ref=e14] [cursor=pointer]:
+                - /url: /career
+                - text: Career
+            - listitem [ref=e15]:
+              - link "Go to development experience page" [ref=e16] [cursor=pointer]:
+                - /url: /dev-experience
+                - text: Dev Experience
+            - listitem [ref=e17]:
+              - link "Go to publications page" [ref=e18] [cursor=pointer]:
+                - /url: /publications
+                - text: Publications
+        - 'button "Switch from light to dark mode. Current theme: system" [ref=e21] [cursor=pointer]':
+          - img [ref=e22]
+    - main "経歴 page content" [ref=e24]:
+      - generic [ref=e25]:
+        - navigation "パンくずナビゲーション" [ref=e26]:
+          - list [ref=e27]:
+            - listitem [ref=e28]:
+              - link "トップページに戻る" [ref=e29] [cursor=pointer]:
+                - /url: /
+                - text: トップ
+            - listitem [ref=e30]: /
+            - listitem [ref=e31]: 経歴
+        - generic [ref=e33]:
+          - heading "経歴" [level=1] [ref=e34]
+          - 'button "表示モードを切り替え: 現在はタイムライン表示" [ref=e36]':
+            - img [ref=e38]
+            - generic [ref=e40]: リスト表示
+        - region "Career Timeline" [ref=e41]:
+          - heading "Career Timeline" [level=2] [ref=e42]
+          - button "Reverse branch order" [ref=e44]: ↓ Reverse Order
+          - img [ref=e47]:
+            - generic [ref=e48]:
+              - generic [ref=e49]: 2009年
+              - generic [ref=e50]: 2015年
+              - generic [ref=e51]: 2018年
+              - generic [ref=e52]: 2021年
+              - generic [ref=e53]: 2023年
+              - generic [ref=e54]: 2024年
+              - generic [ref=e55]: 2025年
+              - generic [ref=e75]:
+                - button "2件のイベント。クリックしてリストを表示" [ref=e76] [cursor=pointer]
+                - generic: "2"
+              - generic [ref=e77]:
+                - button "1件のイベント。クリックして詳細を表示" [ref=e78] [cursor=pointer]
+                - generic: "1"
+              - generic [ref=e79]:
+                - button "10件のイベント。クリックしてリストを表示" [ref=e80] [cursor=pointer]
+                - generic: "10"
+              - generic [ref=e81]:
+                - generic [ref=e83]: Public Elementary School
+                - generic [ref=e84]: student
+                - generic [ref=e85]: 2009.04 - 2015.03
+              - generic [ref=e86]:
+                - generic [ref=e88]: Public Junior High School
+                - generic [ref=e89]: student
+                - generic [ref=e90]: 2015.04 - 2018.03
+              - generic [ref=e91]:
+                - generic [ref=e93]: Gifu Prefectural Gifu High School
+                - generic [ref=e94]: student
+                - generic [ref=e95]: 2018.04 - 2021.03
+              - generic [ref=e96]:
+                - generic [ref=e98]: Nagoya University, School of Informatics, Department of Computer Science
+                - generic [ref=e99]: undergraduate_student
+                - generic [ref=e100]: 2021.04 - 2025.03
+              - generic [ref=e101]:
+                - generic [ref=e104]: Intelligent Systems Division
+                - generic [ref=e105]: assignment
+                - generic [ref=e106]: 2023.04 - 2025.03
+              - generic [ref=e107]:
+                - generic [ref=e109]: Matsubara Laboratory
+                - generic [ref=e110]: assignment
+                - generic [ref=e111]: 2024.04 - 現在
+              - generic [ref=e112]:
+                - generic [ref=e115]: Nagoya University, Graduate School of Informatics, Department of Intelligent Systems
+                - generic [ref=e116]: graduate_student
+                - generic [ref=e117]: 2025.04 - 現在
+              - generic [ref=e118]:
+                - generic [ref=e121]: Tokai National Higher Education and Research System, Information Technology Center
+                - generic [ref=e122]: technical_assistant
+                - generic [ref=e123]: 2025.04 - 現在
+    - contentinfo [ref=e124]:
+      - generic [ref=e125]:
+        - generic [ref=e126]:
+          - paragraph [ref=e128]: © 2025 Personal Portfolio. All rights reserved.
+          - paragraph [ref=e130]:
+            - text: Built with
+            - link "Next.js website (opens in new tab)" [ref=e131] [cursor=pointer]:
+              - /url: https://nextjs.org
+              - text: Next.js
+            - text: and
+            - link "Tailwind CSS website (opens in new tab)" [ref=e132] [cursor=pointer]:
+              - /url: https://tailwindcss.com
+              - text: Tailwind CSS
+        - generic [ref=e134]:
+          - link "Privacy policy" [ref=e135] [cursor=pointer]:
+            - /url: /privacy
+            - text: Privacy Policy
+          - link "Terms of service" [ref=e136] [cursor=pointer]:
+            - /url: /terms
+            - text: Terms of Service
+          - link "Send email to contact@example.com" [ref=e137] [cursor=pointer]:
+            - /url: mailto:contact@example.com
+            - text: Contact
+  - button "Open Next.js Dev Tools" [ref=e143] [cursor=pointer]:
+    - img [ref=e144]
+  - alert [ref=e147]
+```

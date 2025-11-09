@@ -1,0 +1,216 @@
+<testsuites id="" name="" tests="15" failures="4" skipped="0" errors="0" time="46.600871">
+<testsuite name="career.spec.ts" timestamp="2025-11-09T07:25:59.871Z" hostname="chromium" tests="8" failures="4" skipped="0" time="136.884" errors="0">
+<testcase name="Career Page › should load and display career timeline" classname="career.spec.ts" time="18.888">
+<failure message="career.spec.ts:8:7 should load and display career timeline" type="FAILURE">
+<![CDATA[  [chromium] › career.spec.ts:8:7 › Career Page › should load and display career timeline ──────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('graduate_student')
+    Expected: visible
+    Error: strict mode violation: getByText('graduate_student') resolved to 2 elements:
+        1) <text x="178" y="781.9315537303216" class="text-xs fill-slate-500" transform="translate(0, 1563.8631074606433) scale(1, -1)">undergraduate_student</text> aka getByText('undergraduate_student')
+        2) <text x="178" y="1005.7713894592744" class="text-xs fill-slate-500" transform="translate(0, 2011.5427789185487) scale(1, -1)">graduate_student</text> aka getByText('graduate_student', { exact: true })
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByText('graduate_student')
+
+
+      16 |     // Check timeline entries are visible (using actual English data)
+      17 |     await expect(page.getByText('Nagoya University, Graduate School of Informatics')).toBeVisible();
+    > 18 |     await expect(page.getByText('graduate_student')).toBeVisible();
+         |                                                      ^
+      19 |   });
+      20 |
+      21 |   test('should display timeline in chronological order', async ({ page }) => {
+        at C:\Users\Koshi\kmkm-page\e2e\career.spec.ts:18:54
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\career-Career-Page-should-load-and-display-career-timeline-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\career-Career-Page-should-load-and-display-career-timeline-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\career-Career-Page-should-load-and-display-career-timeline-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|career-Career-Page-should-load-and-display-career-timeline-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|career-Career-Page-should-load-and-display-career-timeline-chromium\video.webm]]
+
+[[ATTACHMENT|career-Career-Page-should-load-and-display-career-timeline-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Career Page › should display timeline in chronological order" classname="career.spec.ts" time="18.637">
+</testcase>
+<testcase name="Career Page › should have proper semantic structure" classname="career.spec.ts" time="20.325">
+</testcase>
+<testcase name="Career Page › should be responsive on mobile" classname="career.spec.ts" time="21.335">
+<failure message="career.spec.ts:45:7 should be responsive on mobile" type="FAILURE">
+<![CDATA[  [chromium] › career.spec.ts:45:7 › Career Page › should be responsive on mobile ──────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('graduate_student')
+    Expected: visible
+    Error: strict mode violation: getByText('graduate_student') resolved to 2 elements:
+        1) <text x="178" y="781.9315537303216" class="text-[10px] fill-slate-500" transform="translate(0, 1563.8631074606433) scale(1, -1)">undergraduate_student</text> aka getByText('undergraduate_student')
+        2) <text x="178" y="1005.7713894592744" class="text-[10px] fill-slate-500" transform="translate(0, 2011.5427789185487) scale(1, -1)">graduate_student</text> aka getByText('graduate_student', { exact: true })
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByText('graduate_student')
+
+
+      50 |     // Check that timeline is still readable on mobile
+      51 |     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
+    > 52 |     await expect(page.getByText('graduate_student')).toBeVisible();
+         |                                                      ^
+      53 |
+      54 |     // Check that timeline content is still accessible on mobile
+      55 |     await expect(page.getByText(/2025\.04 - 現在/).first()).toBeVisible();
+        at C:\Users\Koshi\kmkm-page\e2e\career.spec.ts:52:54
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\career-Career-Page-should-be-responsive-on-mobile-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\career-Career-Page-should-be-responsive-on-mobile-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\career-Career-Page-should-be-responsive-on-mobile-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|career-Career-Page-should-be-responsive-on-mobile-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|career-Career-Page-should-be-responsive-on-mobile-chromium\video.webm]]
+
+[[ATTACHMENT|career-Career-Page-should-be-responsive-on-mobile-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Career Page › should navigate back to home" classname="career.spec.ts" time="19.747">
+</testcase>
+<testcase name="Career Page › should be responsive on tablet" classname="career.spec.ts" time="18.255">
+<failure message="career.spec.ts:77:7 should be responsive on tablet" type="FAILURE">
+<![CDATA[  [chromium] › career.spec.ts:77:7 › Career Page › should be responsive on tablet ──────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('graduate_student')
+    Expected: visible
+    Error: strict mode violation: getByText('graduate_student') resolved to 2 elements:
+        1) <text x="178" y="781.9315537303216" class="text-xs fill-slate-500" transform="translate(0, 1563.8631074606433) scale(1, -1)">undergraduate_student</text> aka getByText('undergraduate_student')
+        2) <text x="178" y="1005.7713894592744" class="text-xs fill-slate-500" transform="translate(0, 2011.5427789185487) scale(1, -1)">graduate_student</text> aka getByText('graduate_student', { exact: true })
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByText('graduate_student')
+
+
+      82 |     // Check that content is visible
+      83 |     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
+    > 84 |     await expect(page.getByText('graduate_student')).toBeVisible();
+         |                                                      ^
+      85 |
+      86 |     // Check SVG timeline is rendered
+      87 |     const timelineSection = page.locator('section[aria-labelledby="timeline-heading"]');
+        at C:\Users\Koshi\kmkm-page\e2e\career.spec.ts:84:54
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\career-Career-Page-should-be-responsive-on-tablet-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\career-Career-Page-should-be-responsive-on-tablet-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\career-Career-Page-should-be-responsive-on-tablet-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|career-Career-Page-should-be-responsive-on-tablet-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|career-Career-Page-should-be-responsive-on-tablet-chromium\video.webm]]
+
+[[ATTACHMENT|career-Career-Page-should-be-responsive-on-tablet-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Career Page › should be responsive on desktop" classname="career.spec.ts" time="2.159">
+<failure message="career.spec.ts:98:7 should be responsive on desktop" type="FAILURE">
+<![CDATA[  [chromium] › career.spec.ts:98:7 › Career Page › should be responsive on desktop ─────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('graduate_student')
+    Expected: visible
+    Error: strict mode violation: getByText('graduate_student') resolved to 2 elements:
+        1) <text x="178" y="781.9315537303216" class="text-xs fill-slate-500" transform="translate(0, 1563.8631074606433) scale(1, -1)">undergraduate_student</text> aka getByText('undergraduate_student')
+        2) <text x="178" y="1005.7713894592744" class="text-xs fill-slate-500" transform="translate(0, 2011.5427789185487) scale(1, -1)">graduate_student</text> aka getByText('graduate_student', { exact: true })
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByText('graduate_student')
+
+
+      104 |     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
+      105 |     await expect(page.getByText('Nagoya University, Graduate School of Informatics')).toBeVisible();
+    > 106 |     await expect(page.getByText('graduate_student')).toBeVisible();
+          |                                                      ^
+      107 |
+      108 |     // Check SVG timeline is rendered
+      109 |     const timelineSection = page.locator('section[aria-labelledby="timeline-heading"]');
+        at C:\Users\Koshi\kmkm-page\e2e\career.spec.ts:106:54
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\career-Career-Page-should-be-responsive-on-desktop-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\career-Career-Page-should-be-responsive-on-desktop-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\career-Career-Page-should-be-responsive-on-desktop-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|career-Career-Page-should-be-responsive-on-desktop-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|career-Career-Page-should-be-responsive-on-desktop-chromium\video.webm]]
+
+[[ATTACHMENT|career-Career-Page-should-be-responsive-on-desktop-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Career Page › should toggle timeline order" classname="career.spec.ts" time="17.538">
+</testcase>
+</testsuite>
+<testsuite name="homepage.spec.ts" timestamp="2025-11-09T07:25:59.871Z" hostname="chromium" tests="7" failures="0" skipped="0" time="96.37" errors="0">
+<testcase name="Homepage › should load and display main content" classname="homepage.spec.ts" time="17.946">
+</testcase>
+<testcase name="Homepage › should have working navigation" classname="homepage.spec.ts" time="23.044">
+</testcase>
+<testcase name="Homepage › should display updates list" classname="homepage.spec.ts" time="2.239">
+</testcase>
+<testcase name="Homepage › should have accessible navigation" classname="homepage.spec.ts" time="16.877">
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="homepage.spec.ts" time="16.6">
+</testcase>
+<testcase name="Homepage › should be responsive on tablet" classname="homepage.spec.ts" time="2.549">
+</testcase>
+<testcase name="Homepage › should be responsive on desktop" classname="homepage.spec.ts" time="17.115">
+</testcase>
+</testsuite>
+</testsuites>
