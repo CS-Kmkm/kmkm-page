@@ -51,7 +51,7 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
         onMouseLeave={() => setShowTooltip(false)}
         onFocus={() => setShowTooltip(true)}
         onBlur={() => setShowTooltip(false)}
-        className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 p-3 sm:p-4 bg-white dark:bg-gray-400 rounded-lg border-2 border-gray-200 dark:border-gray-500 transition-all duration-150 hover:shadow-lg hover:scale-110 hover:border-blue-400 dark:hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 active:scale-95"
+        className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 p-3 sm:p-4 bg-white dark:bg-gray-300 rounded-lg border-2 border-gray-200 dark:border-gray-400 transition-all duration-150 hover:shadow-lg hover:scale-110 hover:border-blue-400 dark:hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 active:scale-95"
         aria-label={`View ${tech.name} details`}
         role="button"
         type="button"
