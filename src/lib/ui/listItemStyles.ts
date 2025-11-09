@@ -3,7 +3,11 @@
  * 
  * Unified style constants for list item components across the application.
  * Ensures consistent appearance, behavior, and accessibility.
+ * Uses Design Tokens for consistent theming.
  */
+
+import { tokens, getBadgeTokens } from '../theme/tokens';
+import type { BadgeVariant } from '../constants/categories';
 
 /**
  * List item style configuration interface
@@ -31,34 +35,34 @@ export interface ListItemStyleConfig {
 }
 
 /**
- * Unified list item styles
+ * Unified list item styles using Design Tokens
  */
 export const listItemStyles: ListItemStyleConfig = {
   container: {
-    base: 'rounded-lg cursor-pointer',
-    background: 'bg-white dark:bg-gray-800',
-    border: 'border border-gray-200 dark:border-gray-700',
-    shadow: 'shadow-sm',
+    base: `${tokens.radius.lg} cursor-pointer`,
+    background: tokens.surface.primary,
+    border: `border ${tokens.border.default}`,
+    shadow: tokens.shadow.sm,
     padding: 'p-3 sm:p-4',
-    hover: 'hover:bg-gray-50 dark:hover:bg-gray-700',
-    focus: 'focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900',
-    transition: 'transition-all duration-200',
+    hover: tokens.surface.secondary.replace('bg-', 'hover:bg-'),
+    focus: tokens.focus.ringFull,
+    transition: tokens.transition.normal,
   },
   badge: {
     base: 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border',
     variants: {
-      blue: 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800',
-      green: 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800',
-      purple: 'bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-800',
-      orange: 'bg-orange-100 dark:bg-orange-900/20 text-orange-800 dark:text-orange-300 border-orange-200 dark:border-orange-800',
-      yellow: 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
-      gray: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700',
+      blue: `${tokens.badge.blue.bg} ${tokens.badge.blue.text} ${tokens.badge.blue.border}`,
+      green: `${tokens.badge.green.bg} ${tokens.badge.green.text} ${tokens.badge.green.border}`,
+      purple: `${tokens.badge.purple.bg} ${tokens.badge.purple.text} ${tokens.badge.purple.border}`,
+      orange: `${tokens.badge.orange.bg} ${tokens.badge.orange.text} ${tokens.badge.orange.border}`,
+      yellow: `${tokens.badge.yellow.bg} ${tokens.badge.yellow.text} ${tokens.badge.yellow.border}`,
+      gray: `${tokens.badge.gray.bg} ${tokens.badge.gray.text} ${tokens.badge.gray.border}`,
     },
   },
   text: {
-    title: 'text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 leading-tight',
-    description: 'text-sm text-gray-600 dark:text-gray-300 leading-relaxed',
-    meta: 'text-sm text-gray-500 dark:text-gray-400',
+    title: `text-base sm:text-lg font-semibold ${tokens.text.primary} leading-tight`,
+    description: `text-sm ${tokens.text.secondary} leading-relaxed`,
+    meta: `text-sm ${tokens.text.muted}`,
   },
 };
 
@@ -70,10 +74,11 @@ export const getListItemContainerClasses = (): string => {
 };
 
 /**
- * Get badge classes with variant
+ * Get badge classes with variant using Design Tokens
  */
-export const getBadgeClasses = (variant: keyof typeof listItemStyles.badge.variants = 'gray'): string => {
-  return `${listItemStyles.badge.base} ${listItemStyles.badge.variants[variant] || listItemStyles.badge.variants.gray}`;
+export const getBadgeClasses = (variant: BadgeVariant = 'gray'): string => {
+  const badgeTokens = getBadgeTokens(variant);
+  return `${listItemStyles.badge.base} ${badgeTokens.bg} ${badgeTokens.text} ${badgeTokens.border}`;
 };
 
 /**
@@ -113,34 +118,34 @@ export const getButtonListItemClasses = (): string => {
 };
 
 /**
- * Technology badge styles (for tech stacks, frameworks, etc.)
+ * Technology badge styles (for tech stacks, frameworks, etc.) using Design Tokens
  */
 export const techBadgeStyles = {
-  base: 'inline-block px-2 py-1 text-xs rounded-md font-medium',
-  primary: 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300',
-  secondary: 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400',
+  base: `inline-block px-2 py-1 text-xs ${tokens.radius.md} font-medium`,
+  primary: `${tokens.badge.blue.bg} ${tokens.badge.blue.text}`,
+  secondary: `${tokens.badge.gray.bg} ${tokens.badge.gray.text}`,
 };
 
 /**
- * Get tech badge classes
+ * Get tech badge classes using Design Tokens
  */
 export const getTechBadgeClasses = (isPrimary: boolean = true): string => {
   return `${techBadgeStyles.base} ${isPrimary ? techBadgeStyles.primary : techBadgeStyles.secondary}`;
 };
 
 /**
- * Grid item styles (for grid layouts like RelatedFrameworks)
+ * Grid item styles (for grid layouts like RelatedFrameworks) using Design Tokens
  */
 export const gridItemStyles = {
-  container: 'flex items-center gap-3 p-3 rounded-lg border transition-all duration-150 min-h-[44px]',
-  background: 'bg-white dark:bg-gray-800',
-  border: 'border-gray-200 dark:border-gray-700',
-  hover: 'hover:bg-gray-50 dark:hover:bg-gray-700',
-  focus: 'focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900',
+  container: `flex items-center gap-3 p-3 ${tokens.radius.lg} border ${tokens.transition.fast} min-h-[44px]`,
+  background: tokens.surface.primary,
+  border: tokens.border.default,
+  hover: tokens.surface.secondary.replace('bg-', 'hover:bg-'),
+  focus: tokens.focus.ringFull,
 };
 
 /**
- * Get grid item classes
+ * Get grid item classes using Design Tokens
  */
 export const getGridItemClasses = (): string => {
   return `${gridItemStyles.container} ${gridItemStyles.background} ${gridItemStyles.border} ${gridItemStyles.hover} ${gridItemStyles.focus}`;
@@ -152,17 +157,17 @@ export const getGridItemClasses = (): string => {
 export const minTouchTargetSize = 'min-h-[44px]';
 
 /**
- * Common icon styles
+ * Common icon styles using Design Tokens
  */
 export const iconStyles = {
   small: 'w-4 h-4',
   medium: 'w-5 h-5',
   large: 'w-6 h-6',
-  color: 'text-gray-400 dark:text-gray-500',
+  color: tokens.text.muted,
 };
 
 /**
- * Get icon classes
+ * Get icon classes using Design Tokens
  */
 export const getIconClasses = (size: 'small' | 'medium' | 'large' = 'medium'): string => {
   return `${iconStyles[size]} ${iconStyles.color}`;

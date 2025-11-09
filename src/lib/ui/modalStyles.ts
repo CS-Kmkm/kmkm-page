@@ -3,7 +3,10 @@
  * 
  * Unified style constants for modal components across the application.
  * Ensures consistent appearance, behavior, and accessibility.
+ * Uses Design Tokens for consistent theming.
  */
+
+import { tokens } from '../theme/tokens';
 
 /**
  * Modal style configuration interface
@@ -41,7 +44,7 @@ export interface ModalStyleConfig {
 }
 
 /**
- * Unified modal styles
+ * Unified modal styles using Design Tokens
  */
 export const modalStyles: ModalStyleConfig = {
   backdrop: {
@@ -51,27 +54,27 @@ export const modalStyles: ModalStyleConfig = {
     darkMode: 'dark:bg-black/50',
   },
   container: {
-    base: 'relative rounded-lg overflow-y-auto',
-    background: 'bg-white dark:bg-gray-800',
+    base: `relative ${tokens.radius.lg} overflow-y-auto`,
+    background: tokens.surface.primary,
     border: '',
-    shadow: 'shadow-xl',
+    shadow: tokens.shadow.xl,
     padding: 'p-6',
     maxWidth: 'max-w-2xl w-full',
     maxHeight: 'max-h-[90vh]',
   },
   header: {
     base: 'flex items-start justify-between mb-4',
-    title: 'text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 leading-tight pr-4',
-    closeButton: 'flex-shrink-0 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800',
+    title: `text-xl sm:text-2xl font-bold ${tokens.text.primary} leading-tight pr-4`,
+    closeButton: `flex-shrink-0 ${tokens.text.muted} hover:${tokens.text.secondary.replace('text-', '')} ${tokens.transition.colors} p-2 ${tokens.radius.md} ${tokens.surface.secondary.replace('bg-', 'hover:bg-')} ${tokens.focus.ring} focus:ring-offset-2 dark:focus:ring-offset-gray-800`,
   },
   content: {
     base: 'space-y-4',
-    text: 'text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap',
+    text: `${tokens.text.secondary} leading-relaxed whitespace-pre-wrap`,
   },
   footer: {
-    base: 'flex items-center justify-between mt-6 pt-6 border-t border-gray-200 dark:border-gray-700',
-    button: 'px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors',
-    buttonPrimary: 'px-4 py-2 text-sm font-medium text-white bg-blue-600 dark:bg-blue-500 border border-transparent rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors',
+    base: `flex items-center justify-between mt-6 pt-6 border-t ${tokens.border.default}`,
+    button: `px-4 py-2 text-sm font-medium ${tokens.text.secondary} ${tokens.surface.primary} border ${tokens.border.default} ${tokens.radius.md} ${tokens.surface.secondary.replace('bg-', 'hover:bg-')} ${tokens.focus.ringFull} ${tokens.transition.colors}`,
+    buttonPrimary: `px-4 py-2 text-sm font-medium ${tokens.interactive.primaryText} ${tokens.interactive.primary} border border-transparent ${tokens.radius.md} ${tokens.interactive.primaryHover} ${tokens.focus.ringFull} ${tokens.transition.colors}`,
   },
 };
 
