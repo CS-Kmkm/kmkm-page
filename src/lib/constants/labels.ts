@@ -132,15 +132,15 @@ export const UI_LABELS = {
  * Heading labels for sections
  */
 export const HEADING_LABELS = {
-  latestUpdates: 'Latest Updates',
-  careerTimeline: 'Career Timeline',
-  publications: 'Publications',
-  projects: 'Projects',
-  skills: 'Skills',
-  experience: 'Experience',
-  education: 'Education',
-  awards: 'Awards',
-  events: 'Events',
+  latestUpdates: '最新の更新情報',
+  careerTimeline: '経歴タイムライン',
+  publications: '論文',
+  projects: 'プロジェクト',
+  skills: 'スキル',
+  experience: '経験',
+  education: '学歴',
+  awards: '受賞',
+  events: 'イベント',
 } as const;
 
 /**
