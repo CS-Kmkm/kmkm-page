@@ -2,6 +2,17 @@
 
 import React, { useEffect, useRef } from 'react';
 import { EventDetailModalProps, EventCategory } from '@/types';
+import {
+  getBackdropClassesWithFallback,
+  getModalContainerClasses,
+  getModalHeaderClasses,
+  getModalTitleClasses,
+  getCloseButtonClasses,
+  getModalContentClasses,
+  getModalTextClasses,
+  getModalFooterClasses,
+  getFooterButtonClasses,
+} from '@/lib/ui/modalStyles';
 
 const EventDetailModal: React.FC<EventDetailModalProps> = ({
   isOpen,
@@ -144,7 +155,7 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-white/30 dark:bg-black/50"
+      className={getBackdropClassesWithFallback()}
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
@@ -153,58 +164,60 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
     >
       <div
         ref={modalRef}
-        className="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        className={getModalContainerClasses()}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex-1 pr-4">
-            <h2
-              id="event-modal-title"
-              className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 leading-tight mb-2"
-            >
-              {event.title}
-            </h2>
-            <div className="flex flex-wrap items-center gap-2">
-              <span
-                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getCategoryColor(
-                  event.category
-                )}`}
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className={getModalHeaderClasses()}>
+            <div className="flex-1">
+              <h2
+                id="event-modal-title"
+                className={getModalTitleClasses()}
               >
-                {getCategoryLabel(event.category)}
-              </span>
-              <time className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                {formatDate(event.date)}
-              </time>
+                {event.title}
+              </h2>
+              <div className="flex flex-wrap items-center gap-2 mt-2">
+                <span
+                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getCategoryColor(
+                    event.category
+                  )}`}
+                >
+                  {getCategoryLabel(event.category)}
+                </span>
+                <time className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                  {formatDate(event.date)}
+                </time>
+              </div>
             </div>
-          </div>
-          <button
-            ref={closeButtonRef}
-            onClick={onClose}
-            className="flex-shrink-0 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-            aria-label="モーダルを閉じる"
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            <button
+              ref={closeButtonRef}
+              onClick={onClose}
+              className={getCloseButtonClasses()}
+              aria-label="モーダルを閉じる"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Content */}
         <div className="p-6">
           <div
             id="event-modal-description"
-            className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap mb-6"
+            className={`${getModalTextClasses()} mb-6`}
           >
             {event.description}
           </div>
@@ -271,14 +284,14 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
         </div>
 
         {/* Footer with Navigation */}
-        <div className="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+        <div className={`${getModalFooterClasses()} bg-gray-50 dark:bg-gray-900`}>
           <div className="flex items-center gap-2">
             {filteredEvents.length > 1 && (
               <>
                 <button
                   onClick={handlePrevious}
                   disabled={eventIndex === 0}
-                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className={`${getFooterButtonClasses()} inline-flex items-center disabled:opacity-50 disabled:cursor-not-allowed`}
                   aria-label="前のイベント"
                 >
                   <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -289,7 +302,7 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
                 <button
                   onClick={handleNext}
                   disabled={eventIndex === filteredEvents.length - 1}
-                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className={`${getFooterButtonClasses()} inline-flex items-center disabled:opacity-50 disabled:cursor-not-allowed`}
                   aria-label="次のイベント"
                 >
                   次へ
@@ -305,7 +318,7 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors"
+            className={getFooterButtonClasses()}
           >
             閉じる
           </button>

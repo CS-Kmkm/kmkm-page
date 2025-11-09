@@ -46,7 +46,7 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
 
   return (
     <div
-      className="animate-slide-in-right fixed inset-0 z-50 bg-gray-50 dark:bg-gray-900 overflow-y-auto lg:static lg:z-auto lg:bg-transparent lg:overflow-visible transition-colors duration-200"
+      className="animate-slide-in-right fixed inset-0 z-40 bg-gray-50 dark:bg-gray-900 overflow-y-auto lg:static lg:z-auto lg:bg-transparent lg:overflow-visible transition-colors duration-200"
       role="region"
       aria-label={`${tech.name}の詳細`}
     >

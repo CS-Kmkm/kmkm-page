@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { TechItem } from '@/types';
+import { getGridItemClasses } from '@/lib/ui/listItemStyles';
 
 interface RelatedFrameworksProps {
   frameworks: TechItem[];
@@ -49,13 +50,7 @@ const RelatedFrameworks: React.FC<RelatedFrameworksProps> = ({
           <button
             key={framework.id}
             onClick={() => onFrameworkSelect?.(framework)}
-            className="
-              flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-blue-200 dark:border-blue-700
-              transition-all duration-150
-              hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500
-              focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900
-              min-h-[44px]
-            "
+            className={getGridItemClasses()}
             type="button"
           >
             {/* Logo */}
