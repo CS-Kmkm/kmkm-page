@@ -13,9 +13,9 @@ test.describe('Career Page', () => {
     await expect(page.getByText('トップ')).toBeVisible();
     await expect(page.getByLabel('パンくずナビゲーション').getByText('経歴')).toBeVisible();
 
-    // Check timeline entries are visible (using actual data)
-    await expect(page.getByText('名古屋大学大学院 情報学研究科 知能システム学専攻')).toBeVisible();
-    await expect(page.getByText('大学院生（松原研究室）')).toBeVisible();
+    // Check timeline entries are visible (using actual English data)
+    await expect(page.getByText('Nagoya University, Graduate School of Informatics')).toBeVisible();
+    await expect(page.getByText('graduate_student', { exact: true }).first()).toBeVisible();
   });
 
   test('should display timeline in chronological order', async ({ page }) => {
@@ -49,11 +49,11 @@ test.describe('Career Page', () => {
 
     // Check that timeline is still readable on mobile
     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
-    await expect(page.getByText('大学院生（松原研究室）')).toBeVisible();
+    await expect(page.getByText('graduate_student', { exact: true }).first()).toBeVisible();
 
     // Check that timeline content is still accessible on mobile
     await expect(page.getByText(/2025\.04 - 現在/).first()).toBeVisible();
-    await expect(page.getByText('名古屋大学大学院 情報学研究科 知能システム学専攻')).toBeVisible();
+    await expect(page.getByText('Nagoya University, Graduate School of Informatics')).toBeVisible();
 
     // Check SVG timeline is rendered and responsive
     const timelineSection = page.locator('section[aria-labelledby="timeline-heading"]');
@@ -81,7 +81,7 @@ test.describe('Career Page', () => {
 
     // Check that content is visible
     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
-    await expect(page.getByText('大学院生（松原研究室）')).toBeVisible();
+    await expect(page.getByText('graduate_student', { exact: true }).first()).toBeVisible();
 
     // Check SVG timeline is rendered
     const timelineSection = page.locator('section[aria-labelledby="timeline-heading"]');
@@ -102,22 +102,22 @@ test.describe('Career Page', () => {
 
     // Check that all content is visible
     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
-    await expect(page.getByText('名古屋大学大学院 情報学研究科 知能システム学専攻')).toBeVisible();
-    await expect(page.getByText('大学院生（松原研究室）')).toBeVisible();
+    await expect(page.getByText('Nagoya University, Graduate School of Informatics')).toBeVisible();
+    await expect(page.getByText('graduate_student', { exact: true }).first()).toBeVisible();
 
     // Check SVG timeline is rendered
     const timelineSection = page.locator('section[aria-labelledby="timeline-heading"]');
     const svg = timelineSection.locator('svg').first();
     await expect(svg).toBeVisible();
 
-    // Check reverse button is visible
-    const reverseButton = page.getByRole('button', { name: 'ブランチの順序を反転' });
+    // Check reverse button is visible (now in English)
+    const reverseButton = page.getByRole('button', { name: 'Reverse branch order' });
     await expect(reverseButton).toBeVisible();
   });
 
   test('should toggle timeline order', async ({ page }) => {
-    // Click reverse button
-    const reverseButton = page.getByRole('button', { name: 'ブランチの順序を反転' });
+    // Click reverse button (now in English)
+    const reverseButton = page.getByRole('button', { name: 'Reverse branch order' });
     await expect(reverseButton).toBeVisible();
 
     // Check initial button text (default is reversed, so should show ↓)
