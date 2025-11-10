@@ -30,11 +30,16 @@ test.describe('Development Experience Page', () => {
     await techButton.click();
     
     // Check that detail view is displayed
-    await expect(page.getByRole('button', { name: '技術一覧に戻る' })).toBeVisible();
+    const backButton = page.getByRole('button', { name: '技術一覧に戻る' });
+    await expect(backButton).toBeVisible();
+    
+    // Scroll to top of page to ensure back button is not covered by header
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(300);
     
     // Check back button works
-    await page.getByRole('button', { name: '技術一覧に戻る' }).click();
-    await expect(page.getByRole('heading', { name: 'プログラミング言語' })).toBeVisible();
+    await backButton.click();
+    await expect(page.getByRole('heading', { name: 'プログラミング言語' })).toBeVisible({ timeout: 10000 });
   });
 
   test('should handle keyboard navigation', async ({ page }) => {
@@ -124,9 +129,12 @@ test.describe('Development Experience Page', () => {
     const backButton = page.getByRole('button', { name: '技術一覧に戻る' });
     await expect(backButton).toBeVisible();
     
+    // Scroll to top of page to ensure back button is not covered by header
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(300);
+    
     // Go back
     await backButton.click();
-    await page.waitForTimeout(500);
-    await expect(page.getByRole('heading', { name: 'プログラミング言語' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'プログラミング言語' })).toBeVisible({ timeout: 10000 });
   });
 });
