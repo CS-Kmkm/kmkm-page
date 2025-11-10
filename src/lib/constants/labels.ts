@@ -65,82 +65,82 @@ export const ARIA_LABELS = {
  */
 export const UI_LABELS = {
   // Actions
-  close: 'Close',
-  cancel: 'Cancel',
-  apply: 'Apply',
-  save: 'Save',
-  delete: 'Delete',
-  edit: 'Edit',
-  confirm: 'Confirm',
-  submit: 'Submit',
-  reset: 'Reset',
+  close: '閉じる',
+  cancel: 'キャンセル',
+  apply: '適用',
+  save: '保存',
+  delete: '削除',
+  edit: '編集',
+  confirm: '確認',
+  submit: '送信',
+  reset: 'リセット',
   
   // Navigation
-  previous: 'Previous',
-  next: 'Next',
-  back: 'Back',
-  forward: 'Forward',
+  previous: '前へ',
+  next: '次へ',
+  back: '戻る',
+  forward: '進む',
   
   // View modes
-  timeline: 'Timeline',
-  list: 'List',
-  grid: 'Grid',
+  timeline: 'タイムライン',
+  list: 'リスト',
+  grid: 'グリッド',
   
   // Filters
-  filterBy: 'Filter by',
-  sortBy: 'Sort by',
-  showAll: 'Show all',
+  filterBy: 'フィルター',
+  sortBy: '並び替え',
+  showAll: 'すべて表示',
   
   // Status
-  loading: 'Loading...',
-  noResults: 'No results found',
-  error: 'Error',
-  success: 'Success',
+  loading: '読み込み中...',
+  noResults: '結果が見つかりません',
+  error: 'エラー',
+  success: '成功',
   
   // Links
-  viewLiveSite: 'View Live Site',
-  viewOnGitHub: 'View on GitHub',
-  learnMore: 'Learn more',
-  readMore: 'Read more',
+  viewLiveSite: 'サイトを見る',
+  viewOnGitHub: 'GitHubで見る',
+  learnMore: '詳細を見る',
+  readMore: '続きを読む',
   
   // Sections
-  projectDescription: 'Project Description',
-  technologyStack: 'Technology Stack',
-  relatedLinks: 'Related Links',
-  tags: 'Tags',
+  projectDescription: 'プロジェクト概要',
+  technologyStack: '技術スタック',
+  relatedLinks: '関連リンク',
+  tags: 'タグ',
   
   // Time
-  duration: 'Duration',
-  date: 'Date',
-  year: 'Year',
+  duration: '期間',
+  date: '日付',
+  year: '年',
   
   // Authorship
-  allPublications: 'All Publications',
-  firstAuthorOnly: 'First Author Only',
-  coAuthorOnly: 'Co-author Only',
+  allPublications: 'すべての論文',
+  firstAuthorOnly: '筆頭著者のみ',
+  coAuthorOnly: '共著者のみ',
   
   // Publication types
-  publicationType: 'Publication Type',
-  journal: 'Journal',
-  conference: 'Conference',
-  workshop: 'Workshop',
-  preprint: 'Preprint',
-  other: 'Other',
+  publicationType: '論文タイプ',
+  journal: 'ジャーナル',
+  conference: '国際会議',
+  workshop: 'ワークショップ',
+  preprint: 'プレプリント',
+  other: 'その他',
 } as const;
 
 /**
  * Heading labels for sections
  */
 export const HEADING_LABELS = {
-  latestUpdates: 'Latest Updates',
-  careerTimeline: 'Career Timeline',
-  publications: 'Publications',
-  projects: 'Projects',
-  skills: 'Skills',
-  experience: 'Experience',
-  education: 'Education',
-  awards: 'Awards',
-  events: 'Events',
+  latestUpdates: '最新の更新情報',
+  careerTimeline: '経歴タイムライン',
+  publications: '論文',
+  projects: 'プロジェクト',
+  skills: 'スキル',
+  experience: '経験',
+  education: '学歴',
+  awards: '受賞',
+  events: 'イベント',
 } as const;
 
 /**

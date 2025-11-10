@@ -22,7 +22,7 @@ const TimelineView: React.FC<TimelineViewProps> = ({
   return (
     <section aria-labelledby="timeline-heading">
       <h2 id="timeline-heading" className="sr-only">
-        Career Timeline
+        経歴タイムライン
       </h2>
 
       {/* Control Area - Fixed height to match ListView */}
@@ -30,10 +30,10 @@ const TimelineView: React.FC<TimelineViewProps> = ({
         <button
           onClick={onToggleReverse}
           className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-slate-300 dark:border-gray-600 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-600 transition-colors min-h-[44px] focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
-          aria-label="Reverse branch order"
+          aria-label="ブランチの順序を反転"
           type="button"
         >
-          {isReversed ? "↓" : "↑"} Reverse Order
+          {isReversed ? "↓" : "↑"} 順序反転
         </button>
       </div>
 

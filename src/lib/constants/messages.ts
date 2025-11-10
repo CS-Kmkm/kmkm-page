@@ -21,12 +21,12 @@ export const EMPTY_STATE_MESSAGES = {
  * Instruction messages
  */
 export const INSTRUCTION_MESSAGES = {
-  clickToViewDetails: 'Click to view details.',
-  clickEventForDetails: 'Click on an event to view details.',
-  useArrowKeysToNavigate: 'Use arrow keys to navigate, Enter to select.',
-  useArrowKeysAndEnter: 'Use arrow keys to move, Enter to select.',
-  pressEscapeToClose: 'Press Escape to close.',
-  selectFilters: 'Select filters to refine results.',
+  clickToViewDetails: 'クリックして詳細を表示。',
+  clickEventForDetails: 'イベントをクリックして詳細を表示。',
+  useArrowKeysToNavigate: '矢印キーで移動、Enterキーで選択。',
+  useArrowKeysAndEnter: '矢印キーで移動、Enterキーで選択。',
+  pressEscapeToClose: 'Escapeキーで閉じる。',
+  selectFilters: 'フィルターを選択して結果を絞り込む。',
 } as const;
 
 /**

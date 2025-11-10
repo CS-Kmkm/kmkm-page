@@ -49,8 +49,8 @@ test.describe('Homepage', () => {
   });
 
   test('should display updates list', async ({ page }) => {
-    // Check updates section is visible (now in English)
-    await expect(page.getByText('Latest Updates')).toBeVisible();
+    // Check updates section is visible
+    await expect(page.getByText('最新の更新情報')).toBeVisible();
     
     // Check that at least one update is displayed
     const updates = page.locator('article').filter({ hasText: /2024/ });
@@ -97,7 +97,7 @@ test.describe('Homepage', () => {
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
     
     // Check that layout adapts to tablet (2-column layout)
-    const updatesSection = page.locator('div').filter({ hasText: 'Latest Updates' }).first();
+    const updatesSection = page.locator('div').filter({ hasText: '最新の更新情報' }).first();
     await expect(updatesSection).toBeVisible();
     
     // Check no horizontal scroll
@@ -114,7 +114,7 @@ test.describe('Homepage', () => {
     
     // Check that all content is visible
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
-    await expect(page.getByText('Latest Updates')).toBeVisible();
+    await expect(page.getByText('最新の更新情報')).toBeVisible();
     await expect(page.getByText('コンテンツ')).toBeVisible();
     
     // Check 3-column layout is applied

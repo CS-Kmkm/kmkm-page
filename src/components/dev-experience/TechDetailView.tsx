@@ -46,11 +46,11 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
 
   return (
     <div
-      className="animate-slide-in-right fixed inset-0 z-40 bg-gray-50 dark:bg-gray-900 overflow-y-auto lg:static lg:z-auto lg:bg-transparent lg:overflow-visible transition-colors duration-200"
+      className="animate-slide-in-right fixed inset-0 z-[60] bg-gray-50 dark:bg-gray-900 overflow-y-auto lg:static lg:z-auto lg:bg-transparent lg:overflow-visible transition-colors duration-200"
       role="region"
       aria-label={`${tech.name}の詳細`}
     >
-      <div className="min-h-screen lg:min-h-0 p-4 sm:p-6 lg:p-0">
+      <div className="min-h-screen lg:min-h-0 p-4 sm:p-6 lg:p-0 pt-20 lg:pt-4">
         {/* Back Button */}
         <button
           id="tech-detail-back-button"
