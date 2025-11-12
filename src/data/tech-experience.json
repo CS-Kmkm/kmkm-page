@@ -17,7 +17,7 @@
       "relatedFrameworks": [
         "FastAPI"
       ],
-      "description": "研究におけるデータ分析・実験、個人開発（Webスクレイピング）、競技プログラミング（AtCoder）、講義、アルバイト（チャットボット開発、データ管理）で使用。最も得意な技術。",
+      "description": "研究におけるデータ分析・実験、個人開発（Webスクレイピング）、競技プログラミング（AtCoder）、講義、アルバイト（チャットボット開発、データ管理）で使用。最も得意な言語です。",
       "logoUrl": "/images/tech-logos/python.svg",
       "logoAlt": "Python logo"
     },
@@ -69,7 +69,7 @@
       "projects": [
         "proj-004"
       ],
-      "description": "講義、競技プログラミングで使用。アルゴリズムとデータ構造の実装に活用。",
+      "description": "講義、競技プログラミングで使用。講義ではぷよぷよ（のようなもの）を作成。",
       "logoUrl": "/images/tech-logos/cplusplus.svg",
       "logoAlt": "C++ logo"
     },
@@ -83,7 +83,7 @@
       "projects": [
         "proj-009"
       ],
-      "description": "インターンシップで使用。OracleDBと連携した従業員管理システムの開発。",
+      "description": "インターンシップで使用。OracleDBを利用して従業員管理システムの開発を経験。ほぼ覚えてません。",
       "logoUrl": "/images/tech-logos/csharp.svg",
       "logoAlt": "C# logo"
     },
@@ -98,7 +98,7 @@
       "relatedPlatforms": [
         "Arduino"
       ],
-      "description": "講義、システムプログラミングで使用。低レベルプログラミングとメモリ管理の理解に活用。Arduinoプログラミングのベースとしても使用。",
+      "description": "講義で使用。ポインタに苦労した記憶があります。",
       "logoUrl": "/images/tech-logos/c.svg",
       "logoAlt": "C logo"
     },
@@ -124,7 +124,7 @@
       "projects": [
         "proj-002"
       ],
-      "description": "講義で使用。統計解析とデータ可視化に活用。",
+      "description": "講義で使用。データ解析に活用。",
       "logoUrl": "/images/tech-logos/r.svg",
       "logoAlt": "R logo"
     },
@@ -142,7 +142,7 @@
         "proj-007",
         "proj-008"
       ],
-      "description": "Webアプリケーション開発で使用。マークアップ言語としてWebページの構造を定義。",
+      "description": "Webアプリケーション開発で使用。",
       "logoUrl": "/images/tech-logos/html5.svg",
       "logoAlt": "HTML5 logo"
     },
@@ -159,7 +159,7 @@
       "relatedFrameworks": [
         "Ruby on Rails"
       ],
-      "description": "インターンシップでRuby on Railsフレームワークと共に使用。Cursorとか使いながら書いていたのであまり自信はないです。",
+      "description": "インターンシップでRuby on Railsフレームワークと共に使用。Cursorを使いながら書いていたのであまり自信はないです。",
       "logoUrl": "/images/tech-logos/ruby.svg",
       "logoAlt": "Ruby logo"
     },
@@ -174,7 +174,7 @@
         "proj-005",
         "proj-009"
       ],
-      "description": "データベース操作で使用。MySQL、OracleDBでのデータ操作とクエリ最適化に活用。",
+      "description": "データベース操作で使用。MySQL、OracleDBでのデータ操作などで使用。",
       "logoUrl": "/images/tech-logos/sql.svg",
       "logoAlt": "SQL logo"
     },
@@ -188,7 +188,7 @@
       "projects": [
         "proj-008"
       ],
-      "description": "Webアプリケーションのスタイリングで使用。レスポンシブデザインとUI/UXの実装に活用。",
+      "description": "Webアプリ開発で使用。あまり得意ではないです。",
       "logoUrl": "/images/tech-logos/css.svg",
       "logoAlt": "CSS logo"
     },
@@ -203,7 +203,7 @@
       "relatedLanguages": [
         "C"
       ],
-      "description": "講義やPBLでマイコンプログラミングに使用。IoTデバイスやセンサー制御の実装に活用。",
+      "description": "PBLで使用。4輪の車を動かしました。",
       "logoUrl": "/images/tech-logos/arduino.svg",
       "logoAlt": "Arduino logo"
     },
@@ -223,7 +223,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "description": "ハッカソン、インターンシップ、アルバイトで使用。モダンなWebアプリケーション開発に活用。",
+      "description": "ハッカソン、インターンシップ、アルバイトで使用。最近書くことが増えました。",
       "logoUrl": "/images/tech-logos/react.svg",
       "logoAlt": "React logo"
     },
@@ -241,7 +241,7 @@
         "TypeScript",
         "JavaScript"
       ],
-      "description": "ハッカソン（JPHACKS2025）で使用。Reactベースのフルスタックフレームワーク。",
+      "description": "ハッカソン（JPHACKS2025）・本ホームページ作成に使用。",
       "logoUrl": "/images/tech-logos/nextdotjs.svg",
       "logoAlt": "Next.js logo"
     },
@@ -258,7 +258,7 @@
       "relatedLanguages": [
         "Python"
       ],
-      "description": "ハッカソンで使用。PythonによるWeb API開発フレームワーク。",
+      "description": "ハッカソンで使用。かなり気楽に書けるので好きです。",
       "logoUrl": "/images/tech-logos/fastapi.svg",
       "logoAlt": "FastAPI logo"
     },
@@ -275,7 +275,7 @@
       "relatedLanguages": [
         "Ruby"
       ],
-      "description": "インターンシップで使用。システム機能の追加開発を実施。",
+      "description": "インターンシップで使用。システム機能の追加開発などをやりました。",
       "logoUrl": "/images/tech-logos/rubyonrails.svg",
       "logoAlt": "Ruby on Rails logo"
     },
@@ -289,7 +289,7 @@
       "projects": [
         "proj-001"
       ],
-      "description": "講義、ハッカソン、研究で使用。コンテナ化による開発環境の構築。研究室の開発環境管理をしているので人並には使えます。",
+      "description": "講義、ハッカソン、研究で使用。研究室の開発環境管理をしているので人並には使えます。",
       "logoUrl": "/images/tech-logos/docker.svg",
       "logoAlt": "Docker logo"
     },
@@ -319,7 +319,7 @@
       "projects": [
         "proj-001"
       ],
-      "description": "アルバイトで使用。S3、Lambda、CloudWatchを活用したサーバーレスアーキテクチャ。",
+      "description": "アルバイトで使用。S3、Lambda、CloudWatchを利用してChatBotの開発・保守を行っています。",
       "logoUrl": "/images/tech-logos/amazonwebservices.svg",
       "logoAlt": "AWS logo"
     },
@@ -333,7 +333,7 @@
       "projects": [
         "proj-005"
       ],
-      "description": "ハッカソンで使用。リレーショナルデータベース管理システム。",
+      "description": "ハッカソンで使用。",
       "logoUrl": "/images/tech-logos/mysql.svg",
       "logoAlt": "MySQL logo"
     },
@@ -347,7 +347,7 @@
       "projects": [
         "proj-009"
       ],
-      "description": "インターンシップで使用。C#と連携した従業員管理システムの開発。",
+      "description": "インターンシップで使用。C#と併せて従業員管理システムの開発。",
       "logoUrl": "/images/tech-logos/oracle.svg",
       "logoAlt": "Oracle Database logo"
     },
@@ -359,7 +359,7 @@
       "proficiencyLevel": "低",
       "experienceYears": 1,
       "projects": [],
-      "description": "軽量なリレーショナルデータベース。個人開発やプロトタイプ開発で使用。",
+      "description": "個人開発や講義で使用しました。",
       "logoUrl": "/images/tech-logos/sqlite.svg",
       "logoAlt": "SQLite logo"
     },
@@ -377,7 +377,7 @@
         "proj-007",
         "proj-010"
       ],
-      "description": "バージョン管理システムとして全ての開発プロジェクトで使用。ブランチ管理、マージ、コンフリクト解決に活用。",
+      "description": "バージョン管理システムとして全ての開発プロジェクトで使用。",
       "logoUrl": "/images/tech-logos/git.svg",
       "logoAlt": "Git logo"
     },
@@ -391,7 +391,7 @@
       "projects": [
         "proj-006"
       ],
-      "description": "Webアプリケーションのデプロイメントプラットフォームとして使用。Next.jsアプリケーションの継続的デプロイメントに活用。",
+      "description": "Webアプリケーションのデプロイメントプラットフォームとして使用。本ホームページの開発に使用。",
       "logoUrl": "/images/tech-logos/vercel.svg",
       "logoAlt": "Vercel logo"
     }
@@ -400,7 +400,7 @@
     {
       "id": "proj-001",
       "name": "生成AIチャットボット開発（アルバイト）",
-      "description": "学術研究の成果物（研究データ）の管理手法に関する質問に解答する生成AIチャットボット。研究データ管理を行う人をサポートすることを目的としたプロダクト。Web検索を用いた回答生成機能の不具合修正、ベクトルデータベースのサービス移行（Pinecone→AWS S3 Vector）、データの追加を担当。",
+      "description": "学術研究の成果物（研究データ）の管理手法に関する質問に解答する生成AIチャットボット。研究データ管理を行う人をサポートすることを目的としたプロダクト。先輩の開発を引き継いで、Web検索に基づく回答生成機能の不具合修正、ベクトルデータベースのサービス移行（Pinecone→AWS S3 Vector）、データの追加を担当。",
       "technologies": [
         "Python",
         "JavaScript",
@@ -411,8 +411,8 @@
         "Git",
         "GitHub"
       ],
-      "duration": "2025年4月 - 2025年9月",
-      "role": "フルスタック開発者",
+      "duration": "2025年4月 - 現在",
+      "role": "開発・保守担当（一人）",
       "displayDate": "2025-04-01",
       "isDisplayOnTop": false,
       "imageUrl": null
@@ -420,10 +420,9 @@
     {
       "id": "proj-002",
       "name": "データ分析・実験（研究）",
-      "description": "研究活動におけるデータ分析と実験の実施。PythonとRを用いた統計分析、データ可視化、実験結果の評価を行う。",
+      "description": "研究活動におけるデータ分析と実験の実施。データの分析・可視化、LLMでのテキスト生成、分類モデルの学習などを経験。",
       "technologies": [
-        "Python",
-        "R"
+        "Python"
       ],
       "duration": "2021年4月 - 現在",
       "role": "研究者",
@@ -445,7 +444,7 @@
     {
       "id": "proj-004",
       "name": "競技プログラミング（AtCoder）",
-      "description": "AtCoderでの競技プログラミング活動。アルゴリズムとデータ構造の実装スキルを向上。",
+      "description": "AtCoderでの競技プログラミング活動。アルゴリズムとデータ構造を実際の問題で実装。",
       "technologies": [
         "Python",
         "C++"
@@ -470,7 +469,7 @@
         "Git",
         "GitHub"
       ],
-      "duration": "2024年10月27日",
+      "duration": "2024年10月26日",
       "role": "バックエンド, PM",
       "displayDate": "2024-10-27",
       "githubUrl": "https://github.com/jphacks/ng_2405",
@@ -489,7 +488,7 @@
       ],
       "duration": "2025年10月",
       "role": "フロントエンド、PM",
-      "displayDate": "2025-10-01",
+      "displayDate": "2025-10-11",
       "githubUrl": "https://github.com/jphacks/ng_2511",
       "imageUrl": null
     },
@@ -506,7 +505,7 @@
       ],
       "duration": "2025年9月",
       "role": "フロントエンド開発者",
-      "displayDate": "2025-09-01",
+      "displayDate": "2025-09-08",
       "imageUrl": null
     },
     {
@@ -525,7 +524,7 @@
     },
     {
       "id": "proj-009",
-      "name": "トヨタシステムズインターンシップ",
+      "name": "トヨタシステムズインターンシップ(2週間)",
       "description": "株式会社トヨタシステムズでのインターンシップ。C#とOracleDBを用いたシステム開発を実施。",
       "technologies": [
         "C#",
@@ -534,7 +533,7 @@
       ],
       "duration": "2023年8月",
       "role": "開発者",
-      "displayDate": "2023-08-01",
+      "displayDate": "2023-08-23",
       "imageUrl": null
     },
     {
@@ -585,7 +584,7 @@
       ],
       "duration": "2025年8月",
       "role": "DS/AIエンジニア",
-      "displayDate": "2025-08-01",
+      "displayDate": "2025-08-18",
       "imageUrl": null
     },
     {
@@ -597,7 +596,7 @@
       ],
       "duration": "2025年8月",
       "role": "DS/AIエンジニア",
-      "displayDate": "2025-08-01",
+      "displayDate": "2025-08-25",
       "imageUrl": null
     },
     {
