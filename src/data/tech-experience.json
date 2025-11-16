@@ -413,6 +413,7 @@
       ],
       "duration": "2025年4月 - 現在",
       "role": "開発・保守担当（一人）",
+      "date": "2025-04-01",
       "displayDate": "2025-04-01",
       "isDisplayOnTop": false,
       "imageUrl": null
@@ -426,6 +427,7 @@
       ],
       "duration": "2021年4月 - 現在",
       "role": "研究者",
+      "date": "2021-04-01",
       "displayDate": "2021-04-01",
       "imageUrl": null
     },
@@ -438,6 +440,7 @@
       ],
       "duration": "2021年4月 - 現在",
       "role": "個人開発者",
+      "date": "2021-04-01",
       "displayDate": "2021-04-01",
       "imageUrl": null
     },
@@ -451,6 +454,7 @@
       ],
       "duration": "2021年4月 - 現在",
       "role": "競技プログラマー",
+      "date": "2021-04-01",
       "displayDate": "2021-04-01",
       "imageUrl": null
     },
@@ -471,6 +475,7 @@
       ],
       "duration": "2024年10月26日",
       "role": "バックエンド, PM",
+      "date": "2024-10-27",
       "displayDate": "2024-10-27",
       "githubUrl": "https://github.com/jphacks/ng_2405",
       "imageUrl": null
@@ -488,6 +493,7 @@
       ],
       "duration": "2025年10月",
       "role": "フロントエンド、PM",
+      "date": "2025-10-11",
       "displayDate": "2025-10-11",
       "githubUrl": "https://github.com/jphacks/ng_2511",
       "imageUrl": null
@@ -505,6 +511,7 @@
       ],
       "duration": "2025年9月",
       "role": "フロントエンド開発者",
+      "date": "2025-09-08",
       "displayDate": "2025-09-08",
       "imageUrl": null
     },
@@ -519,6 +526,7 @@
       ],
       "duration": "2023年8月 - 2025年4月",
       "role": "個人開発者",
+      "date": "2023-08-01",
       "displayDate": "2023-08-01",
       "imageUrl": null
     },
@@ -533,6 +541,7 @@
       ],
       "duration": "2023年8月",
       "role": "開発者",
+      "date": "2023-08-23",
       "displayDate": "2023-08-23",
       "imageUrl": null
     },
@@ -548,6 +557,7 @@
       ],
       "duration": "2025年9月",
       "role": "バックエンド開発者",
+      "date": "2025-09-01",
       "displayDate": "2025-09-01",
       "imageUrl": null
     },
@@ -560,6 +570,7 @@
       ],
       "duration": "2023年6月-2023年7月",
       "role": "PM、PG",
+      "date": "2023-06-01",
       "displayDate": "2023-06-01",
       "imageUrl": null
     },
@@ -572,7 +583,8 @@
       ],
       "duration": "2025年3月",
       "role": "参加者",
-      "displayDate": "2025-03-01",
+      "date": "2025-03-16",
+      "displayDate": "2025-03-16",
       "imageUrl": null
     },
     {
@@ -584,6 +596,7 @@
       ],
       "duration": "2025年8月",
       "role": "DS/AIエンジニア",
+      "date": "2025-08-18",
       "displayDate": "2025-08-18",
       "imageUrl": null
     },
@@ -596,6 +609,7 @@
       ],
       "duration": "2025年8月",
       "role": "DS/AIエンジニア",
+      "date": "2025-08-25",
       "displayDate": "2025-08-25",
       "imageUrl": null
     },
@@ -611,6 +625,7 @@
       ],
       "duration": "2025年10月",
       "role": "個人開発者",
+      "date": "2025-10-01",
       "displayDate": "2025-10-01",
       "imageUrl": null
     }

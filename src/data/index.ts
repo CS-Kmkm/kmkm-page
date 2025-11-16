@@ -209,60 +209,51 @@ export const getTimelineEvents = (): TimelineEventEntry[] => {
   // 2. Generate events from projects and activities
   const projects = getProjectDetails();
   projects.forEach(project => {
-    // Extract year and month from duration string
-    const yearMatch = project.duration.match(/(\d{4})/);
-    if (yearMatch) {
-      const projectYear = parseInt(yearMatch[1]);
-      let monthMatch = project.duration.match(/(\d{1,2})月/);
-      let dayMatch = project.duration.match(/(\d{1,2})日/);
+    // Use the date field directly from project data
+    if (!project.date) {
+      console.warn(`Project "${project.id}" is missing date field`);
+      return;
+    }
 
-      // Handle special date formats
-      if (project.duration.includes('10月27日')) {
-        monthMatch = ['', '10'];
-        dayMatch = ['', '27'];
-      }
+    const projectDate = project.date;
+    const projectYear = new Date(projectDate).getFullYear();
 
-      const projectMonth = monthMatch ? monthMatch[1].padStart(2, '0') : '01';
-      const projectDay = dayMatch ? dayMatch[1].padStart(2, '0') : '01';
-      const projectDate = `${projectYear}-${projectMonth}-${projectDay}`;
+    let shouldInclude = false;
+    let title = project.name;
+    let category = '個人開発';
 
-      let shouldInclude = false;
-      let title = project.name;
-      let category = '個人開発';
+    // Include hackathons, tech events, internships, and personal projects
+    if (project.name.includes('JPHACKS')) {
+      shouldInclude = true;
+      title = project.name;
+      category = 'ハッカソン';
+    } else if (project.name.includes('技育祭')) {
+      shouldInclude = true;
+      title = project.name;
+      category = '技術イベント';
+    } else if (project.name.includes('インターンシップ')) {
+      shouldInclude = true;
+      title = project.name;
+      category = 'インターンシップ';
+    } else if (project.name.includes('ポートフォリオサイト')) {
+      shouldInclude = true;
+      title = '個人ポートフォリオサイト開発';
+      category = '個人開発';
+    } else if (project.name.includes('Chrome拡張機能')) {
+      shouldInclude = true;
+      title = 'Chrome拡張機能開発';
+      category = '個人開発';
+    }
 
-      // Include hackathons, tech events, internships, and personal projects
-      if (project.name.includes('JPHACKS')) {
-        shouldInclude = true;
-        title = project.name;
-        category = 'ハッカソン';
-      } else if (project.name.includes('技育祭')) {
-        shouldInclude = true;
-        title = project.name;
-        category = '技術イベント';
-      } else if (project.name.includes('インターンシップ')) {
-        shouldInclude = true;
-        title = project.name;
-        category = 'インターンシップ';
-      } else if (project.name.includes('ポートフォリオサイト')) {
-        shouldInclude = true;
-        title = '個人ポートフォリオサイト開発';
-        category = '個人開発';
-      } else if (project.name.includes('Chrome拡張機能')) {
-        shouldInclude = true;
-        title = 'Chrome拡張機能開発';
-        category = '個人開発';
-      }
-
-      if (shouldInclude) {
-        events.push({
-          id: `timeline-project-${project.id}`,
-          title,
-          description: project.description,
-          date: projectDate,
-          year: projectYear.toString(),
-          category
-        });
-      }
+    if (shouldInclude) {
+      events.push({
+        id: `timeline-project-${project.id}`,
+        title,
+        description: project.description,
+        date: projectDate,
+        year: projectYear.toString(),
+        category
+      });
     }
   });
 
@@ -384,99 +375,84 @@ export const getEvents = (): EventEntry[] => {
   // 3. Generate events from tech experience projects (internships and events)
   const projects = getProjectDetailsRaw();
   projects.forEach(project => {
-    // Extract year from duration string
-    const yearMatch = project.duration.match(/(\d{4})/);
-    if (yearMatch) {
-      const projectYear = parseInt(yearMatch[1]);
-      const monthMatch = project.duration.match(/(\d{1,2})月/);
-      const dayMatch = project.duration.match(/(\d{1,2})日/);
-      
-      // Handle special date formats
-      let projectMonth = '01';
-      let projectDay = '01';
-      
-      if (project.duration.includes('10月27日')) {
-        projectMonth = '10';
-        projectDay = '27';
-      } else if (monthMatch) {
-        projectMonth = monthMatch[1].padStart(2, '0');
-        if (dayMatch) {
-          projectDay = dayMatch[1].padStart(2, '0');
-        }
-      }
-      
-      const projectDate = `${projectYear}-${projectMonth}-${projectDay}`;
-
-      // Skip projects that are not meant to be displayed on top page
-      if (project.isDisplayOnTop === false) {
-        return; // Skip projects with isDisplayOnTop: false
-      }
-
-      let category: EventCategory = EventCategory.OTHER;
-      let title = project.name;
-
-      // Categorize based on project name
-      if (project.name.includes('インターンシップ')) {
-        category = EventCategory.INTERNSHIP;
-      } else if (project.name.includes('JPHACKS') || project.name.includes('技育祭')) {
-        category = EventCategory.EVENT;
-        if (project.name.includes('JPHACKS')) {
-          title = `${project.name} 参加`;
-        } else if (project.name.includes('技育祭')) {
-          title = project.name;
-        }
-      } else if (project.name.includes('ポートフォリオサイト')) {
-        category = EventCategory.OTHER;
-        title = project.name;
-      } else if (project.name.includes('アルバイト')) {
-        // Include work projects as 'other' category
-        category = EventCategory.OTHER;
-        title = project.name;
-      } else {
-        // Skip personal development projects and coursework that are not significant events
-        if (project.name.includes('個人開発') ||
-            project.name.includes('Webスクレイピング') ||
-            project.name.includes('Chrome拡張機能') ||
-            project.name.includes('競技プログラミング') ||
-            project.name.includes('データ分析・実験') ||
-            project.name.includes('PBL')) {
-          return; // Skip these projects
-        }
-        category = EventCategory.OTHER;
-      }
-
-      // Determine location
-      let location = undefined;
-      if (project.name.includes('SmartHR')) {
-        location = 'SmartHR';
-      } else if (project.name.includes('トヨタシステムズ')) {
-        location = 'トヨタシステムズ';
-      } else if (project.name.includes('ラクスル')) {
-        location = 'ラクスル';
-      } else if (project.name.includes('BIPROGY')) {
-        location = 'BIPROGY';
-      } else if (project.name.includes('MonotaRo')) {
-        location = 'MonotaRo';
-      } else if (project.name.includes('JPHACKS')) {
-        location = 'ハッカソン会場';
-      } else if (project.name.includes('技育祭')) {
-        location = 'イベント会場';
-      }
-
-      events.push({
-        id: `project-${project.id}`,
-        title,
-        description: project.description,
-        date: projectDate,
-        year: projectYear,
-        category,
-        displayDate: project.displayDate,
-        location,
-        duration: project.duration,
-        relatedLinks: project.githubUrl ? [project.githubUrl] : undefined,
-        tags: ['development', ...project.technologies.slice(0, 3)]
-      });
+    // Use the date field directly from project data
+    if (!project.date) {
+      console.warn(`Project "${project.id}" is missing date field`);
+      return;
     }
+
+    const projectDate = project.date;
+    const projectYear = new Date(projectDate).getFullYear();
+
+    // Skip projects that are not meant to be displayed on top page
+    if (project.isDisplayOnTop === false) {
+      return; // Skip projects with isDisplayOnTop: false
+    }
+
+    let category: EventCategory = EventCategory.OTHER;
+    let title = project.name;
+
+    // Categorize based on project name
+    if (project.name.includes('インターンシップ')) {
+      category = EventCategory.INTERNSHIP;
+    } else if (project.name.includes('JPHACKS') || project.name.includes('技育祭')) {
+      category = EventCategory.EVENT;
+      if (project.name.includes('JPHACKS')) {
+        title = `${project.name} 参加`;
+      } else if (project.name.includes('技育祭')) {
+        title = project.name;
+      }
+    } else if (project.name.includes('ポートフォリオサイト')) {
+      category = EventCategory.OTHER;
+      title = project.name;
+    } else if (project.name.includes('アルバイト')) {
+      // Include work projects as 'other' category
+      category = EventCategory.OTHER;
+      title = project.name;
+    } else {
+      // Skip personal development projects and coursework that are not significant events
+      if (project.name.includes('個人開発') ||
+          project.name.includes('Webスクレイピング') ||
+          project.name.includes('Chrome拡張機能') ||
+          project.name.includes('競技プログラミング') ||
+          project.name.includes('データ分析・実験') ||
+          project.name.includes('PBL')) {
+        return; // Skip these projects
+      }
+      category = EventCategory.OTHER;
+    }
+
+    // Determine location
+    let location = undefined;
+    if (project.name.includes('SmartHR')) {
+      location = 'SmartHR';
+    } else if (project.name.includes('トヨタシステムズ')) {
+      location = 'トヨタシステムズ';
+    } else if (project.name.includes('ラクスル')) {
+      location = 'ラクスル';
+    } else if (project.name.includes('BIPROGY')) {
+      location = 'BIPROGY';
+    } else if (project.name.includes('MonotaRo')) {
+      location = 'MonotaRo';
+    } else if (project.name.includes('JPHACKS')) {
+      location = 'ハッカソン会場';
+    } else if (project.name.includes('技育祭')) {
+      location = 'イベント会場';
+    }
+
+    events.push({
+      id: `project-${project.id}`,
+      title,
+      description: project.description,
+      date: projectDate,
+      year: projectYear,
+      category,
+      displayDate: project.displayDate,
+      location,
+      duration: project.duration,
+      relatedLinks: project.githubUrl ? [project.githubUrl] : undefined,
+      tags: ['development', ...project.technologies.slice(0, 3)]
+    });
   });
 
   // Apply display date filtering

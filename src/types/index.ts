@@ -88,6 +88,7 @@ export interface ProjectDetail {
   technologies: string[];
   duration: string;
   role: string;
+  date: string;             // 公開日（YYYY-MM-DD形式）
   displayDate: string;      // 表示日（YYYY-MM-DD形式）
   isDisplayOnTop?: boolean; // トップページでの表示制御（デフォルト: true）
   url?: string;
