@@ -69,7 +69,7 @@ jobs:
         NEXT_PUBLIC_SITE_NAME: ${{ secrets.NEXT_PUBLIC_SITE_NAME || 'Personal Portfolio' }}
         
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: build-files
         path: |
@@ -110,7 +110,7 @@ jobs:
       run: npx playwright test --project=chromium
       
     - name: Upload test results
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       if: always()
       with:
         name: playwright-report
