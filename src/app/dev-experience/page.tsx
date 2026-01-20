@@ -63,7 +63,7 @@ export default function DevExperiencePage() {
   return (
     <PageLayout
       title="Development Experience"
-      className="max-w-6xl mx-auto"
+      className="w-[90%] max-w-7xl mx-auto"
     >
       <div className="space-y-6 sm:space-y-8">
         {/* Page header */}

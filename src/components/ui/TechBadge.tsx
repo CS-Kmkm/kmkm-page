@@ -87,13 +87,13 @@ const TechBadge: React.FC<TechBadgeProps> = ({
         
         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs">
           <span className="flex items-center gap-1">
-            <span className="font-medium">Experience:</span>
-            <span>{experienceYears} year{experienceYears !== 1 ? 's' : ''}</span>
+            <span className="font-medium">経験年数:</span>
+            <span>{experienceYears}年</span>
           </span>
           
           <span className="flex items-center gap-1">
-            <span className="font-medium">Level:</span>
-            <span className="capitalize font-medium">{proficiency}</span>
+            <span className="font-medium">習熟度:</span>
+            <span className="font-medium">{proficiency === 'expert' ? '高' : proficiency === 'intermediate' ? '中' : '低'}</span>
           </span>
         </div>
       </div>

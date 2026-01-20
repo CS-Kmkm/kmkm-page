@@ -182,7 +182,7 @@ export default function CareerPage() {
   return (
     <PageLayout
       title={PAGE_TITLE}
-      className="max-w-6xl mx-auto px-4"
+      className="w-[90%] max-w-7xl mx-auto px-4"
     >
       <div className="w-full">
         <BreadcrumbNavigation />

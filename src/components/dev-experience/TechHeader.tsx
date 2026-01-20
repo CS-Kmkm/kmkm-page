@@ -54,9 +54,9 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+    <div className="min-w-full w-full flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-200 box-border overflow-hidden">
       {/* Logo */}
-      <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
+      <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center bg-gray-100 dark:bg-gray-200 rounded-lg p-2">
         {tech.logoUrl ? (
           <Image
             src={tech.logoUrl}
@@ -73,12 +73,12 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
       </div>
 
       {/* Info */}
-      <div className="flex-grow">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+      <div className="flex-grow min-w-0 w-full overflow-hidden">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 w-full block overflow-hidden break-words">
           {tech.name}
         </h2>
         
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full">
           {/* Proficiency Badge */}
           <span
             className={`
