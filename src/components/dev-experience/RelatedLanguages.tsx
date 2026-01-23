@@ -11,6 +11,7 @@ interface RelatedLanguagesProps {
 
 /**
  * RelatedLanguages component displays languages related to a framework
+ * Modern chip-style design with enhanced hover animations
  */
 const RelatedLanguages: React.FC<RelatedLanguagesProps> = ({
   languages,
@@ -36,51 +37,79 @@ const RelatedLanguages: React.FC<RelatedLanguagesProps> = ({
   };
 
   return (
-    <div className="min-w-full w-full p-6 bg-green-50 dark:bg-green-900/10 rounded-lg border border-green-200 dark:border-green-800 transition-colors duration-200 box-border overflow-hidden">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 w-full">
-        関連言語
-      </h3>
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 w-full block overflow-hidden break-words">
-        このフレームワークと一緒に使用した言語
-      </p>
+    <div className="min-w-full w-full">
+      {/* Section Header */}
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-1 h-5 bg-emerald-500 rounded-full" />
+        <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+          関連言語
+        </h3>
+        <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full">
+          {languages.length}
+        </span>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full">
-        {languages.map((language) => (
+      {/* Horizontal Chip Layout */}
+      <div className="flex flex-wrap gap-2">
+        {languages.map((language, index) => (
           <button
             key={language.id}
             onClick={() => onLanguageSelect?.(language)}
             className="
-              flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-green-200 dark:border-green-700
-              transition-all duration-150
-              hover:shadow-md hover:border-green-400 dark:hover:border-green-500
-              focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900
-              min-h-[44px] w-full overflow-hidden
+              group relative flex items-center gap-2.5 px-4 py-2.5
+              bg-white dark:bg-gray-800/80 
+              rounded-full
+              border border-gray-200/80 dark:border-gray-700/60
+              shadow-sm
+              transition-all duration-300 ease-out
+              hover:shadow-lg hover:shadow-emerald-500/10 dark:hover:shadow-emerald-400/10
+              hover:border-emerald-300 dark:hover:border-emerald-600
+              hover:scale-105
+              focus:outline-none focus:ring-2 focus:ring-emerald-500/50 dark:focus:ring-emerald-400/50
+              focus:ring-offset-2 dark:focus:ring-offset-gray-900
+              animate-fade-scale-in
             "
+            style={{ animationDelay: `${index * 75}ms` }}
             type="button"
           >
-            {/* Logo */}
-            <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center">
+            {/* Logo with subtle background */}
+            <div className="
+              relative flex-shrink-0 w-7 h-7 
+              flex items-center justify-center 
+              bg-gray-100 dark:bg-gray-200 
+              rounded-lg
+              transition-transform duration-300
+              group-hover:scale-110
+            ">
               {language.logoUrl ? (
                 <Image
                   src={language.logoUrl}
                   alt={language.logoAlt || `${language.name} logo`}
-                  width={32}
-                  height={32}
-                  className="object-contain w-full h-full"
+                  width={24}
+                  height={24}
+                  className="object-contain w-5 h-5"
                 />
               ) : (
-                <span className="text-xl" role="img" aria-label={`${language.name} icon`}>
+                <span className="text-base" role="img" aria-label={`${language.name} icon`}>
                   {getCategoryIcon(language.category)}
                 </span>
               )}
             </div>
 
             {/* Name */}
-            <div className="flex-grow text-left min-w-0 w-full overflow-hidden">
-              <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate w-full">
-                {language.name}
-              </div>
-            </div>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200">
+              {language.name}
+            </span>
+
+            {/* Hover Arrow */}
+            <svg 
+              className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </button>
         ))}
       </div>
@@ -89,3 +118,4 @@ const RelatedLanguages: React.FC<RelatedLanguagesProps> = ({
 };
 
 export default RelatedLanguages;
+

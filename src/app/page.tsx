@@ -23,10 +23,10 @@ export default function Home() {
   return (
     <PageLayout title="トップページ">
       <div className="bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-        <div className="w-[90%] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        <div className="w-[90%] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-14">
           <HeroSection profile={profile} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
             <UpdatesSection updates={recentUpdates} />
             <NavigationSection />
           </div>

@@ -50,17 +50,21 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:block" role="navigation" aria-label="Main navigation">
-            <ul className="flex space-x-8">
+            <ul className="flex items-center gap-1">
               {navigationItems.map((item) => {
                 const isActive = activePath === item.href;
                 return (
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${isActive
-                        ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border-b-2 border-blue-600 dark:border-blue-400'
-                        : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800'
-                        }`}
+                      className={`
+                        relative px-4 py-2 rounded-full text-sm font-medium 
+                        transition-all duration-200 ease-out
+                        ${isActive
+                          ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30'
+                          : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                        }
+                      `}
                       aria-label={item.ariaLabel}
                       aria-current={isActive ? 'page' : undefined}
                     >

@@ -54,9 +54,9 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
   };
 
   return (
-    <div className="min-w-full w-full flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-200 box-border overflow-hidden">
+    <div className="min-w-full w-full flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-6 p-6 sm:p-8 bg-white dark:bg-gray-800/80 rounded-2xl border border-gray-200/80 dark:border-gray-700/50 shadow-soft transition-all duration-300 box-border overflow-hidden">
       {/* Logo */}
-      <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center bg-gray-100 dark:bg-gray-200 rounded-lg p-2">
+      <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center bg-gray-50 dark:bg-gray-200 rounded-xl p-3">
         {tech.logoUrl ? (
           <Image
             src={tech.logoUrl}
@@ -74,15 +74,15 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
 
       {/* Info */}
       <div className="flex-grow min-w-0 w-full overflow-hidden">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 w-full block overflow-hidden break-words">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3 w-full block overflow-hidden break-words">
           {tech.name}
         </h2>
         
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full">
+        <div className="flex flex-wrap items-center gap-3 w-full">
           {/* Proficiency Badge */}
           <span
             className={`
-              px-3 py-1 rounded-full text-sm font-medium border-2
+              px-4 py-1.5 rounded-full text-sm font-medium border
               ${getProficiencyColor(tech.proficiency)}
             `}
           >
@@ -90,7 +90,7 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
           </span>
 
           {/* Experience Years */}
-          <span className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
+          <span className="flex items-center gap-2 text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700/50 px-3 py-1.5 rounded-full">
             <svg
               className="w-4 h-4"
               fill="none"

@@ -24,6 +24,7 @@ export interface GitBranchTimelineProps {
   enableEventPoints?: boolean;
   className?: string;
   isReversed?: boolean;
+  showLabels?: boolean; // Whether to show labels - default true
 }
 
 /**
@@ -142,7 +143,8 @@ export default function GitBranchTimeline({
   events = [],
   enableEventPoints = true,
   className = '',
-  isReversed = false
+  isReversed = false,
+  showLabels = true
 }: GitBranchTimelineProps) {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -205,11 +207,13 @@ export default function GitBranchTimeline({
   const maxLane = nodes.reduce((max, node) => Math.max(max, node.lane), 1);
   const maxEndY = nodes.reduce((max, node) => Math.max(max, node.endY), 0);
   const maxLabelX = nodes.reduce((max, node) => Math.max(max, node.labelX ?? 0), 0);
-  const svgWidth = Math.max(
-    layoutConstants.MAIN_LINE_X + (maxLane + 1) * layoutConstants.LANE_WIDTH + (isMobile ? 250 : 320),
-    maxLabelX + (isMobile ? 200 : 250)
-  );
-  const svgHeight = maxEndY + 20;
+  const svgWidth = showLabels 
+    ? Math.max(
+        layoutConstants.MAIN_LINE_X + (maxLane + 1) * layoutConstants.LANE_WIDTH + (isMobile ? 180 : 220),
+        maxLabelX + (isMobile ? 150 : 180)
+      )
+    : layoutConstants.MAIN_LINE_X + (maxLane + 1) * layoutConstants.LANE_WIDTH + 50;
+  const svgHeight = maxEndY + 10;
   const mainLineY1 = Math.max(layoutConstants.TOP_PADDING - 60, 20);
   const mainLineY2 = maxEndY;
 
@@ -553,8 +557,8 @@ export default function GitBranchTimeline({
                     )}
                   />
 
-                  {/* Connector line */}
-                  {(Math.abs(labelY - midY) > 5 || Math.abs(labelX - node.x - 18) > 5) && (
+                  {/* Connector line - only when showLabels */}
+                  {showLabels && (Math.abs(labelY - midY) > 5 || Math.abs(labelX - node.x - 18) > 5) && (
                     <line
                       x1={node.x + layoutConstants.NODE_RADIUS}
                       y1={midY}
@@ -567,46 +571,51 @@ export default function GitBranchTimeline({
                     />
                   )}
 
-                  {/* Organization */}
-                  <text
-                    x={labelX}
-                    y={isReversed ? labelY + 18 : labelY - 14}
-                    className={isMobile ? "text-xs font-semibold fill-slate-900" : "text-sm font-semibold fill-slate-900"}
-                    transform={isReversed ? `translate(0, ${2 * (labelY + 18)}) scale(1, -1)` : undefined}
-                  >
-                    {node.entry.organization}
-                  </text>
+                  {/* Labels - only when showLabels */}
+                  {showLabels && (
+                    <>
+                      {/* Organization */}
+                      <text
+                        x={labelX}
+                        y={isReversed ? labelY + 18 : labelY - 14}
+                        className={isMobile ? "text-xs font-semibold fill-slate-900 dark:fill-slate-100" : "text-sm font-semibold fill-slate-900 dark:fill-slate-100"}
+                        transform={isReversed ? `translate(0, ${2 * (labelY + 18)}) scale(1, -1)` : undefined}
+                      >
+                        {node.entry.organization}
+                      </text>
 
-                  {/* Role */}
-                  <text
-                    x={labelX}
-                    y={labelY + 2}
-                    className={isMobile ? "text-[10px] fill-slate-500" : "text-xs fill-slate-500"}
-                    transform={isReversed ? `translate(0, ${2 * (labelY + 2)}) scale(1, -1)` : undefined}
-                  >
-                    {node.entry.role}
-                  </text>
+                      {/* Role */}
+                      <text
+                        x={labelX}
+                        y={labelY + 2}
+                        className={isMobile ? "text-[10px] fill-slate-500 dark:fill-slate-400" : "text-xs fill-slate-500 dark:fill-slate-400"}
+                        transform={isReversed ? `translate(0, ${2 * (labelY + 2)}) scale(1, -1)` : undefined}
+                      >
+                        {node.entry.role}
+                      </text>
 
-                  {/* Date range */}
-                  <text
-                    x={labelX}
-                    y={isReversed ? labelY - 14 : labelY + 18}
-                    className={isMobile ? "text-[10px] fill-slate-400" : "text-xs fill-slate-400"}
-                    transform={isReversed ? `translate(0, ${2 * (labelY - 14)}) scale(1, -1)` : undefined}
-                  >
-                    {formatRange(node.entry)}
-                  </text>
+                      {/* Date range */}
+                      <text
+                        x={labelX}
+                        y={isReversed ? labelY - 14 : labelY + 18}
+                        className={isMobile ? "text-[10px] fill-slate-400 dark:fill-slate-500" : "text-xs fill-slate-400 dark:fill-slate-500"}
+                        transform={isReversed ? `translate(0, ${2 * (labelY - 14)}) scale(1, -1)` : undefined}
+                      >
+                        {formatRange(node.entry)}
+                      </text>
 
-                  {/* Description */}
-                  {node.entry.description && selectedNodeId === node.entry.id && (
-                    <text
-                      x={labelX}
-                      y={isReversed ? labelY - 30 : labelY + 34}
-                      className={isMobile ? "text-[10px] fill-slate-600" : "text-xs fill-slate-600"}
-                      transform={isReversed ? `translate(0, ${2 * (labelY - 30)}) scale(1, -1)` : undefined}
-                    >
-                      {node.entry.description}
-                    </text>
+                      {/* Description */}
+                      {node.entry.description && selectedNodeId === node.entry.id && (
+                        <text
+                          x={labelX}
+                          y={isReversed ? labelY - 30 : labelY + 34}
+                          className={isMobile ? "text-[10px] fill-slate-600 dark:fill-slate-300" : "text-xs fill-slate-600 dark:fill-slate-300"}
+                          transform={isReversed ? `translate(0, ${2 * (labelY - 30)}) scale(1, -1)` : undefined}
+                        >
+                          {node.entry.description}
+                        </text>
+                      )}
+                    </>
                   )}
                 </g>
               );
