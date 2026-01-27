@@ -1,9 +1,24 @@
-'use client';
+﻿'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useId } from 'react';
 import { ExtendedCareerEntry } from '@/types';
 
-// Colors
+/**
+ * Git-style Career Timeline - Complete Implementation
+ * 
+ * Requirements met:
+ * 1. Main "life" branch (blue) always visible
+ * 2. Sub-branches fork from parent nodes with smooth curves
+ * 3. Non-overlapping entries share same lane
+ * 4. Overlapping entries offset to the right
+ * 5. 5-color rotation independent of lane
+ * 6. Branch lines continue during entire membership period
+ * 7. Smooth merge back at end
+ * 8. Year labels on left
+ * 9. Default text color (no coloring)
+ * 10. Parent-child relationships from data
+ */
+
 const BRANCH_COLORS = [
   '#10B981', // emerald
   '#F59E0B', // amber
@@ -11,126 +26,235 @@ const BRANCH_COLORS = [
   '#EC4899', // pink
   '#06B6D4', // cyan
 ];
+
 const MAIN_BRANCH_COLOR = '#3B82F6';
+
+const DEFAULT_ROW_HEIGHT = 32;
+const NODE_RADIUS = 8;
+const LANE_WIDTH = 32;
+const LEFT_PADDING = 28;
+const YEAR_WIDTH = 56;
+const MAIN_X = LEFT_PADDING;
 
 interface GitCommitLogTimelineProps {
   entries: ExtendedCareerEntry[];
   isReversed?: boolean;
+  rowHeight?: number;
 }
 
-// Layout constants
-const LANE_WIDTH = 28;
-const LEFT_MARGIN = 70;
-const MAIN_LANE_X = LEFT_MARGIN;
-const NODE_RADIUS = 6;
-const ROW_HEIGHT = 80; // Slightly taller for better curve visibility
-const TOP_PADDING = 40;
-const BOTTOM_PADDING = 40;
-const LABEL_OFFSET = 30;
-
-interface LayoutEntry extends ExtendedCareerEntry {
+interface ProcessedEntry {
+  id: string;
+  organization: string;
+  role: string;
+  startDate: string;
+  endDate: string | null;
+  parentId: string | null;
+  startTime: number;
+  endTime: number;
+  startYear: number;
+  endYear: number;
+  startMonth: number;
+  endMonth: number;
+  midMonth: number;
   lane: number;
   color: string;
-  rowIndex: number;
-  yCenter: number;
-  parentEntry?: LayoutEntry;
-  colorIndex: number;
+  isOngoing: boolean;
+  parentLane?: number;
 }
 
-function parseDate(dateStr: string): number {
-  const d = new Date(dateStr);
-  return d.getFullYear() + d.getMonth() / 12;
+interface TimelineRow {
+  monthIndex: number;
+  year: number;
+  month: number;
+  showYear: boolean;
+  isFirstMonthRow: boolean;
+  entry: ProcessedEntry | null;
 }
 
-function calculateLayout(entries: ExtendedCareerEntry[], isReversed: boolean): {
-  layoutEntries: LayoutEntry[];
-  svgHeight: number;
-  maxLane: number;
-} {
-  if (entries.length === 0) {
-    return { layoutEntries: [], svgHeight: 200, maxLane: 1 };
-  }
+function getMonthIndex(date: Date): number {
+  return date.getFullYear() * 12 + date.getMonth();
+}
 
-  // Sort by start date (chronological for layout logic)
-  const sorted = [...entries].sort((a, b) => {
-    return parseDate(a.startDate) - parseDate(b.startDate);
-  });
+function monthIndexToParts(monthIndex: number): { year: number; month: number } {
+  const year = Math.floor(monthIndex / 12);
+  const month = monthIndex % 12;
+  return { year, month };
+}
 
-  const entryMap = new Map<string, LayoutEntry>();
-  let colorCounter = 0;
-  
-  // Track active lanes: laneIdx -> lastEntry
-  const activeLanes = new Map<number, LayoutEntry>();
-  
-  const layoutEntries: LayoutEntry[] = sorted.map((entry) => {
-    const startTime = parseDate(entry.startDate);
+function processEntries(entries: ExtendedCareerEntry[]): ProcessedEntry[] {
+  const sorted = [...entries].sort((a, b) => 
+    new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+  );
 
-    // Find parent
-    let parentEntry: LayoutEntry | undefined;
+  const processed: ProcessedEntry[] = [];
+  const entryMap = new Map<string, ProcessedEntry>();
+  let colorIndex = 0;
+  const now = new Date();
+  const nowMonth = getMonthIndex(now);
+
+  sorted.forEach((entry) => {
+    const startTime = new Date(entry.startDate).getTime();
+    const endTime = entry.endDate
+      ? new Date(entry.endDate).getTime()
+      : now.getTime();
+    
+    const startYear = new Date(entry.startDate).getFullYear();
+    const endYear = entry.endDate 
+      ? new Date(entry.endDate).getFullYear()
+      : now.getFullYear();
+
+    const startMonth = getMonthIndex(new Date(entry.startDate));
+    const endMonth = entry.endDate
+      ? getMonthIndex(new Date(entry.endDate))
+      : nowMonth;
+
+    // Get parent lane if exists
+    let parentLane: number | undefined;
     if (entry.parentId && entryMap.has(entry.parentId)) {
-      parentEntry = entryMap.get(entry.parentId);
+      parentLane = entryMap.get(entry.parentId)!.lane;
     }
 
-    // Lane assignment logic:
-    // 1. If non-overlapping with previous in some lane, reuse lane (priority to lower indices)
-    let assignedLane = 1;
-    let foundLane = false;
-
-    // Check existing lines for reuse
-    const laneIndices = Array.from(activeLanes.keys()).sort((a, b) => a - b);
-    for (const laneIdx of laneIndices) {
-      const lastEntry = activeLanes.get(laneIdx)!;
-      const lastEndTime = lastEntry.endDate ? parseDate(lastEntry.endDate) : Infinity;
-      
-      // If this entry starts after the last entry in this lane ended, reuse it
-      if (startTime >= lastEndTime) {
-        assignedLane = laneIdx;
-        foundLane = true;
-        break;
-      }
+    // Find overlapping entries
+    const overlapping = processed.filter(p => 
+      p.startTime < endTime && p.endTime > startTime
+    );
+    
+    // Find first available lane
+    const usedLanes = new Set(overlapping.map(p => p.lane));
+    // Lane policy:
+    // - If no overlap, reuse lane 1 (keeps timeline compact)
+    // - If overlap exists, allocate the leftmost available lane
+    // - If it has a parent, start searching from parentLane + 1 to express branching
+    const minLane = parentLane !== undefined ? parentLane + 1 : 1;
+    let lane = minLane;
+    while (usedLanes.has(lane)) {
+      lane++;
     }
 
-    if (!foundLane) {
-      // Find first empty lane index
-      assignedLane = 1;
-      while (activeLanes.has(assignedLane)) {
-        assignedLane++;
-      }
-    }
-
-    // Update active lanes
-    const colorIndex = colorCounter;
-    colorCounter = (colorCounter + 1) % BRANCH_COLORS.length;
-
-    const layoutEntry: LayoutEntry = {
-      ...entry,
-      lane: assignedLane,
-      color: BRANCH_COLORS[colorIndex],
-      colorIndex,
-      rowIndex: 0, // placeholder
-      yCenter: 0,   // placeholder
-      parentEntry,
+    const processedEntry: ProcessedEntry = {
+      id: entry.id,
+      organization: entry.organization,
+      role: entry.role,
+      startDate: entry.startDate,
+      endDate: entry.endDate ?? null,
+      parentId: entry.parentId ?? null,
+      startTime,
+      endTime,
+      startYear,
+      endYear,
+      startMonth,
+      endMonth,
+      midMonth: Math.floor((startMonth + endMonth) / 2),
+      lane,
+      color: BRANCH_COLORS[colorIndex % BRANCH_COLORS.length],
+      isOngoing: !entry.endDate,
+      parentLane,
     };
 
-    activeLanes.set(assignedLane, layoutEntry);
-    entryMap.set(entry.id, layoutEntry);
-    return layoutEntry;
+    colorIndex++;
+    processed.push(processedEntry);
+    entryMap.set(entry.id, processedEntry);
   });
 
-  // Finalize rowIndex and yCenter based on display order (isReversed)
-  const displaySorted = isReversed ? [...layoutEntries].reverse() : [...layoutEntries];
-  displaySorted.forEach((entry, idx) => {
-    entry.rowIndex = idx;
-    entry.yCenter = TOP_PADDING + idx * ROW_HEIGHT + ROW_HEIGHT / 2;
-  });
-
-  const svgHeight = TOP_PADDING + layoutEntries.length * ROW_HEIGHT + BOTTOM_PADDING;
-  const maxLane = Math.max(...layoutEntries.map(e => e.lane), 1);
-
-  return { layoutEntries: displaySorted, svgHeight, maxLane };
+  return processed;
 }
 
-function formatDateCompact(startDate: string, endDate?: string | null): string {
+function buildRows(entries: ProcessedEntry[], isReversed: boolean): TimelineRow[] {
+  if (entries.length === 0) return [];
+
+  // Event-driven approach: only create rows for months where events (start/end) occur
+  // This keeps the timeline compact while preserving the order and overlap relationships
+  const eventMonths = new Set<number>();
+  entries.forEach((entry) => {
+    eventMonths.add(entry.startMonth);
+    eventMonths.add(entry.endMonth);
+  });
+
+  // For entries where start and end are adjacent months in the event list,
+  // we need to add an intermediate row to show the vertical line properly
+  // Find entries that need an intermediate row
+  const sortedEventMonths = Array.from(eventMonths).sort((a, b) => a - b);
+  entries.forEach((entry) => {
+    const startIdx = sortedEventMonths.indexOf(entry.startMonth);
+    const endIdx = sortedEventMonths.indexOf(entry.endMonth);
+    // If start and end are adjacent in the event months list and they are different months
+    if (entry.startMonth !== entry.endMonth && endIdx === startIdx + 1) {
+      // Add an intermediate month (midpoint between start and end)
+      const midMonth = Math.floor((entry.startMonth + entry.endMonth) / 2);
+      if (midMonth !== entry.startMonth && midMonth !== entry.endMonth) {
+        eventMonths.add(midMonth);
+      }
+    }
+  });
+
+  const sortedMonths = Array.from(eventMonths).sort((a, b) => a - b);
+  const orderedMonths = isReversed ? [...sortedMonths].reverse() : sortedMonths;
+
+  const startsByMonth = new Map<number, ProcessedEntry[]>();
+  entries.forEach((entry) => {
+    const list = startsByMonth.get(entry.startMonth) ?? [];
+    list.push(entry);
+    startsByMonth.set(entry.startMonth, list);
+  });
+
+  // Track which months have fork/merge events for year label alignment
+  const endsByMonth = new Map<number, ProcessedEntry[]>();
+  entries.forEach((entry) => {
+    if (!entry.isOngoing) {
+      const list = endsByMonth.get(entry.endMonth) ?? [];
+      list.push(entry);
+      endsByMonth.set(entry.endMonth, list);
+    }
+  });
+
+  const rows: TimelineRow[] = [];
+  const displayedYears = new Set<number>();
+
+  orderedMonths.forEach((monthIndex) => {
+    const { year, month } = monthIndexToParts(monthIndex);
+    const startEntries = startsByMonth.get(monthIndex) ?? [];
+    const endEntries = endsByMonth.get(monthIndex) ?? [];
+    const hasForkOrMerge = startEntries.length > 0 || endEntries.length > 0;
+
+    if (startEntries.length === 0) {
+      // This is an end-only month or intermediate month (no new entries start here)
+      // Show year only if there's a merge event and year hasn't been shown
+      const showYear = hasForkOrMerge && !displayedYears.has(year);
+      if (showYear) {
+        displayedYears.add(year);
+      }
+      rows.push({
+        monthIndex,
+        year,
+        month,
+        showYear,
+        isFirstMonthRow: true,
+        entry: null,
+      });
+      return;
+    }
+
+    startEntries.forEach((entry, idx) => {
+      // Show year on each fork row if not already shown
+      const showYear = !displayedYears.has(year);
+      if (showYear) {
+        displayedYears.add(year);
+      }
+      rows.push({
+        monthIndex,
+        year,
+        month,
+        showYear,
+        isFirstMonthRow: idx === 0,
+        entry,
+      });
+    });
+  });
+
+  return rows;
+}
+
+function formatDateRange(startDate: string, endDate: string | null): string {
   const start = new Date(startDate);
   const startStr = `${start.getFullYear()}.${String(start.getMonth() + 1).padStart(2, '0')}`;
   if (!endDate) return `${startStr} - 現在`;
@@ -139,152 +263,394 @@ function formatDateCompact(startDate: string, endDate?: string | null): string {
   return `${startStr} - ${endStr}`;
 }
 
-/**
- * Creates an S-curve path string for SVG
- */
-function createSCurve(x1: number, y1: number, x2: number, y2: number): string {
-  const midY = (y1 + y2) / 2;
-  return `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
-}
-
-export default function GitCommitLogTimeline({ 
-  entries, 
-  isReversed = false 
+export default function GitCommitLogTimeline({
+  entries,
+  isReversed = false,
+  rowHeight = DEFAULT_ROW_HEIGHT,
 }: GitCommitLogTimelineProps) {
-  const { layoutEntries, svgHeight, maxLane } = useMemo(
-    () => calculateLayout(entries, isReversed),
-    [entries, isReversed]
+  const clipBaseId = useId();
+  const processedEntries = useMemo(
+    () => processEntries(entries),
+    [entries]
   );
 
-  const svgWidth = LEFT_MARGIN + (maxLane + 1) * LANE_WIDTH + 450;
+  const rows = useMemo(
+    () => buildRows(processedEntries, isReversed),
+    [processedEntries, isReversed]
+  );
+
+  const maxLane = useMemo(
+    () => Math.max(...processedEntries.map(e => e.lane), 1),
+    [processedEntries]
+  );
+
+  const graphWidth = LEFT_PADDING + (maxLane + 1) * LANE_WIDTH + 20;
+  const firstRowIndexByMonth = useMemo(() => {
+    const map = new Map<number, number>();
+    rows.forEach((row, rowIndex) => {
+      if (!map.has(row.monthIndex)) {
+        map.set(row.monthIndex, rowIndex);
+      }
+    });
+    return map;
+  }, [rows]);
+
+  const hasMergeAtMonth = useMemo(() => {
+    const merged = new Set<number>();
+    processedEntries.forEach((entry) => {
+      if (!entry.isOngoing) {
+        merged.add(entry.endMonth);
+      }
+    });
+    return merged;
+  }, [processedEntries]);
 
   return (
-    <div className="overflow-auto bg-white dark:bg-gray-900/50">
-      <svg width={svgWidth} height={svgHeight} className="text-sm">
-        {/* Main branch line background */}
-        <line
-          x1={MAIN_LANE_X}
-          y1={TOP_PADDING - 20}
-          x2={MAIN_LANE_X}
-          y2={svgHeight - BOTTOM_PADDING + 20}
-          stroke="#E2E8F0"
-          strokeWidth={2}
-          strokeDasharray="4,4"
-          className="dark:stroke-gray-700"
-        />
+    <div className="text-sm font-sans">
+      {rows.map((row, rowIndex) => {
+        const clipId = `${clipBaseId}-row-clip-${rowIndex}`;
+        const entry = row.entry;
+        const activeEntries = processedEntries.filter(e =>
+          row.monthIndex >= e.startMonth && row.monthIndex <= e.endMonth
+        );
+        const showMainIndicator = Boolean(
+          row.entry || (row.isFirstMonthRow && hasMergeAtMonth.has(row.monthIndex))
+        );
 
-        {/* Draw each entry branch */}
-        {layoutEntries.map((entry) => {
-          const laneX = LEFT_MARGIN + entry.lane * LANE_WIDTH;
-          const parentX = entry.parentEntry 
-            ? LEFT_MARGIN + entry.parentEntry.lane * LANE_WIDTH 
-            : MAIN_LANE_X;
-          const parentY = entry.parentEntry?.yCenter || entry.yCenter;
+        return (
+          <div
+            key={`row-${rowIndex}`}
+            className="flex items-center hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors"
+            style={{ minHeight: rowHeight }}
+          >
+            {/* Year Label */}
+            <div
+              className="flex-shrink-0 flex items-center justify-end pr-4"
+              style={{ width: YEAR_WIDTH }}
+            >
+              {row.showYear && (
+                <span className="text-sm font-bold text-gray-600 dark:text-gray-300">
+                  {row.year}
+                </span>
+              )}
+            </div>
 
-          // Branch start offset for curve
-          const curveOffset = isReversed ? -25 : 25;
-          
-          return (
-            <g key={entry.id}>
-              {/* Year Label on the far left */}
-              <text
-                x={LEFT_MARGIN - 20}
-                y={entry.yCenter}
-                textAnchor="end"
-                dominantBaseline="middle"
-                className="fill-gray-400 dark:fill-gray-500 text-[10px] font-mono"
+            {/* Branch Graph */}
+            <div
+              className="flex-shrink-0 relative"
+              style={{ width: graphWidth, height: rowHeight }}
+            >
+              <svg
+                width={graphWidth}
+                height={rowHeight}
+                className="absolute inset-0"
               >
-                {new Date(entry.startDate).getFullYear()}
-              </text>
+                <defs>
+                  <clipPath id={clipId}>
+                    <rect
+                      x={0}
+                      y={0}
+                      width={graphWidth}
+                      height={rowHeight}
+                    />
+                  </clipPath>
+                </defs>
 
-              {/* Fork curve from parent node to this branch lane */}
-              <path
-                d={createSCurve(parentX, parentY, laneX, entry.yCenter - curveOffset)}
-                fill="none"
-                stroke={entry.color}
-                strokeWidth={2}
-                opacity={0.4}
-              />
-
-              {/* Continuous vertical line for membership duration */}
-              <line
-                x1={laneX}
-                y1={entry.yCenter - 30}
-                x2={laneX}
-                y2={entry.yCenter + 30}
-                stroke={entry.color}
-                strokeWidth={3}
-                opacity={0.8}
-                strokeLinecap="round"
-              />
-
-              {/* Merge back logic */}
-              {entry.endDate && (
-                <path
-                  d={createSCurve(laneX, entry.yCenter + curveOffset, MAIN_LANE_X, entry.yCenter + curveOffset * 2)}
-                  fill="none"
-                  stroke={entry.color}
-                  strokeWidth={2}
-                  opacity={0.3}
+                <g clipPath={`url(#${clipId})`}>
+                {/* Main branch */}
+                <line
+                  x1={MAIN_X}
+                  y1={0}
+                  x2={MAIN_X}
+                  y2={rowHeight}
+                  stroke={MAIN_BRANCH_COLOR}
+                  strokeWidth={4}
+                  strokeLinecap="butt"
                 />
+
+                {/* Main branch indicator */}
+                {showMainIndicator && (
+                  <circle
+                    cx={MAIN_X}
+                    cy={rowHeight / 2}
+                    r={4}
+                    fill={MAIN_BRANCH_COLOR}
+                    stroke="white"
+                    strokeWidth={2}
+                  />
+                )}
+
+                {/* Active branch lines */}
+                {activeEntries.map((e) => {
+                  const laneX = LEFT_PADDING + e.lane * LANE_WIDTH;
+                  // isStartRow: this is the first row of the entry's start month
+                  // All entries starting in the same month will fork from this single row
+                  const isStartRow = row.isFirstMonthRow && row.monthIndex === e.startMonth;
+                  const isEndRow = row.isFirstMonthRow && !e.isOngoing && row.monthIndex === e.endMonth;
+                  // isInStartMonth: this row is in the start month but not the first row
+                  const isInStartMonth = !row.isFirstMonthRow && row.monthIndex === e.startMonth;
+                  // isInEndMonth: this row is in the end month but not the first row
+                  const isInEndMonth = !row.isFirstMonthRow && !e.isOngoing && row.monthIndex === e.endMonth;
+                  const isNodeRow = rowIndex === firstRowIndexByMonth.get(e.midMonth);
+                  const forkFromX = e.parentLane !== undefined
+                    ? LEFT_PADDING + e.parentLane * LANE_WIDTH
+                    : MAIN_X;
+                  const mergeToX = MAIN_X;
+                  const midY = rowHeight / 2;
+                  const cornerR = 10;
+
+                  // Determine vertical line range and whether to draw fork/merge
+                  // The fork/merge curves already draw the vertical portions near the curve
+                  // So we only need to draw the remaining portion to avoid overlap at the circle
+                  let lineY1 = 0;
+                  let lineY2 = rowHeight;
+                  let skipVerticalLine = false;
+                  let skipFork = false;
+                  let skipMerge = false;
+                  
+                  if (isInStartMonth) {
+                    // This row is in the start month but not the first row
+                    // Skip vertical line - the fork in the first row already handles the connection
+                    skipVerticalLine = true;
+                    skipFork = true;
+                  } else if (isInEndMonth) {
+                    // This row is in the end month but not the first row
+                    // Draw full vertical line, skip merge (handled in first row of month)
+                    lineY1 = 0;
+                    lineY2 = rowHeight;
+                    skipMerge = true;
+                  } else if (isStartRow && isEndRow) {
+                    // Both start and end in same row - skip vertical line, curves handle it
+                    skipVerticalLine = true;
+                  } else if (isStartRow) {
+                    // Fork row: only draw the portion not covered by the fork curve
+                    if (isReversed) {
+                      // Fork curve goes up (0 to midY-cornerR), draw below (midY+cornerR to rowHeight)
+                      lineY1 = midY + cornerR;
+                      lineY2 = rowHeight;
+                    } else {
+                      // Fork curve goes down (midY+cornerR to rowHeight), draw above (0 to midY-cornerR)
+                      lineY1 = 0;
+                      lineY2 = midY - cornerR;
+                    }
+                  } else if (isEndRow) {
+                    // Merge row: only draw the portion not covered by the merge curve
+                    if (isReversed) {
+                      // Merge curve goes down (midY+cornerR to rowHeight), draw above (0 to midY-cornerR)
+                      lineY1 = 0;
+                      lineY2 = midY - cornerR;
+                    } else {
+                      // Merge curve goes up (0 to midY-cornerR), draw below (midY+cornerR to rowHeight)
+                      lineY1 = midY + cornerR;
+                      lineY2 = rowHeight;
+                    }
+                  }
+                  // For normal rows (not start or end), line goes full height (0 to rowHeight)
+
+                  return (
+                    <g key={`branch-${e.id}`}>
+                      {/* Continuous vertical line for this lane */}
+                      {!skipVerticalLine && (
+                        <line
+                          x1={laneX}
+                          y1={lineY1}
+                          x2={laneX}
+                          y2={lineY2}
+                          stroke={e.color}
+                          strokeWidth={4}
+                          strokeLinecap="butt"
+                        />
+                      )}
+
+                      {/* This is the entry's start row - draw fork */}
+                      {/* Straight line from parent + quarter arc to this lane */}
+                      {isStartRow && !skipFork && (
+                        <>
+                          {/* Horizontal line from parent to near this lane */}
+                          <line
+                            x1={forkFromX}
+                            y1={midY}
+                            x2={laneX - cornerR}
+                            y2={midY}
+                            stroke={e.color}
+                            strokeWidth={4}
+                            strokeLinecap="butt"
+                          />
+                          {isReversed ? (
+                            <>
+                              {/* Quarter arc: from horizontal to vertical (going up) */}
+                              <path
+                                d={`M ${laneX - cornerR} ${midY}
+                                    A ${cornerR} ${cornerR} 0 0 0 ${laneX} ${midY - cornerR}`}
+                                fill="none"
+                                stroke={e.color}
+                                strokeWidth={4}
+                                strokeLinecap="butt"
+                              />
+                              {/* Short vertical line from top of row to arc start */}
+                              <line
+                                x1={laneX}
+                                y1={0}
+                                x2={laneX}
+                                y2={midY - cornerR}
+                                stroke={e.color}
+                                strokeWidth={4}
+                                strokeLinecap="butt"
+                              />
+                            </>
+                          ) : (
+                            <>
+                              {/* Quarter arc: from horizontal to vertical (going down) */}
+                              <path
+                                d={`M ${laneX - cornerR} ${midY}
+                                    A ${cornerR} ${cornerR} 0 0 1 ${laneX} ${midY + cornerR}`}
+                                fill="none"
+                                stroke={e.color}
+                                strokeWidth={4}
+                                strokeLinecap="butt"
+                              />
+                              {/* Short vertical line from arc end to bottom of row */}
+                              <line
+                                x1={laneX}
+                                y1={midY + cornerR}
+                                x2={laneX}
+                                y2={rowHeight}
+                                stroke={e.color}
+                                strokeWidth={4}
+                                strokeLinecap="butt"
+                              />
+                            </>
+                          )}
+                        </>
+                      )}
+
+                      {/* End row - merge back to main */}
+                      {/* Quarter arc from this lane + straight line to main */}
+                      {isEndRow && !skipMerge && (
+                        <>
+                          {/* Horizontal line from main to near this lane */}
+                          <line
+                            x1={mergeToX}
+                            y1={midY}
+                            x2={laneX - cornerR}
+                            y2={midY}
+                            stroke={e.color}
+                            strokeWidth={4}
+                            strokeLinecap="butt"
+                          />
+                          {isReversed ? (
+                            <>
+                              {/* Quarter arc: from horizontal to vertical (going down) */}
+                              <path
+                                d={`M ${laneX - cornerR} ${midY}
+                                    A ${cornerR} ${cornerR} 0 0 1 ${laneX} ${midY + cornerR}`}
+                                fill="none"
+                                stroke={e.color}
+                                strokeWidth={4}
+                                strokeLinecap="butt"
+                              />
+                              {/* Short vertical line from arc end to bottom of row */}
+                              <line
+                                x1={laneX}
+                                y1={midY + cornerR}
+                                x2={laneX}
+                                y2={rowHeight}
+                                stroke={e.color}
+                                strokeWidth={4}
+                                strokeLinecap="butt"
+                              />
+                            </>
+                          ) : (
+                            <>
+                              {/* Quarter arc: from horizontal to vertical (going up) */}
+                              <path
+                                d={`M ${laneX - cornerR} ${midY}
+                                    A ${cornerR} ${cornerR} 0 0 0 ${laneX} ${midY - cornerR}`}
+                                fill="none"
+                                stroke={e.color}
+                                strokeWidth={4}
+                                strokeLinecap="butt"
+                              />
+                              {/* Short vertical line from top of row to arc start */}
+                              <line
+                                x1={laneX}
+                                y1={0}
+                                x2={laneX}
+                                y2={midY - cornerR}
+                                stroke={e.color}
+                                strokeWidth={4}
+                                strokeLinecap="butt"
+                              />
+                            </>
+                          )}
+                        </>
+                      )}
+
+                      {/* Entry node at mid-span */}
+                      {isNodeRow && (
+                        <>
+                          <circle
+                            cx={laneX}
+                            cy={rowHeight / 2}
+                            r={NODE_RADIUS}
+                            fill={e.color}
+                            stroke="white"
+                            strokeWidth={3}
+                          />
+                          {e.isOngoing && (
+                            <circle
+                              cx={laneX}
+                              cy={rowHeight / 2}
+                              r={NODE_RADIUS + 6}
+                              fill="none"
+                              stroke={e.color}
+                              strokeWidth={2}
+                              opacity={0.5}
+                              className="animate-ping"
+                            />
+                          )}
+                        </>
+                      )}
+                    </g>
+                  );
+                })}
+                </g>
+              </svg>
+            </div>
+
+            {/* Entry Information */}
+            <div className="flex-1 flex items-center gap-4 px-4 min-w-0">
+              {entry && (
+                <>
+                  <div
+                    className="w-1.5 h-10 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: entry.color }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline gap-2 flex-wrap">
+                      <span className="font-semibold text-gray-900 dark:text-gray-100">
+                        {entry.organization}
+                      </span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {entry.role}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex-shrink-0 text-xs text-gray-500 dark:text-gray-400 font-mono">
+                    {formatDateRange(entry.startDate, entry.endDate)}
+                  </div>
+                  {entry.isOngoing && (
+                    <span className="flex-shrink-0 px-2 py-1 text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300 rounded-full">
+                      現在
+                    </span>
+                  )}
+                </>
               )}
-
-              {/* Central Node */}
-              <circle
-                cx={laneX}
-                cy={entry.yCenter}
-                r={NODE_RADIUS}
-                fill={entry.color}
-                stroke="white"
-                strokeWidth={2}
-                className="dark:stroke-gray-900"
-              />
-
-              {/* Fork point marker on parent */}
-              {entry.parentEntry && (
-                <circle
-                  cx={parentX}
-                  cy={parentY}
-                  r={2.5}
-                  fill={entry.parentEntry.color}
-                  stroke="white"
-                  strokeWidth={1}
-                />
-              )}
-
-              {/* Entry labels */}
-              <g transform={`translate(${LEFT_MARGIN + (maxLane + 1) * LANE_WIDTH + LABEL_OFFSET}, ${entry.yCenter})`}>
-                <rect
-                  x={-15}
-                  y={-12}
-                  width={4}
-                  height={24}
-                  rx={2}
-                  fill={entry.color}
-                  opacity={0.8}
-                />
-                
-                <text
-                  x={0}
-                  y={-4}
-                  dominantBaseline="middle"
-                  className="fill-gray-900 dark:fill-gray-100 text-sm font-bold"
-                >
-                  {entry.organization}
-                </text>
-                <text
-                  x={0}
-                  y={14}
-                  dominantBaseline="middle"
-                  className="fill-gray-500 dark:fill-gray-400 text-xs"
-                >
-                  {entry.role} · {formatDateCompact(entry.startDate, entry.endDate)}
-                </text>
-              </g>
-            </g>
-          );
-        })}
-      </svg>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
+

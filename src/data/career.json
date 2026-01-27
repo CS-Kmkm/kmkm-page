@@ -17,7 +17,7 @@
       "organization": "某公立中学校",
       "role": "生徒",
       "startDate": "2015-04-01",
-      "endDate": "2018-03-31",
+      "endDate": "2018-04-01",
       "parentId": null,
       "description": "地元の公立中学校に通いました。",
       "displayDate": "2015-04-01"
@@ -28,7 +28,7 @@
       "organization": "岐阜県立岐阜高等学校",
       "role": "生徒",
       "startDate": "2018-04-01",
-      "endDate": "2021-03-31",
+      "endDate": "2021-04-01",
       "parentId": null,
       "description": "高等学校での学習",
       "displayDate": "2018-04-01"
@@ -39,7 +39,7 @@
       "organization": "名古屋大学 情報学部 コンピュータ科学科",
       "role": "学部学生",
       "startDate": "2021-04-01",
-      "endDate": "2025-03-31",
+      "endDate": "2025-04-01",
       "parentId": null,
       "description": "大学での学習",
       "displayDate": "2021-04-01"
@@ -50,7 +50,7 @@
       "organization": "知能システム系",
       "role": "配属",
       "startDate": "2023-04-01",
-      "endDate": "2025-03-31",
+      "endDate": "2025-04-01",
       "parentId": "career-004",
       "description": "知能システム系への配属",
       "displayDate": "2023-04-01"

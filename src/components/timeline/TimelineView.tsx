@@ -46,6 +46,7 @@ const TimelineView: React.FC<TimelineViewProps> = ({
           <GitCommitLogTimeline
             entries={careerEntries}
             isReversed={isReversed}
+            rowHeight={28}
           />
         </div>
       ) : (
