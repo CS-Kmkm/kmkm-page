@@ -1,5 +1,4 @@
 import Header from './Header';
-import Footer from './Footer';
 import { PageLayoutProps } from '@/types';
 
 const PageLayout: React.FC<PageLayoutProps> = ({
@@ -31,9 +30,6 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       >
         {children}
       </main>
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 };
