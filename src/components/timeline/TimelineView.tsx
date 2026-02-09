@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import GitBranchTimeline from '@/components/ui/GitBranchTimeline';
+import GitCommitLogTimeline from '@/components/ui/GitCommitLogTimeline';
 import { ExtendedCareerEntry, TimelineEventEntry } from '@/types';
 
 export interface TimelineViewProps {
@@ -25,30 +25,33 @@ const TimelineView: React.FC<TimelineViewProps> = ({
         経歴タイムライン
       </h2>
 
-      {/* Control Area - Fixed height to match ListView */}
-      <div className="mb-6 min-h-[52px] flex items-start justify-end">
+      {/* Control Area */}
+      <div className="mb-4 flex items-center justify-end gap-3">
         <button
           onClick={onToggleReverse}
-          className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-slate-300 dark:border-gray-600 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-600 transition-colors min-h-[44px] focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
-          aria-label="ブランチの順序を反転"
+          className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-slate-300 dark:border-gray-600 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
           type="button"
         >
-          {isReversed ? "↓" : "↑"} 順序反転
+          {isReversed ? "↓ 古い順" : "↑ 新しい順"}
         </button>
       </div>
 
-      {/* Timeline Content */}
       {hasCareerData ? (
-        <GitBranchTimeline
-          entries={careerEntries}
-          events={timelineEvents}
-          enableEventPoints={true}
-          className="px-2 sm:px-4"
-          isReversed={isReversed}
-        />
+        <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
+          <div className="px-4 py-3 border-b border-gray-200/50 dark:border-gray-700/50">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              左のブランチ図は所属の重複・派生関係を表示。色でブランチを識別。
+            </p>
+          </div>
+          <GitCommitLogTimeline
+            entries={careerEntries}
+            isReversed={isReversed}
+            rowHeight={28}
+          />
+        </div>
       ) : (
-        <div className="text-center py-8 sm:py-12">
-          <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg">
+        <div className="text-center py-12">
+          <p className="text-gray-500 dark:text-gray-400">
             経歴情報が見つかりませんでした。
           </p>
         </div>

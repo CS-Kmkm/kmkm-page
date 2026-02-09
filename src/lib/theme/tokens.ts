@@ -169,6 +169,50 @@ export const transitionTokens = {
 } as const;
 
 /**
+ * Component-specific tokens for unified styling
+ */
+export const componentTokens = {
+  /**
+   * Tech icon button/card colors
+   */
+  techIcon: {
+    bg: 'bg-white dark:bg-gray-300',
+    border: 'border-gray-200 dark:border-gray-400',
+    hoverBorder: 'hover:border-blue-400 dark:hover:border-blue-500',
+  },
+  /**
+   * Logo container colors (ensures visibility in dark mode)
+   */
+  logoContainer: {
+    bg: 'bg-gray-100 dark:bg-gray-200',
+  },
+  /**
+   * Card colors
+   */
+  card: {
+    bg: 'bg-white dark:bg-gray-800',
+    border: 'border-gray-200 dark:border-gray-700',
+    hoverBg: 'hover:bg-gray-50 dark:hover:bg-gray-700',
+  },
+  /**
+   * Page layout container
+   */
+  pageContainer: {
+    width: 'w-[90%] max-w-7xl mx-auto',
+    padding: 'px-4',
+  },
+  /**
+   * Proficiency level colors
+   */
+  proficiency: {
+    expert: 'bg-green-100 dark:bg-green-900/20 text-green-900 dark:text-green-300 border-green-300 dark:border-green-700',
+    advanced: 'bg-blue-100 dark:bg-blue-900/20 text-blue-900 dark:text-blue-300 border-blue-300 dark:border-blue-700',
+    intermediate: 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-900 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700',
+    beginner: 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border-gray-300 dark:border-gray-600',
+  },
+} as const;
+
+/**
  * Combined token object for easy access
  */
 export const tokens = {
@@ -183,6 +227,7 @@ export const tokens = {
   spacing: spacingTokens,
   radius: radiusTokens,
   transition: transitionTokens,
+  component: componentTokens,
 } as const;
 
 /**

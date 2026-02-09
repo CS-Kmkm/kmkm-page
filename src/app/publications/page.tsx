@@ -13,7 +13,7 @@ export default function PublicationsPage() {
 
   return (
     <PageLayout title="Publications">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="w-[90%] max-w-7xl mx-auto px-4">
         {/* Page Header */}
         <div className="mb-4 sm:mb-6 md:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3 md:mb-4">Publications</h1>

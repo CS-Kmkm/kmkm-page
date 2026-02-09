@@ -180,37 +180,36 @@ export default function CareerPage() {
   } = useViewState();
 
   return (
-    <PageLayout
-      title={PAGE_TITLE}
-      className="max-w-6xl mx-auto px-4"
-    >
-      <div className="w-full">
-        <BreadcrumbNavigation />
-        
-        <PageHeader 
-          viewMode={viewMode}
-          onToggleView={toggleViewMode}
-        />
-        
-        <ViewContent
-          viewMode={viewMode}
-          careerEntries={careerEntries}
-          timelineEvents={timelineEvents}
-          events={events}
-          isReversed={isReversed}
-          onToggleReverse={toggleReverse}
-          onEventClick={handleEventClick}
-        />
+    <PageLayout title={PAGE_TITLE}>
+      <div className="w-[90%] max-w-7xl mx-auto px-4">
+        <div className="w-full">
+          <BreadcrumbNavigation />
+          
+          <PageHeader 
+            viewMode={viewMode}
+            onToggleView={toggleViewMode}
+          />
+          
+          <ViewContent
+            viewMode={viewMode}
+            careerEntries={careerEntries}
+            timelineEvents={timelineEvents}
+            events={events}
+            isReversed={isReversed}
+            onToggleReverse={toggleReverse}
+            onEventClick={handleEventClick}
+          />
 
-        {/* Event Detail Modal for List View */}
-        <EventDetailModal
-          isOpen={isModalOpen}
-          event={selectedEvent}
-          eventIndex={eventIndex}
-          filteredEvents={filteredEvents}
-          onClose={handleCloseModal}
-          onNavigate={handleNavigate}
-        />
+          {/* Event Detail Modal for List View */}
+          <EventDetailModal
+            isOpen={isModalOpen}
+            event={selectedEvent}
+            eventIndex={eventIndex}
+            filteredEvents={filteredEvents}
+            onClose={handleCloseModal}
+            onNavigate={handleNavigate}
+          />
+        </div>
       </div>
     </PageLayout>
   );

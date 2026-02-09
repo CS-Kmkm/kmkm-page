@@ -50,7 +50,7 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
       role="region"
       aria-label={`${tech.name}の詳細`}
     >
-      <div className="min-h-screen lg:min-h-0 p-4 sm:p-6 lg:p-0 pt-20 lg:pt-4">
+      <div className="min-h-screen lg:min-h-0 p-4 sm:p-6 lg:px-4 pt-20 lg:pt-4 w-[90%] max-w-7xl mx-auto">
         {/* Back Button */}
         <button
           id="tech-detail-back-button"
@@ -84,31 +84,39 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
         </button>
 
         {/* Content - Two Column Layout */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8 xl:items-stretch">
+        <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr] gap-6 xl:gap-8 xl:items-start">
           {/* Left Column - Tech Information */}
-          <div className="space-y-6">
+          <div className="flex flex-col gap-6 w-full min-w-0">
             {/* Tech Header */}
-            <TechHeader tech={tech} />
+            <div className="w-full min-w-0">
+              <TechHeader tech={tech} />
+            </div>
 
             {/* Tech Description */}
             {tech.description && (
-              <TechDescription description={tech.description} />
+              <div className="w-full min-w-0">
+                <TechDescription description={tech.description} />
+              </div>
             )}
 
             {/* Related Frameworks (only for languages) */}
             {tech.category === 'language' && relatedFrameworks.length > 0 && (
-              <RelatedFrameworks
-                frameworks={relatedFrameworks}
-                onFrameworkSelect={onRelatedTechSelect}
-              />
+              <div className="w-full min-w-0">
+                <RelatedFrameworks
+                  frameworks={relatedFrameworks}
+                  onFrameworkSelect={onRelatedTechSelect}
+                />
+              </div>
             )}
 
             {/* Related Languages (only for frameworks) */}
             {tech.category === 'framework' && relatedLanguages.length > 0 && (
-              <RelatedLanguages
-                languages={relatedLanguages}
-                onLanguageSelect={onRelatedTechSelect}
-              />
+              <div className="w-full min-w-0">
+                <RelatedLanguages
+                  languages={relatedLanguages}
+                  onLanguageSelect={onRelatedTechSelect}
+                />
+              </div>
             )}
           </div>
 

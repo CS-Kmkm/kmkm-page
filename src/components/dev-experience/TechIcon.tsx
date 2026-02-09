@@ -43,7 +43,7 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
   };
 
   return (
-    <div className="relative flex flex-col items-center">
+    <div className="relative flex flex-col items-center w-24 sm:w-28">
       <button
         onClick={handleClick}
         onKeyDown={handleKeyDown}
@@ -51,7 +51,18 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
         onMouseLeave={() => setShowTooltip(false)}
         onFocus={() => setShowTooltip(true)}
         onBlur={() => setShowTooltip(false)}
-        className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 p-3 sm:p-4 bg-white dark:bg-gray-300 rounded-lg border-2 border-gray-200 dark:border-gray-400 transition-all duration-150 hover:shadow-lg hover:scale-110 hover:border-blue-400 dark:hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 active:scale-95"
+        className="
+          relative w-24 h-24 sm:w-28 sm:h-28 p-4 sm:p-5 
+          bg-white dark:bg-gray-300 rounded-xl
+          border border-gray-200 dark:border-gray-400 
+          shadow-soft
+          transition-all duration-300 ease-out
+          hover:shadow-soft-lg hover:-translate-y-1
+          hover:border-blue-300 dark:hover:border-blue-500 
+          focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 
+          focus:ring-offset-2 dark:focus:ring-offset-gray-900 
+          active:scale-95
+        "
         aria-label={`View ${tech.name} details`}
         role="button"
         type="button"
@@ -62,15 +73,15 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
             <Image
               src={tech.logoUrl}
               alt={tech.logoAlt || `${tech.name} logo`}
-              width={64}
-              height={64}
+              width={48}
+              height={48}
               onError={handleImageError}
-              className="object-contain w-full h-full max-w-[64px] max-h-[64px] dark:mix-blend-multiply"
+              className="object-contain w-12 h-12 sm:w-14 sm:h-14 dark:mix-blend-multiply"
               priority={false}
               unoptimized={true}
             />
           ) : (
-            <span className="text-3xl sm:text-4xl md:text-5xl" role="img" aria-label={`${tech.name} icon`}>
+            <span className="text-2xl sm:text-3xl" role="img" aria-label={`${tech.name} icon`}>
               {getCategoryIcon(tech.category)}
             </span>
           )}
@@ -78,8 +89,8 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
       </button>
 
       {/* Tech Name Label */}
-      <div className="mt-2 text-center">
-        <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 line-clamp-2">
+      <div className="mt-2 sm:mt-3 text-center h-10 sm:h-12 flex items-center justify-center w-full px-1">
+        <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 line-clamp-2 leading-3 sm:leading-4 text-center overflow-hidden text-ellipsis w-full">
           {tech.name}
         </span>
       </div>

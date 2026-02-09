@@ -33,13 +33,13 @@ const TechGrid: React.FC<TechGridProps> = ({
   const getCategoryDisplayName = (category: string) => {
     switch (category) {
       case 'language':
-        return 'Programming Languages';
+        return 'プログラミング言語';
       case 'framework':
-        return 'Frameworks & Libraries';
+        return 'フレームワーク・ライブラリ';
       case 'tool':
-        return 'Tools & Platforms';
+        return 'ツール・プラットフォーム';
       case 'database':
-        return 'Databases';
+        return 'データベース';
       default:
         return category.charAt(0).toUpperCase() + category.slice(1);
     }

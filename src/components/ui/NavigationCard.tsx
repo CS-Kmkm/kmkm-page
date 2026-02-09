@@ -15,15 +15,16 @@ export default function NavigationCard({
     <Link
       href={href}
       className={`
-        group block p-4 sm:p-6 
-        bg-white dark:bg-gray-800 
-        border border-gray-200 dark:border-gray-700 
-        rounded-lg
-        hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-600
-        hover:bg-gray-50 dark:hover:bg-gray-700
+        group block p-5 sm:p-6 
+        bg-white dark:bg-gray-800/80 
+        border border-gray-200/80 dark:border-gray-700/50 
+        rounded-2xl
+        shadow-soft hover:shadow-soft-lg
+        hover:border-blue-200 dark:hover:border-blue-800/50
         focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 
         focus:ring-offset-2 dark:focus:ring-offset-gray-900
-        transition-all duration-200
+        transition-all duration-300 ease-out
+        hover:-translate-y-1
         ${className}
       `}
       aria-describedby={descriptionId}
@@ -31,15 +32,15 @@ export default function NavigationCard({
     >
       <article className="h-full flex flex-col">
         {/* Header with icon and title */}
-        <header className="flex items-center gap-2 sm:gap-3 mb-3">
+        <header className="flex items-center gap-3 sm:gap-4 mb-4">
           {icon && (
             <div 
               className="
-                flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 
+                flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 
                 flex items-center justify-center
-                bg-gray-100 dark:bg-gray-700 rounded-lg
-                group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20
-                transition-colors duration-200
+                bg-blue-50 dark:bg-blue-900/20 rounded-xl
+                group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30
+                transition-colors duration-300
               "
               aria-hidden="true"
             >
@@ -63,10 +64,10 @@ export default function NavigationCard({
         </p>
 
         {/* Arrow indicator */}
-        <div className="mt-3 sm:mt-4 flex items-center text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300">
+        <div className="mt-4 sm:mt-5 flex items-center text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300">
           <span className="text-xs sm:text-sm font-medium mr-2">詳しく見る</span>
           <svg 
-            className="w-3 h-3 sm:w-4 sm:h-4 transform group-hover:translate-x-1 transition-transform duration-200" 
+            className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform duration-300" 
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
