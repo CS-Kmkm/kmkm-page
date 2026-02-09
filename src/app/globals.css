@@ -324,6 +324,10 @@ img {
   scrollbar-color: #cbd5e1 #f8fafc;
 }
 
+.dark .custom-scrollbar {
+  scrollbar-color: #4b5563 #111827;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
@@ -333,13 +337,25 @@ img {
   border-radius: 3px;
 }
 
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: #111827;
+}
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 3px;
 }
 
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
 }
 
 /* Touch target optimization for mobile */
