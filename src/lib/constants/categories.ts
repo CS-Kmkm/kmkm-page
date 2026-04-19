@@ -47,40 +47,40 @@ export interface CategoryConfig {
  */
 export const EVENT_CATEGORY_CONFIG: Record<EventCategory, CategoryConfig> = {
   [EventCategory.AFFILIATION]: {
-    label: 'Affiliation',
+    label: '所属',
     variant: 'blue',
     icon: '🏢',
-    ariaLabel: 'Category: Affiliation',
+    ariaLabel: 'カテゴリ: 所属',
   },
   [EventCategory.PUBLICATION]: {
-    label: 'Publication',
+    label: '論文',
     variant: 'green',
     icon: '📄',
-    ariaLabel: 'Category: Publication',
+    ariaLabel: 'カテゴリ: 論文',
   },
   [EventCategory.EVENT]: {
-    label: 'Event',
+    label: 'イベント',
     variant: 'purple',
     icon: '📅',
-    ariaLabel: 'Category: Event',
+    ariaLabel: 'カテゴリ: イベント',
   },
   [EventCategory.INTERNSHIP]: {
-    label: 'Internship',
+    label: 'インターン',
     variant: 'orange',
     icon: '💼',
-    ariaLabel: 'Category: Internship',
+    ariaLabel: 'カテゴリ: インターン',
   },
   [EventCategory.AWARD]: {
-    label: 'Award',
+    label: '受賞',
     variant: 'yellow',
     icon: '🏆',
-    ariaLabel: 'Category: Award',
+    ariaLabel: 'カテゴリ: 受賞',
   },
   [EventCategory.OTHER]: {
-    label: 'Other',
+    label: 'その他',
     variant: 'gray',
     icon: '📝',
-    ariaLabel: 'Category: Other',
+    ariaLabel: 'カテゴリ: その他',
   },
 } as const;
 
@@ -89,28 +89,28 @@ export const EVENT_CATEGORY_CONFIG: Record<EventCategory, CategoryConfig> = {
  */
 export const UPDATE_CATEGORY_CONFIG: Record<UpdateCategory, CategoryConfig> = {
   [UpdateCategory.CAREER]: {
-    label: 'Career',
+    label: '経歴',
     variant: 'blue',
     icon: '👔',
-    ariaLabel: 'Category: Career',
+    ariaLabel: 'カテゴリ: 経歴',
   },
   [UpdateCategory.DEVELOPMENT]: {
-    label: 'Development',
+    label: '開発',
     variant: 'green',
     icon: '💻',
-    ariaLabel: 'Category: Development',
+    ariaLabel: 'カテゴリ: 開発',
   },
   [UpdateCategory.PUBLICATION]: {
-    label: 'Publication',
+    label: '論文',
     variant: 'purple',
     icon: '📄',
-    ariaLabel: 'Category: Publication',
+    ariaLabel: 'カテゴリ: 論文',
   },
   [UpdateCategory.OTHER]: {
-    label: 'Other',
+    label: 'その他',
     variant: 'gray',
     icon: '📝',
-    ariaLabel: 'Category: Other',
+    ariaLabel: 'カテゴリ: その他',
   },
 } as const;
 
@@ -118,20 +118,20 @@ export const UPDATE_CATEGORY_CONFIG: Record<UpdateCategory, CategoryConfig> = {
  * Publication type labels
  */
 export const PUBLICATION_TYPE_LABELS: Record<string, string> = {
-  journal: 'Journal',
-  conference: 'Conference',
-  workshop: 'Workshop',
-  preprint: 'Preprint',
-  other: 'Other',
+  journal: 'ジャーナル',
+  conference: '国際会議',
+  workshop: 'ワークショップ',
+  preprint: 'プレプリント',
+  other: 'その他',
 } as const;
 
 /**
  * Authorship type labels
  */
 export const AUTHORSHIP_TYPE_LABELS = {
-  all: 'All Publications',
-  'first-author': 'First Author Only',
-  'co-author': 'Co-author Only',
+  all: 'すべての論文',
+  'first-author': '第一著者のみ',
+  'co-author': '共著のみ',
 } as const;
 
 /**

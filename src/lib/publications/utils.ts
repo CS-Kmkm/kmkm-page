@@ -4,11 +4,11 @@ import { PublicationEntry } from '@/types';
  * Publication type labels mapping
  */
 export const PUBLICATION_TYPE_LABELS: Record<string, string> = {
-  journal: 'Journal',
-  conference: 'Conference',
-  workshop: 'Workshop',
-  preprint: 'Preprint',
-  other: 'Other'
+  journal: 'ジャーナル',
+  conference: '国際会議',
+  workshop: 'ワークショップ',
+  preprint: 'プレプリント',
+  other: 'その他'
 };
 
 /**
@@ -25,7 +25,15 @@ export const PUBLICATION_TYPE_COLORS: Record<string, string> = {
 /**
  * Get publication type label
  */
-export const getPublicationTypeLabel = (type: string): string => {
+export const getPublicationTypeLabel = (
+  type: string,
+  conferenceScope?: PublicationEntry['conferenceScope']
+): string => {
+  if (type === 'conference') {
+    if (conferenceScope === 'domestic') return '国内会議';
+    if (conferenceScope === 'international') return '国際会議';
+  }
+
   return PUBLICATION_TYPE_LABELS[type] || type.charAt(0).toUpperCase() + type.slice(1);
 };
 
@@ -34,6 +42,16 @@ export const getPublicationTypeLabel = (type: string): string => {
  */
 export const getPublicationTypeColor = (type: string): string => {
   return PUBLICATION_TYPE_COLORS[type] || 'bg-gray-100 text-gray-900 border border-gray-200';
+};
+
+/**
+ * Domestic conference labels should not be displayed as publication type badges.
+ */
+export const shouldShowPublicationTypeBadge = (publication: PublicationEntry): boolean => {
+  if (publication.publicationType === 'conference' && publication.conferenceScope === 'domestic') {
+    return false;
+  }
+  return true;
 };
 
 /**
@@ -76,15 +94,25 @@ export const filterPublications = (
     showCoAuthor: boolean;
     showPeerReviewed: boolean;
     showNonPeerReviewed: boolean;
+    showDomesticConference: boolean;
+    showInternationalConference: boolean;
   }
 ): PublicationEntry[] => {
-  const { showFirstAuthor, showCoAuthor, showPeerReviewed, showNonPeerReviewed } = filters;
+  const {
+    showFirstAuthor,
+    showCoAuthor,
+    showPeerReviewed,
+    showNonPeerReviewed,
+    showDomesticConference,
+    showInternationalConference
+  } = filters;
   
   let result = [...publications];
   
   // Check if any filter is active in each category
   const hasAuthorshipFilter = showFirstAuthor || showCoAuthor;
   const hasPeerReviewedFilter = showPeerReviewed || showNonPeerReviewed;
+  const hasConferenceScopeFilter = showDomesticConference || showInternationalConference;
   
   // Apply authorship filter
   if (hasAuthorshipFilter) {
@@ -100,6 +128,19 @@ export const filterPublications = (
     result = result.filter(pub => {
       if (showPeerReviewed && pub.isPeerReviewed) return true;
       if (showNonPeerReviewed && !pub.isPeerReviewed) return true;
+      return false;
+    });
+  }
+
+  // Apply conference scope filter
+  if (hasConferenceScopeFilter) {
+    result = result.filter(pub => {
+      if (pub.publicationType !== 'conference') return false;
+
+      // Backward compatibility: conference entries without scope are treated as international.
+      const scope = pub.conferenceScope ?? 'international';
+      if (showDomesticConference && scope === 'domestic') return true;
+      if (showInternationalConference && scope === 'international') return true;
       return false;
     });
   }

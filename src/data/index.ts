@@ -198,7 +198,9 @@ export const getTimelineEvents = (): TimelineEventEntry[] => {
       events.push({
         id: `timeline-pub-${pub.id}`,
         title: `論文発表: ${pub.venue}`,
-        description: `「${pub.title}」を${pub.isFirstAuthor ? '第一著者として' : '共著者として'}発表`,
+        description: pub.isFirstAuthor
+          ? `「${pub.title}」を第一著者として発表`
+          : `「${pub.title}」を投稿`,
         date: pub.date,
         year: pubYear.toString(),
         category: '研究成果'
@@ -359,7 +361,9 @@ export const getEvents = (): EventEntry[] => {
       events.push({
         id: `pub-${pub.id}`,
         title: `${pub.venue} 論文発表`,
-        description: `「${pub.title}」を${pub.isFirstAuthor ? '第一著者として' : '共著者として'}発表`,
+        description: pub.isFirstAuthor
+          ? `「${pub.title}」を第一著者として発表`
+          : `「${pub.title}」を投稿`,
         date: pub.date,
         year: pubYear,
         category: EventCategory.PUBLICATION,

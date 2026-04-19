@@ -1,7 +1,7 @@
-import { Metadata } from 'next';
+import { generatePageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
-  title: 'Events | Personal Portfolio',
-  description: 'Academic and professional events including affiliation changes, publications, event participation, and internships.',
-  keywords: ['events', 'timeline', 'career', 'academic events', 'professional activities', 'publications', 'internships'],
-};
+export const metadata = generatePageMetadata({
+  title: 'イベント',
+  path: '/events',
+  description: 'イベントページは経歴ページに統合されています。',
+});

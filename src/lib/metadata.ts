@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
+import { siteConfig } from '@/lib/site';
 
 interface GenerateMetadataProps {
-  title: string;
+  title?: string;
   description?: string;
   path?: string;
-  image?: string;
+  keywords?: string[];
 }
 
 /**
@@ -13,21 +14,21 @@ interface GenerateMetadataProps {
  */
 export function generatePageMetadata({
   title,
-  description = 'Personal portfolio showcasing career, development experience, and publications.',
+  description = siteConfig.description,
   path = '',
-  image = '/og-image.png',
-}: GenerateMetadataProps): Metadata {
-  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'Personal Portfolio';
-  const fullTitle = title === 'Home' ? siteName : `${title} | ${siteName}`;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://portfolio.vercel.app';
-  const fullUrl = `${siteUrl}${path}`;
+  keywords = [],
+}: GenerateMetadataProps = {}): Metadata {
+  const fullTitle = title ? `${title} | ${siteConfig.personName}` : siteConfig.defaultTitle;
+  const siteUrl = siteConfig.siteUrl;
+  const fullUrl = siteUrl ? new URL(path || '/', siteUrl).toString() : undefined;
 
   return {
     title: fullTitle,
     description,
-    authors: [{ name: 'Personal Portfolio' }],
-    creator: 'Personal Portfolio',
-    publisher: 'Personal Portfolio',
+    keywords,
+    authors: [{ name: siteConfig.personName }],
+    creator: siteConfig.personName,
+    publisher: siteConfig.personName,
     robots: {
       index: true,
       follow: true,
@@ -41,38 +42,29 @@ export function generatePageMetadata({
     },
     openGraph: {
       type: 'website',
-      locale: 'en_US',
-      url: fullUrl,
+      locale: siteConfig.locale,
       title: fullTitle,
       description,
-      siteName: siteName,
-      images: [
-        {
-          url: image,
-          width: 1200,
-          height: 630,
-          alt: fullTitle,
-        },
-      ],
+      siteName: siteConfig.siteName,
+      ...(fullUrl ? { url: fullUrl } : {}),
     },
     twitter: {
       card: 'summary_large_image',
       title: fullTitle,
       description,
-      images: [image],
     },
-    alternates: {
-      canonical: fullUrl,
-    },
+    alternates: fullUrl
+      ? {
+          canonical: fullUrl,
+        }
+      : undefined,
     icons: {
       icon: '/favicon.ico',
-      shortcut: '/favicon-16x16.png',
-      apple: '/apple-touch-icon.png',
     },
-    manifest: '/site.webmanifest',
+    manifest: '/manifest.webmanifest',
     other: {
       'theme-color': '#ffffff',
-      'color-scheme': 'light',
+      'color-scheme': 'light dark',
     },
   };
 }
@@ -81,6 +73,5 @@ export function generatePageMetadata({
  * Default metadata for the site
  */
 export const defaultMetadata: Metadata = generatePageMetadata({
-  title: 'Home',
-  description: 'Personal portfolio showcasing career, development experience, and publications.',
+  keywords: ['茂木光志', 'Koshi Motegi', '自然言語処理', 'NLP', '名古屋大学', '開発経験', '論文'],
 });

@@ -16,17 +16,15 @@ import { tokens } from '@/lib/theme/tokens';
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
+  return date.toLocaleDateString('ja-JP', {
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric'
   });
 }
 
 function UpdateModal({ update, onClose }: { update: UpdateItem | null; onClose: () => void }) {
   if (!update) return null;
-
-  const categoryConfig = getUpdateCategoryConfig(update.category);
 
   return (
     <Modal
@@ -84,7 +82,7 @@ export default function UpdatesList({
     );
   }
 
-  // Display logic: show maxItems initially, or all if not scrollable
+  // Display logic: show a compact subset unless scrollable display is explicitly requested
   const displayUpdates = showScrollable ? sortedUpdates : sortedUpdates.slice(0, maxItems);
 
   return (
@@ -92,13 +90,13 @@ export default function UpdatesList({
       <section className={className} aria-labelledby="updates-heading">
         <h2 
           id="updates-heading" 
-          className={`text-2xl font-bold ${tokens.text.primary} mb-6`}
+          className={`text-2xl font-bold ${tokens.text.primary} mb-5`}
         >
           {HEADING_LABELS.latestUpdates}
         </h2>
         
         <div 
-          className={`space-y-4 ${showScrollable ? 'max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400' : ''}`}
+          className={`space-y-3 ${showScrollable ? 'max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400' : ''}`}
           style={showScrollable ? { scrollbarWidth: 'thin' } : undefined}
         >
           {displayUpdates.map((update) => {
@@ -108,6 +106,7 @@ export default function UpdatesList({
               <ListItem
                 key={update.id}
                 title={update.title}
+                className="p-2.5 sm:p-3"
                 meta={
                   <time dateTime={update.date}>
                     {formatDate(update.date)}

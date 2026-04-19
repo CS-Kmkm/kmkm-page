@@ -4,26 +4,12 @@ export default function PublicationsLoading() {
       {/* Header skeleton */}
       <div className="mb-6 sm:mb-8">
         <div className="h-8 sm:h-10 bg-gray-200 rounded w-48 mb-3 sm:mb-4 animate-pulse"></div>
-        <div className="space-y-2">
-          <div className="h-4 sm:h-5 bg-gray-200 rounded w-full animate-pulse"></div>
-          <div className="h-4 sm:h-5 bg-gray-200 rounded w-3/4 animate-pulse"></div>
-        </div>
-      </div>
-
-      {/* Statistics skeleton */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
-        {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-gray-50 rounded-lg p-3 sm:p-4 text-center">
-            <div className="h-6 sm:h-8 bg-gray-200 rounded w-8 mx-auto mb-2 animate-pulse"></div>
-            <div className="h-3 sm:h-4 bg-gray-200 rounded w-20 mx-auto animate-pulse"></div>
-          </div>
-        ))}
       </div>
 
       {/* Filters skeleton */}
       <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-6">
-        {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-7 bg-gray-200 rounded-full w-20 animate-pulse"></div>
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="h-10 bg-gray-200 rounded-md w-24 animate-pulse"></div>
         ))}
       </div>
 
@@ -48,11 +34,6 @@ export default function PublicationsLoading() {
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Results count skeleton */}
-      <div className="mt-6 text-center">
-        <div className="h-4 bg-gray-200 rounded w-32 mx-auto animate-pulse"></div>
       </div>
     </div>
   );

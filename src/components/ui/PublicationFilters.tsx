@@ -7,10 +7,14 @@ interface PublicationFiltersProps {
   showCoAuthor: boolean;
   showPeerReviewed: boolean;
   showNonPeerReviewed: boolean;
+  showDomesticConference: boolean;
+  showInternationalConference: boolean;
   onToggleFirstAuthor: () => void;
   onToggleCoAuthor: () => void;
   onTogglePeerReviewed: () => void;
   onToggleNonPeerReviewed: () => void;
+  onToggleDomesticConference: () => void;
+  onToggleInternationalConference: () => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
   resultCount: number;
@@ -22,10 +26,14 @@ const PublicationFilters: React.FC<PublicationFiltersProps> = ({
   showCoAuthor,
   showPeerReviewed,
   showNonPeerReviewed,
+  showDomesticConference,
+  showInternationalConference,
   onToggleFirstAuthor,
   onToggleCoAuthor,
   onTogglePeerReviewed,
   onToggleNonPeerReviewed,
+  onToggleDomesticConference,
+  onToggleInternationalConference,
   onClearFilters,
   hasActiveFilters,
   resultCount,
@@ -75,6 +83,25 @@ const PublicationFilters: React.FC<PublicationFiltersProps> = ({
           aria-pressed={showNonPeerReviewed}
         >
           査読なし
+        </button>
+
+        {/* Divider */}
+        <div className="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1" aria-hidden="true"></div>
+
+        {/* Conference Scope Filters */}
+        <button
+          onClick={onToggleDomesticConference}
+          className={filterButtonClass(showDomesticConference)}
+          aria-pressed={showDomesticConference}
+        >
+          国内会議
+        </button>
+        <button
+          onClick={onToggleInternationalConference}
+          className={filterButtonClass(showInternationalConference)}
+          aria-pressed={showInternationalConference}
+        >
+          国際会議
         </button>
 
         {/* Clear Filters Button */}

@@ -49,7 +49,7 @@ export function createLazyComponent<P extends Record<string, unknown>>(
   
   return function WrappedComponent(props: P) {
     return (
-      <React.Suspense fallback={fallback ? React.createElement(fallback) : <div>Loading...</div>}>
+      <React.Suspense fallback={fallback ? React.createElement(fallback) : <div>読み込み中...</div>}>
         <LazyComponent {...props} />
       </React.Suspense>
     );

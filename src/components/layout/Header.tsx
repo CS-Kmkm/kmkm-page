@@ -5,18 +5,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { HeaderProps } from '@/types';
 import ThemeToggle from '@/components/ui/ThemeToggle';
+import { navigationItems, siteConfig } from '@/lib/site';
 
 const Header: React.FC<HeaderProps> = ({ currentPath }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const activePath = currentPath || pathname;
-
-  const navigationItems = [
-    { href: '/', label: 'Home', ariaLabel: 'Go to home page' },
-    { href: '/career', label: 'Career', ariaLabel: 'Go to career page' },
-    { href: '/dev-experience', label: 'Dev Experience', ariaLabel: 'Go to development experience page' },
-    { href: '/publications', label: 'Publications', ariaLabel: 'Go to publications page' },
-  ];
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -24,13 +18,6 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      toggleMobileMenu();
-    }
   };
 
   return (
@@ -41,15 +28,20 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
           <div className="flex-shrink-0">
             <Link
               href="/"
-              className="text-xl font-bold text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
-              aria-label="Go to home page"
+              className="flex flex-col text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
+              aria-label="トップページへ移動"
             >
-              Portfolio
+              <span className="text-base sm:text-lg font-semibold tracking-wide">
+                {siteConfig.personName}
+              </span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                個人ポートフォリオ
+              </span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:block" role="navigation" aria-label="Main navigation">
+          <nav className="hidden md:block" role="navigation" aria-label="メインナビゲーション">
             <ul className="flex items-center gap-1">
               {navigationItems.map((item) => {
                 const isActive = activePath === item.href;
@@ -89,11 +81,9 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200"
               aria-controls="mobile-menu"
               aria-expanded={isMobileMenuOpen}
-              aria-label={isMobileMenuOpen ? 'Close main menu' : 'Open main menu'}
+              aria-label={isMobileMenuOpen ? 'メインメニューを閉じる' : 'メインメニューを開く'}
               onClick={toggleMobileMenu}
-              onKeyDown={handleKeyDown}
             >
-              <span className="sr-only">Open main menu</span>
               {/* Hamburger icon */}
               <svg
                 className={`${isMobileMenuOpen ? 'hidden' : 'block'} h-6 w-6`}
@@ -136,7 +126,7 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
         className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}
         id="mobile-menu"
         role="navigation"
-        aria-label="Mobile navigation"
+        aria-label="モバイルナビゲーション"
       >
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
           {navigationItems.map((item) => {

@@ -46,7 +46,7 @@ const WebsiteIcon = ({ className }: { className?: string }) => (
 // Platform configuration
 const platformConfig = {
   twitter: {
-    name: 'Twitter',
+    name: 'X',
     icon: TwitterIcon,
     color: 'hover:text-blue-500'
   },
@@ -71,12 +71,12 @@ const platformConfig = {
     color: 'hover:text-teal-600'
   },
   email: {
-    name: 'Email',
+    name: 'メール',
     icon: EmailIcon,
     color: 'hover:text-red-500'
   },
   website: {
-    name: 'Website',
+    name: 'Webサイト',
     icon: WebsiteIcon,
     color: 'hover:text-purple-600'
   }

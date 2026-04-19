@@ -127,6 +127,7 @@ export interface PublicationEntry {
   isFirstAuthor: boolean;
   isPeerReviewed: boolean;
   publicationType: 'journal' | 'conference' | 'workshop' | 'preprint' | 'other';
+  conferenceScope?: 'international' | 'domestic'; // conference時の会議種別
   abstract?: string;        // 論文の抄録
   imageUrl?: string;        // 説明用画像のURL
   imageAlt?: string;        // 画像の代替テキスト
@@ -248,7 +249,7 @@ export interface PublicationListProps {
 
 export interface NavigationCardProps {
   title: string;
-  description: string;
+  description?: string;
   href: string;
   icon?: React.ReactNode;
   className?: string;

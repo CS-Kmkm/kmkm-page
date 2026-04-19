@@ -1,34 +1,22 @@
-import { Metadata } from 'next';
 import { getProfile, getRecentUpdates } from '@/data';
 import PageLayout from '@/components/layout/PageLayout';
-import { HeroSection, UpdatesSection, NavigationSection } from '@/components/home';
+import { HeroSection, UpdatesSection } from '@/components/home';
+import { generatePageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
-  title: '茂木光志 - 個人ポートフォリオ',
-  description: '名古屋大学大学院情報学研究科知能システム学専攻松原研究室の茂木光志の個人ポートフォリオサイトです。自然言語処理の研究活動、論文投稿履歴をご紹介しています。',
-  keywords: ['茂木光志', 'Koshi Motegi', '自然言語処理', 'NLP', '名古屋大学', '松原研究室', '機械学習', '研究'],
-  authors: [{ name: '茂木光志' }],
-  openGraph: {
-    title: '茂木光志 - 個人ポートフォリオ',
-    description: '名古屋大学大学院情報学研究科知能システム学専攻松原研究室の茂木光志の個人ポートフォリオサイト',
-    type: 'website',
-    locale: 'ja_JP',
-  },
-};
+export const metadata = generatePageMetadata();
 
 export default function Home() {
   const profile = getProfile();
-  const recentUpdates = getRecentUpdates(15);
+  const recentUpdates = getRecentUpdates(3);
 
   return (
-    <PageLayout title="トップページ">
+    <PageLayout title="トップページ" className="pt-1 sm:pt-2 lg:pt-3">
       <div className="bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-        <div className="w-[90%] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-14">
+        <div className="w-[90%] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 sm:pt-4 lg:pt-6 pb-8 sm:pb-10 lg:pb-14">
           <HeroSection profile={profile} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
+          <div className="mt-8">
             <UpdatesSection updates={recentUpdates} />
-            <NavigationSection />
           </div>
         </div>
       </div>

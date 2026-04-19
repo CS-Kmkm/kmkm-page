@@ -1,25 +1,25 @@
-import { Metadata } from 'next';
 import { PageLayout, PublicationList } from '@/components/common';
 import { getPublications } from '@/data';
+import { generatePageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
-  title: 'Publications | Personal Portfolio',
-  description: 'Academic publications and research papers including journal articles, conference proceedings, and workshop papers.',
-  keywords: ['publications', 'research', 'academic papers', 'journal articles', 'conference proceedings'],
-};
+export const metadata = generatePageMetadata({
+  title: '論文・発表',
+  path: '/publications',
+  description: '投稿した論文・発表一覧です。著者区分や査読の有無で絞り込みながら閲覧できます。',
+  keywords: ['論文', '発表', '研究', '国際会議', 'ジャーナル'],
+});
 
 export default function PublicationsPage() {
   const publications = getPublications();
 
   return (
-    <PageLayout title="Publications">
+    <PageLayout title="論文・発表">
       <div className="w-[90%] max-w-7xl mx-auto px-4">
         {/* Page Header */}
         <div className="mb-4 sm:mb-6 md:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3 md:mb-4">Publications</h1>
-          {/* <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-            Academic publications and research papers, organized chronologically with the most recent work first.
-          </p> */}
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3 md:mb-4">
+            論文・発表
+          </h1>
         </div>
 
         {/* Publications List */}
@@ -45,10 +45,10 @@ export default function PublicationsPage() {
                 </svg>
               </div>
               <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-                No Publications Available
+                公開中の論文はありません
               </h3>
               <p className="text-gray-500 dark:text-gray-400">
-                Publications will be displayed here once they are added to the system.
+                追加した論文・発表はここに表示されます。
               </p>
             </div>
           )}
