@@ -13,10 +13,10 @@ export default function HeroSection({ profile }: HeroSectionProps) {
         profile={profile}
         showBio={false}
         showLocation={true}
-        className="mb-6 sm:mb-8"
+        className="mb-1 sm:mb-2"
       />
 
-      <div className="border-t border-gray-200/80 dark:border-gray-700/50 pt-6 sm:pt-8">
+      <div className="border-t border-gray-200/80 dark:border-gray-700/50 pt-2 sm:pt-3">
         <SocialLinks
           socialLinks={profile.socialLinks}
           showLabels={true}

@@ -55,7 +55,9 @@ export default function ProfileSection({
 
         {/* Location */}
         {showLocation && profile.location && (
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-3 sm:mb-4 flex items-center justify-center md:justify-start gap-2">
+          <p
+            className={`text-sm sm:text-base text-gray-600 dark:text-gray-400 flex items-center justify-center md:justify-start gap-2 ${showBio ? 'mb-3 sm:mb-4' : 'mb-1 sm:mb-1'}`}
+          >
             <svg 
               className="w-4 h-4 flex-shrink-0" 
               fill="none" 

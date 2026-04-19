@@ -59,8 +59,11 @@ interface ProcessedEntry {
   lane: number;
   color: string;
   isOngoing: boolean;
+  isAlignedTransitionStart: boolean;
+  isAlignedTransitionEnd: boolean;
   parentLane?: number;
 }
+const TRANSITION_EVENT_OFFSET_PX = 5;
 
 interface TimelineRow {
   monthIndex: number;
@@ -81,6 +84,23 @@ function monthIndexToParts(monthIndex: number): { year: number; month: number } 
   return { year, month };
 }
 
+function getNextDateString(dateStr: string): string | null {
+  const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return null;
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+
+  const date = new Date(Date.UTC(year, month - 1, day));
+  date.setUTCDate(date.getUTCDate() + 1);
+
+  const nextYear = date.getUTCFullYear();
+  const nextMonth = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const nextDay = String(date.getUTCDate()).padStart(2, '0');
+  return `${nextYear}-${nextMonth}-${nextDay}`;
+}
+
 function processEntries(entries: ExtendedCareerEntry[]): ProcessedEntry[] {
   const sorted = [...entries].sort((a, b) => 
     new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
@@ -91,6 +111,44 @@ function processEntries(entries: ExtendedCareerEntry[]): ProcessedEntry[] {
   let colorIndex = 0;
   const now = new Date();
   const nowMonth = getMonthIndex(now);
+
+  // Align contiguous transitions (end date + 1 day === next start date)
+  // on the same branch so merge/start share a single visual pivot.
+  const startMonthByBranchAndDate = new Map<string, number>();
+  const startEntryIdsByBranchAndDate = new Map<string, string[]>();
+  entries.forEach((entry) => {
+    const branchKey = entry.parentId ?? '__main__';
+    const monthIndex = getMonthIndex(new Date(entry.startDate));
+    const key = `${branchKey}|${entry.startDate}`;
+    startMonthByBranchAndDate.set(key, monthIndex);
+    const ids = startEntryIdsByBranchAndDate.get(key) ?? [];
+    ids.push(entry.id);
+    startEntryIdsByBranchAndDate.set(key, ids);
+  });
+
+  const alignedEndMonthById = new Map<string, number>();
+  const alignedTransitionEndIds = new Set<string>();
+  const alignedTransitionStartIds = new Set<string>();
+  entries.forEach((entry) => {
+    if (!entry.endDate) return;
+
+    const nextDate = getNextDateString(entry.endDate);
+    if (!nextDate) return;
+
+    const branchKey = entry.parentId ?? '__main__';
+    const key = `${branchKey}|${nextDate}`;
+    const successorStartMonth = startMonthByBranchAndDate.get(key);
+    const successorEntryIds = startEntryIdsByBranchAndDate.get(key) ?? [];
+
+    if (successorStartMonth !== undefined && successorEntryIds.length > 0) {
+      alignedEndMonthById.set(entry.id, successorStartMonth);
+      alignedTransitionEndIds.add(entry.id);
+
+      // Apply the same start offset to all same-day successors so
+      // they remain fully coincident with each other and with the split marker.
+      successorEntryIds.forEach((id) => alignedTransitionStartIds.add(id));
+    }
+  });
 
   sorted.forEach((entry) => {
     const startTime = new Date(entry.startDate).getTime();
@@ -104,9 +162,10 @@ function processEntries(entries: ExtendedCareerEntry[]): ProcessedEntry[] {
       : now.getFullYear();
 
     const startMonth = getMonthIndex(new Date(entry.startDate));
-    const endMonth = entry.endDate
+    const rawEndMonth = entry.endDate
       ? getMonthIndex(new Date(entry.endDate))
       : nowMonth;
+    const endMonth = alignedEndMonthById.get(entry.id) ?? rawEndMonth;
 
     // Get parent lane if exists
     let parentLane: number | undefined;
@@ -148,6 +207,8 @@ function processEntries(entries: ExtendedCareerEntry[]): ProcessedEntry[] {
       lane,
       color: BRANCH_COLORS[colorIndex % BRANCH_COLORS.length],
       isOngoing: !entry.endDate,
+      isAlignedTransitionStart: alignedTransitionStartIds.has(entry.id),
+      isAlignedTransitionEnd: alignedTransitionEndIds.has(entry.id),
       parentLane,
     };
 
@@ -305,6 +366,8 @@ export default function GitCommitLogTimeline({
     return merged;
   }, [processedEntries]);
 
+  const entryLabelOffsetY = rowHeight * 1.5 * (isReversed ? -1 : 1) + rowHeight * 0.5;
+
   return (
     <div className="text-sm font-sans">
       {rows.map((row, rowIndex) => {
@@ -313,6 +376,15 @@ export default function GitCommitLogTimeline({
         const activeEntries = processedEntries.filter(e =>
           row.monthIndex >= e.startMonth && row.monthIndex <= e.endMonth
         );
+        const hasStartAndMergeOnSameRow = Boolean(
+          row.entry && row.isFirstMonthRow && hasMergeAtMonth.has(row.monthIndex)
+        );
+        const mainIndicatorYs = hasStartAndMergeOnSameRow
+          ? [
+              rowHeight / 2 - TRANSITION_EVENT_OFFSET_PX,
+              rowHeight / 2 + TRANSITION_EVENT_OFFSET_PX,
+            ]
+          : [rowHeight / 2];
         const showMainIndicator = Boolean(
           row.entry || (row.isFirstMonthRow && hasMergeAtMonth.has(row.monthIndex))
         );
@@ -321,7 +393,7 @@ export default function GitCommitLogTimeline({
           <div
             key={`row-${rowIndex}`}
             className="flex items-center hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors"
-            style={{ minHeight: rowHeight }}
+            style={{ height: rowHeight }}
           >
             {/* Year Label */}
             <div
@@ -370,14 +442,19 @@ export default function GitCommitLogTimeline({
 
                 {/* Main branch indicator */}
                 {showMainIndicator && (
-                  <circle
-                    cx={MAIN_X}
-                    cy={rowHeight / 2}
-                    r={4}
-                    fill={MAIN_BRANCH_COLOR}
-                    stroke="white"
-                    strokeWidth={2}
-                  />
+                  <>
+                    {mainIndicatorYs.map((y, i) => (
+                      <circle
+                        key={`main-indicator-${rowIndex}-${i}`}
+                        cx={MAIN_X}
+                        cy={y}
+                        r={4}
+                        fill={MAIN_BRANCH_COLOR}
+                        stroke="white"
+                        strokeWidth={2}
+                      />
+                    ))}
+                  </>
                 )}
 
                 {/* Active branch lines */}
@@ -397,7 +474,16 @@ export default function GitCommitLogTimeline({
                     : MAIN_X;
                   const mergeToX = MAIN_X;
                   const midY = rowHeight / 2;
-                  const cornerR = 10;
+                  const cornerR = midY;
+                  const hasUpperConnector = midY - cornerR > 0.5;
+                  const hasLowerConnector = rowHeight - (midY + cornerR) > 0.5;
+                  const transitionOffsetY = TRANSITION_EVENT_OFFSET_PX;
+                  const startEventY = e.isAlignedTransitionStart
+                    ? (isReversed ? midY - transitionOffsetY : midY + transitionOffsetY)
+                    : midY;
+                  const endEventY = e.isAlignedTransitionEnd
+                    ? (isReversed ? midY + transitionOffsetY : midY - transitionOffsetY)
+                    : midY;
 
                   // Determine vertical line range and whether to draw fork/merge
                   // The fork/merge curves already draw the vertical portions near the curve
@@ -407,17 +493,30 @@ export default function GitCommitLogTimeline({
                   let skipVerticalLine = false;
                   let skipFork = false;
                   let skipMerge = false;
-                  
+
                   if (isInStartMonth) {
                     // This row is in the start month but not the first row
-                    // Skip vertical line - the fork in the first row already handles the connection
-                    skipVerticalLine = true;
+                    // Direction-aware handling:
+                    // - reversed (new -> old): do not draw older-side segment for start month
+                    // - normal (old -> new): keep vertical continuity to newer rows
+                    if (isReversed) {
+                      skipVerticalLine = true;
+                    } else {
+                      lineY1 = 0;
+                      lineY2 = rowHeight;
+                    }
                     skipFork = true;
                   } else if (isInEndMonth) {
                     // This row is in the end month but not the first row
-                    // Draw full vertical line, skip merge (handled in first row of month)
-                    lineY1 = 0;
-                    lineY2 = rowHeight;
+                    // Direction-aware handling:
+                    // - reversed (new -> old): keep continuity to older rows
+                    // - normal (old -> new): do not draw newer-side segment after end
+                    if (isReversed) {
+                      lineY1 = 0;
+                      lineY2 = rowHeight;
+                    } else {
+                      skipVerticalLine = true;
+                    }
                     skipMerge = true;
                   } else if (isStartRow && isEndRow) {
                     // Both start and end in same row - skip vertical line, curves handle it
@@ -450,7 +549,7 @@ export default function GitCommitLogTimeline({
                   return (
                     <g key={`branch-${e.id}`}>
                       {/* Continuous vertical line for this lane */}
-                      {!skipVerticalLine && (
+                      {!skipVerticalLine && lineY2 > lineY1 && (
                         <line
                           x1={laneX}
                           y1={lineY1}
@@ -469,9 +568,9 @@ export default function GitCommitLogTimeline({
                           {/* Horizontal line from parent to near this lane */}
                           <line
                             x1={forkFromX}
-                            y1={midY}
+                            y1={startEventY}
                             x2={laneX - cornerR}
-                            y2={midY}
+                            y2={startEventY}
                             stroke={e.color}
                             strokeWidth={4}
                             strokeLinecap="butt"
@@ -480,45 +579,49 @@ export default function GitCommitLogTimeline({
                             <>
                               {/* Quarter arc: from horizontal to vertical (going up) */}
                               <path
-                                d={`M ${laneX - cornerR} ${midY}
-                                    A ${cornerR} ${cornerR} 0 0 0 ${laneX} ${midY - cornerR}`}
+                                d={`M ${laneX - cornerR} ${startEventY}
+                                    A ${cornerR} ${cornerR} 0 0 0 ${laneX} ${startEventY - cornerR}`}
                                 fill="none"
                                 stroke={e.color}
                                 strokeWidth={4}
                                 strokeLinecap="butt"
                               />
                               {/* Short vertical line from top of row to arc start */}
-                              <line
-                                x1={laneX}
-                                y1={0}
-                                x2={laneX}
-                                y2={midY - cornerR}
-                                stroke={e.color}
-                                strokeWidth={4}
-                                strokeLinecap="butt"
-                              />
+                              {hasUpperConnector && (
+                                <line
+                                  x1={laneX}
+                                  y1={0}
+                                  x2={laneX}
+                                  y2={midY - cornerR}
+                                  stroke={e.color}
+                                  strokeWidth={4}
+                                  strokeLinecap="butt"
+                                />
+                              )}
                             </>
                           ) : (
                             <>
                               {/* Quarter arc: from horizontal to vertical (going down) */}
                               <path
-                                d={`M ${laneX - cornerR} ${midY}
-                                    A ${cornerR} ${cornerR} 0 0 1 ${laneX} ${midY + cornerR}`}
+                                d={`M ${laneX - cornerR} ${startEventY}
+                                    A ${cornerR} ${cornerR} 0 0 1 ${laneX} ${startEventY + cornerR}`}
                                 fill="none"
                                 stroke={e.color}
                                 strokeWidth={4}
                                 strokeLinecap="butt"
                               />
                               {/* Short vertical line from arc end to bottom of row */}
-                              <line
-                                x1={laneX}
-                                y1={midY + cornerR}
-                                x2={laneX}
-                                y2={rowHeight}
-                                stroke={e.color}
-                                strokeWidth={4}
-                                strokeLinecap="butt"
-                              />
+                              {hasLowerConnector && (
+                                <line
+                                  x1={laneX}
+                                  y1={midY + cornerR}
+                                  x2={laneX}
+                                  y2={rowHeight}
+                                  stroke={e.color}
+                                  strokeWidth={4}
+                                  strokeLinecap="butt"
+                                />
+                              )}
                             </>
                           )}
                         </>
@@ -531,9 +634,9 @@ export default function GitCommitLogTimeline({
                           {/* Horizontal line from main to near this lane */}
                           <line
                             x1={mergeToX}
-                            y1={midY}
+                            y1={endEventY}
                             x2={laneX - cornerR}
-                            y2={midY}
+                            y2={endEventY}
                             stroke={e.color}
                             strokeWidth={4}
                             strokeLinecap="butt"
@@ -542,45 +645,49 @@ export default function GitCommitLogTimeline({
                             <>
                               {/* Quarter arc: from horizontal to vertical (going down) */}
                               <path
-                                d={`M ${laneX - cornerR} ${midY}
-                                    A ${cornerR} ${cornerR} 0 0 1 ${laneX} ${midY + cornerR}`}
+                                d={`M ${laneX - cornerR} ${endEventY}
+                                    A ${cornerR} ${cornerR} 0 0 1 ${laneX} ${endEventY + cornerR}`}
                                 fill="none"
                                 stroke={e.color}
                                 strokeWidth={4}
                                 strokeLinecap="butt"
                               />
                               {/* Short vertical line from arc end to bottom of row */}
-                              <line
-                                x1={laneX}
-                                y1={midY + cornerR}
-                                x2={laneX}
-                                y2={rowHeight}
-                                stroke={e.color}
-                                strokeWidth={4}
-                                strokeLinecap="butt"
-                              />
+                              {hasLowerConnector && (
+                                <line
+                                  x1={laneX}
+                                  y1={midY + cornerR}
+                                  x2={laneX}
+                                  y2={rowHeight}
+                                  stroke={e.color}
+                                  strokeWidth={4}
+                                  strokeLinecap="butt"
+                                />
+                              )}
                             </>
                           ) : (
                             <>
                               {/* Quarter arc: from horizontal to vertical (going up) */}
                               <path
-                                d={`M ${laneX - cornerR} ${midY}
-                                    A ${cornerR} ${cornerR} 0 0 0 ${laneX} ${midY - cornerR}`}
+                                d={`M ${laneX - cornerR} ${endEventY}
+                                    A ${cornerR} ${cornerR} 0 0 0 ${laneX} ${endEventY - cornerR}`}
                                 fill="none"
                                 stroke={e.color}
                                 strokeWidth={4}
                                 strokeLinecap="butt"
                               />
                               {/* Short vertical line from top of row to arc start */}
-                              <line
-                                x1={laneX}
-                                y1={0}
-                                x2={laneX}
-                                y2={midY - cornerR}
-                                stroke={e.color}
-                                strokeWidth={4}
-                                strokeLinecap="butt"
-                              />
+                              {hasUpperConnector && (
+                                <line
+                                  x1={laneX}
+                                  y1={0}
+                                  x2={laneX}
+                                  y2={midY - cornerR}
+                                  stroke={e.color}
+                                  strokeWidth={4}
+                                  strokeLinecap="butt"
+                                />
+                              )}
                             </>
                           )}
                         </>
@@ -597,18 +704,6 @@ export default function GitCommitLogTimeline({
                             stroke="white"
                             strokeWidth={3}
                           />
-                          {e.isOngoing && (
-                            <circle
-                              cx={laneX}
-                              cy={rowHeight / 2}
-                              r={NODE_RADIUS + 6}
-                              fill="none"
-                              stroke={e.color}
-                              strokeWidth={2}
-                              opacity={0.5}
-                              className="animate-ping"
-                            />
-                          )}
                         </>
                       )}
                     </g>
@@ -619,7 +714,10 @@ export default function GitCommitLogTimeline({
             </div>
 
             {/* Entry Information */}
-            <div className="flex-1 flex items-center gap-4 px-4 min-w-0">
+            <div
+              className="flex-1 flex items-center gap-4 px-4 min-w-0"
+              style={entry ? { transform: `translateY(${entryLabelOffsetY}px)` } : undefined}
+            >
               {entry && (
                 <>
                   <div

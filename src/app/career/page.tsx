@@ -7,8 +7,8 @@ import TimelineView from '@/components/timeline/TimelineView';
 import ListView from '@/components/timeline/ListView';
 import ViewToggleButton, { ViewMode } from '@/components/ui/ViewToggleButton';
 import EventDetailModal from '@/components/ui/EventDetailModal';
-import { getCareerEntries, getTimelineEvents, getEvents } from '@/data';
-import { ExtendedCareerEntry, TimelineEventEntry, EventEntry } from '@/types';
+import { getCareerEntries, getEvents } from '@/data';
+import { ExtendedCareerEntry, EventEntry } from '@/types';
 
 // Constants
 const DEFAULT_VIEW_MODE: ViewMode = 'timeline';
@@ -41,21 +41,34 @@ function BreadcrumbNavigation() {
 // Component for page header with view toggle
 interface PageHeaderProps {
   viewMode: ViewMode;
+  isReversed: boolean;
   onToggleView: () => void;
+  onToggleReverse: () => void;
 }
 
-function PageHeader({ viewMode, onToggleView }: PageHeaderProps) {
+function PageHeader({ viewMode, isReversed, onToggleView, onToggleReverse }: PageHeaderProps) {
   return (
     <div className="mb-6">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 flex-shrink-0">
           {PAGE_TITLE}
         </h1>
-        <div className="sm:ml-auto flex-shrink-0">
+        <div className="sm:ml-auto flex-shrink-0 flex items-center gap-2 sm:gap-3">
           <ViewToggleButton
             currentView={viewMode}
             onToggle={onToggleView}
           />
+          {viewMode === 'timeline' && (
+            <button
+              onClick={onToggleReverse}
+              className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-slate-300 dark:border-gray-600 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="ブランチの順序を反転"
+              aria-pressed={isReversed}
+              type="button"
+            >
+              {isReversed ? "↓ 古い順" : "↑ 新しい順"}
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -66,29 +79,23 @@ function PageHeader({ viewMode, onToggleView }: PageHeaderProps) {
 interface ViewContentProps {
   viewMode: ViewMode;
   careerEntries: ExtendedCareerEntry[];
-  timelineEvents: TimelineEventEntry[];
   events: EventEntry[];
   isReversed: boolean;
-  onToggleReverse: () => void;
   onEventClick: (event: EventEntry, index: number, filtered: EventEntry[]) => void;
 }
 
 function ViewContent({
   viewMode,
   careerEntries,
-  timelineEvents,
   events,
   isReversed,
-  onToggleReverse,
   onEventClick
 }: ViewContentProps) {
   if (viewMode === 'timeline') {
     return (
       <TimelineView
         careerEntries={careerEntries}
-        timelineEvents={timelineEvents}
         isReversed={isReversed}
-        onToggleReverse={onToggleReverse}
       />
     );
   }
@@ -100,12 +107,10 @@ function ViewContent({
 function useCareerData() {
   return useMemo(() => {
     const careerEntries = getCareerEntries() as ExtendedCareerEntry[];
-    const timelineEvents = getTimelineEvents();
     const events = getEvents();
     
     return {
       careerEntries,
-      timelineEvents,
       events
     };
   }, []);
@@ -164,7 +169,7 @@ function useViewState() {
 
 // Main component
 export default function CareerPage() {
-  const { careerEntries, timelineEvents, events } = useCareerData();
+  const { careerEntries, events } = useCareerData();
   const {
     viewMode,
     isReversed,
@@ -187,16 +192,16 @@ export default function CareerPage() {
           
           <PageHeader 
             viewMode={viewMode}
+            isReversed={isReversed}
             onToggleView={toggleViewMode}
+            onToggleReverse={toggleReverse}
           />
           
           <ViewContent
             viewMode={viewMode}
             careerEntries={careerEntries}
-            timelineEvents={timelineEvents}
             events={events}
             isReversed={isReversed}
-            onToggleReverse={toggleReverse}
             onEventClick={handleEventClick}
           />
 

@@ -36,7 +36,7 @@ const ViewToggleButton: React.FC<ViewToggleButtonProps> = ({
         ${className}
       `}
       aria-label={`表示モードを切り替え: 現在は${isTimeline ? 'タイムライン' : 'リスト'}表示`}
-      aria-pressed={false}
+      aria-pressed={isTimeline}
       type="button"
     >
       {/* Icon */}
