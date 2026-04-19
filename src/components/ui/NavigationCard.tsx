@@ -15,28 +15,28 @@ export default function NavigationCard({
     <Link
       href={href}
       className={`
-        group block p-5 sm:p-6 
+        group block p-4 sm:p-[18px] 
         bg-white dark:bg-gray-800/80 
         border border-gray-200/80 dark:border-gray-700/50 
-        rounded-2xl
+        rounded-xl
         shadow-soft hover:shadow-soft-lg
         hover:border-blue-200 dark:hover:border-blue-800/50
         focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 
         focus:ring-offset-2 dark:focus:ring-offset-gray-900
         transition-all duration-300 ease-out
-        hover:-translate-y-1
+        hover:-translate-y-0.5
         ${className}
       `}
-      aria-describedby={descriptionId}
+      aria-describedby={description ? descriptionId : undefined}
       aria-labelledby={cardId}
     >
       <article className="h-full flex flex-col">
         {/* Header with icon and title */}
-        <header className="flex items-center gap-3 sm:gap-4 mb-4">
+        <header className="flex items-center gap-3 mb-3">
           {icon && (
             <div 
               className="
-                flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 
+                flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 
                 flex items-center justify-center
                 bg-blue-50 dark:bg-blue-900/20 rounded-xl
                 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30
@@ -49,23 +49,25 @@ export default function NavigationCard({
           )}
           <h3 
             id={cardId}
-            className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
+            className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
           >
             {title}
           </h3>
         </header>
 
         {/* Description */}
-        <p 
-          id={descriptionId}
-          className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed flex-1"
-        >
-          {description}
-        </p>
+        {description && (
+          <p 
+            id={descriptionId}
+            className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed flex-1"
+          >
+            {description}
+          </p>
+        )}
 
         {/* Arrow indicator */}
-        <div className="mt-4 sm:mt-5 flex items-center text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300">
-          <span className="text-xs sm:text-sm font-medium mr-2">詳しく見る</span>
+        <div className="mt-2 flex items-center text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300">
+          <span className="text-xs font-medium mr-2 tracking-[0.08em]">開く</span>
           <svg 
             className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform duration-300" 
             fill="none" 
@@ -91,7 +93,6 @@ export function CareerNavigationCard({ className }: { className?: string }) {
   return (
     <NavigationCard
       title="経歴"
-      description="所属の変化や経歴を時系列で確認できます。学歴から現在のポジションまでの変遷をご覧ください。"
       href="/career"
       icon={
         <svg className="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,7 +108,6 @@ export function DevExperienceNavigationCard({ className }: { className?: string 
   return (
     <NavigationCard
       title="開発経験"
-      description="使用できるプログラミング言語や技術スタック、開発実績をご紹介します。プロジェクトの詳細もご覧いただけます。"
       href="/dev-experience"
       icon={
         <svg className="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,7 +123,6 @@ export function PublicationsNavigationCard({ className }: { className?: string }
   return (
     <NavigationCard
       title="論文投稿履歴"
-      description="投稿した論文の書誌情報を一覧で確認できます。主著・共著の区別や査読の有無も表示されています。"
       href="/publications"
       icon={
         <svg className="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

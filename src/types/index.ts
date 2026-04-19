@@ -248,7 +248,7 @@ export interface PublicationListProps {
 
 export interface NavigationCardProps {
   title: string;
-  description: string;
+  description?: string;
   href: string;
   icon?: React.ReactNode;
   className?: string;
