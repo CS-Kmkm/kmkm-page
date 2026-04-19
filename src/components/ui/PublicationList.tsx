@@ -13,11 +13,19 @@ const PublicationList: React.FC<PublicationListProps> = ({ publications }) => {
   const [showCoAuthor, setShowCoAuthor] = useState(false);
   const [showPeerReviewed, setShowPeerReviewed] = useState(false);
   const [showNonPeerReviewed, setShowNonPeerReviewed] = useState(false);
+  const [showDomesticConference, setShowDomesticConference] = useState(false);
+  const [showInternationalConference, setShowInternationalConference] = useState(false);
   const [selectedPublication, setSelectedPublication] = useState<PublicationEntry | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   // Check if any filter is active
-  const hasActiveFilters = showFirstAuthor || showCoAuthor || showPeerReviewed || showNonPeerReviewed;
+  const hasActiveFilters =
+    showFirstAuthor ||
+    showCoAuthor ||
+    showPeerReviewed ||
+    showNonPeerReviewed ||
+    showDomesticConference ||
+    showInternationalConference;
 
   // Filter and sort publications
   const filteredPublications = useMemo(() => {
@@ -25,15 +33,27 @@ const PublicationList: React.FC<PublicationListProps> = ({ publications }) => {
       showFirstAuthor,
       showCoAuthor,
       showPeerReviewed,
-      showNonPeerReviewed
+      showNonPeerReviewed,
+      showDomesticConference,
+      showInternationalConference
     });
-  }, [publications, showFirstAuthor, showCoAuthor, showPeerReviewed, showNonPeerReviewed]);
+  }, [
+    publications,
+    showFirstAuthor,
+    showCoAuthor,
+    showPeerReviewed,
+    showNonPeerReviewed,
+    showDomesticConference,
+    showInternationalConference
+  ]);
 
   const handleClearFilters = () => {
     setShowFirstAuthor(false);
     setShowCoAuthor(false);
     setShowPeerReviewed(false);
     setShowNonPeerReviewed(false);
+    setShowDomesticConference(false);
+    setShowInternationalConference(false);
   };
 
   const handlePublicationClick = (publication: PublicationEntry) => {
@@ -54,10 +74,14 @@ const PublicationList: React.FC<PublicationListProps> = ({ publications }) => {
         showCoAuthor={showCoAuthor}
         showPeerReviewed={showPeerReviewed}
         showNonPeerReviewed={showNonPeerReviewed}
+        showDomesticConference={showDomesticConference}
+        showInternationalConference={showInternationalConference}
         onToggleFirstAuthor={() => setShowFirstAuthor(!showFirstAuthor)}
         onToggleCoAuthor={() => setShowCoAuthor(!showCoAuthor)}
         onTogglePeerReviewed={() => setShowPeerReviewed(!showPeerReviewed)}
         onToggleNonPeerReviewed={() => setShowNonPeerReviewed(!showNonPeerReviewed)}
+        onToggleDomesticConference={() => setShowDomesticConference(!showDomesticConference)}
+        onToggleInternationalConference={() => setShowInternationalConference(!showInternationalConference)}
         onClearFilters={handleClearFilters}
         hasActiveFilters={hasActiveFilters}
         resultCount={filteredPublications.length}

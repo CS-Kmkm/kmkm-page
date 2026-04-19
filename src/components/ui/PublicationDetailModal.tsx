@@ -2,7 +2,11 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { PublicationDetailModalProps } from '@/types';
-import { getPublicationTypeLabel, getPublicationTypeColor } from '@/lib/publications/utils';
+import {
+  getPublicationTypeLabel,
+  getPublicationTypeColor,
+  shouldShowPublicationTypeBadge
+} from '@/lib/publications/utils';
 
 const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
   publication,
@@ -128,13 +132,15 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
             {/* Badges */}
             <div className="flex flex-wrap items-center gap-2">
               {/* Publication Type Badge */}
-              <span
-                className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getPublicationTypeColor(
-                  publication.publicationType
-                )}`}
-              >
-                {getPublicationTypeLabel(publication.publicationType)}
-              </span>
+              {shouldShowPublicationTypeBadge(publication) && (
+                <span
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getPublicationTypeColor(
+                    publication.publicationType
+                  )}`}
+                >
+                  {getPublicationTypeLabel(publication.publicationType, publication.conferenceScope)}
+                </span>
+              )}
 
               {/* First Author Badge */}
               {publication.isFirstAuthor && (

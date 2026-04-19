@@ -2,7 +2,11 @@
 
 import React from 'react';
 import { PublicationItemProps } from '@/types';
-import { getPublicationTypeLabel, getPublicationTypeColor } from '@/lib/publications/utils';
+import {
+  getPublicationTypeLabel,
+  getPublicationTypeColor,
+  shouldShowPublicationTypeBadge
+} from '@/lib/publications/utils';
 
 const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick }) => {
   const formatAuthors = (authors: string[], isFirstAuthor: boolean) => {
@@ -58,13 +62,15 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
       {/* Badges */}
       <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
         {/* Publication Type Badge */}
-        <span
-          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPublicationTypeColor(
-            publication.publicationType
-          )}`}
-        >
-          {getPublicationTypeLabel(publication.publicationType)}
-        </span>
+        {shouldShowPublicationTypeBadge(publication) && (
+          <span
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPublicationTypeColor(
+              publication.publicationType
+            )}`}
+          >
+            {getPublicationTypeLabel(publication.publicationType, publication.conferenceScope)}
+          </span>
+        )}
 
         {/* First Author Badge */}
         {publication.isFirstAuthor && (

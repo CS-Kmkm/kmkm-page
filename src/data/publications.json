@@ -15,7 +15,8 @@
       "toBeAppear": true,
       "isFirstAuthor": true,
       "isPeerReviewed": true,
-      "publicationType": "conference"
+      "publicationType": "conference",
+      "conferenceScope": "international"
     },
     {
       "id": "pub-002",
@@ -33,7 +34,8 @@
       "url": "https://www.anlp.jp/proceedings/annual_meeting/2025/pdf_dir/P10-10.pdf",
       "isFirstAuthor": true,
       "isPeerReviewed": false,
-      "publicationType": "conference"
+      "publicationType": "conference",
+      "conferenceScope": "domestic"
     },
     {
       "id": "pub-003",
@@ -50,7 +52,8 @@
       "toBeAppear": true,
       "isFirstAuthor": false,
       "isPeerReviewed": false,
-      "publicationType": "conference"
+      "publicationType": "conference",
+      "conferenceScope": "domestic"
     },
     {
       "id": "pub-004",
@@ -65,7 +68,8 @@
       "toBeAppear": true,
       "isFirstAuthor": true,
       "isPeerReviewed": false,
-      "publicationType": "conference"
+      "publicationType": "conference",
+      "conferenceScope": "domestic"
     },
         {
       "id": "pub-005",
@@ -80,7 +84,8 @@
       "toBeAppear": true,
       "isFirstAuthor": false,
       "isPeerReviewed": false,
-      "publicationType": "conference"
+      "publicationType": "conference",
+      "conferenceScope": "domestic"
     }
   ]
 }

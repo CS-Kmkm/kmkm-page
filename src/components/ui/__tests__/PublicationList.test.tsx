@@ -141,6 +141,121 @@ describe('PublicationList', () => {
     expect(screen.getByText('共著者')).toBeInTheDocument()
     expect(screen.getByText('査読あり')).toBeInTheDocument()
     expect(screen.getByText('査読なし')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '国内会議' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '国際会議' })).toBeInTheDocument()
+  })
+
+  it('filters publications by domestic conference', () => {
+    const conferenceScopePublications: PublicationEntry[] = [
+      {
+        id: 'pub-a',
+        title: 'Domestic Conference Paper',
+        authors: ['Author A'],
+        venue: 'NLP Conference',
+        year: 2024,
+        isFirstAuthor: true,
+        isPeerReviewed: false,
+        publicationType: 'conference',
+        conferenceScope: 'domestic'
+      },
+      {
+        id: 'pub-b',
+        title: 'International Conference Paper',
+        authors: ['Author B'],
+        venue: 'ICML',
+        year: 2024,
+        isFirstAuthor: false,
+        isPeerReviewed: true,
+        publicationType: 'conference',
+        conferenceScope: 'international'
+      },
+      {
+        id: 'pub-c',
+        title: 'Journal Paper',
+        authors: ['Author C'],
+        venue: 'Journal X',
+        year: 2023,
+        isFirstAuthor: true,
+        isPeerReviewed: true,
+        publicationType: 'journal'
+      }
+    ]
+
+    render(<PublicationList publications={conferenceScopePublications} />)
+
+    fireEvent.click(screen.getByRole('button', { name: '国内会議' }))
+
+    expect(screen.getByText('Domestic Conference Paper')).toBeInTheDocument()
+    expect(screen.queryByText('International Conference Paper')).not.toBeInTheDocument()
+    expect(screen.queryByText('Journal Paper')).not.toBeInTheDocument()
+    expect(screen.getByText('1件 / 3件の論文を表示')).toBeInTheDocument()
+  })
+
+  it('does not display domestic conference badge label', () => {
+    const conferenceScopePublications: PublicationEntry[] = [
+      {
+        id: 'pub-a',
+        title: 'Domestic Conference Paper',
+        authors: ['Author A'],
+        venue: 'NLP Conference',
+        year: 2024,
+        isFirstAuthor: true,
+        isPeerReviewed: false,
+        publicationType: 'conference',
+        conferenceScope: 'domestic'
+      }
+    ]
+
+    render(<PublicationList publications={conferenceScopePublications} />)
+
+    // "国内会議" はフィルタボタンには表示されるが、論文種別バッジには表示しない
+    expect(screen.getAllByText('国内会議')).toHaveLength(1)
+  })
+
+  it('filters publications by international conference', () => {
+    const conferenceScopePublications: PublicationEntry[] = [
+      {
+        id: 'pub-a',
+        title: 'Domestic Conference Paper',
+        authors: ['Author A'],
+        venue: 'NLP Conference',
+        year: 2024,
+        isFirstAuthor: true,
+        isPeerReviewed: false,
+        publicationType: 'conference',
+        conferenceScope: 'domestic'
+      },
+      {
+        id: 'pub-b',
+        title: 'International Conference Paper',
+        authors: ['Author B'],
+        venue: 'ICML',
+        year: 2024,
+        isFirstAuthor: false,
+        isPeerReviewed: true,
+        publicationType: 'conference',
+        conferenceScope: 'international'
+      },
+      {
+        id: 'pub-c',
+        title: 'Journal Paper',
+        authors: ['Author C'],
+        venue: 'Journal X',
+        year: 2023,
+        isFirstAuthor: true,
+        isPeerReviewed: true,
+        publicationType: 'journal'
+      }
+    ]
+
+    render(<PublicationList publications={conferenceScopePublications} />)
+
+    fireEvent.click(screen.getByRole('button', { name: '国際会議' }))
+
+    expect(screen.queryByText('Domestic Conference Paper')).not.toBeInTheDocument()
+    expect(screen.getByText('International Conference Paper')).toBeInTheDocument()
+    expect(screen.queryByText('Journal Paper')).not.toBeInTheDocument()
+    expect(screen.getByText('1件 / 3件の論文を表示')).toBeInTheDocument()
   })
 
   it('filters publications correctly when filter is selected', () => {
