@@ -62,12 +62,12 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
    * Get appropriate ARIA label based on current theme
    */
   const getAriaLabel = (): string => {
-    if (isLoading) return 'Loading theme toggle';
+    if (isLoading) return 'テーマ切替を読み込み中';
     
-    const currentMode = resolvedTheme === 'dark' ? 'dark' : 'light';
-    const nextMode = resolvedTheme === 'dark' ? 'light' : 'dark';
+    const currentMode = resolvedTheme === 'dark' ? 'ダーク' : 'ライト';
+    const nextMode = resolvedTheme === 'dark' ? 'ライト' : 'ダーク';
     
-    return `Switch from ${currentMode} to ${nextMode} mode. Current theme: ${theme}`;
+    return `${currentMode}モードから${nextMode}モードへ切り替え`;
   };
 
   /**
@@ -172,7 +172,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
       
       {showLabel && (
         <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-          {isLoading ? 'Loading...' : `${resolvedTheme === 'dark' ? 'Dark' : 'Light'} mode`}
+          {isLoading ? '読み込み中...' : `${resolvedTheme === 'dark' ? 'ダーク' : 'ライト'}モード`}
         </span>
       )}
     </div>

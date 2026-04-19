@@ -33,28 +33,27 @@ export default function CareerError({
             />
           </svg>
         </div>
-        
         <h2 className="text-xl font-semibold text-gray-900 mb-2">
-          Failed to load career information
+          経歴情報を読み込めませんでした
         </h2>
-        
+
         <p className="text-gray-600 mb-6">
-          We couldn&apos;t load the career timeline. This might be due to a temporary issue.
+          一時的な問題により、経歴タイムラインを表示できませんでした。時間をおいて再度お試しください。
         </p>
-        
+
         <div className="space-x-4">
           <button
             onClick={reset}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
           >
-            Try again
+            再読み込み
           </button>
           
           <Link
             href="/"
             className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
           >
-            Go back home
+            トップへ戻る
           </Link>
         </div>
       </div>

@@ -9,12 +9,12 @@
  * Empty state messages
  */
 export const EMPTY_STATE_MESSAGES = {
-  noUpdates: 'No recent updates available.',
-  noEvents: 'No events found.',
-  noPublications: 'No publications found.',
-  noProjects: 'No projects found.',
-  noResults: 'No results found.',
-  noData: 'No data available.',
+  noUpdates: '公開中の更新情報はまだありません。',
+  noEvents: '該当するイベントはありません。',
+  noPublications: '公開中の論文はありません。',
+  noProjects: '公開中のプロジェクトはありません。',
+  noResults: '該当する結果はありません。',
+  noData: '表示できるデータがありません。',
 } as const;
 
 /**
@@ -53,10 +53,10 @@ export const ERROR_MESSAGES = {
  * Loading messages
  */
 export const LOADING_MESSAGES = {
-  loading: 'Loading...',
-  loadingData: 'Loading data...',
-  loadingContent: 'Loading content...',
-  pleaseWait: 'Please wait...',
+  loading: '読み込み中...',
+  loadingData: 'データを読み込み中...',
+  loadingContent: 'コンテンツを読み込み中...',
+  pleaseWait: 'しばらくお待ちください...',
 } as const;
 
 /**
@@ -74,14 +74,14 @@ export const COUNT_MESSAGES = {
    * Format: "3 more items"
    */
   moreItems: (count: number): string => {
-    return `${count} more ${count === 1 ? 'item' : 'items'}`;
+    return `ほか${count}件`;
   },
   
   /**
    * Format: "Showing 10 of 50"
    */
   itemsShowing: (showing: number, total: number): string => {
-    return `Showing ${showing} of ${total}`;
+    return `${total}件中${showing}件を表示`;
   },
   
   /**
@@ -95,7 +95,7 @@ export const COUNT_MESSAGES = {
    * Format: "5 results"
    */
   resultsCount: (count: number): string => {
-    return `${count} ${count === 1 ? 'result' : 'results'}`;
+    return `${count}件`;
   },
 } as const;
 

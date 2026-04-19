@@ -39,7 +39,7 @@ test.describe('Accessibility Tests', () => {
       }
 
       // Check for skip links
-      const skipLink = page.getByRole('link', { name: 'Skip to main content' }).first();
+      const skipLink = page.getByRole('link', { name: 'メインコンテンツへスキップ' }).first();
       await expect(skipLink).toBeVisible();
       await skipLink.focus();
       await expect(skipLink).toBeFocused();
@@ -116,13 +116,13 @@ test.describe('Accessibility Tests', () => {
     await page.goto('/non-existent-page');
 
     // Check that 404 page is accessible
-    await expect(page.getByRole('heading', { name: /404.*Not Found/ })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /404.*ページが見つかりません/ })).toBeVisible();
 
     // Check that there are navigation options
-    await expect(page.getByRole('link', { name: /Go back home/ })).toBeVisible();
+    await expect(page.getByRole('link', { name: /トップへ戻る/ })).toBeVisible();
 
     // Test keyboard navigation on 404 page
-    const homeLink = page.getByRole('link', { name: /Go back home/ });
+    const homeLink = page.getByRole('link', { name: /トップへ戻る/ });
     await homeLink.focus();
     await expect(homeLink).toBeFocused();
   });

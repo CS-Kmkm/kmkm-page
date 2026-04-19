@@ -1,4 +1,20 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Setup
+
+This is a Next.js portfolio site.
+
+Create an `.env.local` file before deploying:
+
+```bash
+cp .env.example .env.local
+```
+
+Set the following value in `.env.local`:
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://your-production-domain.example
+```
+
+Without `NEXT_PUBLIC_SITE_URL`, canonical URLs, sitemap entries, and robots sitemap links are intentionally omitted to avoid publishing incorrect metadata.
 
 ## Getting Started
 
@@ -15,10 +31,6 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
 

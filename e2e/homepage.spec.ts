@@ -45,7 +45,7 @@ test.describe('Homepage', () => {
     // Test navigation to publications page
     await page.getByRole('link', { name: /論文/ }).first().click();
     await expect(page).toHaveURL('/publications');
-    await expect(page.getByRole('heading', { name: 'Publications', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '論文・発表', exact: true })).toBeVisible();
   });
 
   test('should display updates list', async ({ page }) => {
@@ -59,7 +59,7 @@ test.describe('Homepage', () => {
 
   test('should have accessible navigation', async ({ page }) => {
     // Check skip link exists and can be focused
-    const skipLink = page.getByRole('link', { name: 'Skip to main content' }).first();
+    const skipLink = page.getByRole('link', { name: 'メインコンテンツへスキップ' }).first();
     await skipLink.focus();
     await expect(skipLink).toBeFocused();
     

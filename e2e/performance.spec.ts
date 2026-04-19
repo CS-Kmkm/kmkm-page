@@ -130,7 +130,7 @@ test.describe('Performance Tests', () => {
     expect(loadTime).toBeLessThan(3000);
 
     // Check that publications page loads
-    await expect(page.getByRole('heading', { name: 'Publications' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '論文・発表' })).toBeVisible();
 
     // Test filtering performance
     const filterStartTime = Date.now();

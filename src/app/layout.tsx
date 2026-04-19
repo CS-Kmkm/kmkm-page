@@ -4,6 +4,7 @@ import "./globals.css";
 import { defaultMetadata } from "@/lib/metadata";
 import WebVitals from "@/components/common/WebVitals";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { siteConfig } from "@/lib/site";
 
 // Optimize font loading with display swap and preload
 const inter = Inter({
@@ -15,7 +16,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   ...defaultMetadata,
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://portfolio.vercel.app'),
+  metadataBase: siteConfig.siteUrl ? new URL(siteConfig.siteUrl) : undefined,
 };
 
 export const viewport: Viewport = {
@@ -35,23 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <head>
-        {/* Preconnect to external domains for performance */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
-        {/* DNS prefetch for better performance */}
-        <link rel="dns-prefetch" href="https://vercel.com" />
-        
-        {/* Favicon and app icons */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        
-        {/* Web app manifest */}
-        <link rel="manifest" href="/manifest.json" />
-      </head>
+    <html lang={siteConfig.lang} className={inter.variable} suppressHydrationWarning>
       <body className={`font-sans antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200`}>
         <ThemeProvider>
           {children}

@@ -7,7 +7,7 @@ test.describe('Publications Page', () => {
 
   test('should load and display publications list', async ({ page }) => {
     // Check page heading
-    await expect(page.getByRole('heading', { name: 'Publications', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '論文・発表', exact: true })).toBeVisible();
     
     // Check that filter controls are displayed
     await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
@@ -67,10 +67,10 @@ test.describe('Publications Page', () => {
     // Check that modal opens
     const modal = page.getByRole('dialog');
     await expect(modal).toBeVisible();
-    await expect(page.getByText('Publication Details')).toBeVisible();
+    await expect(page.getByText('論文詳細')).toBeVisible();
     
     // Close modal
-    const closeButton = page.getByRole('button', { name: 'Close modal' });
+    const closeButton = page.getByRole('button', { name: 'モーダルを閉じる' });
     await expect(closeButton).toBeVisible();
     await closeButton.click();
     
@@ -115,7 +115,7 @@ test.describe('Publications Page', () => {
     await page.waitForLoadState('networkidle');
     
     // Check that content is still accessible
-    await expect(page.getByRole('heading', { name: 'Publications', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '論文・発表', exact: true })).toBeVisible();
     
     // Check that filter buttons are visible
     await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
@@ -137,7 +137,7 @@ test.describe('Publications Page', () => {
     await page.waitForLoadState('networkidle');
     
     // Check that content is visible
-    await expect(page.getByRole('heading', { name: 'Publications', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '論文・発表', exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
     
     // Check no horizontal scroll
@@ -153,7 +153,7 @@ test.describe('Publications Page', () => {
     await page.waitForLoadState('networkidle');
     
     // Check that all content is visible
-    await expect(page.getByRole('heading', { name: 'Publications', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '論文・発表', exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
     
     // Check that publications are displayed
@@ -174,10 +174,10 @@ test.describe('Publications Page', () => {
     // Check that modal is displayed
     const modal = page.getByRole('dialog');
     await expect(modal).toBeVisible();
-    await expect(page.getByText('Publication Details')).toBeVisible();
+    await expect(page.getByText('論文詳細')).toBeVisible();
     
     // Close modal
-    const closeButton = page.getByRole('button', { name: 'Close modal' });
+    const closeButton = page.getByRole('button', { name: 'モーダルを閉じる' });
     await closeButton.click();
     await page.waitForTimeout(300);
     

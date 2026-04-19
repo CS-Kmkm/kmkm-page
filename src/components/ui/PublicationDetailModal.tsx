@@ -81,13 +81,13 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
         {/* Header with Close Button */}
         <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-start z-10">
           <h2 id="publication-detail-title" className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 pr-8">
-            Publication Details
+            論文詳細
           </h2>
           <button
             ref={closeButtonRef}
             onClick={onClose}
             className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 rounded-full p-1 min-h-[44px] min-w-[44px] flex items-center justify-center"
-            aria-label="Close modal"
+            aria-label="モーダルを閉じる"
           >
             <svg
               className="w-6 h-6"
@@ -139,14 +139,14 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
               {/* First Author Badge */}
               {publication.isFirstAuthor && (
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
-                  First Author
+                  第一著者
                 </span>
               )}
 
               {/* Peer Reviewed Badge */}
               {publication.isPeerReviewed && (
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800">
-                  Peer Reviewed
+                  査読あり
                 </span>
               )}
             </div>
@@ -174,7 +174,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
                       d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                     />
                   </svg>
-                  View DOI
+                  DOIを開く
                 </a>
               )}
               {publication.url && (
@@ -198,7 +198,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
                       d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                     />
                   </svg>
-                  View PDF
+                  PDFを開く
                 </a>
               )}
             </div>
@@ -207,7 +207,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
           {/* Abstract Section */}
           {publication.abstract && (
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
-              <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">Abstract</h4>
+              <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">概要</h4>
               <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
                 {publication.abstract}
               </p>
@@ -217,10 +217,10 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
           {/* Image Section */}
           {publication.imageUrl && !imageError && (
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
-              <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">Figure</h4>
+              <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">図</h4>
               <img
                 src={publication.imageUrl}
-                alt={publication.imageAlt || 'Publication figure'}
+                alt={publication.imageAlt || '論文の関連図'}
                 onError={() => setImageError(true)}
                 className="w-full rounded-lg border border-gray-200 dark:border-gray-700"
               />
