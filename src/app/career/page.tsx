@@ -95,6 +95,7 @@ function ViewContent({
     return (
       <TimelineView
         careerEntries={careerEntries}
+        events={events}
         isReversed={isReversed}
       />
     );

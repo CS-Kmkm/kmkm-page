@@ -11,8 +11,7 @@ import { EventListModalProps, YearEventGroup } from '@/types';
 import { formatEventDate } from '@/lib/career/eventUtils';
 import { Modal } from './Modal';
 import { getEventCategoryConfig } from '@/lib/constants/categories';
-import { UI_LABELS, ARIA_LABELS, MESSAGE_LABELS } from '@/lib/constants/labels';
-import { COUNT_MESSAGES, INSTRUCTION_MESSAGES } from '@/lib/constants/messages';
+import { ARIA_LABELS } from '@/lib/constants/labels';
 import { getBadgeClasses } from '@/lib/ui/listItemStyles';
 import { tokens } from '@/lib/theme/tokens';
 
@@ -95,29 +94,10 @@ export default function EventListModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Events in ${yearGroup.year}`}
-      description={COUNT_MESSAGES.eventsInYear(yearGroup.events.length, parseInt(yearGroup.year))}
+      title={`${yearGroup.year}年の出来事`}
       size="md"
       className={className}
-      footer={
-        <div className="flex items-center justify-between w-full">
-          <p className={`text-xs ${tokens.text.muted}`}>
-            {INSTRUCTION_MESSAGES.useArrowKeysAndEnter}
-          </p>
-          <button
-            onClick={onClose}
-            className={`px-4 py-2 text-sm font-medium ${tokens.text.secondary} ${tokens.surface.primary} border ${tokens.border.default} ${tokens.radius.md} ${tokens.surface.secondary.replace('bg-', 'hover:bg-')} ${tokens.focus.ringFull} ${tokens.transition.colors}`}
-          >
-            {UI_LABELS.close}
-          </button>
-        </div>
-      }
     >
-      {/* Description */}
-      <p className={`text-sm ${tokens.text.secondary} mb-4`}>
-        {COUNT_MESSAGES.eventsInYear(yearGroup.events.length, parseInt(yearGroup.year))}. {INSTRUCTION_MESSAGES.clickEventForDetails}
-      </p>
-
       {/* Event List */}
       <div className="space-y-2 max-h-96 overflow-y-auto">
         <ul role="list" className="space-y-2">
