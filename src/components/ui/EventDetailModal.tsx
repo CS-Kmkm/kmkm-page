@@ -121,7 +121,7 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
       </div>
 
       {/* Description */}
-      <div className={`${tokens.text.secondary} leading-relaxed mb-6`}>
+      <div className={`${tokens.text.secondary} leading-relaxed mb-6 whitespace-pre-line`}>
         {event.description}
       </div>
 

@@ -64,7 +64,7 @@ export default function EventModal({
       )}
 
       {/* Description */}
-      <div className={`${tokens.text.secondary} leading-relaxed`}>
+      <div className={`${tokens.text.secondary} leading-relaxed whitespace-pre-line`}>
         {event.description}
       </div>
     </Modal>
