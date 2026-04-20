@@ -49,17 +49,17 @@ export interface ModalStyleConfig {
 export const modalStyles: ModalStyleConfig = {
   backdrop: {
     base: 'fixed inset-0 z-50 flex items-center justify-center p-4',
-    blur: 'backdrop-blur-sm',
-    lightMode: 'bg-white/30',
-    darkMode: 'dark:bg-black/50',
+    blur: 'backdrop-blur-md',
+    lightMode: 'bg-slate-100/45',
+    darkMode: 'dark:bg-slate-900/55',
   },
   container: {
-    base: `relative ${tokens.radius.lg} overflow-y-auto`,
+    base: `relative min-w-0 ${tokens.radius.lg} overflow-y-auto`,
     background: tokens.surface.primary,
     border: '',
     shadow: tokens.shadow.xl,
     padding: 'p-6',
-    maxWidth: 'max-w-2xl w-full',
+    maxWidth: 'w-[min(calc(100vw-2rem),42rem)]',
     maxHeight: 'max-h-[90vh]',
   },
   header: {
@@ -157,11 +157,7 @@ export const supportsBackdropFilter = (): boolean => {
  */
 export const getBackdropClassesWithFallback = (): string => {
   const baseClasses = `${modalStyles.backdrop.base} ${modalStyles.backdrop.lightMode} ${modalStyles.backdrop.darkMode}`;
-  
-  if (supportsBackdropFilter()) {
-    return `${baseClasses} ${modalStyles.backdrop.blur}`;
-  }
-  
-  // Fallback: use darker background without blur
-  return `${baseClasses} bg-black/60 dark:bg-black/70`;
+
+  // Always apply blur classes so modal backdrops stay consistent across pages.
+  return `${baseClasses} ${modalStyles.backdrop.blur}`;
 };
