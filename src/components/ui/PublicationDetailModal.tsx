@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { PublicationDetailModalProps } from '@/types';
+import { getBackdropClassesWithFallback } from '@/lib/ui/modalStyles';
 import {
   getPublicationTypeLabel,
   getPublicationTypeColor,
@@ -71,7 +72,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black/50 p-0 sm:p-4"
+      className={`${getBackdropClassesWithFallback()} p-0 sm:p-4`}
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { FilterModalProps, PublicationFilters } from '@/types';
+import { getBackdropClassesWithFallback } from '@/lib/ui/modalStyles';
 
 const FilterModal: React.FC<FilterModalProps> = ({
   isOpen,
@@ -85,7 +86,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+      className={getBackdropClassesWithFallback()}
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
