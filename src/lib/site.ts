@@ -37,8 +37,7 @@ export const navigationItems: NavigationItem[] = [
 ];
 
 export const footerLinks: FooterLink[] = [
-  { href: '/privacy', label: 'プライバシーポリシー' },
-  { href: '/terms', label: '利用条件' },
+  // Footer policy links are intentionally hidden to keep the footer compact.
 ];
 
 const socialLinkLabels: Record<SocialLink['platform'], string> = {
@@ -51,7 +50,7 @@ const socialLinkLabels: Record<SocialLink['platform'], string> = {
   website: '研究室サイト',
 };
 
-const footerSocialPlatforms: SocialLink['platform'][] = ['github', 'twitter', 'orcid', 'website'];
+const footerSocialPlatforms: SocialLink['platform'][] = ['github', 'twitter', 'orcid'];
 
 export const footerSocialLinks = profile.socialLinks
   .filter((link) => footerSocialPlatforms.includes(link.platform))
