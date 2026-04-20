@@ -15,7 +15,7 @@ export default function Home() {
         <div className="w-[90%] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 sm:pt-4 lg:pt-6 pb-8 sm:pb-10 lg:pb-14">
           <HeroSection profile={profile} />
 
-          <div className="mt-8">
+          <div className="mt-4 sm:mt-5">
             <UpdatesSection updates={recentUpdates} />
           </div>
         </div>
