@@ -538,13 +538,16 @@ export default function GitCommitLogTimeline({
           : infoAreaWidth >= 460
             ? 20
             : 14;
+        const shouldShowFullRole = shouldShowFullOrganization;
         const organizationText = entry
           ? (shouldShowFullOrganization
             ? entry.organization
             : truncateText(entry.organization, organizationMaxLength))
           : '';
         const roleText = entry
-          ? truncateText(entry.role, roleMaxLength)
+          ? (shouldShowFullRole
+            ? entry.role
+            : truncateText(entry.role, roleMaxLength))
           : '';
         const yearGroup = yearEventGroups.get(row.year);
         const hasYearEvents = Boolean(yearGroup && yearGroup.events.length > 0);
@@ -924,7 +927,11 @@ export default function GitCommitLogTimeline({
                         {organizationText}
                       </span>
                       <span
-                        className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[6.5rem] sm:max-w-[10rem] leading-tight"
+                        className={`text-xs text-gray-500 dark:text-gray-400 leading-tight ${
+                          shouldShowFullRole
+                            ? 'whitespace-nowrap'
+                            : 'truncate max-w-[6.5rem] sm:max-w-[10rem]'
+                        }`}
                         title={entry.role}
                       >
                         {roleText}
