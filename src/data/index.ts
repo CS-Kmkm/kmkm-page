@@ -200,7 +200,7 @@ export const getTimelineEvents = (): TimelineEventEntry[] => {
         title: `論文発表: ${pub.venue}`,
         description: pub.isFirstAuthor
           ? `「${pub.title}」を第一著者として発表`
-          : `「${pub.title}」を投稿`,
+          : `「${pub.title}」を共著者として執筆`,
         date: pub.date,
         year: pubYear.toString(),
         category: '研究成果'
@@ -363,7 +363,7 @@ export const getEvents = (): EventEntry[] => {
         title: `${pub.venue} 論文発表`,
         description: pub.isFirstAuthor
           ? `「${pub.title}」を第一著者として発表`
-          : `「${pub.title}」を投稿`,
+          : `「${pub.title}」を共著者として執筆`,
         date: pub.date,
         year: pubYear,
         category: EventCategory.PUBLICATION,
@@ -436,8 +436,8 @@ export const getEvents = (): EventEntry[] => {
       location = 'ラクスル';
     } else if (project.name.includes('BIPROGY')) {
       location = 'BIPROGY';
-    } else if (project.name.includes('MonotaRo')) {
-      location = 'MonotaRo';
+    } else if (project.name.includes('MonotaRO')) {
+      location = 'MonotaRO';
     } else if (project.name.includes('JPHACKS')) {
       location = 'ハッカソン会場';
     } else if (project.name.includes('技育祭')) {
