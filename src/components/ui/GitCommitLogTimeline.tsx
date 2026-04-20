@@ -38,6 +38,7 @@ const LANE_WIDTH = 32;
 const LEFT_PADDING = 28;
 const YEAR_WIDTH = 108;
 const MAIN_X = LEFT_PADDING;
+const STATUS_COLUMN_WIDTH = 124;
 
 interface GitCommitLogTimelineProps {
   entries: ExtendedCareerEntry[];
@@ -322,13 +323,24 @@ function buildRows(entries: ProcessedEntry[], isReversed: boolean, eventYears: S
   return rows;
 }
 
-function formatDateRange(startDate: string, endDate: string | null): string {
-  const start = new Date(startDate);
-  const startStr = `${start.getFullYear()}.${String(start.getMonth() + 1).padStart(2, '0')}`;
-  if (!endDate) return `${startStr} - 現在`;
-  const end = new Date(endDate);
-  const endStr = `${end.getFullYear()}.${String(end.getMonth() + 1).padStart(2, '0')}`;
-  return `${startStr} - ${endStr}`;
+function formatYearMonth(dateStr: string): string {
+  const date = new Date(dateStr);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function formatDateRangeLabel(startDate: string, endDate: string | null): string {
+  const startStr = formatYearMonth(startDate);
+  if (!endDate) {
+    return `${startStr}-現在`;
+  }
+  return `${startStr}-${formatYearMonth(endDate)}`;
+}
+
+function truncateText(text: string, maxLength: number): string {
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return `${text.slice(0, Math.max(0, maxLength - 3)).trimEnd()}...`;
 }
 
 export default function GitCommitLogTimeline({
@@ -342,6 +354,7 @@ export default function GitCommitLogTimeline({
   const clipBaseId = useId();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [resolvedRowHeight, setResolvedRowHeight] = useState(rowHeight);
+  const [containerWidth, setContainerWidth] = useState(0);
   const [isEventListModalOpen, setIsEventListModalOpen] = useState(false);
   const [selectedYearGroup, setSelectedYearGroup] = useState<YearEventGroup | null>(null);
   const [isEventDetailModalOpen, setIsEventDetailModalOpen] = useState(false);
@@ -420,18 +433,21 @@ export default function GitCommitLogTimeline({
   }, [processedEntries]);
 
   useEffect(() => {
-    if (!fitToViewport) {
-      setResolvedRowHeight(rowHeight);
-      return;
-    }
-
-    const updateRowHeight = () => {
-      if (!containerRef.current || rows.length === 0) {
+    const updateLayoutMetrics = () => {
+      if (!containerRef.current) {
+        setContainerWidth(0);
         setResolvedRowHeight(rowHeight);
         return;
       }
 
       const rect = containerRef.current.getBoundingClientRect();
+      setContainerWidth(rect.width);
+
+      if (!fitToViewport || rows.length === 0) {
+        setResolvedRowHeight(rowHeight);
+        return;
+      }
+
       const footerHeight = document.querySelector('footer')?.getBoundingClientRect().height ?? 0;
       const availableHeight = window.innerHeight - rect.top - footerHeight - viewportBottomOffset;
       if (availableHeight <= 0) {
@@ -443,15 +459,25 @@ export default function GitCommitLogTimeline({
       setResolvedRowHeight(Math.max(MIN_FIT_ROW_HEIGHT, fittedHeight));
     };
 
-    updateRowHeight();
-    window.addEventListener('resize', updateRowHeight);
+    updateLayoutMetrics();
+    window.addEventListener('resize', updateLayoutMetrics);
+
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined' && containerRef.current) {
+      resizeObserver = new ResizeObserver(() => {
+        updateLayoutMetrics();
+      });
+      resizeObserver.observe(containerRef.current);
+    }
 
     return () => {
-      window.removeEventListener('resize', updateRowHeight);
+      window.removeEventListener('resize', updateLayoutMetrics);
+      resizeObserver?.disconnect();
     };
   }, [fitToViewport, rowHeight, rows.length, viewportBottomOffset]);
 
   const entryLabelOffsetY = resolvedRowHeight * 1.5 * (isReversed ? -1 : 1) + resolvedRowHeight * 0.5;
+  const isCompactRow = resolvedRowHeight <= 24;
 
   const openYearEventModal = (year: number) => {
     const yearGroup = yearEventGroups.get(year);
@@ -486,6 +512,40 @@ export default function GitCommitLogTimeline({
       {rows.map((row, rowIndex) => {
         const clipId = `${clipBaseId}-row-clip-${rowIndex}`;
         const entry = row.entry;
+        const startDateText = entry
+          ? formatYearMonth(entry.startDate)
+          : '';
+        const endDateText = entry?.endDate
+          ? formatYearMonth(entry.endDate)
+          : '';
+        const fullDateText = entry
+          ? formatDateRangeLabel(entry.startDate, entry.endDate)
+          : '';
+        const trailingReservedWidth = entry
+          ? STATUS_COLUMN_WIDTH
+          : 96;
+        const infoAreaWidth = Math.max(containerWidth - YEAR_WIDTH - graphWidth - trailingReservedWidth, 0);
+        const shouldShowFullOrganization = infoAreaWidth >= 560;
+        const organizationMaxLength = isCompactRow
+          ? 16
+          : infoAreaWidth >= 460
+            ? 30
+            : infoAreaWidth >= 320
+              ? 24
+              : 18;
+        const roleMaxLength = isCompactRow
+          ? 9
+          : infoAreaWidth >= 460
+            ? 20
+            : 14;
+        const organizationText = entry
+          ? (shouldShowFullOrganization
+            ? entry.organization
+            : truncateText(entry.organization, organizationMaxLength))
+          : '';
+        const roleText = entry
+          ? truncateText(entry.role, roleMaxLength)
+          : '';
         const yearGroup = yearEventGroups.get(row.year);
         const hasYearEvents = Boolean(yearGroup && yearGroup.events.length > 0);
         const showYearEventButton = hasYearEvents && row.showYear;
@@ -844,33 +904,52 @@ export default function GitCommitLogTimeline({
 
             {/* Entry Information */}
             <div
-              className="flex-1 flex items-center gap-4 px-4 min-w-0"
+              className="flex-1 flex items-center gap-4 pl-4 pr-0 min-w-0"
               style={entry ? { transform: `translateY(${entryLabelOffsetY}px)` } : undefined}
             >
               {entry && (
                 <>
                   <div
-                    className="w-1.5 h-10 rounded-full flex-shrink-0"
+                    className={`w-1.5 ${isCompactRow ? 'h-6' : 'h-10'} rounded-full flex-shrink-0`}
                     style={{ backgroundColor: entry.color }}
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-baseline gap-2 flex-wrap">
-                      <span className="font-semibold text-gray-900 dark:text-gray-100">
-                        {entry.organization}
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span
+                        className={`font-semibold text-gray-900 dark:text-gray-100 leading-tight min-w-0 ${
+                          shouldShowFullOrganization ? 'whitespace-nowrap' : 'truncate'
+                        }`}
+                        title={entry.organization}
+                      >
+                        {organizationText}
                       </span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {entry.role}
+                      <span
+                        className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[6.5rem] sm:max-w-[10rem] leading-tight"
+                        title={entry.role}
+                      >
+                        {roleText}
                       </span>
                     </div>
                   </div>
-                  <div className="flex-shrink-0 text-xs text-gray-500 dark:text-gray-400 font-mono">
-                    {formatDateRange(entry.startDate, entry.endDate)}
+                  <div className="flex-shrink-0 ml-auto w-[15ch] -mr-2">
+                    <div
+                      className="grid grid-cols-[8ch_7ch] items-center text-xs text-gray-500 dark:text-gray-400 font-mono"
+                      title={fullDateText}
+                    >
+                      <span className="text-left whitespace-nowrap">{startDateText}-</span>
+                      {entry.isOngoing ? (
+                        <span className="flex justify-center">
+                          <span className="inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] leading-none font-bold bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300 rounded-full">
+                            現在
+                          </span>
+                        </span>
+                      ) : (
+                        <span className="text-center whitespace-nowrap">
+                          {endDateText}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  {entry.isOngoing && (
-                    <span className="flex-shrink-0 px-2 py-1 text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300 rounded-full">
-                      現在
-                    </span>
-                  )}
                 </>
               )}
             </div>
