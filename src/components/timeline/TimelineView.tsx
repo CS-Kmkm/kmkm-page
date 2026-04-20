@@ -29,7 +29,7 @@ const TimelineView: React.FC<TimelineViewProps> = ({
             entries={careerEntries}
             events={events}
             isReversed={isReversed}
-            rowHeight={32}
+            rowHeight={36}
             fitToViewport
             viewportBottomOffset={32}
           />
