@@ -602,8 +602,8 @@
     },
     {
       "id": "proj-014",
-      "name": "MonotaRoインターンシップ",
-      "description": "株式会社MonotaRoでのデータサイエンティスト/AIエンジニアインターンシップ（1週間）。生成AIを活用したシステム開発を実施。",
+      "name": "MonotaROインターンシップ",
+      "description": "株式会社MonotaROでのデータサイエンティスト/AIエンジニアインターンシップ（1週間）。生成AIを活用したシステム開発を実施。",
       "technologies": [
         "Python"
       ],
