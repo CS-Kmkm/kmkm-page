@@ -53,21 +53,26 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
 
   const formatAuthors = (authors: string[], isFirstAuthor: boolean) => {
     if (authors.length === 0) return '';
+
+    const emphasizedNames = new Set(['茂木光志', '茂木 光志', 'Koshi Motegi']);
+    const renderedAuthors = authors.map((author, index) => (
+      emphasizedNames.has(author)
+        ? <strong key={`${author}-${index}`}>{author}</strong>
+        : <React.Fragment key={`${author}-${index}`}>{author}</React.Fragment>
+    ));
     
     if (isFirstAuthor && authors.length > 0) {
-      const [firstAuthor, ...restAuthors] = authors;
-      if (restAuthors.length === 0) {
-        return <strong>{firstAuthor}</strong>;
+      if (authors.length === 1) {
+        return renderedAuthors[0];
       }
-      return (
-        <>
-          <strong>{firstAuthor}</strong>
-          {restAuthors.length > 0 && `, ${restAuthors.join(', ')}`}
-        </>
-      );
     }
-    
-    return authors.join(', ');
+
+    return renderedAuthors.map((author, index) => (
+      <React.Fragment key={index}>
+        {index > 0 && ', '}
+        {author}
+      </React.Fragment>
+    ));
   };
 
   return (
