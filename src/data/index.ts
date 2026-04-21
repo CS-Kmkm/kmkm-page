@@ -165,9 +165,10 @@ function mapEventCategoryToUpdateCategory(eventCategory: EventCategory): UpdateI
       return 'career';
     case EventCategory.PUBLICATION:
       return 'publication';
+    case EventCategory.AWARD:
+      return 'award';
     case EventCategory.EVENT:
     case EventCategory.INTERNSHIP:
-    case EventCategory.AWARD:
       return 'development';
     case EventCategory.OTHER:
     default:
@@ -486,6 +487,27 @@ export const getEvents = (): EventEntry[] => {
       location: newestPublication.venue,
       relatedLinks: relatedLinks.length > 0 ? relatedLinks : undefined,
       tags: ['research', 'publication', ...authorshipTags, ...reviewTags, ...publicationTypeTags]
+    });
+  });
+
+  // 2.5. Generate award events from publication data
+  publications.forEach((publication) => {
+    publication.awards?.forEach((award, index) => {
+      const awardYear = new Date(award.date).getFullYear();
+
+      events.push({
+        id: `award-${publication.id}-${index}`,
+        title: award.title,
+        description: award.description ?? `${publication.venue}の論文「${publication.title}」が${award.title}を受賞`,
+        date: award.date,
+        year: awardYear,
+        category: EventCategory.AWARD,
+        displayDate: award.date,
+        toBeAppear: publication.toBeAppear,
+        location: award.organization ?? publication.venue,
+        relatedLinks: publication.url ? [publication.url] : undefined,
+        tags: ['award', 'publication', publication.id]
+      });
     });
   });
 

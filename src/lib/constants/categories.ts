@@ -24,6 +24,7 @@ export enum UpdateCategory {
   CAREER = 'career',
   DEVELOPMENT = 'development',
   PUBLICATION = 'publication',
+  AWARD = 'award',
   OTHER = 'other',
 }
 
@@ -105,6 +106,12 @@ export const UPDATE_CATEGORY_CONFIG: Record<UpdateCategory, CategoryConfig> = {
     variant: 'purple',
     icon: '📄',
     ariaLabel: 'カテゴリ: 論文',
+  },
+  [UpdateCategory.AWARD]: {
+    label: '受賞',
+    variant: 'yellow',
+    icon: '🏆',
+    ariaLabel: 'カテゴリ: 受賞',
   },
   [UpdateCategory.OTHER]: {
     label: 'その他',

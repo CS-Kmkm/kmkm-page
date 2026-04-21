@@ -156,6 +156,15 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
                   査読あり
                 </span>
               )}
+
+              {publication.awards?.map((award, index) => (
+                <span
+                  key={`${publication.id}-award-badge-${index}`}
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-900"
+                >
+                  {award.title}
+                </span>
+              ))}
             </div>
 
             {/* Links */}
@@ -188,6 +197,24 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
               )}
             </div>
           </div>
+
+          {publication.awards && publication.awards.length > 0 && (
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
+              <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
+                受賞
+              </h4>
+              <ul className="mt-2 sm:mt-3 space-y-2 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                {publication.awards.map((award, index) => (
+                  <li key={`${publication.id}-award-${index}`} className="leading-relaxed">
+                    <div className="font-medium text-gray-900 dark:text-gray-100">{award.title}</div>
+                    <div>{new Date(award.date).toLocaleDateString('ja-JP')}</div>
+                    {award.organization && <div>{award.organization}</div>}
+                    {award.description && <div>{award.description}</div>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Abstract Section */}
           {publication.abstract && (

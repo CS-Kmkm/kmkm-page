@@ -85,6 +85,15 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
             査読あり
           </span>
         )}
+
+        {publication.awards?.map((award, index) => (
+          <span
+            key={`${publication.id}-award-${index}`}
+            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-900"
+          >
+            {award.title}
+          </span>
+        ))}
       </div>
     </article>
   );
