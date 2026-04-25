@@ -8,9 +8,10 @@ const mockPublications: PublicationEntry[] = [
   {
     id: 'pub-001',
     title: 'Test Publication 1',
-    authors: ['John Doe', 'Jane Smith'],
+    authors: ['Koshi Motegi', 'Jane Smith'],
     venue: 'Test Journal',
     year: 2024,
+    displayDate: '2024-01-01',
     doi: '10.1000/test.001',
     isFirstAuthor: true,
     isPeerReviewed: true,
@@ -22,6 +23,7 @@ const mockPublications: PublicationEntry[] = [
     authors: ['Jane Smith', 'John Doe', 'Bob Wilson'],
     venue: 'Test Conference',
     year: 2023,
+    displayDate: '2023-01-01',
     isFirstAuthor: false,
     isPeerReviewed: false,
     publicationType: 'conference'
@@ -29,9 +31,10 @@ const mockPublications: PublicationEntry[] = [
   {
     id: 'pub-003',
     title: 'Test Publication 3',
-    authors: ['Alice Brown'],
+    authors: ['茂木光志'],
     venue: 'Test Workshop',
     year: 2022,
+    displayDate: '2022-01-01',
     doi: '10.1000/test.003',
     isFirstAuthor: true,
     isPeerReviewed: true,
@@ -63,21 +66,19 @@ describe('PublicationList', () => {
     render(<PublicationList publications={mockPublications} />)
 
     // Check for first author badges
-    const firstAuthorBadges = screen.getAllByText('第一著者')
+    const firstAuthorBadges = screen.getAllByText('第一著者', { selector: 'span' })
     expect(firstAuthorBadges).toHaveLength(2) // pub-001 and pub-003 are first author
 
     // Check that first author names are wrapped in strong tags
-    const johnDoeElement = screen.getByText('John Doe')
-    const aliceBrownElement = screen.getByText('Alice Brown')
-    expect(johnDoeElement.tagName).toBe('STRONG')
-    expect(aliceBrownElement.tagName).toBe('STRONG')
+    const emphasizedAuthors = screen.getAllByText(/Koshi Motegi|茂木光志/, { selector: 'strong' })
+    expect(emphasizedAuthors).toHaveLength(2)
   })
 
   it('displays peer-review badges correctly', () => {
     render(<PublicationList publications={mockPublications} />)
 
     // Check for peer reviewed badges
-    const peerReviewedBadges = screen.getAllByText('査読あり')
+    const peerReviewedBadges = screen.getAllByText('査読あり', { selector: 'span' })
     expect(peerReviewedBadges).toHaveLength(2) // pub-001 and pub-003 are peer reviewed
   })
 
@@ -86,7 +87,7 @@ describe('PublicationList', () => {
 
     // Check for publication type badges
     expect(screen.getByText('ジャーナル')).toBeInTheDocument()
-    expect(screen.getByText('国際会議')).toBeInTheDocument()
+    expect(screen.getByText('国際会議', { selector: 'span' })).toBeInTheDocument()
     expect(screen.getByText('ワークショップ')).toBeInTheDocument()
   })
 
@@ -137,10 +138,10 @@ describe('PublicationList', () => {
     render(<PublicationList publications={mockPublications} />)
 
     // Check for filter buttons
-    expect(screen.getByText('第一著者')).toBeInTheDocument()
-    expect(screen.getByText('共著者')).toBeInTheDocument()
-    expect(screen.getByText('査読あり')).toBeInTheDocument()
-    expect(screen.getByText('査読なし')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '第一著者' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '共著者' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '査読あり' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '査読なし' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '国内会議' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '国際会議' })).toBeInTheDocument()
   })
@@ -153,6 +154,7 @@ describe('PublicationList', () => {
         authors: ['Author A'],
         venue: 'NLP Conference',
         year: 2024,
+        displayDate: '2024-01-01',
         isFirstAuthor: true,
         isPeerReviewed: false,
         publicationType: 'conference',
@@ -164,6 +166,7 @@ describe('PublicationList', () => {
         authors: ['Author B'],
         venue: 'ICML',
         year: 2024,
+        displayDate: '2024-02-01',
         isFirstAuthor: false,
         isPeerReviewed: true,
         publicationType: 'conference',
@@ -175,6 +178,7 @@ describe('PublicationList', () => {
         authors: ['Author C'],
         venue: 'Journal X',
         year: 2023,
+        displayDate: '2023-01-01',
         isFirstAuthor: true,
         isPeerReviewed: true,
         publicationType: 'journal'
@@ -199,6 +203,7 @@ describe('PublicationList', () => {
         authors: ['Author A'],
         venue: 'NLP Conference',
         year: 2024,
+        displayDate: '2024-01-01',
         isFirstAuthor: true,
         isPeerReviewed: false,
         publicationType: 'conference',
@@ -220,6 +225,7 @@ describe('PublicationList', () => {
         authors: ['Author A'],
         venue: 'NLP Conference',
         year: 2024,
+        displayDate: '2024-01-01',
         isFirstAuthor: true,
         isPeerReviewed: false,
         publicationType: 'conference',
@@ -231,6 +237,7 @@ describe('PublicationList', () => {
         authors: ['Author B'],
         venue: 'ICML',
         year: 2024,
+        displayDate: '2024-02-01',
         isFirstAuthor: false,
         isPeerReviewed: true,
         publicationType: 'conference',
@@ -242,6 +249,7 @@ describe('PublicationList', () => {
         authors: ['Author C'],
         venue: 'Journal X',
         year: 2023,
+        displayDate: '2023-01-01',
         isFirstAuthor: true,
         isPeerReviewed: true,
         publicationType: 'journal'
@@ -262,7 +270,7 @@ describe('PublicationList', () => {
     render(<PublicationList publications={mockPublications} />)
 
     // Click on first author filter
-    fireEvent.click(screen.getByText('第一著者'))
+    fireEvent.click(screen.getByRole('button', { name: '第一著者' }))
 
     // Should only show first author publications
     expect(screen.getByText('Test Publication 1')).toBeInTheDocument()
@@ -276,8 +284,8 @@ describe('PublicationList', () => {
   it('has proper aria-pressed attributes on filter buttons', () => {
     render(<PublicationList publications={mockPublications} />)
 
-    const firstAuthorButton = screen.getByText('第一著者')
-    const peerReviewedButton = screen.getByText('査読あり')
+    const firstAuthorButton = screen.getByRole('button', { name: '第一著者' })
+    const peerReviewedButton = screen.getByRole('button', { name: '査読あり' })
 
     // Initially filters should not be pressed
     expect(firstAuthorButton).toHaveAttribute('aria-pressed', 'false')
@@ -295,7 +303,7 @@ describe('PublicationList', () => {
     render(<PublicationList publications={mockPublications} />)
 
     // Click on non-peer-reviewed filter - should show only 1 publication
-    fireEvent.click(screen.getByText('査読なし'))
+    fireEvent.click(screen.getByRole('button', { name: '査読なし' }))
 
     // Should show only the non-peer-reviewed publication
     expect(screen.getByText('Test Publication 2')).toBeInTheDocument()
