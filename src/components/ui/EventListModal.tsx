@@ -25,7 +25,8 @@ export default function EventListModal({
   onEventSelect,
   className = ''
 }: EventListModalProps) {
-  const [focusedIndex, setFocusedIndex] = useState<number>(0);
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+  const activeFocusedIndex = focusedIndex ?? 0;
 
   // Handle keyboard events for list navigation
   useEffect(() => {
@@ -35,18 +36,22 @@ export default function EventListModal({
       switch (e.key) {
         case 'ArrowDown':
           e.preventDefault();
-          setFocusedIndex(prev => 
-            prev < yearGroup.events.length - 1 ? prev + 1 : prev
-          );
+          setFocusedIndex(prev => {
+            const current = prev ?? 0;
+            return current < yearGroup.events.length - 1 ? current + 1 : current;
+          });
           break;
         case 'ArrowUp':
           e.preventDefault();
-          setFocusedIndex(prev => prev > 0 ? prev - 1 : prev);
+          setFocusedIndex(prev => {
+            const current = prev ?? 0;
+            return current > 0 ? current - 1 : current;
+          });
           break;
         case 'Enter':
           e.preventDefault();
-          if (yearGroup.events[focusedIndex]) {
-            onEventSelect(yearGroup.events[focusedIndex]);
+          if (yearGroup.events[activeFocusedIndex]) {
+            onEventSelect(yearGroup.events[activeFocusedIndex]);
           }
           break;
       }
@@ -59,14 +64,7 @@ export default function EventListModal({
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, onClose, onEventSelect, yearGroup, focusedIndex]);
-
-  // Reset focused index when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      setFocusedIndex(0);
-    }
-  }, [isOpen]);
+  }, [isOpen, onEventSelect, yearGroup, activeFocusedIndex]);
 
   // Animation variants for list items
   const listItemVariants = {
@@ -115,7 +113,7 @@ export default function EventListModal({
               >
                 <button
                   className={`w-full p-3 text-left border ${tokens.radius.lg} ${tokens.transition.normal} ${tokens.focus.ringFull} ${
-                    focusedIndex === index
+                    activeFocusedIndex === index
                       ? `${tokens.surface.primary} ${tokens.border.focus}`
                       : `${tokens.surface.primary} ${tokens.border.default} ${tokens.border.hover.replace('border-', 'hover:border-')}`
                   }`}

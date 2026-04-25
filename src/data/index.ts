@@ -705,8 +705,12 @@ export const getRecentEvents = (limit: number = 5): EventEntry[] => {
   return getEvents().slice(0, limit);
 };
 
+type RawEventEntry = Omit<EventEntry, 'year'> & {
+  year?: number;
+};
+
 // Additional event processing utilities
-export const processEventData = (rawEvents: any[]): EventEntry[] => {
+export const processEventData = (rawEvents: RawEventEntry[]): EventEntry[] => {
   return rawEvents.map(event => ({
     ...event,
     year: new Date(event.date).getFullYear(),

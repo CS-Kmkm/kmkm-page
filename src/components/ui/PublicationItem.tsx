@@ -33,20 +33,12 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
     ));
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      onClick();
-    }
-  };
-
   return (
-    <article
-      role="button"
+    <button
+      type="button"
       tabIndex={0}
       onClick={onClick}
-      onKeyDown={handleKeyDown}
-      className="border-l-4 border-gray-200 dark:border-gray-700 pl-3 sm:pl-4 py-2 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 min-h-[44px]"
+      className="block w-full text-left border-l-4 border-gray-200 dark:border-gray-700 pl-3 sm:pl-4 py-2 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 min-h-[44px]"
       aria-label={`${publication.title}の詳細を表示`}
     >
       {/* Title */}
@@ -100,7 +92,7 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
           </span>
         ))}
       </div>
-    </article>
+    </button>
   );
 };
 

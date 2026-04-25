@@ -24,7 +24,6 @@ export interface BranchNodeProps {
  * Renders a node (circle) on the timeline with hover and focus effects
  */
 export default function BranchNode({
-  branch,
   entry,
   color,
   position,

@@ -16,7 +16,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const [imageError, setImageError] = useState(false);
+  const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null);
 
   // Handle Escape key and focus management
   useEffect(() => {
@@ -38,12 +38,9 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
     };
   }, [isOpen, onClose]);
 
-  // Reset image error state when publication changes
-  useEffect(() => {
-    setImageError(false);
-  }, [publication]);
-
   if (!isOpen || !publication) return null;
+
+  const imageError = failedImageUrl === publication.imageUrl;
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -257,10 +254,11 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
           {publication.imageUrl && !imageError && (
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
               <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">図</h4>
+              {/* eslint-disable-next-line @next/next/no-img-element -- publication images may be arbitrary external assets */}
               <img
                 src={publication.imageUrl}
                 alt={publication.imageAlt || '論文の関連図'}
-                onError={() => setImageError(true)}
+                onError={() => setFailedImageUrl(publication.imageUrl ?? null)}
                 className="w-full rounded-lg border border-gray-200 dark:border-gray-700"
               />
               {publication.imageAlt && (

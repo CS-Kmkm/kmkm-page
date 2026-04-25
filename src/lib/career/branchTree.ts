@@ -29,7 +29,7 @@ export function buildBranchTree(entries: ExtendedCareerEntry[]): BranchTree {
   });
 
   // Build parent-child relationships
-  let mainBranch: BranchNode | null = null;
+  const mainBranch: BranchNode | null = null;
   const rootNodes: BranchNode[] = [];
 
   entries.forEach(entry => {

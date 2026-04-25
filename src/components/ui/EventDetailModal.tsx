@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { EventDetailModalProps, EventCategory } from '@/types';
+import { EventDetailModalProps } from '@/types';
 import { Modal } from './Modal';
 import { getEventCategoryConfig } from '@/lib/constants/categories';
 import { UI_LABELS, ARIA_LABELS } from '@/lib/constants/labels';
