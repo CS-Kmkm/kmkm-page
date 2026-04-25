@@ -11,8 +11,8 @@ export default function HeroSection({ profile }: HeroSectionProps) {
     <section className="bg-white dark:bg-gray-800/80 rounded-2xl shadow-soft p-5 sm:p-6 lg:p-7 mb-5 sm:mb-6 transition-all duration-300">
       <ProfileSection
         profile={profile}
-        showBio={false}
-        showLocation={false}
+        showBio={true}
+        showLocation={true}
         className="mb-1 sm:mb-2"
       />
 
