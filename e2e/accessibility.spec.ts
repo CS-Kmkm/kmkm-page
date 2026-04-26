@@ -38,9 +38,8 @@ test.describe('Accessibility Tests', () => {
         }
       }
 
-      // Check for skip links
+      // Check for skip links (becomes visible when focused)
       const skipLink = page.getByRole('link', { name: 'メインコンテンツへスキップ' }).first();
-      await expect(skipLink).toBeVisible();
       await skipLink.focus();
       await expect(skipLink).toBeFocused();
 
