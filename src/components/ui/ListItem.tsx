@@ -54,7 +54,8 @@ export function ListItem({
   ariaLabel,
   isActive = false,
 }: ListItemProps) {
-  const baseClasses = `${getListItemContainerClasses()} ${className}`;
+  const activeClasses = isActive ? 'ring-2 ring-blue-500 dark:ring-blue-400' : '';
+  const baseClasses = `${getListItemContainerClasses()} ${activeClasses} ${className}`;
   const titleId = `list-item-${title.replace(/\s+/g, '-').toLowerCase()}`;
 
   // Content to render
@@ -122,22 +123,16 @@ export function ListItem({
   // Button variant
   if (onClick) {
     return (
-      <article
-        className={baseClasses}
+      <button
+        type="button"
+        className={`${baseClasses} block w-full text-left`}
         aria-labelledby={titleId}
         onClick={onClick}
-        role="button"
         tabIndex={0}
         aria-label={ariaLabel}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            onClick();
-          }
-        }}
       >
         {content}
-      </article>
+      </button>
     );
   }
 

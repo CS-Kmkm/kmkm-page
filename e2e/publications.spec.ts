@@ -19,14 +19,11 @@ test.describe('Publications Page', () => {
     await expect(page.getByText(/\d+件 \/ \d+件の論文を表示/)).toBeVisible();
     
     // Check that publications are displayed
-    const publications = page.locator('article[role="button"]');
+    const publications = page.getByRole('button', { name: /の詳細を表示/ });
     await expect(publications.first()).toBeVisible();
   });
 
   test('should have working publication filters', async ({ page }) => {
-    // Get initial count
-    const initialCount = await page.getByText(/\d+件 \/ \d+件の論文を表示/).textContent();
-    
     // Test first author filter
     await page.getByRole('button', { name: '第一著者' }).click();
     await page.waitForTimeout(300);
@@ -47,7 +44,7 @@ test.describe('Publications Page', () => {
     await page.waitForLoadState('networkidle');
     
     // Check that publication articles are displayed
-    const publications = page.locator('article[role="button"]');
+    const publications = page.getByRole('button', { name: /の詳細を表示/ });
     await expect(publications.first()).toBeVisible();
     
     // Check for badges within publications (they may vary by data)
@@ -60,7 +57,7 @@ test.describe('Publications Page', () => {
     await page.waitForLoadState('networkidle');
     
     // Click first publication
-    const firstPublication = page.locator('article[role="button"]').first();
+    const firstPublication = page.getByRole('button', { name: /の詳細を表示/ }).first();
     await expect(firstPublication).toBeVisible();
     await firstPublication.click();
     
@@ -87,7 +84,7 @@ test.describe('Publications Page', () => {
     await expect(yearLabels.first()).toBeVisible();
     
     // Check that publications are displayed
-    const publications = page.locator('article[role="button"]');
+    const publications = page.getByRole('button', { name: /の詳細を表示/ });
     await expect(publications.first()).toBeVisible();
   });
 
@@ -121,7 +118,7 @@ test.describe('Publications Page', () => {
     await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
     
     // Check that publications are displayed
-    const publications = page.locator('article[role="button"]');
+    const publications = page.getByRole('button', { name: /の詳細を表示/ });
     await expect(publications.first()).toBeVisible();
     
     // Check no horizontal scroll
@@ -157,7 +154,7 @@ test.describe('Publications Page', () => {
     await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
     
     // Check that publications are displayed
-    const publications = page.locator('article[role="button"]');
+    const publications = page.getByRole('button', { name: /の詳細を表示/ });
     await expect(publications.first()).toBeVisible();
   });
 
@@ -167,7 +164,7 @@ test.describe('Publications Page', () => {
     await page.waitForLoadState('networkidle');
     
     // Click first publication
-    const firstPublication = page.locator('article[role="button"]').first();
+    const firstPublication = page.getByRole('button', { name: /の詳細を表示/ }).first();
     await expect(firstPublication).toBeVisible();
     await firstPublication.click();
     

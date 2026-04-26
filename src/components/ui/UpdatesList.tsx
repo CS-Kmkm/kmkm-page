@@ -55,7 +55,7 @@ function UpdateModal({ update, onClose }: { update: UpdateItem | null; onClose: 
       </div>
 
       {/* Description */}
-      <div className={`${tokens.text.secondary} leading-relaxed`}>
+      <div className={`${tokens.text.secondary} leading-relaxed whitespace-pre-line`}>
         {update.description}
       </div>
     </Modal>

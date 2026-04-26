@@ -9,7 +9,7 @@ import React from 'react';
 import Image from 'next/image';
 import { ProjectModalProps } from '@/types';
 import { Modal } from './Modal';
-import { UI_LABELS, ARIA_LABELS } from '@/lib/constants/labels';
+import { UI_LABELS } from '@/lib/constants/labels';
 import { tokens } from '@/lib/theme/tokens';
 
 const ProjectModal: React.FC<ProjectModalProps> = ({

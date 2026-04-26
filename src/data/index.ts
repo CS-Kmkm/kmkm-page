@@ -165,9 +165,10 @@ function mapEventCategoryToUpdateCategory(eventCategory: EventCategory): UpdateI
       return 'career';
     case EventCategory.PUBLICATION:
       return 'publication';
+    case EventCategory.AWARD:
+      return 'award';
     case EventCategory.EVENT:
     case EventCategory.INTERNSHIP:
-    case EventCategory.AWARD:
       return 'development';
     case EventCategory.OTHER:
     default:
@@ -199,8 +200,8 @@ export const getTimelineEvents = (): TimelineEventEntry[] => {
         id: `timeline-pub-${pub.id}`,
         title: `論文発表: ${pub.venue}`,
         description: pub.isFirstAuthor
-          ? `「${pub.title}」を第一著者として発表`
-          : `「${pub.title}」を投稿`,
+          ? `${pub.title}を第一著者として発表`
+          : `${pub.title}を共著者として執筆`,
         date: pub.date,
         year: pubYear.toString(),
         category: '研究成果'
@@ -285,11 +286,30 @@ export const getEvents = (): EventEntry[] => {
 
       // Generate start event (入学/着任)
       let startTitle = '';
-      let startDescription = career.description || '';
+      const isPrimaryToHighSchool =
+        career.organization.includes('小学校') ||
+        career.organization.includes('中学校') ||
+        career.organization.includes('高等学校') ||
+        career.organization.includes('高校');
+      const isUniversity = career.organization.includes('大学');
+      const isAdmission =
+        (isPrimaryToHighSchool && career.role === '生徒') ||
+        (isUniversity && (career.role === '学部学生' || career.role.includes('大学院生')));
+      const educationDescriptionOrg =
+        career.organization === '小学校'
+          ? '地元の公立小学校'
+          : career.organization === '中学校'
+            ? '地元の公立中学校'
+            : career.organization === '高校'
+              ? '地元の公立高校'
+              : career.organization;
+      const startDescription = isAdmission
+        ? `${educationDescriptionOrg}に入学しました`
+        : (career.description || '');
 
-      if (career.organization.includes('小学校') || career.organization.includes('中学校') || career.organization.includes('高等学校')) {
+      if (isPrimaryToHighSchool) {
         startTitle = `${career.organization} ${career.role === '生徒' ? '入学' : '着任'}`;
-      } else if (career.organization.includes('大学')) {
+      } else if (isUniversity) {
         startTitle = `${career.organization} ${career.role === '学部学生' ? '入学' : career.role.includes('大学院生') ? '入学' : '着任'}`;
       } else {
         startTitle = `${career.organization} ${career.role} 着任`;
@@ -316,23 +336,28 @@ export const getEvents = (): EventEntry[] => {
         let endTitle = '';
         let endDescription = '';
 
-        if (career.organization.includes('小学校') || career.organization.includes('中学校') || career.organization.includes('高等学校')) {
+        if (
+          career.organization.includes('小学校') ||
+          career.organization.includes('中学校') ||
+          career.organization.includes('高等学校') ||
+          career.organization.includes('高校')
+        ) {
           endTitle = `${career.organization} ${career.role === '生徒' ? '卒業' : '退職'}`;
-          endDescription = `${career.organization}を卒業`;
+          endDescription = `${educationDescriptionOrg}を卒業しました`;
         } else if (career.organization.includes('大学')) {
           if (career.role === '学部学生') {
             endTitle = `${career.organization} 卒業`;
-            endDescription = `${career.organization}を卒業`;
+            endDescription = `${career.organization}を卒業しました`;
           } else if (career.role.includes('大学院生')) {
             endTitle = `${career.organization} 修了`;
-            endDescription = `${career.organization}を修了`;
+            endDescription = `${career.organization}を修了しました`;
           } else {
             endTitle = `${career.organization} ${career.role} 退職`;
-            endDescription = `${career.organization}での${career.role}を終了`;
+            endDescription = `${career.organization}での${career.role}を終了しました`;
           }
         } else {
           endTitle = `${career.organization} ${career.role} 退職`;
-          endDescription = `${career.organization}での${career.role}を終了`;
+          endDescription = `${career.organization}での${career.role}を終了しました`;
         }
 
         events.push({
@@ -351,29 +376,139 @@ export const getEvents = (): EventEntry[] => {
   });
 
   // 2. Generate events from publications data
-  const publications = getPublicationsRaw();
+  const publications = getPublications();
+  const publicationGroups = new Map<string, PublicationEntry[]>();
+
   publications.forEach(pub => {
-    if (pub.date) {
-      const pubYear = new Date(pub.date).getFullYear();
-      const authorshipType = pub.isFirstAuthor ? 'first-author' : 'co-author';
-      const reviewType = pub.isPeerReviewed ? 'peer-reviewed' : 'non-peer-reviewed';
+    if (!pub.date) {
+      return;
+    }
+
+    // Group only conference publications by venue/year.
+    // Non-conference publications stay as one event per publication.
+    const groupKey = pub.publicationType === 'conference'
+      ? `conference:${pub.venue}:${pub.year}`
+      : `single:${pub.id}`;
+
+    const grouped = publicationGroups.get(groupKey);
+    if (grouped) {
+      grouped.push(pub);
+    } else {
+      publicationGroups.set(groupKey, [pub]);
+    }
+  });
+
+  publicationGroups.forEach(groupedPublications => {
+    const sortedPublications = [...groupedPublications].sort((a, b) => {
+      const dateA = a.date || '';
+      const dateB = b.date || '';
+      return dateB.localeCompare(dateA);
+    });
+
+    const newestPublication = sortedPublications[0];
+    if (!newestPublication.date) {
+      return;
+    }
+
+    const eventYear = new Date(newestPublication.date).getFullYear();
+    const firstAuthorPublications = sortedPublications.filter(pub => pub.isFirstAuthor);
+    const coAuthorPublications = sortedPublications.filter(pub => !pub.isFirstAuthor);
+    const firstAuthorCount = firstAuthorPublications.length;
+    const coAuthorCount = coAuthorPublications.length;
+
+    const formatTitleList = (items: PublicationEntry[]): string => {
+      return items.map(item => item.title).join('、');
+    };
+
+    const description = groupedPublications.length === 1
+      ? (newestPublication.isFirstAuthor
+          ? `${newestPublication.title}を第一著者として発表`
+          : `${newestPublication.title}を共著者として執筆`)
+      : (() => {
+          const roleDetails: string[] = [];
+
+          if (firstAuthorCount > 0) {
+            roleDetails.push(`主著：${formatTitleList(firstAuthorPublications)}`);
+          }
+          if (coAuthorCount > 0) {
+            roleDetails.push(`共著：${formatTitleList(coAuthorPublications)}`);
+          }
+
+          return `同一会議で${groupedPublications.length}件の論文を発表（第一著者${firstAuthorCount}件・共著${coAuthorCount}件）。\n${roleDetails.join('\n')}`;
+        })();
+
+    const authorshipTags: string[] = [];
+    if (firstAuthorCount > 0) {
+      authorshipTags.push('first-author');
+    }
+    if (coAuthorCount > 0) {
+      authorshipTags.push('co-author');
+    }
+
+    const reviewTags: string[] = [];
+    if (groupedPublications.some(pub => pub.isPeerReviewed)) {
+      reviewTags.push('peer-reviewed');
+    }
+    if (groupedPublications.some(pub => !pub.isPeerReviewed)) {
+      reviewTags.push('non-peer-reviewed');
+    }
+
+    const publicationTypeTags = Array.from(
+      new Set(groupedPublications.map(pub => pub.publicationType))
+    );
+
+    const relatedLinks = Array.from(
+      new Set(
+        groupedPublications
+          .map(pub => pub.url)
+          .filter((url): url is string => Boolean(url))
+      )
+    );
+
+    const latestDisplayDate = groupedPublications.reduce((latest, pub) => {
+      return pub.displayDate > latest ? pub.displayDate : latest;
+    }, newestPublication.displayDate);
+
+    const eventId = groupedPublications.length === 1
+      ? `pub-${newestPublication.id}`
+      : `pub-group-${groupedPublications.map(pub => pub.id).sort().join('-')}`;
+
+    events.push({
+      id: eventId,
+      title: groupedPublications.length > 1
+        ? `${newestPublication.venue} 論文発表（${groupedPublications.length}件）`
+        : `${newestPublication.venue} 論文発表`,
+      description,
+      date: newestPublication.date,
+      year: eventYear,
+      category: EventCategory.PUBLICATION,
+      displayDate: latestDisplayDate,
+      toBeAppear: groupedPublications.some(pub => pub.toBeAppear === true),
+      location: newestPublication.venue,
+      relatedLinks: relatedLinks.length > 0 ? relatedLinks : undefined,
+      tags: ['research', 'publication', ...authorshipTags, ...reviewTags, ...publicationTypeTags]
+    });
+  });
+
+  // 2.5. Generate award events from publication data
+  publications.forEach((publication) => {
+    publication.awards?.forEach((award, index) => {
+      const awardYear = new Date(award.date).getFullYear();
 
       events.push({
-        id: `pub-${pub.id}`,
-        title: `${pub.venue} 論文発表`,
-        description: pub.isFirstAuthor
-          ? `「${pub.title}」を第一著者として発表`
-          : `「${pub.title}」を投稿`,
-        date: pub.date,
-        year: pubYear,
-        category: EventCategory.PUBLICATION,
-        displayDate: pub.displayDate,
-        toBeAppear: pub.toBeAppear,
-        location: pub.venue,
-        relatedLinks: pub.url ? [pub.url] : undefined,
-        tags: ['research', 'publication', authorshipType, reviewType, pub.publicationType]
+        id: `award-${publication.id}-${index}`,
+        title: award.title,
+        description: award.description ?? `${publication.venue}の論文「${publication.title}」が${award.title}を受賞`,
+        date: award.date,
+        year: awardYear,
+        category: EventCategory.AWARD,
+        displayDate: award.date,
+        toBeAppear: publication.toBeAppear,
+        location: award.organization ?? publication.venue,
+        relatedLinks: publication.url ? [publication.url] : undefined,
+        tags: ['award', 'publication', publication.id]
       });
-    }
+    });
   });
 
   // 3. Generate events from tech experience projects (internships and events)
@@ -436,8 +571,8 @@ export const getEvents = (): EventEntry[] => {
       location = 'ラクスル';
     } else if (project.name.includes('BIPROGY')) {
       location = 'BIPROGY';
-    } else if (project.name.includes('MonotaRo')) {
-      location = 'MonotaRo';
+    } else if (project.name.includes('MonotaRO')) {
+      location = 'MonotaRO';
     } else if (project.name.includes('JPHACKS')) {
       location = 'ハッカソン会場';
     } else if (project.name.includes('技育祭')) {
@@ -570,8 +705,12 @@ export const getRecentEvents = (limit: number = 5): EventEntry[] => {
   return getEvents().slice(0, limit);
 };
 
+type RawEventEntry = Omit<EventEntry, 'year'> & {
+  year?: number;
+};
+
 // Additional event processing utilities
-export const processEventData = (rawEvents: any[]): EventEntry[] => {
+export const processEventData = (rawEvents: RawEventEntry[]): EventEntry[] => {
   return rawEvents.map(event => ({
     ...event,
     year: new Date(event.date).getFullYear(),

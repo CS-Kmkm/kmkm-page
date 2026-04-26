@@ -1,7 +1,9 @@
 ﻿'use client';
 
-import React, { useMemo, useId } from 'react';
-import { ExtendedCareerEntry } from '@/types';
+import React, { useMemo, useId, useEffect, useRef, useState } from 'react';
+import type { ExtendedCareerEntry, EventEntry, YearEventGroup, TimelineEventEntry } from '@/types';
+import EventListModal from './EventListModal';
+import EventModal from './EventModal';
 
 /**
  * Git-style Career Timeline - Complete Implementation
@@ -29,17 +31,22 @@ const BRANCH_COLORS = [
 
 const MAIN_BRANCH_COLOR = '#3B82F6';
 
-const DEFAULT_ROW_HEIGHT = 32;
+const DEFAULT_ROW_HEIGHT = 36;
+const MIN_FIT_ROW_HEIGHT = 24;
 const NODE_RADIUS = 8;
 const LANE_WIDTH = 32;
 const LEFT_PADDING = 28;
-const YEAR_WIDTH = 56;
+const YEAR_WIDTH = 108;
 const MAIN_X = LEFT_PADDING;
+const STATUS_COLUMN_WIDTH = 124;
 
 interface GitCommitLogTimelineProps {
   entries: ExtendedCareerEntry[];
+  events?: EventEntry[];
   isReversed?: boolean;
   rowHeight?: number;
+  fitToViewport?: boolean;
+  viewportBottomOffset?: number;
 }
 
 interface ProcessedEntry {
@@ -220,7 +227,7 @@ function processEntries(entries: ExtendedCareerEntry[]): ProcessedEntry[] {
   return processed;
 }
 
-function buildRows(entries: ProcessedEntry[], isReversed: boolean): TimelineRow[] {
+function buildRows(entries: ProcessedEntry[], isReversed: boolean, eventYears: Set<number>): TimelineRow[] {
   if (entries.length === 0) return [];
 
   // Event-driven approach: only create rows for months where events (start/end) occur
@@ -275,12 +282,13 @@ function buildRows(entries: ProcessedEntry[], isReversed: boolean): TimelineRow[
     const { year, month } = monthIndexToParts(monthIndex);
     const startEntries = startsByMonth.get(monthIndex) ?? [];
     const endEntries = endsByMonth.get(monthIndex) ?? [];
+    const hasYearEvents = eventYears.has(year);
     const hasForkOrMerge = startEntries.length > 0 || endEntries.length > 0;
 
     if (startEntries.length === 0) {
       // This is an end-only month or intermediate month (no new entries start here)
       // Show year only if there's a merge event and year hasn't been shown
-      const showYear = hasForkOrMerge && !displayedYears.has(year);
+      const showYear = (hasForkOrMerge || hasYearEvents) && !displayedYears.has(year);
       if (showYear) {
         displayedYears.add(year);
       }
@@ -315,29 +323,87 @@ function buildRows(entries: ProcessedEntry[], isReversed: boolean): TimelineRow[
   return rows;
 }
 
-function formatDateRange(startDate: string, endDate: string | null): string {
-  const start = new Date(startDate);
-  const startStr = `${start.getFullYear()}.${String(start.getMonth() + 1).padStart(2, '0')}`;
-  if (!endDate) return `${startStr} - 現在`;
-  const end = new Date(endDate);
-  const endStr = `${end.getFullYear()}.${String(end.getMonth() + 1).padStart(2, '0')}`;
-  return `${startStr} - ${endStr}`;
+function formatYearMonth(dateStr: string): string {
+  const date = new Date(dateStr);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function formatDateRangeLabel(startDate: string, endDate: string | null): string {
+  const startStr = formatYearMonth(startDate);
+  if (!endDate) {
+    return `${startStr}-現在`;
+  }
+  return `${startStr}-${formatYearMonth(endDate)}`;
+}
+
+function truncateText(text: string, maxLength: number): string {
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return `${text.slice(0, Math.max(0, maxLength - 3)).trimEnd()}...`;
 }
 
 export default function GitCommitLogTimeline({
   entries,
+  events = [],
   isReversed = false,
   rowHeight = DEFAULT_ROW_HEIGHT,
+  fitToViewport = false,
+  viewportBottomOffset = 24,
 }: GitCommitLogTimelineProps) {
   const clipBaseId = useId();
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [resolvedRowHeight, setResolvedRowHeight] = useState(rowHeight);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [isEventListModalOpen, setIsEventListModalOpen] = useState(false);
+  const [selectedYearGroup, setSelectedYearGroup] = useState<YearEventGroup | null>(null);
+  const [isEventDetailModalOpen, setIsEventDetailModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<TimelineEventEntry | null>(null);
+
   const processedEntries = useMemo(
     () => processEntries(entries),
     [entries]
   );
 
+  const yearEventGroups = useMemo(() => {
+    const grouped = new Map<number, YearEventGroup>();
+
+    events.forEach((event) => {
+      const timelineEvent: TimelineEventEntry = {
+        id: event.id,
+        title: event.title,
+        date: event.date,
+        description: event.description,
+        category: event.category,
+        year: String(event.year),
+      };
+
+      const existing = grouped.get(event.year);
+      if (existing) {
+        existing.events.push(timelineEvent);
+      } else {
+        grouped.set(event.year, {
+          year: String(event.year),
+          events: [timelineEvent],
+        });
+      }
+    });
+
+    grouped.forEach((group) => {
+      group.events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    });
+
+    return grouped;
+  }, [events]);
+
+  const eventYears = useMemo(
+    () => new Set<number>(Array.from(yearEventGroups.keys())),
+    [yearEventGroups]
+  );
+
   const rows = useMemo(
-    () => buildRows(processedEntries, isReversed),
-    [processedEntries, isReversed]
+    () => buildRows(processedEntries, isReversed, eventYears),
+    [processedEntries, isReversed, eventYears]
   );
 
   const maxLane = useMemo(
@@ -366,13 +432,126 @@ export default function GitCommitLogTimeline({
     return merged;
   }, [processedEntries]);
 
-  const entryLabelOffsetY = rowHeight * 1.5 * (isReversed ? -1 : 1) + rowHeight * 0.5;
+  useEffect(() => {
+    const updateLayoutMetrics = () => {
+      if (!containerRef.current) {
+        setContainerWidth(0);
+        setResolvedRowHeight(rowHeight);
+        return;
+      }
+
+      const rect = containerRef.current.getBoundingClientRect();
+      setContainerWidth(rect.width);
+
+      if (!fitToViewport || rows.length === 0) {
+        setResolvedRowHeight(rowHeight);
+        return;
+      }
+
+      const footerHeight = document.querySelector('footer')?.getBoundingClientRect().height ?? 0;
+      const availableHeight = window.innerHeight - rect.top - footerHeight - viewportBottomOffset;
+      if (availableHeight <= 0) {
+        setResolvedRowHeight(rowHeight);
+        return;
+      }
+
+      const fittedHeight = Math.floor(availableHeight / rows.length);
+      setResolvedRowHeight(Math.max(MIN_FIT_ROW_HEIGHT, fittedHeight));
+    };
+
+    updateLayoutMetrics();
+    window.addEventListener('resize', updateLayoutMetrics);
+
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined' && containerRef.current) {
+      resizeObserver = new ResizeObserver(() => {
+        updateLayoutMetrics();
+      });
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => {
+      window.removeEventListener('resize', updateLayoutMetrics);
+      resizeObserver?.disconnect();
+    };
+  }, [fitToViewport, rowHeight, rows.length, viewportBottomOffset]);
+
+  const entryLabelOffsetY = resolvedRowHeight * 1.5 * (isReversed ? -1 : 1) + resolvedRowHeight * 0.5;
+  const isCompactRow = resolvedRowHeight <= 24;
+
+  const openYearEventModal = (year: number) => {
+    const yearGroup = yearEventGroups.get(year);
+    if (!yearGroup) return;
+
+    setSelectedYearGroup(yearGroup);
+    setIsEventListModalOpen(true);
+  };
+
+  const closeYearEventModal = () => {
+    setIsEventListModalOpen(false);
+    setTimeout(() => {
+      setSelectedYearGroup(null);
+    }, 200);
+  };
+
+  const openEventDetailModal = (event: TimelineEventEntry) => {
+    setSelectedEvent(event);
+    setIsEventDetailModalOpen(true);
+  };
+
+  const closeEventDetailModal = () => {
+    setIsEventDetailModalOpen(false);
+    setTimeout(() => {
+      setSelectedEvent(null);
+    }, 200);
+  };
 
   return (
-    <div className="text-sm font-sans">
+    <>
+      <div ref={containerRef} className="text-sm font-sans">
       {rows.map((row, rowIndex) => {
         const clipId = `${clipBaseId}-row-clip-${rowIndex}`;
         const entry = row.entry;
+        const startDateText = entry
+          ? formatYearMonth(entry.startDate)
+          : '';
+        const endDateText = entry?.endDate
+          ? formatYearMonth(entry.endDate)
+          : '';
+        const fullDateText = entry
+          ? formatDateRangeLabel(entry.startDate, entry.endDate)
+          : '';
+        const trailingReservedWidth = entry
+          ? STATUS_COLUMN_WIDTH
+          : 96;
+        const infoAreaWidth = Math.max(containerWidth - YEAR_WIDTH - graphWidth - trailingReservedWidth, 0);
+        const shouldShowFullOrganization = infoAreaWidth >= 560;
+        const organizationMaxLength = isCompactRow
+          ? 16
+          : infoAreaWidth >= 460
+            ? 30
+            : infoAreaWidth >= 320
+              ? 24
+              : 18;
+        const roleMaxLength = isCompactRow
+          ? 9
+          : infoAreaWidth >= 460
+            ? 20
+            : 14;
+        const shouldShowFullRole = shouldShowFullOrganization;
+        const organizationText = entry
+          ? (shouldShowFullOrganization
+            ? entry.organization
+            : truncateText(entry.organization, organizationMaxLength))
+          : '';
+        const roleText = entry
+          ? (shouldShowFullRole
+            ? entry.role
+            : truncateText(entry.role, roleMaxLength))
+          : '';
+        const yearGroup = yearEventGroups.get(row.year);
+        const hasYearEvents = Boolean(yearGroup && yearGroup.events.length > 0);
+        const showYearEventButton = hasYearEvents && row.showYear;
         const activeEntries = processedEntries.filter(e =>
           row.monthIndex >= e.startMonth && row.monthIndex <= e.endMonth
         );
@@ -381,10 +560,10 @@ export default function GitCommitLogTimeline({
         );
         const mainIndicatorYs = hasStartAndMergeOnSameRow
           ? [
-              rowHeight / 2 - TRANSITION_EVENT_OFFSET_PX,
-              rowHeight / 2 + TRANSITION_EVENT_OFFSET_PX,
+              resolvedRowHeight / 2 - TRANSITION_EVENT_OFFSET_PX,
+              resolvedRowHeight / 2 + TRANSITION_EVENT_OFFSET_PX,
             ]
-          : [rowHeight / 2];
+          : [resolvedRowHeight / 2];
         const showMainIndicator = Boolean(
           row.entry || (row.isFirstMonthRow && hasMergeAtMonth.has(row.monthIndex))
         );
@@ -393,7 +572,7 @@ export default function GitCommitLogTimeline({
           <div
             key={`row-${rowIndex}`}
             className="flex items-center hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors"
-            style={{ height: rowHeight }}
+            style={{ height: resolvedRowHeight }}
           >
             {/* Year Label */}
             <div
@@ -401,20 +580,33 @@ export default function GitCommitLogTimeline({
               style={{ width: YEAR_WIDTH }}
             >
               {row.showYear && (
-                <span className="text-sm font-bold text-gray-600 dark:text-gray-300">
-                  {row.year}
-                </span>
+                <div className="flex items-center justify-end gap-2">
+                  <span className="text-sm font-bold text-gray-600 dark:text-gray-300">
+                    {row.year}
+                  </span>
+                  {showYearEventButton && yearGroup && (
+                    <button
+                      type="button"
+                      onClick={() => openYearEventModal(row.year)}
+                      className="inline-flex min-w-6 h-6 items-center justify-center px-1.5 rounded-full text-[11px] font-semibold text-white bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-500 transition-colors"
+                      aria-label={`${row.year}年のイベント${yearGroup.events.length}件を表示`}
+                      title={`${row.year}年のイベント`}
+                    >
+                      {yearGroup.events.length}
+                    </button>
+                  )}
+                </div>
               )}
             </div>
 
             {/* Branch Graph */}
             <div
               className="flex-shrink-0 relative"
-              style={{ width: graphWidth, height: rowHeight }}
+              style={{ width: graphWidth, height: resolvedRowHeight }}
             >
               <svg
                 width={graphWidth}
-                height={rowHeight}
+                height={resolvedRowHeight}
                 className="absolute inset-0"
               >
                 <defs>
@@ -423,7 +615,7 @@ export default function GitCommitLogTimeline({
                       x={0}
                       y={0}
                       width={graphWidth}
-                      height={rowHeight}
+                      height={resolvedRowHeight}
                     />
                   </clipPath>
                 </defs>
@@ -434,7 +626,7 @@ export default function GitCommitLogTimeline({
                   x1={MAIN_X}
                   y1={0}
                   x2={MAIN_X}
-                  y2={rowHeight}
+                  y2={resolvedRowHeight}
                   stroke={MAIN_BRANCH_COLOR}
                   strokeWidth={4}
                   strokeLinecap="butt"
@@ -473,10 +665,10 @@ export default function GitCommitLogTimeline({
                     ? LEFT_PADDING + e.parentLane * LANE_WIDTH
                     : MAIN_X;
                   const mergeToX = MAIN_X;
-                  const midY = rowHeight / 2;
+                  const midY = resolvedRowHeight / 2;
                   const cornerR = midY;
                   const hasUpperConnector = midY - cornerR > 0.5;
-                  const hasLowerConnector = rowHeight - (midY + cornerR) > 0.5;
+                  const hasLowerConnector = resolvedRowHeight - (midY + cornerR) > 0.5;
                   const transitionOffsetY = TRANSITION_EVENT_OFFSET_PX;
                   const startEventY = e.isAlignedTransitionStart
                     ? (isReversed ? midY - transitionOffsetY : midY + transitionOffsetY)
@@ -489,7 +681,7 @@ export default function GitCommitLogTimeline({
                   // The fork/merge curves already draw the vertical portions near the curve
                   // So we only need to draw the remaining portion to avoid overlap at the circle
                   let lineY1 = 0;
-                  let lineY2 = rowHeight;
+                  let lineY2 = resolvedRowHeight;
                   let skipVerticalLine = false;
                   let skipFork = false;
                   let skipMerge = false;
@@ -503,7 +695,7 @@ export default function GitCommitLogTimeline({
                       skipVerticalLine = true;
                     } else {
                       lineY1 = 0;
-                      lineY2 = rowHeight;
+                      lineY2 = resolvedRowHeight;
                     }
                     skipFork = true;
                   } else if (isInEndMonth) {
@@ -513,7 +705,7 @@ export default function GitCommitLogTimeline({
                     // - normal (old -> new): do not draw newer-side segment after end
                     if (isReversed) {
                       lineY1 = 0;
-                      lineY2 = rowHeight;
+                      lineY2 = resolvedRowHeight;
                     } else {
                       skipVerticalLine = true;
                     }
@@ -526,7 +718,7 @@ export default function GitCommitLogTimeline({
                     if (isReversed) {
                       // Fork curve goes up (0 to midY-cornerR), draw below (midY+cornerR to rowHeight)
                       lineY1 = midY + cornerR;
-                      lineY2 = rowHeight;
+                      lineY2 = resolvedRowHeight;
                     } else {
                       // Fork curve goes down (midY+cornerR to rowHeight), draw above (0 to midY-cornerR)
                       lineY1 = 0;
@@ -541,7 +733,7 @@ export default function GitCommitLogTimeline({
                     } else {
                       // Merge curve goes up (0 to midY-cornerR), draw below (midY+cornerR to rowHeight)
                       lineY1 = midY + cornerR;
-                      lineY2 = rowHeight;
+                      lineY2 = resolvedRowHeight;
                     }
                   }
                   // For normal rows (not start or end), line goes full height (0 to rowHeight)
@@ -616,7 +808,7 @@ export default function GitCommitLogTimeline({
                                   x1={laneX}
                                   y1={midY + cornerR}
                                   x2={laneX}
-                                  y2={rowHeight}
+                                  y2={resolvedRowHeight}
                                   stroke={e.color}
                                   strokeWidth={4}
                                   strokeLinecap="butt"
@@ -658,7 +850,7 @@ export default function GitCommitLogTimeline({
                                   x1={laneX}
                                   y1={midY + cornerR}
                                   x2={laneX}
-                                  y2={rowHeight}
+                                  y2={resolvedRowHeight}
                                   stroke={e.color}
                                   strokeWidth={4}
                                   strokeLinecap="butt"
@@ -698,7 +890,7 @@ export default function GitCommitLogTimeline({
                         <>
                           <circle
                             cx={laneX}
-                            cy={rowHeight / 2}
+                            cy={resolvedRowHeight / 2}
                             r={NODE_RADIUS}
                             fill={e.color}
                             stroke="white"
@@ -715,40 +907,77 @@ export default function GitCommitLogTimeline({
 
             {/* Entry Information */}
             <div
-              className="flex-1 flex items-center gap-4 px-4 min-w-0"
+              className="flex-1 flex items-center gap-4 pl-4 pr-0 min-w-0"
               style={entry ? { transform: `translateY(${entryLabelOffsetY}px)` } : undefined}
             >
               {entry && (
                 <>
                   <div
-                    className="w-1.5 h-10 rounded-full flex-shrink-0"
+                    className={`w-1.5 ${isCompactRow ? 'h-6' : 'h-10'} rounded-full flex-shrink-0`}
                     style={{ backgroundColor: entry.color }}
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-baseline gap-2 flex-wrap">
-                      <span className="font-semibold text-gray-900 dark:text-gray-100">
-                        {entry.organization}
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span
+                        className={`font-semibold text-gray-900 dark:text-gray-100 leading-tight min-w-0 ${
+                          shouldShowFullOrganization ? 'whitespace-nowrap' : 'truncate'
+                        }`}
+                        title={entry.organization}
+                      >
+                        {organizationText}
                       </span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {entry.role}
+                      <span
+                        className={`text-xs text-gray-500 dark:text-gray-400 leading-tight ${
+                          shouldShowFullRole
+                            ? 'whitespace-nowrap'
+                            : 'truncate max-w-[6.5rem] sm:max-w-[10rem]'
+                        }`}
+                        title={entry.role}
+                      >
+                        {roleText}
                       </span>
                     </div>
                   </div>
-                  <div className="flex-shrink-0 text-xs text-gray-500 dark:text-gray-400 font-mono">
-                    {formatDateRange(entry.startDate, entry.endDate)}
+                  <div className="flex-shrink-0 ml-auto w-[15ch] -mr-2">
+                    <div
+                      className="grid grid-cols-[8ch_7ch] items-center text-xs text-gray-500 dark:text-gray-400 font-mono"
+                      title={fullDateText}
+                    >
+                      <span className="text-left whitespace-nowrap">{startDateText}-</span>
+                      {entry.isOngoing ? (
+                        <span className="flex justify-center">
+                          <span className="inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] leading-none font-bold bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300 rounded-full">
+                            現在
+                          </span>
+                        </span>
+                      ) : (
+                        <span className="text-center whitespace-nowrap">
+                          {endDateText}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  {entry.isOngoing && (
-                    <span className="flex-shrink-0 px-2 py-1 text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300 rounded-full">
-                      現在
-                    </span>
-                  )}
                 </>
               )}
             </div>
           </div>
         );
       })}
-    </div>
+      </div>
+
+      <EventListModal
+        isOpen={isEventListModalOpen}
+        onClose={closeYearEventModal}
+        yearGroup={selectedYearGroup}
+        onEventSelect={openEventDetailModal}
+      />
+
+      <EventModal
+        isOpen={isEventDetailModalOpen}
+        onClose={closeEventDetailModal}
+        event={selectedEvent}
+      />
+    </>
   );
 }
 

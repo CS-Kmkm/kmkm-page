@@ -53,7 +53,15 @@
       "isFirstAuthor": false,
       "isPeerReviewed": false,
       "publicationType": "conference",
-      "conferenceScope": "domestic"
+      "conferenceScope": "domestic",
+      "awards": [
+        {
+          "title": "大学ICT推進協議会2025年度年次大会（AXIES2025）最優秀論文賞",
+          "date": "2026-03-31",
+          "organization": "大学ICT推進協議会",
+          "description": "論文：\n「研究データのオープンアクセスを加速化する：生成AIを用いたメタデータ生成と機関レポジトリへの収載」\nが\n大学ICT推進協議会2025年度年次大会（AXIES2025）最優秀論文賞\nを受賞"
+        }
+      ]
     },
     {
       "id": "pub-004",

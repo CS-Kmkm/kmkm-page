@@ -102,7 +102,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, onClick }) => {
       </h3>
 
       {/* Description */}
-      <p className={`${getDescriptionClasses()} mb-2`}>
+      <p className={`${getDescriptionClasses()} mb-2 whitespace-pre-line`}>
         {event.description}
       </p>
 

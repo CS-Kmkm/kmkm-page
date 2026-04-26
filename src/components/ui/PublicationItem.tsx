@@ -11,37 +11,34 @@ import {
 const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick }) => {
   const formatAuthors = (authors: string[], isFirstAuthor: boolean) => {
     if (authors.length === 0) return '';
+
+    const emphasizedNames = new Set(['茂木光志', '茂木 光志', 'Koshi Motegi']);
+    const renderedAuthors = authors.map((author, index) => (
+      emphasizedNames.has(author)
+        ? <strong key={`${author}-${index}`}>{author}</strong>
+        : <React.Fragment key={`${author}-${index}`}>{author}</React.Fragment>
+    ));
     
     if (isFirstAuthor && authors.length > 0) {
-      const [firstAuthor, ...restAuthors] = authors;
-      if (restAuthors.length === 0) {
-        return <strong>{firstAuthor}</strong>;
+      if (authors.length === 1) {
+        return renderedAuthors[0];
       }
-      return (
-        <>
-          <strong>{firstAuthor}</strong>
-          {restAuthors.length > 0 && `, ${restAuthors.join(', ')}`}
-        </>
-      );
     }
-    
-    return authors.join(', ');
-  };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      onClick();
-    }
+    return renderedAuthors.map((author, index) => (
+      <React.Fragment key={index}>
+        {index > 0 && ', '}
+        {author}
+      </React.Fragment>
+    ));
   };
 
   return (
-    <article
-      role="button"
+    <button
+      type="button"
       tabIndex={0}
       onClick={onClick}
-      onKeyDown={handleKeyDown}
-      className="border-l-4 border-gray-200 dark:border-gray-700 pl-3 sm:pl-4 py-2 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 min-h-[44px]"
+      className="block w-full text-left border-l-4 border-gray-200 dark:border-gray-700 pl-3 sm:pl-4 py-2 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 min-h-[44px]"
       aria-label={`${publication.title}の詳細を表示`}
     >
       {/* Title */}
@@ -85,8 +82,17 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
             査読あり
           </span>
         )}
+
+        {publication.awards?.map((award, index) => (
+          <span
+            key={`${publication.id}-award-${index}`}
+            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-900"
+          >
+            {award.title}
+          </span>
+        ))}
       </div>
-    </article>
+    </button>
   );
 };
 

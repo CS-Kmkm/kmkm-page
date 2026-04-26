@@ -14,15 +14,15 @@ test.describe('Homepage', () => {
     
     // Check profile section is visible
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
-    await expect(page.getByText('名古屋大学大学院情報学研究科知能システム学専攻松原研究室')).toBeVisible();
+    await expect(page.getByText('名古屋大学大学院情報学研究科知能システム学専攻松原研究室', { exact: true })).toBeVisible();
     
     // Check social media section
     await expect(page.getByLabel('ソーシャルメディアリンク')).toBeVisible();
     
     // Check navigation cards are present
-    await expect(page.getByRole('link', { name: /経歴/ })).toBeVisible();
-    await expect(page.getByRole('link', { name: /開発経験/ })).toBeVisible();
-    await expect(page.getByRole('link', { name: /論文/ })).toBeVisible();
+    await expect(page.getByRole('link', { name: '経歴', exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: '開発経験', exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: '論文投稿履歴', exact: true })).toBeVisible();
   });
 
   test('should have working navigation', async ({ page }) => {
@@ -51,9 +51,10 @@ test.describe('Homepage', () => {
   test('should display updates list', async ({ page }) => {
     // Check updates section is visible
     await expect(page.getByText('最新の更新情報')).toBeVisible();
-    
-    // Check that at least one update is displayed
-    const updates = page.locator('article').filter({ hasText: /2024/ });
+
+    // Check that at least one update item is displayed
+    const updatesSection = page.locator('section[aria-labelledby="updates-heading"]');
+    const updates = updatesSection.getByRole('button');
     await expect(updates.first()).toBeVisible();
   });
 
@@ -115,7 +116,7 @@ test.describe('Homepage', () => {
     // Check that all content is visible
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
     await expect(page.getByText('最新の更新情報')).toBeVisible();
-    await expect(page.getByText('コンテンツ')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'コンテンツ' })).toBeVisible();
     
     // Check 3-column layout is applied
     const navigationSection = page.locator('div').filter({ hasText: 'コンテンツ' }).first();

@@ -3,34 +3,34 @@
     {
       "id": "career-007",
       "year": "2009-2015",
-      "organization": "某公立小学校",
+      "organization": "小学校",
       "role": "生徒",
       "startDate": "2009-04-01",
       "endDate": "2015-03-31",
       "parentId": null,
-      "description": "地元の公立小学校に通いました。",
+      "description": "地元の公立小学校・中学校・高校に入学・卒業しました",
       "displayDate": "2009-04-01"
     },
     {
       "id": "career-006",
       "year": "2015-2018",
-      "organization": "某公立中学校",
+      "organization": "中学校",
       "role": "生徒",
       "startDate": "2015-04-01",
       "endDate": "2018-03-31",
       "parentId": null,
-      "description": "地元の公立中学校に通いました。",
+      "description": "地元の公立小学校・中学校・高校に入学・卒業しました",
       "displayDate": "2015-04-01"
     },
     {
       "id": "career-005",
       "year": "2018-2021",
-      "organization": "岐阜県立岐阜高等学校",
+      "organization": "高校",
       "role": "生徒",
       "startDate": "2018-04-01",
       "endDate": "2021-03-31",
       "parentId": null,
-      "description": "高等学校での学習",
+      "description": "地元の公立小学校・中学校・高校に入学・卒業しました",
       "displayDate": "2018-04-01"
     },
     {

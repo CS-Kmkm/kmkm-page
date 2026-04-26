@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { PublicationDetailModalProps } from '@/types';
+import { getBackdropClassesWithFallback } from '@/lib/ui/modalStyles';
 import {
   getPublicationTypeLabel,
   getPublicationTypeColor,
@@ -15,7 +16,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const [imageError, setImageError] = useState(false);
+  const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null);
 
   // Handle Escape key and focus management
   useEffect(() => {
@@ -37,12 +38,9 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
     };
   }, [isOpen, onClose]);
 
-  // Reset image error state when publication changes
-  useEffect(() => {
-    setImageError(false);
-  }, [publication]);
-
   if (!isOpen || !publication) return null;
+
+  const imageError = failedImageUrl === publication.imageUrl;
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -52,26 +50,31 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
 
   const formatAuthors = (authors: string[], isFirstAuthor: boolean) => {
     if (authors.length === 0) return '';
+
+    const emphasizedNames = new Set(['茂木光志', '茂木 光志', 'Koshi Motegi']);
+    const renderedAuthors = authors.map((author, index) => (
+      emphasizedNames.has(author)
+        ? <strong key={`${author}-${index}`}>{author}</strong>
+        : <React.Fragment key={`${author}-${index}`}>{author}</React.Fragment>
+    ));
     
     if (isFirstAuthor && authors.length > 0) {
-      const [firstAuthor, ...restAuthors] = authors;
-      if (restAuthors.length === 0) {
-        return <strong>{firstAuthor}</strong>;
+      if (authors.length === 1) {
+        return renderedAuthors[0];
       }
-      return (
-        <>
-          <strong>{firstAuthor}</strong>
-          {restAuthors.length > 0 && `, ${restAuthors.join(', ')}`}
-        </>
-      );
     }
-    
-    return authors.join(', ');
+
+    return renderedAuthors.map((author, index) => (
+      <React.Fragment key={index}>
+        {index > 0 && ', '}
+        {author}
+      </React.Fragment>
+    ));
   };
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black/50 p-0 sm:p-4"
+      className={`${getBackdropClassesWithFallback()} p-0 sm:p-4`}
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
@@ -155,79 +158,107 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
                   査読あり
                 </span>
               )}
+
+              {publication.awards?.map((award, index) => (
+                <span
+                  key={`${publication.id}-award-badge-${index}`}
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-900"
+                >
+                  {award.title}
+                </span>
+              ))}
             </div>
 
             {/* Links */}
-            <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2 sm:gap-3">
+            <div className="space-y-3">
               {publication.doi && (
-                <a
-                  href={`https://doi.org/${publication.doi}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 min-h-[44px]"
-                >
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
+                <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 break-all">
+                  DOI:{' '}
+                  <a
+                    href={`https://doi.org/${publication.doi}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 dark:text-blue-400 hover:underline focus:outline-none focus:underline"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                    />
-                  </svg>
-                  DOIを開く
-                </a>
+                    {`https://doi.org/${publication.doi}`}
+                  </a>
+                </p>
               )}
               {publication.url && (
-                <a
-                  href={publication.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 min-h-[44px]"
-                >
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
+                <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 break-all">
+                  URL:{' '}
+                  <a
+                    href={publication.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 dark:text-blue-400 hover:underline focus:outline-none focus:underline"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                  PDFを開く
-                </a>
+                    {publication.url}
+                  </a>
+                </p>
               )}
             </div>
           </div>
 
+          {publication.awards && publication.awards.length > 0 && (
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
+              <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
+                受賞
+              </h4>
+              <ul className="mt-2 sm:mt-3 space-y-2 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                {publication.awards.map((award, index) => (
+                  <li key={`${publication.id}-award-${index}`} className="leading-relaxed">
+                    <div className="font-medium text-gray-900 dark:text-gray-100">{award.title}</div>
+                    <div>{new Date(award.date).toLocaleDateString('ja-JP')}</div>
+                    {award.organization && <div>{award.organization}</div>}
+                    {award.description && <div>{award.description}</div>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {/* Abstract Section */}
           {publication.abstract && (
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
-              <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">概要</h4>
-              <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+            <details className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
+              <summary className="cursor-pointer text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
+                Abstract（概要）
+              </summary>
+              <p className="mt-2 sm:mt-3 text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
                 {publication.abstract}
               </p>
-            </div>
+            </details>
+          )}
+
+          {/* Memo Section */}
+          {publication.memo && (
+            <details className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
+              <summary className="cursor-pointer text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
+                メモ・受賞履歴
+              </summary>
+              {Array.isArray(publication.memo) ? (
+                <ul className="mt-2 sm:mt-3 list-disc pl-5 space-y-2 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                  {publication.memo.map((memoItem, index) => (
+                    <li key={`${publication.id}-memo-${index}`}>{memoItem}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-2 sm:mt-3 text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+                  {publication.memo}
+                </p>
+              )}
+            </details>
           )}
 
           {/* Image Section */}
           {publication.imageUrl && !imageError && (
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
               <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">図</h4>
+              {/* eslint-disable-next-line @next/next/no-img-element -- publication images may be arbitrary external assets */}
               <img
                 src={publication.imageUrl}
                 alt={publication.imageAlt || '論文の関連図'}
-                onError={() => setImageError(true)}
+                onError={() => setFailedImageUrl(publication.imageUrl ?? null)}
                 className="w-full rounded-lg border border-gray-200 dark:border-gray-700"
               />
               {publication.imageAlt && (

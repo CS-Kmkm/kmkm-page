@@ -58,7 +58,7 @@ export const shouldShowPublicationTypeBadge = (publication: PublicationEntry): b
  * Format authors - returns plain string or JSX for highlighting first author
  * Note: This function is meant to be used in React components
  */
-export const formatAuthorsString = (authors: string[], isFirstAuthor: boolean): string => {
+export const formatAuthorsString = (authors: string[]): string => {
   if (authors.length === 0) return '';
   return authors.join(', ');
 };

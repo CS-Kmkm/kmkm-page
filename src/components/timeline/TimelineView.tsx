@@ -2,15 +2,17 @@
 
 import React from 'react';
 import GitCommitLogTimeline from '@/components/ui/GitCommitLogTimeline';
-import { ExtendedCareerEntry } from '@/types';
+import type { ExtendedCareerEntry, EventEntry } from '@/types';
 
 export interface TimelineViewProps {
   careerEntries: ExtendedCareerEntry[];
+  events: EventEntry[];
   isReversed: boolean;
 }
 
 const TimelineView: React.FC<TimelineViewProps> = ({
   careerEntries,
+  events,
   isReversed
 }) => {
   const hasCareerData = careerEntries.length > 0;
@@ -25,8 +27,11 @@ const TimelineView: React.FC<TimelineViewProps> = ({
         <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
           <GitCommitLogTimeline
             entries={careerEntries}
+            events={events}
             isReversed={isReversed}
-            rowHeight={32}
+            rowHeight={36}
+            fitToViewport
+            viewportBottomOffset={32}
           />
         </div>
       ) : (

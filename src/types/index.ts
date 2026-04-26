@@ -7,7 +7,7 @@ export interface UpdateItem {
   date: string;
   title: string;
   description: string;
-  category: 'career' | 'development' | 'publication' | 'other';
+  category: 'career' | 'development' | 'publication' | 'award' | 'other';
 }
 
 export interface CareerEntry {
@@ -129,8 +129,17 @@ export interface PublicationEntry {
   publicationType: 'journal' | 'conference' | 'workshop' | 'preprint' | 'other';
   conferenceScope?: 'international' | 'domestic'; // conference時の会議種別
   abstract?: string;        // 論文の抄録
+  awards?: PublicationAward[];
+  memo?: string | string[]; // 受賞履歴などの補足メモ
   imageUrl?: string;        // 説明用画像のURL
   imageAlt?: string;        // 画像の代替テキスト
+}
+
+export interface PublicationAward {
+  title: string;
+  date: string;             // 受賞日（YYYY-MM-DD形式）
+  organization?: string;    // 授与元
+  description?: string;     // 補足説明
 }
 
 export interface SocialLink {

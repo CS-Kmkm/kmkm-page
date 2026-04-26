@@ -56,10 +56,10 @@ export interface ModalProps {
  * Size to max-width mapping
  */
 const sizeMap: Record<ModalSize, string> = {
-  sm: 'max-w-md',
-  md: 'max-w-2xl',
-  lg: 'max-w-4xl',
-  xl: 'max-w-6xl',
+  sm: 'w-[min(calc(100vw-2rem),28rem)]',
+  md: 'w-[min(calc(100vw-2rem),42rem)]',
+  lg: 'w-[min(calc(100vw-2rem),56rem)]',
+  xl: 'w-[min(calc(100vw-2rem),72rem)]',
 };
 
 /**
@@ -204,7 +204,7 @@ export function Modal({
           {/* Modal container */}
           <motion.div
             ref={modalRef}
-            className={`${getModalContainerClasses(sizeMap[size])} mx-4 ${className}`}
+            className={`${getModalContainerClasses(sizeMap[size])} ${className}`}
             {...animationProps}
             role="dialog"
             aria-modal="true"

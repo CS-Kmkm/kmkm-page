@@ -4,10 +4,10 @@
 
 'use client';
 
-import { useMemo, useState, useEffect, useCallback } from 'react';
-import type { ExtendedCareerEntry, TimelineEventEntry, YearEventGroup, EventPointPosition } from '@/types';
+import { useMemo, useState, useEffect } from 'react';
+import type { ExtendedCareerEntry, TimelineEventEntry, YearEventGroup } from '@/types';
 import { validateCareerData } from '@/lib/career';
-import { groupEventsByYear, calculateEventPointPositions, validateEventData } from '@/lib/career/eventUtils';
+import { groupEventsByYear, validateEventData } from '@/lib/career/eventUtils';
 import Timeline from '../Timeline';
 import { computeLayout, groupNodesByLane } from './layoutEngine';
 import { formatRange, extractYear } from './utils';
@@ -46,6 +46,55 @@ function ErrorDisplay({ errors }: { errors: Array<{ entryId: string; message: st
         ))}
       </ul>
     </div>
+  );
+}
+
+/**
+ * GitBranchTimeline component
+ */
+export default function GitBranchTimeline({
+  entries,
+  events = [],
+  enableEventPoints = true,
+  className = '',
+  isReversed = false,
+  showLabels = true
+}: GitBranchTimelineProps) {
+  const errors = useMemo(() => validateCareerData(entries), [entries]);
+  const eventErrors = useMemo(() => validateEventData(events), [events]);
+
+  if (errors.length > 0 || eventErrors.length > 0) {
+    return (
+      <div className={className}>
+        {errors.length > 0 && <ErrorDisplay errors={errors} />}
+        {eventErrors.length > 0 && (
+          <div className="mb-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4">
+            <h3 className="mb-2 font-semibold text-yellow-800">
+              イベントデータにエラーがあります
+            </h3>
+            <ul className="list-inside list-disc space-y-1">
+              {eventErrors.map((error, index) => (
+                <li key={index} className="text-sm text-yellow-700">
+                  {error.eventId}: {error.message}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <Timeline entries={entries} />
+      </div>
+    );
+  }
+
+  return (
+    <GitBranchTimelineContent
+      entries={entries}
+      events={events}
+      enableEventPoints={enableEventPoints}
+      className={className}
+      isReversed={isReversed}
+      showLabels={showLabels}
+    />
   );
 }
 
@@ -135,10 +184,7 @@ function findCombinedPairs(
   return { combinedChildIds, combinedParentIds };
 }
 
-/**
- * GitBranchTimeline component
- */
-export default function GitBranchTimeline({
+function GitBranchTimelineContent({
   entries,
   events = [],
   enableEventPoints = true,
@@ -154,9 +200,6 @@ export default function GitBranchTimeline({
   const [selectedYearGroup, setSelectedYearGroup] = useState<YearEventGroup | null>(null);
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
   const [isEventListModalOpen, setIsEventListModalOpen] = useState(false);
-  
-  const errors = useMemo(() => validateCareerData(entries), [entries]);
-  const eventErrors = useMemo(() => validateEventData(events), [events]);
 
   // Detect mobile viewport
   useEffect(() => {
@@ -172,36 +215,9 @@ export default function GitBranchTimeline({
   // Use mobile or desktop layout constants
   const layoutConstants = isMobile ? MOBILE_LAYOUT : LAYOUT;
 
-  if (errors.length > 0 || eventErrors.length > 0) {
-    return (
-      <div className={className}>
-        {errors.length > 0 && <ErrorDisplay errors={errors} />}
-        {eventErrors.length > 0 && (
-          <div className="mb-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4">
-            <h3 className="mb-2 font-semibold text-yellow-800">
-              イベントデータにエラーがあります
-            </h3>
-            <ul className="list-inside list-disc space-y-1">
-              {eventErrors.map((error, index) => (
-                <li key={index} className="text-sm text-yellow-700">
-                  {error.eventId}: {error.message}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        <Timeline entries={entries} />
-      </div>
-    );
-  }
-
   const nodes = useMemo(() => computeLayout(entries), [entries]);
   const nodeMap = useMemo(() => new Map(nodes.map(node => [node.entry.id, node])), [nodes]);
   const laneGroups = useMemo(() => groupNodesByLane(nodes), [nodes]);
-
-  if (nodes.length === 0) {
-    return null;
-  }
 
   // Calculate dimensions
   const maxLane = nodes.reduce((max, node) => Math.max(max, node.lane), 1);
@@ -305,6 +321,10 @@ export default function GitBranchTimeline({
 
     return { eventPointPositions: positions, eventHandlers: handlers };
   }, [events, enableEventPoints, yearLabels, layoutConstants, nodes, maxEndY]);
+
+  if (nodes.length === 0) {
+    return null;
+  }
 
   return (
     <div className={className}>
