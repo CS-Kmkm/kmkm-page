@@ -11,7 +11,7 @@ export default function ProfileSection({
 
   return (
     <section
-      className={`flex flex-col md:flex-row items-center md:items-start gap-4 sm:gap-6 md:gap-8 ${className}`}
+      className={`flex flex-col md:flex-row items-center gap-4 sm:gap-6 md:gap-8 ${className}`}
       aria-labelledby="profile-heading"
     >
       <div className="relative h-32 w-32 sm:h-40 sm:w-40 md:h-44 md:w-44 overflow-hidden rounded-3xl border border-gray-200/80 dark:border-gray-700/80 bg-gray-100 dark:bg-gray-800 shadow-soft">
@@ -28,26 +28,24 @@ export default function ProfileSection({
       {/* Profile Information */}
       <div className="flex-1 text-center md:text-left">
         {/* Name */}
-        <h1 
+        <h1
           id="profile-heading"
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2"
+          aria-label={profile.name}
+          className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3 flex flex-wrap items-baseline justify-center md:justify-start gap-x-3 gap-y-1"
         >
-          {profile.name}
+          <span>{profile.name}</span>
+          {profile.nameEn && (
+            <span
+              aria-hidden="true"
+              className="text-base sm:text-lg font-normal text-gray-600 dark:text-gray-400"
+            >
+              {profile.nameEn}
+            </span>
+          )}
         </h1>
-        
-        {/* English Name */}
-        {profile.nameEn && (
-          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-2 sm:mb-3">
-            <span className="sr-only">英語名: </span>
-            {profile.nameEn}
-          </p>
-        )}
 
-        {/* Current Position and Affiliation */}
-        <div className="mb-3 sm:mb-4">
-          <p className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-200 mb-1">
-            {profile.currentPosition}
-          </p>
+        {/* Current Affiliation */}
+        <div className={showBio ? 'mb-3 sm:mb-4' : 'mb-1 sm:mb-1'}>
           <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300">
             {profile.currentAffiliation}
           </p>
