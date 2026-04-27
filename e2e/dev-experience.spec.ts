@@ -79,6 +79,22 @@ test.describe('Development Experience Page', () => {
     await expect(pythonButton).toBeVisible();
   });
 
+  test('should collapse and expand all projects', async ({ page }) => {
+    const projectsToggle = page.getByRole('button', { name: /全プロジェクト/ });
+    const projectList = page.getByRole('list', { name: '全プロジェクト一覧' });
+
+    await expect(projectsToggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(projectList).toBeVisible();
+
+    await projectsToggle.click();
+    await expect(projectsToggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(projectList).toBeHidden();
+
+    await projectsToggle.click();
+    await expect(projectsToggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(projectList).toBeVisible();
+  });
+
   test('should be responsive on mobile', async ({ page }) => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
