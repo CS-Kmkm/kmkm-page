@@ -13,16 +13,14 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
   const [imageError, setImageError] = useState(false);
 
   const buttonClassName = [
-    'relative w-24 h-24 sm:w-28 sm:h-28 p-4 sm:p-5',
-    'bg-white dark:bg-gray-300 rounded-xl',
-    'border border-gray-200 dark:border-gray-400',
-    'shadow-soft',
-    'transition-all duration-300 ease-out',
-    'hover:shadow-soft-lg hover:-translate-y-1',
-    'hover:border-blue-300 dark:hover:border-blue-500',
+    'relative w-full aspect-square p-3 sm:p-4',
+    'bg-gray-50/80 dark:bg-gray-900/30 rounded-lg',
+    'border border-gray-200/80 dark:border-gray-700/60',
+    'transition-colors duration-200',
+    'hover:bg-white dark:hover:bg-gray-800',
+    'hover:border-gray-300 dark:hover:border-gray-600',
     'focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400',
     'focus:ring-offset-2 dark:focus:ring-offset-gray-900',
-    'active:scale-95',
   ].join(' ');
 
   const getCategoryIcon = (category: string) => {
@@ -56,7 +54,7 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
   };
 
   return (
-    <div className="relative flex flex-col items-center w-24 sm:w-28">
+    <div className="relative flex w-full min-w-0 flex-col items-stretch">
       <button
         onClick={handleClick}
         onKeyDown={handleKeyDown}
@@ -65,34 +63,35 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
         onFocus={() => setShowTooltip(true)}
         onBlur={() => setShowTooltip(false)}
         className={buttonClassName}
-        aria-label={`View ${tech.name} details`}
-        role="button"
+        aria-label={`${tech.name}の詳細を表示`}
         type="button"
       >
         {/* Logo Image */}
-        <div className="w-full h-full flex items-center justify-center">
-          {tech.logoUrl && !imageError ? (
-            <Image
-              src={tech.logoUrl}
-              alt={tech.logoAlt || `${tech.name} logo`}
-              width={48}
-              height={48}
-              onError={handleImageError}
-              className="object-contain w-12 h-12 sm:w-14 sm:h-14 dark:mix-blend-multiply"
-              priority={false}
-              unoptimized={true}
-            />
-          ) : (
-            <span className="text-2xl sm:text-3xl" role="img" aria-label={`${tech.name} icon`}>
-              {getCategoryIcon(tech.category)}
-            </span>
-          )}
+        <div className="flex h-full w-full items-center justify-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-md bg-gray-50 p-2 dark:bg-gray-100 sm:h-14 sm:w-14">
+            {tech.logoUrl && !imageError ? (
+              <Image
+                src={tech.logoUrl}
+                alt={tech.logoAlt || `${tech.name}のロゴ`}
+                width={48}
+                height={48}
+                onError={handleImageError}
+                className="h-full w-full object-contain"
+                priority={false}
+                unoptimized={true}
+              />
+            ) : (
+              <span className="text-2xl sm:text-3xl" role="img" aria-label={`${tech.name}のアイコン`}>
+                {getCategoryIcon(tech.category)}
+              </span>
+            )}
+          </div>
         </div>
       </button>
 
       {/* Tech Name Label */}
-      <div className="mt-2 sm:mt-3 text-center h-10 sm:h-12 flex items-center justify-center w-full px-1">
-        <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 line-clamp-2 leading-3 sm:leading-4 text-center overflow-hidden text-ellipsis w-full">
+      <div className="mt-2 flex h-10 w-full items-start justify-center px-1 text-center sm:h-11">
+        <span className="line-clamp-2 w-full overflow-hidden text-ellipsis text-center text-xs font-medium leading-4 text-gray-700 dark:text-gray-300 sm:text-sm">
           {tech.name}
         </span>
       </div>
@@ -100,7 +99,7 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
       {/* Tooltip */}
       {showTooltip && (
         <div
-          className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm rounded-md whitespace-nowrap pointer-events-none z-10 animate-fade-in"
+          className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-900 px-3 py-1.5 text-sm text-white dark:bg-gray-100 dark:text-gray-900"
           role="tooltip"
         >
           {tech.name}

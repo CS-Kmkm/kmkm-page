@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useId, useState } from 'react';
 import { TechItem } from '@/types';
 import TechIconGrid from './TechIconGrid';
 
@@ -20,16 +20,43 @@ const TechCategorySection: React.FC<TechCategorySectionProps> = ({
   techItems,
   onTechSelect
 }) => {
+  const [isExpanded, setIsExpanded] = useState(true);
+  const contentId = useId();
+
   if (techItems.length === 0) {
     return null;
   }
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-4 border-b border-gray-200/80 pb-6 last:border-b-0 last:pb-0 dark:border-gray-700/60" aria-label={`${title}カテゴリ`}>
       {/* Section Header */}
-      <div className="border-b border-gray-200 dark:border-gray-700 pb-3">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
-          {title} <span className="text-xs text-gray-500 dark:text-gray-400 font-normal">({techItems.length}件)</span>
+      <div>
+        <h2>
+          <button
+            type="button"
+            className="group flex min-h-10 w-full items-center justify-between gap-3 rounded-md text-left text-lg font-semibold text-gray-900 transition-colors duration-150 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:text-gray-100 dark:hover:text-blue-300 dark:focus:ring-blue-400 dark:focus:ring-offset-gray-900 sm:text-xl"
+            aria-expanded={isExpanded}
+            aria-controls={contentId}
+            onClick={() => setIsExpanded((expanded) => !expanded)}
+          >
+            <span className="min-w-0">
+              {title} <span className="text-xs text-gray-500 dark:text-gray-400 font-normal">({techItems.length}件)</span>
+            </span>
+            <svg
+              className={`h-5 w-5 flex-shrink-0 text-gray-400 transition-transform duration-200 group-hover:text-blue-600 dark:text-gray-500 dark:group-hover:text-blue-300 ${isExpanded ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
         </h2>
         {description && (
           <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
@@ -39,10 +66,12 @@ const TechCategorySection: React.FC<TechCategorySectionProps> = ({
       </div>
 
       {/* Tech Grid */}
-      <TechIconGrid
-        techItems={techItems}
-        onTechSelect={onTechSelect}
-      />
+      <div id={contentId} hidden={!isExpanded}>
+        <TechIconGrid
+          techItems={techItems}
+          onTechSelect={onTechSelect}
+        />
+      </div>
     </section>
   );
 };

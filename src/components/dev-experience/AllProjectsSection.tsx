@@ -10,8 +10,11 @@ interface AllProjectsSectionProps {
   onProjectSelect: (project: ProjectDetail) => void;
 }
 
+const sectionClasses = 'xl:h-[var(--experience-panel-height)] xl:flex xl:flex-col';
+const listClasses = 'space-y-3 overflow-visible custom-scrollbar xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:pr-2';
+
 /**
- * AllProjectsSection component displays all projects with scrollable list
+ * AllProjectsSection component displays all projects.
  */
 const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
   projects,
@@ -19,30 +22,32 @@ const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
 }) => {
   if (projects.length === 0) {
     return (
-      <div className="space-y-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors duration-200">
+      <section className="h-full" aria-label="全プロジェクト">
+        <div className={sectionClasses}>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
             全プロジェクト (0)
           </h3>
-          <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg text-center">
+          <div className="rounded-lg bg-gray-50/80 p-4 text-center dark:bg-gray-800/60">
             <p className="text-gray-500 dark:text-gray-400 text-sm">プロジェクトがありません</p>
           </div>
         </div>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors duration-200">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-          全プロジェクト ({projects.length})
-        </h3>
+    <section className="h-full" aria-label="全プロジェクト">
+      <div className={sectionClasses}>
+        <div className="mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            全プロジェクト <span className="text-xs text-gray-500 dark:text-gray-400 font-normal">({projects.length}件)</span>
+          </h3>
+        </div>
         <div
-          className="space-y-3 overflow-y-auto pr-2 custom-scrollbar"
-          style={getProjectListStyle(projects.length)}
+          className={listClasses}
+          style={getProjectListStyle()}
           role="list"
-          aria-label="All projects"
+          aria-label="全プロジェクト一覧"
         >
           {projects.map((project) => (
             <div key={project.id} role="listitem">
@@ -54,7 +59,7 @@ const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

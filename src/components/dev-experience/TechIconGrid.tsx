@@ -72,15 +72,18 @@ const TechIconGrid: React.FC<TechIconGridProps> = ({
 
   return (
     <div
-      className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-6 gap-2 sm:gap-3 animate-fade-in"
+      className="grid w-full justify-start gap-3 animate-fade-in"
+      style={{
+        gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 6.75rem), 6.75rem))'
+      }}
       role="list"
-      aria-label="Technology stack"
+      aria-label="技術スタック一覧"
     >
       {sortedTechItems.map((tech, index) => (
         <div
           key={tech.id}
           role="listitem"
-          className="animate-fade-in"
+          className="min-w-0 animate-fade-in"
           style={{
             animationDelay: `${index * 50}ms`
           }}

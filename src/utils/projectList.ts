@@ -1,28 +1,17 @@
 /**
- * Project list display constants and utilities
+ * Project list display utilities.
  */
 
-// Constants for project list display
-export const PROJECT_LIST_CONSTANTS = {
-  MAX_VISIBLE_PROJECTS: 10,
-  PROJECT_ITEM_HEIGHT: 120, // px
-} as const;
+import type { CSSProperties } from 'react';
 
-/**
- * Calculate the maximum height for project list container
- * @param projectCount - Number of projects to display
- * @returns Maximum height in pixels
- */
-export const calculateProjectListHeight = (projectCount: number): number => {
-  const visibleCount = Math.min(PROJECT_LIST_CONSTANTS.MAX_VISIBLE_PROJECTS, projectCount);
-  return visibleCount * PROJECT_LIST_CONSTANTS.PROJECT_ITEM_HEIGHT;
+type ProjectListStyle = CSSProperties & {
+  '--project-list-max-height': string;
 };
 
 /**
- * Get inline style object for project list container
- * @param projectCount - Number of projects to display
- * @returns Style object with maxHeight property
+ * Get CSS variables for responsive project list containers.
+ * Mobile lists use normal page scrolling; desktop can opt into this viewport-aware cap.
  */
-export const getProjectListStyle = (projectCount: number): React.CSSProperties => ({
-  maxHeight: `${calculateProjectListHeight(projectCount)}px`,
+export const getProjectListStyle = (): ProjectListStyle => ({
+  '--project-list-max-height': 'min(72vh, 48rem)',
 });

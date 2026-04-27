@@ -5,13 +5,15 @@ import { ProjectListProps } from '@/types';
 import ProjectListItem from './ProjectListItem';
 import { getProjectListStyle } from '@/utils/projectList';
 
+const listClasses = 'space-y-3 overflow-visible custom-scrollbar lg:overflow-y-auto lg:pr-2 lg:max-h-[var(--project-list-max-height)]';
+
 /**
- * ProjectList component displays a list of projects with scrollable container
+ * ProjectList component displays related projects.
  */
 const ProjectList: React.FC<ProjectListProps> = ({ projects, onProjectSelect }) => {
   if (projects.length === 0) {
     return (
-      <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg text-center">
+      <div className="rounded-lg border border-dashed border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-800/60 p-4 text-center">
         <p className="text-gray-500 dark:text-gray-400 text-sm">関連プロジェクトがありません</p>
       </div>
     );
@@ -19,10 +21,10 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, onProjectSelect }) 
 
   return (
     <div
-      className="space-y-3 overflow-y-auto pr-2 custom-scrollbar"
-      style={getProjectListStyle(projects.length)}
+      className={listClasses}
+      style={getProjectListStyle()}
       role="list"
-      aria-label="Related projects"
+      aria-label="関連プロジェクト一覧"
     >
       {projects.map((project) => (
         <div key={project.id} role="listitem">
