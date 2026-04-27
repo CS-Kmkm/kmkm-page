@@ -176,6 +176,26 @@ function mapEventCategoryToUpdateCategory(eventCategory: EventCategory): UpdateI
   }
 }
 
+function hasUpcomingPublication(publications: PublicationEntry[]): boolean {
+  return publications.some(pub => pub.toBeAppear === true);
+}
+
+function getPublicationEventLabel(publications: PublicationEntry[]): string {
+  return hasUpcomingPublication(publications) ? '論文発表予定' : '論文発表';
+}
+
+function getPublicationRoleDescription(publication: PublicationEntry): string {
+  if (publication.toBeAppear === true) {
+    return publication.isFirstAuthor
+      ? `${publication.title}を第一著者として発表予定`
+      : `${publication.title}を共著者として発表予定`;
+  }
+
+  return publication.isFirstAuthor
+    ? `${publication.title}を第一著者として発表`
+    : `${publication.title}を共著者として執筆`;
+}
+
 export const getProfile = (): ProfileInfo => {
   const profile = loadProfileData();
   return profile || {
@@ -198,10 +218,8 @@ export const getTimelineEvents = (): TimelineEventEntry[] => {
       // Include all publications as research achievements
       events.push({
         id: `timeline-pub-${pub.id}`,
-        title: `論文発表: ${pub.venue}`,
-        description: pub.isFirstAuthor
-          ? `${pub.title}を第一著者として発表`
-          : `${pub.title}を共著者として執筆`,
+        title: `${getPublicationEventLabel([pub])}: ${pub.venue}`,
+        description: getPublicationRoleDescription(pub),
         date: pub.date,
         year: pubYear.toString(),
         category: '研究成果'
@@ -420,10 +438,11 @@ export const getEvents = (): EventEntry[] => {
       return items.map(item => item.title).join('、');
     };
 
+    const isUpcomingPublication = hasUpcomingPublication(groupedPublications);
+    const publicationEventLabel = getPublicationEventLabel(groupedPublications);
+
     const description = groupedPublications.length === 1
-      ? (newestPublication.isFirstAuthor
-          ? `${newestPublication.title}を第一著者として発表`
-          : `${newestPublication.title}を共著者として執筆`)
+      ? getPublicationRoleDescription(newestPublication)
       : (() => {
           const roleDetails: string[] = [];
 
@@ -434,7 +453,8 @@ export const getEvents = (): EventEntry[] => {
             roleDetails.push(`共著：${formatTitleList(coAuthorPublications)}`);
           }
 
-          return `同一会議で${groupedPublications.length}件の論文を発表（第一著者${firstAuthorCount}件・共著${coAuthorCount}件）。\n${roleDetails.join('\n')}`;
+          const actionLabel = isUpcomingPublication ? '発表予定' : '発表';
+          return `${groupedPublications.length}件の論文を${actionLabel}（主著${firstAuthorCount}件・共著${coAuthorCount}件）\n${roleDetails.join('\n')}`;
         })();
 
     const authorshipTags: string[] = [];
@@ -476,8 +496,8 @@ export const getEvents = (): EventEntry[] => {
     events.push({
       id: eventId,
       title: groupedPublications.length > 1
-        ? `${newestPublication.venue} 論文発表（${groupedPublications.length}件）`
-        : `${newestPublication.venue} 論文発表`,
+        ? `${newestPublication.venue} ${publicationEventLabel}（${groupedPublications.length}件）`
+        : `${newestPublication.venue} ${publicationEventLabel}`,
       description,
       date: newestPublication.date,
       year: eventYear,
