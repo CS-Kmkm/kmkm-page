@@ -1,5 +1,5 @@
 import { UpdateItem, CareerEntry, ExtendedCareerEntry, TechItem, ProjectDetail, PublicationEntry, ProfileInfo, EventEntry, EventFilters, EventCategory, TimelineEventEntry } from '@/types';
-import { filterByDisplayDate } from '@/utils/dateUtils';
+import { filterByDisplayDate, getCurrentDate } from '@/utils/dateUtils';
 
 // Import JSON data with error handling
 let publicationsData: { publications: PublicationEntry[] } | null = null;
@@ -176,6 +176,55 @@ function mapEventCategoryToUpdateCategory(eventCategory: EventCategory): UpdateI
   }
 }
 
+function getPublicationEventLabel(publications: PublicationEntry[]): string {
+  return publications.some(isPublicationAwaitingPresentation) ? '論文発表予定' : '論文発表';
+}
+
+function getPublicationRoleDescription(publication: PublicationEntry): string {
+  if (publication.toBeAppear === true) {
+    return publication.isFirstAuthor
+      ? `${publication.title}を第一著者として発表予定`
+      : `${publication.title}を共著者として発表予定`;
+  }
+
+  return publication.isFirstAuthor
+    ? `${publication.title}を第一著者として発表`
+    : `${publication.title}を共著者として執筆`;
+}
+
+function isPublicationAwaitingPresentation(publication: PublicationEntry): boolean {
+  if (publication.toBeAppear !== true || !publication.date) {
+    return false;
+  }
+
+  return getCurrentDate() <= publication.date;
+}
+
+function getPublicationDisplayDate(publication: PublicationEntry): string {
+  if (isPublicationAwaitingPresentation(publication)) {
+    return publication.displayDate;
+  }
+
+  return publication.date || publication.displayDate;
+}
+
+function formatJapaneseDate(dateString: string): string {
+  const date = new Date(`${dateString}T00:00:00`);
+  return date.toLocaleDateString('ja-JP', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+
+function appendPresentationSchedule(description: string, publication: PublicationEntry): string {
+  if (!isPublicationAwaitingPresentation(publication) || !publication.date) {
+    return description;
+  }
+
+  return `${description}（${formatJapaneseDate(publication.date)}）`;
+}
+
 export const getProfile = (): ProfileInfo => {
   const profile = loadProfileData();
   return profile || {
@@ -193,16 +242,15 @@ export const getTimelineEvents = (): TimelineEventEntry[] => {
   const publications = getPublications();
   publications.forEach(pub => {
     if (pub.date) {
-      const pubYear = new Date(pub.date).getFullYear();
+      const visibleDate = getPublicationDisplayDate(pub);
+      const pubYear = new Date(visibleDate).getFullYear();
 
       // Include all publications as research achievements
       events.push({
         id: `timeline-pub-${pub.id}`,
-        title: `論文発表: ${pub.venue}`,
-        description: pub.isFirstAuthor
-          ? `${pub.title}を第一著者として発表`
-          : `${pub.title}を共著者として執筆`,
-        date: pub.date,
+        title: `${getPublicationEventLabel([pub])}: ${pub.venue}`,
+        description: appendPresentationSchedule(getPublicationRoleDescription(pub), pub),
+        date: visibleDate,
         year: pubYear.toString(),
         category: '研究成果'
       });
@@ -410,7 +458,6 @@ export const getEvents = (): EventEntry[] => {
       return;
     }
 
-    const eventYear = new Date(newestPublication.date).getFullYear();
     const firstAuthorPublications = sortedPublications.filter(pub => pub.isFirstAuthor);
     const coAuthorPublications = sortedPublications.filter(pub => !pub.isFirstAuthor);
     const firstAuthorCount = firstAuthorPublications.length;
@@ -420,10 +467,19 @@ export const getEvents = (): EventEntry[] => {
       return items.map(item => item.title).join('、');
     };
 
+    const latestDisplayDate = groupedPublications.reduce((latest, pub) => {
+      return pub.displayDate > latest ? pub.displayDate : latest;
+    }, newestPublication.displayDate);
+
+    const isUpcomingPublication = groupedPublications.some(isPublicationAwaitingPresentation);
+    const publicationEventLabel = getPublicationEventLabel(groupedPublications);
+    const eventDate = isPublicationAwaitingPresentation(newestPublication)
+      ? latestDisplayDate
+      : newestPublication.date;
+    const eventYear = new Date(eventDate).getFullYear();
+
     const description = groupedPublications.length === 1
-      ? (newestPublication.isFirstAuthor
-          ? `${newestPublication.title}を第一著者として発表`
-          : `${newestPublication.title}を共著者として執筆`)
+      ? appendPresentationSchedule(getPublicationRoleDescription(newestPublication), newestPublication)
       : (() => {
           const roleDetails: string[] = [];
 
@@ -434,7 +490,9 @@ export const getEvents = (): EventEntry[] => {
             roleDetails.push(`共著：${formatTitleList(coAuthorPublications)}`);
           }
 
-          return `同一会議で${groupedPublications.length}件の論文を発表（第一著者${firstAuthorCount}件・共著${coAuthorCount}件）。\n${roleDetails.join('\n')}`;
+          const actionLabel = isUpcomingPublication ? '発表予定' : '発表';
+          const baseDescription = `${groupedPublications.length}件の論文を${actionLabel}（主著${firstAuthorCount}件・共著${coAuthorCount}件）\n${roleDetails.join('\n')}`;
+          return appendPresentationSchedule(baseDescription, newestPublication);
         })();
 
     const authorshipTags: string[] = [];
@@ -465,10 +523,6 @@ export const getEvents = (): EventEntry[] => {
       )
     );
 
-    const latestDisplayDate = groupedPublications.reduce((latest, pub) => {
-      return pub.displayDate > latest ? pub.displayDate : latest;
-    }, newestPublication.displayDate);
-
     const eventId = groupedPublications.length === 1
       ? `pub-${newestPublication.id}`
       : `pub-group-${groupedPublications.map(pub => pub.id).sort().join('-')}`;
@@ -476,10 +530,10 @@ export const getEvents = (): EventEntry[] => {
     events.push({
       id: eventId,
       title: groupedPublications.length > 1
-        ? `${newestPublication.venue} 論文発表（${groupedPublications.length}件）`
-        : `${newestPublication.venue} 論文発表`,
+        ? `${newestPublication.venue} ${publicationEventLabel}（${groupedPublications.length}件）`
+        : `${newestPublication.venue} ${publicationEventLabel}`,
       description,
-      date: newestPublication.date,
+      date: eventDate,
       year: eventYear,
       category: EventCategory.PUBLICATION,
       displayDate: latestDisplayDate,

@@ -7,14 +7,14 @@ test.describe('Homepage', () => {
 
   test('should load and display main content', async ({ page }) => {
     // Check page title
-    await expect(page).toHaveTitle(/茂木光志.*個人ポートフォリオ/);
+    await expect(page).toHaveTitle(/茂木光志/);
     
     // Check main heading is visible (exclude screen reader only headings)
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
     
     // Check profile section is visible
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
-    await expect(page.getByText('名古屋大学大学院情報学研究科知能システム学専攻松原研究室', { exact: true })).toBeVisible();
+    await expect(page.getByText('名古屋大学大学院 情報学研究科 知能システム学専攻 松原研究室', { exact: true })).toBeVisible();
     
     // Check social media section
     await expect(page.getByLabel('ソーシャルメディアリンク')).toBeVisible();

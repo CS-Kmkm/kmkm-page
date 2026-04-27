@@ -1,6 +1,23 @@
 {
   "publications": [
     {
+      "id": "pub-006",
+      "title": "Identifying Implicit Research Data References in Paper Citations",
+      "authors": [
+        "Koshi Motegi",
+        "Koichiro Ito",
+        "Shigeki Matsubara"
+      ],
+      "venue": "3rd International Workshop on Natural Scientific Language Processing (NSLP 2026)",
+      "year": 2026,
+      "date": "2026-05-12",
+      "displayDate": "2026-04-27",
+      "toBeAppear": true,
+      "isFirstAuthor": true,
+      "isPeerReviewed": true,
+      "publicationType": "workshop"
+    },
+    {
       "id": "pub-001",
       "title": "Where Did the Research Data Originate? Acquiring Provenance of Research Data from Scholarly Papers",
       "authors": [
@@ -12,7 +29,6 @@
       "year": 2025,
       "date": "2025-12-04",
       "displayDate": "2025-12-04",
-      "toBeAppear": true,
       "isFirstAuthor": true,
       "isPeerReviewed": true,
       "publicationType": "conference",
@@ -49,7 +65,6 @@
       "year": 2025,
       "date": "2025-12-03",
       "displayDate": "2025-12-03",
-      "toBeAppear": true,
       "isFirstAuthor": false,
       "isPeerReviewed": false,
       "publicationType": "conference",
@@ -59,7 +74,7 @@
           "title": "大学ICT推進協議会2025年度年次大会（AXIES2025）最優秀論文賞",
           "date": "2026-03-31",
           "organization": "大学ICT推進協議会",
-          "description": "論文：\n「研究データのオープンアクセスを加速化する：生成AIを用いたメタデータ生成と機関レポジトリへの収載」\nが\n大学ICT推進協議会2025年度年次大会（AXIES2025）最優秀論文賞\nを受賞"
+          "description": "論文：「研究データのオープンアクセスを加速化する：生成AIを用いたメタデータ生成と機関レポジトリへの収載」\nが大学ICT推進協議会2025年度年次大会（AXIES2025）最優秀論文賞を受賞"
         }
       ]
     },
@@ -73,7 +88,6 @@
       "year": 2026,
       "date": "2026-03-12",
       "displayDate": "2025-12-03",
-      "toBeAppear": true,
       "isFirstAuthor": true,
       "isPeerReviewed": false,
       "publicationType": "conference",
@@ -89,7 +103,6 @@
       "year": 2026,
       "date": "2026-03-12",
       "displayDate": "2025-12-03",
-      "toBeAppear": true,
       "isFirstAuthor": false,
       "isPeerReviewed": false,
       "publicationType": "conference",

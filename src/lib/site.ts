@@ -30,7 +30,6 @@ export const siteConfig = {
 } as const;
 
 export const navigationItems: NavigationItem[] = [
-  { href: '/', label: 'トップ', ariaLabel: 'トップページへ移動' },
   { href: '/career', label: '経歴', ariaLabel: '経歴ページへ移動' },
   { href: '/publications', label: '論文・発表', ariaLabel: '論文・発表ページへ移動' },
   { href: '/dev-experience', label: '開発経験', ariaLabel: '開発経験ページへ移動' },
