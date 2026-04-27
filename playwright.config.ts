@@ -88,7 +88,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npm run build && npm run start',
+    command: 'corepack pnpm build && corepack pnpm start',
     url: 'http://localhost:3000',
     reuseExistingServer: true,
     timeout: 120 * 1000,

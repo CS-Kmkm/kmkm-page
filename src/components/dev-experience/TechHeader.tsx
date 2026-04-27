@@ -26,15 +26,15 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
   const getProficiencyColor = (level: string) => {
     switch (level) {
       case 'expert':
-        return 'bg-green-100 dark:bg-green-900/20 text-green-900 dark:text-green-300 border-green-300 dark:border-green-700';
+        return 'bg-gray-50 dark:bg-gray-700/50 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-600';
       case 'advanced':
-        return 'bg-blue-100 dark:bg-blue-900/20 text-blue-900 dark:text-blue-300 border-blue-300 dark:border-blue-700';
+        return 'bg-gray-50 dark:bg-gray-700/50 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-600';
       case 'intermediate':
-        return 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-900 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700';
+        return 'bg-gray-50 dark:bg-gray-700/50 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-600';
       case 'beginner':
-        return 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border-gray-300 dark:border-gray-600';
+        return 'bg-gray-50 dark:bg-gray-700/50 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-600';
       default:
-        return 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border-gray-300 dark:border-gray-600';
+        return 'bg-gray-50 dark:bg-gray-700/50 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-600';
     }
   };
 
@@ -54,9 +54,9 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
   };
 
   return (
-    <div className="min-w-full w-full flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-6 p-6 sm:p-8 bg-white dark:bg-gray-800/80 rounded-2xl border border-gray-200/80 dark:border-gray-700/50 shadow-soft transition-all duration-300 box-border overflow-hidden">
+    <div className="min-w-full w-full flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm transition-colors duration-200 box-border overflow-hidden">
       {/* Logo */}
-      <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center bg-gray-50 dark:bg-gray-200 rounded-xl p-3">
+      <div className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center bg-gray-50 dark:bg-gray-200 rounded-lg border border-gray-100 dark:border-gray-300 p-2.5">
         {tech.logoUrl ? (
           <Image
             src={tech.logoUrl}
@@ -66,7 +66,7 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
             className="object-contain w-full h-full"
           />
         ) : (
-          <span className="text-4xl sm:text-5xl" role="img" aria-label={`${tech.name} icon`}>
+          <span className="text-2xl sm:text-3xl" role="img" aria-label={`${tech.name}のアイコン`}>
             {getCategoryIcon(tech.category)}
           </span>
         )}
@@ -74,15 +74,15 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
 
       {/* Info */}
       <div className="flex-grow min-w-0 w-full overflow-hidden">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3 w-full block overflow-hidden break-words">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 w-full block overflow-hidden break-words">
           {tech.name}
         </h2>
         
-        <div className="flex flex-wrap items-center gap-3 w-full">
+        <div className="flex flex-wrap items-center gap-2 w-full">
           {/* Proficiency Badge */}
           <span
             className={`
-              px-4 py-1.5 rounded-full text-sm font-medium border
+              px-3 py-1 rounded-lg text-sm font-medium border
               ${getProficiencyColor(tech.proficiency)}
             `}
           >
@@ -90,7 +90,7 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
           </span>
 
           {/* Experience Years */}
-          <span className="flex items-center gap-2 text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700/50 px-3 py-1.5 rounded-full">
+          <span className="flex items-center gap-2 text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 px-3 py-1 rounded-lg">
             <svg
               className="w-4 h-4"
               fill="none"

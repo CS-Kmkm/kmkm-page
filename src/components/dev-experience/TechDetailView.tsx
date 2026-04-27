@@ -45,21 +45,21 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
   }, []);
 
   return (
-    <div
-      className="animate-slide-in-right fixed inset-0 z-[60] bg-gray-50 dark:bg-gray-900 overflow-y-auto lg:static lg:z-auto lg:bg-transparent lg:overflow-visible transition-colors duration-200"
+    <section
+      className="animate-slide-in-right w-full transition-colors duration-200"
       role="region"
       aria-label={`${tech.name}の詳細`}
     >
-      <div className="min-h-screen lg:min-h-0 p-4 sm:p-6 lg:px-4 pt-20 lg:pt-4 w-[90%] max-w-7xl mx-auto">
+      <div className="w-full">
         {/* Back Button */}
         <button
           id="tech-detail-back-button"
           onClick={onBack}
           className="
-            inline-flex items-center gap-2 mb-6
-            px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600
-            transition-all duration-150
-            hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500
+            inline-flex items-center gap-2 mb-4 sm:mb-6
+            px-4 py-2 text-sm font-medium text-slate-700 dark:text-gray-300 bg-white dark:bg-gray-800 rounded-lg border border-slate-300 dark:border-gray-600
+            transition-colors duration-150
+            hover:bg-slate-50 dark:hover:bg-gray-700 hover:border-slate-400 dark:hover:border-gray-500
             focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900
             min-h-[44px]
           "
@@ -84,9 +84,9 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
         </button>
 
         {/* Content - Two Column Layout */}
-        <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr] gap-6 xl:gap-8 xl:items-start">
+        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_minmax(320px,0.9fr)] gap-5 sm:gap-6 xl:items-start">
           {/* Left Column - Tech Information */}
-          <div className="flex flex-col gap-6 w-full min-w-0">
+          <div className="flex flex-col gap-5 sm:gap-6 w-full min-w-0">
             {/* Tech Header */}
             <div className="w-full min-w-0">
               <TechHeader tech={tech} />
@@ -122,7 +122,7 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
 
           {/* Right Column - Project List */}
           <div className="xl:h-full">
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 xl:h-full xl:flex xl:flex-col transition-colors duration-200">
+            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-5 xl:h-full xl:flex xl:flex-col transition-colors duration-200">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 xl:flex-shrink-0">
                 関連プロジェクト ({projects.length})
               </h3>
@@ -136,7 +136,7 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

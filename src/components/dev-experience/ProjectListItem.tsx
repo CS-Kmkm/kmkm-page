@@ -11,6 +11,11 @@ import {
   getIconClasses,
 } from '@/lib/ui/listItemStyles';
 
+const getProjectListItemClasses = (): string =>
+  getButtonListItemClasses()
+    .replace('hover:bg-gray-300 dark:hover:bg-gray-600', 'hover:bg-gray-50 dark:hover:bg-gray-800/80 hover:border-gray-300 dark:hover:border-gray-600')
+    .replace('active:scale-[0.98]', 'active:scale-[0.995]');
+
 /**
  * ProjectListItem component displays a clickable project list item
  * with project name, duration, and role
@@ -55,8 +60,8 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ project, onClick }) =
     <button
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      className={getButtonListItemClasses()}
-      aria-label={`View details for ${project.name}`}
+      className={getProjectListItemClasses()}
+      aria-label={`${project.name}の詳細を表示`}
       type="button"
     >
       <div className="flex items-start justify-between gap-3">

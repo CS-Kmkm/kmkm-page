@@ -9,6 +9,8 @@ import ProjectModal from '@/components/ui/ProjectModal';
 import { useTechExperience } from '@/hooks/useTechExperience';
 import { TechItem, ProjectDetail } from '@/types';
 
+const PAGE_TITLE = '開発経験';
+
 export default function DevExperiencePage() {
   const {
     allProjects,
@@ -61,50 +63,55 @@ export default function DevExperiencePage() {
   };
 
   return (
-    <PageLayout title="Development Experience">
-      <div className="w-[90%] max-w-7xl mx-auto">
+    <PageLayout title={PAGE_TITLE}>
+      <div className="w-[90%] max-w-7xl mx-auto px-4">
         <div className="space-y-6 sm:space-y-8">
           {/* Page header */}
-          <div className="text-center space-y-3 sm:space-y-4 px-4">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">
-              開発経験
-            </h1>
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div className="space-y-2">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+                {PAGE_TITLE}
+              </h1>
+            </div>
           </div>
 
           {/* Main Content */}
           {!selectedTech ? (
             // Two Column Layout - Tech Categories and Projects
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8 px-4 xl:items-start">
+            <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_1px_minmax(320px,420px)] xl:items-stretch xl:[--experience-panel-height:min(76vh,58rem)]">
               {/* Left Column - Tech Categories */}
-              <div className="space-y-8 sm:space-y-12">
-                <TechCategorySection
-                  title="プログラミング言語"
-                  description="使用しているプログラミング言語"
-                  techItems={categorizedTech.languages}
-                  onTechSelect={handleTechSelect}
-                />
+              <section
+                className="min-w-0 xl:h-[var(--experience-panel-height)] xl:overflow-y-auto xl:pr-2 custom-scrollbar"
+                aria-label="技術カテゴリ一覧"
+              >
+                <div className="space-y-6 sm:space-y-7">
+                  <TechCategorySection
+                    title="プログラミング言語"
+                    techItems={categorizedTech.languages}
+                    onTechSelect={handleTechSelect}
+                  />
 
-                <TechCategorySection
-                  title="フレームワーク・ライブラリ"
-                  description="Webアプリケーション開発に使用しているフレームワーク"
-                  techItems={categorizedTech.frameworks}
-                  onTechSelect={handleTechSelect}
-                />
+                  <TechCategorySection
+                    title="フレームワーク・ライブラリ"
+                    techItems={categorizedTech.frameworks}
+                    onTechSelect={handleTechSelect}
+                  />
 
-                <TechCategorySection
-                  title="ツール・プラットフォーム"
-                  description="開発環境やインフラに使用しているツール"
-                  techItems={categorizedTech.tools}
-                  onTechSelect={handleTechSelect}
-                />
+                  <TechCategorySection
+                    title="ツール・プラットフォーム"
+                    techItems={categorizedTech.tools}
+                    onTechSelect={handleTechSelect}
+                  />
 
-                <TechCategorySection
-                  title="データベース"
-                  description="データ管理に使用しているデータベース"
-                  techItems={categorizedTech.databases}
-                  onTechSelect={handleTechSelect}
-                />
-              </div>
+                  <TechCategorySection
+                    title="データベース"
+                    techItems={categorizedTech.databases}
+                    onTechSelect={handleTechSelect}
+                  />
+                </div>
+              </section>
+
+              <div className="hidden w-px bg-gray-200 dark:bg-gray-700 xl:block" aria-hidden="true" />
 
               {/* Right Column - All Projects */}
               <AllProjectsSection

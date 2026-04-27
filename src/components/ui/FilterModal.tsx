@@ -4,7 +4,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FilterModalProps, PublicationFilters } from '@/types';
 import { getBackdropClassesWithFallback } from '@/lib/ui/modalStyles';
 
-const FilterModal: React.FC<FilterModalProps> = ({
+const getFilterStateKey = (filters: PublicationFilters) =>
+  `${filters.authorshipType}:${filters.publicationTypes.join(',')}`;
+
+const FilterModalContent: React.FC<FilterModalProps> = ({
   isOpen,
   onClose,
   onApply,
@@ -14,11 +17,6 @@ const FilterModal: React.FC<FilterModalProps> = ({
   const [localFilters, setLocalFilters] = useState<PublicationFilters>(currentFilters);
   const modalRef = useRef<HTMLDivElement>(null);
   const firstFocusableRef = useRef<HTMLInputElement>(null);
-
-  // Update local filters when currentFilters change
-  useEffect(() => {
-    setLocalFilters(currentFilters);
-  }, [currentFilters]);
 
   // Handle Escape key
   useEffect(() => {
@@ -182,6 +180,17 @@ const FilterModal: React.FC<FilterModalProps> = ({
         </div>
       </div>
     </div>
+  );
+};
+
+const FilterModal: React.FC<FilterModalProps> = (props) => {
+  if (!props.isOpen) return null;
+
+  return (
+    <FilterModalContent
+      key={getFilterStateKey(props.currentFilters)}
+      {...props}
+    />
   );
 };
 
