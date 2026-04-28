@@ -342,7 +342,7 @@ export const getEvents = (): EventEntry[] => {
       const isUniversity = career.organization.includes('大学');
       const isAdmission =
         (isPrimaryToHighSchool && career.role === '生徒') ||
-        (isUniversity && (career.role === '学部学生' || career.role.includes('大学院生')));
+        (isUniversity && (career.role === '学士' || career.role.includes('修士')));
       const educationDescriptionOrg =
         career.organization === '小学校'
           ? '地元の公立小学校'
@@ -358,7 +358,7 @@ export const getEvents = (): EventEntry[] => {
       if (isPrimaryToHighSchool) {
         startTitle = `${career.organization} ${career.role === '生徒' ? '入学' : '着任'}`;
       } else if (isUniversity) {
-        startTitle = `${career.organization} ${career.role === '学部学生' ? '入学' : career.role.includes('大学院生') ? '入学' : '着任'}`;
+        startTitle = `${career.organization} ${career.role === '学士' ? '入学' : career.role.includes('大学院生') ? '入学' : '着任'}`;
       } else {
         startTitle = `${career.organization} ${career.role} 着任`;
       }
@@ -393,10 +393,10 @@ export const getEvents = (): EventEntry[] => {
           endTitle = `${career.organization} ${career.role === '生徒' ? '卒業' : '退職'}`;
           endDescription = `${educationDescriptionOrg}を卒業しました`;
         } else if (career.organization.includes('大学')) {
-          if (career.role === '学部学生') {
+          if (career.role === '学士') {
             endTitle = `${career.organization} 卒業`;
             endDescription = `${career.organization}を卒業しました`;
-          } else if (career.role.includes('大学院生')) {
+          } else if (career.role.includes('修士')) {
             endTitle = `${career.organization} 修了`;
             endDescription = `${career.organization}を修了しました`;
           } else {

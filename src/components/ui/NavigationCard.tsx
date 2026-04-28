@@ -122,7 +122,7 @@ export function DevExperienceNavigationCard({ className }: { className?: string 
 export function PublicationsNavigationCard({ className }: { className?: string }) {
   return (
     <NavigationCard
-      title="論文投稿履歴"
+      title="論文・発表"
       href="/publications"
       icon={
         <svg className="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

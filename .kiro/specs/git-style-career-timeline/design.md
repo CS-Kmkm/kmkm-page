@@ -33,7 +33,7 @@ Git-Style Career Timeline Systemは、ユーザーの経歴をGitHubのブラン
 │      │   高等学校での学習
 │      │
 2021年 ├─ ● 名古屋大学 情報学部 [オレンジ色ブランチ]
-│      │   学部学生
+│      │   学士
 │      │   2021-04-01 - 2025-03-31
 │      │   大学での学習
 │      │
@@ -48,7 +48,7 @@ Git-Style Career Timeline Systemは、ユーザーの経歴をGitHubのブラン
 │      │  │  │   松原研究室への配属
 │      │  │  │
 2025年 ├─ ● 名古屋大学大学院 情報学研究科 [ピンク色ブランチ]
-│      │   大学院生（松原研究室）
+│      │   修士
 │      │   2025-04-01 - 現在
 │      │   大学院での研究活動
 │      │
@@ -239,7 +239,7 @@ interface BranchLabelProps {
 ノード位置
     ↓
     ● ─ 名古屋大学 情報学部              ← organization（ノードの右側）
-        学部学生（松原研究室）           ← role（ノードの右側）
+        学士（松原研究室）           ← role（ノードの右側）
         2024-04-01 - 2025-03-31          ← startDate - endDate（ノードの右側）
         大学での学習                     ← description（ノードの右側、4行目）
 ```
@@ -289,7 +289,7 @@ career.jsonのデータ構造を拡張します。
       "id": "career-001",
       "year": "2025",
       "organization": "名古屋大学大学院 情報学研究科",
-      "role": "大学院生（松原研究室）",
+      "role": "修士",
       "startDate": "2025-04-01",
       "endDate": null,
       "parentId": null,
@@ -299,7 +299,7 @@ career.jsonのデータ構造を拡張します。
       "id": "career-002",
       "year": "2024-2025",
       "organization": "名古屋大学 情報学部",
-      "role": "学部学生（松原研究室）",
+      "role": "学士（松原研究室）",
       "startDate": "2024-04-01",
       "endDate": "2025-03-31",
       "parentId": "career-004",
