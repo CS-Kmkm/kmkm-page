@@ -37,6 +37,8 @@ export interface ListItemProps {
   ariaLabel?: string;
   /** Whether the item is currently selected/active */
   isActive?: boolean;
+  /** Reduces internal spacing for compact lists */
+  compact?: boolean;
 }
 
 /**
@@ -53,9 +55,16 @@ export function ListItem({
   className = '',
   ariaLabel,
   isActive = false,
+  compact = false,
 }: ListItemProps) {
   const activeClasses = isActive ? 'ring-2 ring-blue-500 dark:ring-blue-400' : '';
   const baseClasses = `${getListItemContainerClasses()} ${activeClasses} ${className}`;
+  const titleClasses = compact
+    ? `text-sm sm:text-base font-semibold text-gray-900 dark:text-gray-100 leading-tight`
+    : getTitleClasses();
+  const metaClasses = compact
+    ? `text-xs sm:text-sm text-gray-500 dark:text-gray-400`
+    : getMetaClasses();
   const titleId = `list-item-${title.replace(/\s+/g, '-').toLowerCase()}`;
 
   // Content to render
@@ -63,9 +72,9 @@ export function ListItem({
     <>
       {/* Header with meta and badge */}
       {(meta || badge) && (
-        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+        <header className={`flex flex-col sm:flex-row sm:items-center sm:justify-between ${compact ? 'gap-1.5 mb-2' : 'gap-2 mb-3'}`}>
           {meta && (
-            <div className={getMetaClasses()}>
+            <div className={metaClasses}>
               {typeof meta === 'string' ? <span>{meta}</span> : meta}
             </div>
           )}
@@ -74,7 +83,7 @@ export function ListItem({
       )}
 
       {/* Title with optional icon */}
-      <h3 id={titleId} className={`${getTitleClasses()} flex items-center justify-between`}>
+      <h3 id={titleId} className={`${titleClasses} flex items-center justify-between`}>
         <span className="flex items-center gap-2">
           {icon && <span className="flex-shrink-0">{icon}</span>}
           <span>{title}</span>

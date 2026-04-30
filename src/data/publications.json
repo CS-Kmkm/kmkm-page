@@ -29,6 +29,7 @@
       "year": 2025,
       "date": "2025-12-04",
       "displayDate": "2025-12-04",
+      "url": "https://link.springer.com/chapter/10.1007/978-981-95-4861-3_29",
       "isFirstAuthor": true,
       "isPeerReviewed": true,
       "publicationType": "conference",
@@ -73,8 +74,7 @@
         {
           "title": "大学ICT推進協議会2025年度年次大会（AXIES2025）最優秀論文賞",
           "date": "2026-03-31",
-          "organization": "大学ICT推進協議会",
-          "description": "論文：「研究データのオープンアクセスを加速化する：生成AIを用いたメタデータ生成と機関レポジトリへの収載」\nが大学ICT推進協議会2025年度年次大会（AXIES2025）最優秀論文賞を受賞"
+          "organization": "大学ICT推進協議会"
         }
       ]
     },
@@ -88,6 +88,7 @@
       "year": 2026,
       "date": "2026-03-12",
       "displayDate": "2025-12-03",
+      "url": "https://www.anlp.jp/proceedings/annual_meeting/2026/pdf_dir/Q9-21.pdf",
       "isFirstAuthor": true,
       "isPeerReviewed": false,
       "publicationType": "conference",
@@ -103,6 +104,7 @@
       "year": 2026,
       "date": "2026-03-12",
       "displayDate": "2025-12-03",
+      "url": "https://www.anlp.jp/proceedings/annual_meeting/2026/pdf_dir/Q9-22.pdf",
       "isFirstAuthor": false,
       "isPeerReviewed": false,
       "publicationType": "conference",

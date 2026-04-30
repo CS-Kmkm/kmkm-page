@@ -26,7 +26,7 @@ src/
 │   ├── dev-experience/
 │   │   └── page.tsx       # 開発経験ページ
 │   └── publications/
-│       └── page.tsx       # 論文投稿履歴ページ
+│       └── page.tsx       # 論文・発表ページ
 ├── components/            # 再利用可能コンポーネント
 │   ├── layout/
 │   │   ├── Header.tsx
@@ -50,7 +50,7 @@ src/
 │   ├── updates.json       # 最新更新情報
 │   ├── career.json        # 経歴・所属変遷データ
 │   ├── tech-experience.json # 開発経験・技術スタックデータ
-│   ├── publications.json  # 論文投稿履歴データ
+│   ├── publications.json  # 論文・発表データ
 │   ├── profile.json       # 個人プロフィール情報
 │   └── index.ts           # データ読み込み用ヘルパー
 ├── styles/               # グローバルスタイル
@@ -65,7 +65,7 @@ src/
 - `/` - トップページ（最新更新情報 + ナビゲーション）
 - `/career` - 経歴ページ（所属変遷のタイムライン）
 - `/dev-experience` - 開発経験ページ（技術スタック + 実績）
-- `/publications` - 論文投稿履歴ページ（書誌情報一覧）
+- `/publications` - 論文・発表ページ（書誌情報一覧）
 
 ## Components and Interfaces
 

@@ -22,7 +22,7 @@ test.describe('Homepage', () => {
     // Check navigation cards are present
     await expect(page.getByRole('link', { name: '経歴', exact: true })).toBeVisible();
     await expect(page.getByRole('link', { name: '開発経験', exact: true })).toBeVisible();
-    await expect(page.getByRole('link', { name: '論文投稿履歴', exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: '論文・発表', exact: true })).toBeVisible();
   });
 
   test('should have working navigation', async ({ page }) => {

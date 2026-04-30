@@ -8,15 +8,15 @@ interface HeroSectionProps {
 
 export default function HeroSection({ profile }: HeroSectionProps) {
   return (
-    <section className="bg-white dark:bg-gray-800/80 rounded-2xl shadow-soft p-5 sm:p-6 lg:p-7 mb-5 sm:mb-6 transition-all duration-300">
+    <section className="bg-white dark:bg-gray-800/80 rounded-2xl shadow-soft p-4 sm:p-5 lg:p-5 mb-2 sm:mb-3 transition-all duration-300">
       <ProfileSection
         profile={profile}
         showBio={false}
         showLocation={false}
-        className="mb-1 sm:mb-2"
+        className="mb-0 sm:mb-1"
       />
 
-      <div className="border-t border-gray-200/80 dark:border-gray-700/50 pt-2 sm:pt-3">
+      <div className="border-t border-gray-200/80 dark:border-gray-700/50 pt-1.5 sm:pt-2">
         <SocialLinks
           socialLinks={profile.socialLinks.filter((link) => link.platform !== 'website')}
           showLabels={true}
