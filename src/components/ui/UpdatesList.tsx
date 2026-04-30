@@ -88,15 +88,15 @@ export default function UpdatesList({
   return (
     <>
       <section className={className} aria-labelledby="updates-heading">
-        <h2 
-          id="updates-heading" 
-          className={`text-2xl font-bold ${tokens.text.primary} mb-5`}
+        <h2
+          id="updates-heading"
+          className={`text-lg sm:text-xl font-bold ${tokens.text.primary} mb-2`}
         >
           {HEADING_LABELS.latestUpdates}
         </h2>
-        
-        <div 
-          className={`space-y-3 ${showScrollable ? 'max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400' : ''}`}
+
+        <div
+          className={`space-y-1.5 ${showScrollable ? 'max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400' : ''}`}
           style={showScrollable ? { scrollbarWidth: 'thin' } : undefined}
         >
           {displayUpdates.map((update) => {
@@ -106,7 +106,8 @@ export default function UpdatesList({
               <ListItem
                 key={update.id}
                 title={update.title}
-                className="p-2.5 sm:p-3"
+                className="p-1.5 sm:p-2"
+                compact
                 meta={
                   <time dateTime={update.date}>
                     {formatDate(update.date)}
@@ -125,7 +126,7 @@ export default function UpdatesList({
         </div>
 
         {!showScrollable && updates.length > maxItems && (
-          <div className="mt-6 text-center">
+          <div className="mt-3 text-center">
             <p className={`text-sm ${tokens.text.muted}`}>
               {COUNT_MESSAGES.moreItems(updates.length - maxItems)}
             </p>
