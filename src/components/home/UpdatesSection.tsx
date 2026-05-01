@@ -11,8 +11,10 @@ export default function UpdatesSection({ updates }: UpdatesSectionProps) {
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-2 sm:p-2.5 lg:p-3 transition-colors duration-200">
         <UpdatesList
           updates={updates}
-          maxItems={3}
+          maxItems={1}
           showScrollable={false}
+          autoFitToViewport
+          moreItemsHref="/career?view=list#list-heading"
         />
       </div>
     </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { PageLayout } from '@/components/common';
 import TimelineView from '@/components/timeline/TimelineView';
 import ListView from '@/components/timeline/ListView';
@@ -94,8 +95,8 @@ function useCareerData() {
 }
 
 // Custom hook for view state management
-function useViewState() {
-  const [viewMode, setViewMode] = useState<ViewMode>(DEFAULT_VIEW_MODE);
+function useViewState(initialViewMode: ViewMode = DEFAULT_VIEW_MODE) {
+  const [viewMode, setViewMode] = useState<ViewMode>(initialViewMode);
   const [isReversed, setIsReversed] = useState(DEFAULT_REVERSED_STATE);
   const [selectedEvent, setSelectedEvent] = useState<EventEntry | null>(null);
   const [eventIndex, setEventIndex] = useState<number>(0);
@@ -146,6 +147,8 @@ function useViewState() {
 
 // Main component
 export default function CareerPage() {
+  const searchParams = useSearchParams();
+  const initialViewMode = searchParams.get('view') === 'list' ? 'list' : DEFAULT_VIEW_MODE;
   const { careerEntries, events } = useCareerData();
   const {
     viewMode,
@@ -159,7 +162,7 @@ export default function CareerPage() {
     handleEventClick,
     handleCloseModal,
     handleNavigate
-  } = useViewState();
+  } = useViewState(initialViewMode);
 
   return (
     <PageLayout title={PAGE_TITLE}>

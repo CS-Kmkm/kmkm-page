@@ -6,6 +6,7 @@
 - When adding or updating dependencies, update `pnpm-lock.yaml` and keep `package-lock.json` absent.
 - This repository enforces `minimumReleaseAge: 10080` in `pnpm-workspace.yaml`, so pnpm should only install package versions that have been published for at least 7 days.
 - Do not add `minimumReleaseAgeExclude` entries unless the user explicitly approves the exception and the reason is documented in the change.
+- In Codex shell sessions on this Windows/nvm setup, run `corepack pnpm ...` commands with escalated permissions from the start. Sandboxed execution is expected to fail with `'node' is not recognized as an internal or external command` even though `corepack.cmd` is on PATH. Do not switch to `npm`, `npx`, Yarn, or Bun.
 - Common commands:
   - `corepack pnpm install`
   - `corepack pnpm add <package>`
