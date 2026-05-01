@@ -214,6 +214,8 @@ export interface UpdatesListProps {
   updates: UpdateItem[];
   maxItems?: number;
   showScrollable?: boolean;
+  autoFitToViewport?: boolean;
+  moreItemsHref?: string;
 }
 
 export interface TimelineProps {

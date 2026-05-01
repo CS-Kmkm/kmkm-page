@@ -35,6 +35,8 @@ export interface ListItemProps {
   className?: string;
   /** Custom aria-label */
   ariaLabel?: string;
+  /** Custom heading id used by aria-labelledby */
+  titleId?: string;
   /** Whether the item is currently selected/active */
   isActive?: boolean;
   /** Reduces internal spacing for compact lists */
@@ -54,6 +56,7 @@ export function ListItem({
   href,
   className = '',
   ariaLabel,
+  titleId: customTitleId,
   isActive = false,
   compact = false,
 }: ListItemProps) {
@@ -65,7 +68,7 @@ export function ListItem({
   const metaClasses = compact
     ? `text-xs sm:text-sm text-gray-500 dark:text-gray-400`
     : getMetaClasses();
-  const titleId = `list-item-${title.replace(/\s+/g, '-').toLowerCase()}`;
+  const titleId = customTitleId ?? `list-item-${title.replace(/\s+/g, '-').toLowerCase()}`;
 
   // Content to render
   const content = (

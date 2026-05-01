@@ -74,7 +74,7 @@ export const COUNT_MESSAGES = {
    * Format: "3 more items"
    */
   moreItems: (count: number): string => {
-    return `ほか${count}件`;
+    return `他${count}件`;
   },
   
   /**

@@ -1,4 +1,4 @@
-import { getProfile, getRecentUpdates } from '@/data';
+import { getProfile, getUpdates } from '@/data';
 import PageLayout from '@/components/layout/PageLayout';
 import { HeroSection, UpdatesSection } from '@/components/home';
 import { generatePageMetadata } from '@/lib/metadata';
@@ -7,7 +7,7 @@ export const metadata = generatePageMetadata();
 
 export default function Home() {
   const profile = getProfile();
-  const recentUpdates = getRecentUpdates(3);
+  const updates = getUpdates();
 
   return (
     <PageLayout title="トップページ" className="pt-0 bg-gray-50 dark:bg-gray-900">
@@ -16,7 +16,7 @@ export default function Home() {
           <HeroSection profile={profile} />
 
           <div className="mt-2 sm:mt-3">
-            <UpdatesSection updates={recentUpdates} />
+            <UpdatesSection updates={updates} />
           </div>
         </div>
       </div>

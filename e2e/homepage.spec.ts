@@ -58,6 +58,72 @@ test.describe('Homepage', () => {
     await expect(updates.first()).toBeVisible();
   });
 
+  test('should fit updates count to available viewport height', async ({ page }) => {
+    const updatesSection = page.locator('section[aria-labelledby="updates-heading"]');
+
+    await page.setViewportSize({ width: 1280, height: 360 });
+    await page.waitForFunction(() => {
+      const section = document.querySelector('section[aria-labelledby="updates-heading"]');
+      return section ? section.querySelectorAll('[data-visible-update-item]').length > 0 : false;
+    });
+
+    const compactVisibleCount = await updatesSection.locator('[data-visible-update-item]').count();
+    const compactTotalCount = await updatesSection.locator('[data-update-measure-item]').count();
+    expect(compactVisibleCount).toBeGreaterThanOrEqual(1);
+    expect(compactVisibleCount).toBeLessThan(3);
+
+    const compactMoreText = await updatesSection.locator('[data-visible-update-more]').textContent();
+    const compactHiddenCount = Number(compactMoreText?.match(/\d+/)?.[0]);
+    expect(compactHiddenCount).toBe(compactTotalCount - compactVisibleCount);
+
+    await page.setViewportSize({ width: 1280, height: 1400 });
+    await page.waitForFunction(() => {
+      const section = document.querySelector('section[aria-labelledby="updates-heading"]');
+      return section ? section.querySelectorAll('[data-visible-update-item]').length > 3 : false;
+    });
+
+    const roomyVisibleCount = await updatesSection.locator('[data-visible-update-item]').count();
+    expect(roomyVisibleCount).toBeGreaterThan(3);
+
+    const hasHorizontalScroll = await page.evaluate(() => {
+      return document.body.scrollWidth > window.innerWidth;
+    });
+    expect(hasHorizontalScroll).toBe(false);
+
+    const footerGap = await page.evaluate(() => {
+      const footer = document.querySelector('footer');
+      const scrollingElement = document.scrollingElement;
+      if (!footer || !scrollingElement) return null;
+
+      const footerBottom = footer.getBoundingClientRect().bottom + window.scrollY;
+
+      return {
+        bodyOverflow: document.body.scrollHeight - scrollingElement.scrollHeight,
+        gapAfterFooter: scrollingElement.scrollHeight - footerBottom,
+      };
+    });
+
+    expect(footerGap).not.toBeNull();
+    expect(footerGap?.bodyOverflow).toBeLessThanOrEqual(1);
+    expect(footerGap?.gapAfterFooter).toBeLessThanOrEqual(1);
+  });
+
+  test('should navigate from hidden updates count to career list view', async ({ page }) => {
+    const updatesSection = page.locator('section[aria-labelledby="updates-heading"]');
+
+    await page.setViewportSize({ width: 1280, height: 360 });
+    await page.waitForFunction(() => {
+      const section = document.querySelector('section[aria-labelledby="updates-heading"]');
+      return section ? Boolean(section.querySelector('[data-visible-update-more] a')) : false;
+    });
+
+    await updatesSection.locator('[data-visible-update-more] a').click();
+
+    await expect(page).toHaveURL(/\/career\?view=list#list-heading$/);
+    await expect(page.getByRole('heading', { name: 'イベントリスト' })).toBeAttached();
+    await expect(page.getByRole('button', { name: '所属' })).toBeVisible();
+  });
+
   test('should have accessible navigation', async ({ page }) => {
     // Check skip link exists and can be focused
     const skipLink = page.getByRole('link', { name: 'メインコンテンツへスキップ' }).first();
