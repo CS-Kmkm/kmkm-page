@@ -225,6 +225,10 @@ function appendPresentationSchedule(description: string, publication: Publicatio
   return `${description}（${formatJapaneseDate(publication.date)}）`;
 }
 
+function getPublicationEventVenue(publication: PublicationEntry): string {
+  return publication.shortVenue ?? publication.venue;
+}
+
 export const getProfile = (): ProfileInfo => {
   const profile = loadProfileData();
   return profile || {
@@ -526,19 +530,21 @@ export const getEvents = (): EventEntry[] => {
     const eventId = groupedPublications.length === 1
       ? `pub-${newestPublication.id}`
       : `pub-group-${groupedPublications.map(pub => pub.id).sort().join('-')}`;
+    const eventVenue = getPublicationEventVenue(newestPublication);
+    const eventTitle = groupedPublications.length > 1
+      ? `${eventVenue} ${publicationEventLabel}（${groupedPublications.length}件）`
+      : `${eventVenue} ${publicationEventLabel}`;
 
     events.push({
       id: eventId,
-      title: groupedPublications.length > 1
-        ? `${newestPublication.venue} ${publicationEventLabel}（${groupedPublications.length}件）`
-        : `${newestPublication.venue} ${publicationEventLabel}`,
+      title: eventTitle,
       description,
       date: eventDate,
       year: eventYear,
       category: EventCategory.PUBLICATION,
       displayDate: latestDisplayDate,
       toBeAppear: groupedPublications.some(pub => pub.toBeAppear === true),
-      location: newestPublication.venue,
+      location: eventVenue,
       relatedLinks: relatedLinks.length > 0 ? relatedLinks : undefined,
       tags: ['research', 'publication', ...authorshipTags, ...reviewTags, ...publicationTypeTags]
     });

@@ -118,6 +118,7 @@ export interface PublicationEntry {
   title: string;
   authors: string[];
   venue: string;
+  shortVenue?: string;      // 更新情報などで使う短い会議名
   year: number;
   date?: string;            // 発表・公開日（YYYY-MM-DD形式）
   displayDate: string;      // 表示日（YYYY-MM-DD形式）
