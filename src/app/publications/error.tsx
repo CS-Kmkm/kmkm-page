@@ -38,7 +38,7 @@ export default function PublicationsError({
         </h2>
 
         <p className="text-gray-600 mb-6">
-          一時的な問題により、論文・発表一覧を表示できませんでした。時間をおいて再度お試しください。
+          一時的な問題により、論文一覧を表示できませんでした。時間をおいて再度お試しください。
         </p>
 
         <div className="space-x-4">

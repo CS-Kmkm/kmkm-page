@@ -54,7 +54,7 @@ export default function NotFound() {
               href="/publications"
               className="block text-blue-600 hover:text-blue-800 focus:outline-none focus:underline"
             >
-              論文・発表
+              論文
             </Link>
           </div>
         </div>
