@@ -129,7 +129,8 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
 
             {/* Venue and Year */}
             <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
-              <em>{publication.venue}</em>, {publication.year}
+              <em>{publication.venue}</em>
+              {!publication.venue.includes(String(publication.year)) && `, ${publication.year}`}
             </p>
 
             {/* Badges */}
