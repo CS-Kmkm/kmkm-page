@@ -15,7 +15,8 @@
       "displayDate": "2026-04-27",
       "isFirstAuthor": true,
       "isPeerReviewed": true,
-      "publicationType": "workshop"
+      "publicationType": "workshop",
+      "conferenceScope": "international"
     },
     {
       "id": "pub-001",

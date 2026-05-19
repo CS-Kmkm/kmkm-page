@@ -94,14 +94,14 @@ const PublicationFilters: React.FC<PublicationFiltersProps> = ({
           className={filterButtonClass(showDomesticConference)}
           aria-pressed={showDomesticConference}
         >
-          国内会議
+          国内
         </button>
         <button
           onClick={onToggleInternationalConference}
           className={filterButtonClass(showInternationalConference)}
           aria-pressed={showInternationalConference}
         >
-          国際会議
+          国外
         </button>
 
         {/* Clear Filters Button */}

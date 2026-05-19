@@ -5,7 +5,7 @@ import { PublicationEntry } from '@/types';
  */
 export const PUBLICATION_TYPE_LABELS: Record<string, string> = {
   journal: 'ジャーナル',
-  conference: '国際会議',
+  conference: '国外',
   workshop: 'ワークショップ',
   preprint: 'プレプリント',
   other: 'その他'
@@ -30,8 +30,8 @@ export const getPublicationTypeLabel = (
   conferenceScope?: PublicationEntry['conferenceScope']
 ): string => {
   if (type === 'conference') {
-    if (conferenceScope === 'domestic') return '国内会議';
-    if (conferenceScope === 'international') return '国際会議';
+    if (conferenceScope === 'domestic') return '国内';
+    if (conferenceScope === 'international') return '国外';
   }
 
   return PUBLICATION_TYPE_LABELS[type] || type.charAt(0).toUpperCase() + type.slice(1);
@@ -132,12 +132,13 @@ export const filterPublications = (
     });
   }
 
-  // Apply conference scope filter
+  // Apply venue scope filter
   if (hasConferenceScopeFilter) {
     result = result.filter(pub => {
-      if (pub.publicationType !== 'conference') return false;
+      if (!pub.conferenceScope && pub.publicationType !== 'conference') return false;
 
       // Backward compatibility: conference entries without scope are treated as international.
+      // Workshops and other publication types must opt in with conferenceScope.
       const scope = pub.conferenceScope ?? 'international';
       if (showDomesticConference && scope === 'domestic') return true;
       if (showInternationalConference && scope === 'international') return true;
