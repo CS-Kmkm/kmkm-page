@@ -190,6 +190,7 @@ export interface ProfileInfo {
   nameJa?: string; // Japanese reading (optional)
   currentAffiliation: string;
   currentPosition: string;
+  researchInterests?: string;
   bio?: string;
   location?: string;
   avatarUrl?: string;
