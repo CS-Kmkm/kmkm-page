@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { HeaderProps } from '@/types';
 import ThemeToggle from '@/components/ui/ThemeToggle';
-import { navigationItems, siteConfig } from '@/lib/site';
+import { navigationItems } from '@/lib/site';
 
 const Header: React.FC<HeaderProps> = ({ currentPath }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -28,14 +28,11 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
           <div className="flex-shrink-0">
             <Link
               href="/"
-              className="flex flex-col text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
+              className="text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
               aria-label="トップページへ移動"
             >
               <span className="text-base sm:text-lg font-semibold tracking-wide">
-                {siteConfig.personName}
-              </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                個人ポートフォリオ
+                Koshi Motegi
               </span>
             </Link>
           </div>
