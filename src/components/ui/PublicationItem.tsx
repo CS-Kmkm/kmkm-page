@@ -5,7 +5,10 @@ import { PublicationItemProps } from '@/types';
 import {
   getPublicationTypeLabel,
   getPublicationTypeColor,
-  shouldShowPublicationTypeBadge
+  getPublicationScopeLabel,
+  getPublicationScopeColor,
+  shouldShowPublicationTypeBadge,
+  shouldShowPublicationScopeBadge
 } from '@/lib/publications/utils';
 
 const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick }) => {
@@ -58,14 +61,12 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
 
       {/* Badges */}
       <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-        {/* Publication Type Badge */}
-        {shouldShowPublicationTypeBadge(publication) && (
+        {/* Publication Scope Badge */}
+        {shouldShowPublicationScopeBadge(publication) && (
           <span
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPublicationTypeColor(
-              publication.publicationType
-            )}`}
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPublicationScopeColor()}`}
           >
-            {getPublicationTypeLabel(publication.publicationType, publication.conferenceScope)}
+            {getPublicationScopeLabel(publication.conferenceScope)}
           </span>
         )}
 
@@ -91,6 +92,17 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
             {award.title}
           </span>
         ))}
+
+        {/* Publication Type Badge */}
+        {shouldShowPublicationTypeBadge(publication) && (
+          <span
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPublicationTypeColor(
+              publication.publicationType
+            )}`}
+          >
+            {getPublicationTypeLabel(publication.publicationType)}
+          </span>
+        )}
       </div>
     </button>
   );
