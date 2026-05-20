@@ -217,6 +217,32 @@ describe('PublicationList', () => {
     expect(screen.getAllByText('国内')).toHaveLength(1)
   })
 
+  it('displays international workshop with type and international badge labels', () => {
+    const conferenceScopePublications: PublicationEntry[] = [
+      {
+        id: 'pub-nslp',
+        title: 'NSLP Workshop Paper',
+        authors: ['Koshi Motegi'],
+        venue: 'NSLP',
+        year: 2026,
+        displayDate: '2026-04-27',
+        isFirstAuthor: true,
+        isPeerReviewed: true,
+        publicationType: 'workshop',
+        conferenceScope: 'international'
+      }
+    ]
+
+    render(<PublicationList publications={conferenceScopePublications} />)
+
+    expect(screen.getByText('国外', { selector: 'span' })).toBeInTheDocument()
+    expect(screen.getByText('ワークショップ', { selector: 'span' })).toBeInTheDocument()
+    const badges = Array.from(
+      screen.getByRole('button', { name: 'NSLP Workshop Paperの詳細を表示' }).querySelectorAll('span')
+    ).map((badge) => badge.textContent)
+    expect(badges.at(-1)).toBe('ワークショップ')
+  })
+
   it('filters publications by international conference', () => {
     const conferenceScopePublications: PublicationEntry[] = [
       {
