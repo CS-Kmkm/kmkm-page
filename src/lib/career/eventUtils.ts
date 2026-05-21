@@ -163,10 +163,20 @@ export function extractEventYear(dateStr: string): string {
  * @returns True if valid, false otherwise
  */
 export function isValidEventDate(dateStr: string): boolean {
-  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!dateRegex.test(dateStr)) return false;
-  const date = new Date(dateStr);
-  return date instanceof Date && !isNaN(date.getTime());
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr);
+  if (!match) return false;
+
+  const [, yearValue, monthValue, dayValue] = match;
+  const year = Number(yearValue);
+  const month = Number(monthValue);
+  const day = Number(dayValue);
+  const date = new Date(year, month - 1, day);
+
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
 }
 
 /**

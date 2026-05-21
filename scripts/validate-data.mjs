@@ -26,10 +26,20 @@ const errors = [];
 // Helper function to validate date format (YYYY-MM-DD)
 const isValidDate = (dateStr) => {
   if (dateStr === null) return true;
-  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!dateRegex.test(dateStr)) return false;
-  const date = new Date(dateStr);
-  return date instanceof Date && !isNaN(date.getTime());
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr);
+  if (!match) return false;
+
+  const [, yearValue, monthValue, dayValue] = match;
+  const year = Number(yearValue);
+  const month = Number(monthValue);
+  const day = Number(dayValue);
+  const date = new Date(year, month - 1, day);
+
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
 };
 
 // Helper function to validate URL format
@@ -43,14 +53,13 @@ const isValidUrl = (urlStr) => {
 };
 
 // Load JSON files
-let profile, career, publications, techExperience, updates;
+let profile, career, publications, techExperience;
 
 try {
   profile = JSON.parse(readFileSync(join(dataDir, 'profile.json'), 'utf-8'));
   career = JSON.parse(readFileSync(join(dataDir, 'career.json'), 'utf-8'));
   publications = JSON.parse(readFileSync(join(dataDir, 'publications.json'), 'utf-8'));
   techExperience = JSON.parse(readFileSync(join(dataDir, 'tech-experience.json'), 'utf-8'));
-  updates = JSON.parse(readFileSync(join(dataDir, 'updates.json'), 'utf-8'));
   console.log('✅ All JSON files are valid format\n');
 } catch (error) {
   console.error('❌ JSON parsing error:', error.message);
@@ -167,22 +176,6 @@ techExperience.projects?.forEach((project, index) => {
   if (project.githubUrl && !isValidUrl(project.githubUrl)) {
     errors.push(`Project: Entry "${project.id}" has invalid githubUrl format: "${project.githubUrl}"`);
   }
-});
-
-// 6. Validate Updates Data
-console.log('📋 Validating updates.json...');
-updates.updates?.forEach((update, index) => {
-  if (!update.id) errors.push(`Update: Entry at index ${index} missing required field "id"`);
-  if (!update.date) {
-    errors.push(`Update: Entry "${update.id || index}" missing required field "date"`);
-  } else if (!isValidDate(update.date)) {
-    errors.push(`Update: Entry "${update.id}" has invalid date format: "${update.date}" (expected YYYY-MM-DD)`);
-  }
-  if (!update.title) errors.push(`Update: Entry "${update.id || index}" missing required field "title"`);
-  if (!update.description) {
-    errors.push(`Update: Entry "${update.id || index}" missing required field "description"`);
-  }
-  if (!update.category) errors.push(`Update: Entry "${update.id || index}" missing required field "category"`);
 });
 
 // Display results
