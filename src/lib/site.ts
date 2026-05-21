@@ -21,7 +21,7 @@ export const siteConfig = {
   siteName: `${profile.name}の個人ポートフォリオ`,
   defaultTitle: `${profile.name} | 個人ポートフォリオ`,
   description:
-    '名古屋大学大学院情報学研究科知能システム学専攻松原研究室に所属する茂木光志の個人ポートフォリオです。自然言語処理の研究活動、開発経験、論文・発表を掲載しています。',
+    '名古屋大学大学院情報学研究科知能システム学専攻松原研究室に所属する茂木光志の個人ポートフォリオです。自然言語処理の研究活動、開発経験、論文を掲載しています。',
   locale: 'ja_JP',
   lang: 'ja',
   siteUrl,
@@ -31,7 +31,7 @@ export const siteConfig = {
 
 export const navigationItems: NavigationItem[] = [
   { href: '/career', label: '経歴', ariaLabel: '経歴ページへ移動' },
-  { href: '/publications', label: '論文・発表', ariaLabel: '論文・発表ページへ移動' },
+  { href: '/publications', label: '論文', ariaLabel: '論文ページへ移動' },
   { href: '/dev-experience', label: '開発経験', ariaLabel: '開発経験ページへ移動' },
 ];
 

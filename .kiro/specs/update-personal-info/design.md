@@ -190,7 +190,7 @@ interface UpdateItem {
 
 **カテゴリ（category）：**
 - `"development"` - 開発関連
-- `"publication"` - 論文・発表
+- `"publication"` - 論文
 - `"career"` - 経歴・キャリア
 - `"other"` - その他
 

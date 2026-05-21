@@ -7,7 +7,7 @@ test.describe('Publications Page', () => {
 
   test('should load and display publications list', async ({ page }) => {
     // Check page heading
-    await expect(page.getByRole('heading', { name: '論文・発表', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '論文', exact: true })).toBeVisible();
     
     // Check that filter controls are displayed
     await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
@@ -112,7 +112,7 @@ test.describe('Publications Page', () => {
     await page.waitForLoadState('networkidle');
     
     // Check that content is still accessible
-    await expect(page.getByRole('heading', { name: '論文・発表', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '論文', exact: true })).toBeVisible();
     
     // Check that filter buttons are visible
     await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
@@ -134,7 +134,7 @@ test.describe('Publications Page', () => {
     await page.waitForLoadState('networkidle');
     
     // Check that content is visible
-    await expect(page.getByRole('heading', { name: '論文・発表', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '論文', exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
     
     // Check no horizontal scroll
@@ -150,7 +150,7 @@ test.describe('Publications Page', () => {
     await page.waitForLoadState('networkidle');
     
     // Check that all content is visible
-    await expect(page.getByRole('heading', { name: '論文・発表', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '論文', exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
     
     // Check that publications are displayed

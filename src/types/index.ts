@@ -128,7 +128,7 @@ export interface PublicationEntry {
   isFirstAuthor: boolean;
   isPeerReviewed: boolean;
   publicationType: 'journal' | 'conference' | 'workshop' | 'preprint' | 'other';
-  conferenceScope?: 'international' | 'domestic'; // conference時の会議種別
+  conferenceScope?: 'international' | 'domestic'; // 会議・ワークショップ等の開催範囲
   abstract?: string;        // 論文の抄録
   awards?: PublicationAward[];
   memo?: string | string[]; // 受賞履歴などの補足メモ
@@ -190,6 +190,7 @@ export interface ProfileInfo {
   nameJa?: string; // Japanese reading (optional)
   currentAffiliation: string;
   currentPosition: string;
+  researchInterests?: string;
   bio?: string;
   location?: string;
   avatarUrl?: string;

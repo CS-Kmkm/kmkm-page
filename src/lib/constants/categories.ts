@@ -126,7 +126,7 @@ export const UPDATE_CATEGORY_CONFIG: Record<UpdateCategory, CategoryConfig> = {
  */
 export const PUBLICATION_TYPE_LABELS: Record<string, string> = {
   journal: 'ジャーナル',
-  conference: '国際会議',
+  conference: '国外',
   workshop: 'ワークショップ',
   preprint: 'プレプリント',
   other: 'その他',

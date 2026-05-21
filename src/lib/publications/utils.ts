@@ -5,7 +5,7 @@ import { PublicationEntry } from '@/types';
  */
 export const PUBLICATION_TYPE_LABELS: Record<string, string> = {
   journal: 'ジャーナル',
-  conference: '国際会議',
+  conference: '国外',
   workshop: 'ワークショップ',
   preprint: 'プレプリント',
   other: 'その他'
@@ -22,18 +22,15 @@ export const PUBLICATION_TYPE_COLORS: Record<string, string> = {
   other: 'bg-purple-100 text-purple-900 border border-purple-200'
 };
 
+const isVenueScopedPublicationType = (type: string): boolean =>
+  type === 'conference' || type === 'workshop';
+
 /**
  * Get publication type label
  */
 export const getPublicationTypeLabel = (
-  type: string,
-  conferenceScope?: PublicationEntry['conferenceScope']
+  type: string
 ): string => {
-  if (type === 'conference') {
-    if (conferenceScope === 'domestic') return '国内会議';
-    if (conferenceScope === 'international') return '国際会議';
-  }
-
   return PUBLICATION_TYPE_LABELS[type] || type.charAt(0).toUpperCase() + type.slice(1);
 };
 
@@ -52,6 +49,34 @@ export const shouldShowPublicationTypeBadge = (publication: PublicationEntry): b
     return false;
   }
   return true;
+};
+
+/**
+ * Get venue scope label for conference/workshop publications.
+ */
+export const getPublicationScopeLabel = (
+  conferenceScope?: PublicationEntry['conferenceScope']
+): string => {
+  if (conferenceScope === 'international') return '国外';
+  if (conferenceScope === 'domestic') return '国内';
+  return '';
+};
+
+/**
+ * Get venue scope color classes.
+ */
+export const getPublicationScopeColor = (): string => {
+  return 'bg-green-100 text-green-900 border border-green-200';
+};
+
+/**
+ * Show a separate scope badge only when it adds information beyond the type badge.
+ */
+export const shouldShowPublicationScopeBadge = (publication: PublicationEntry): boolean => {
+  if (!isVenueScopedPublicationType(publication.publicationType)) return false;
+  if (publication.conferenceScope !== 'international') return false;
+
+  return getPublicationTypeLabel(publication.publicationType) !== getPublicationScopeLabel(publication.conferenceScope);
 };
 
 /**
@@ -132,12 +157,13 @@ export const filterPublications = (
     });
   }
 
-  // Apply conference scope filter
+  // Apply venue scope filter
   if (hasConferenceScopeFilter) {
     result = result.filter(pub => {
-      if (pub.publicationType !== 'conference') return false;
+      if (!pub.conferenceScope && pub.publicationType !== 'conference') return false;
 
       // Backward compatibility: conference entries without scope are treated as international.
+      // Workshops and other publication types must opt in with conferenceScope.
       const scope = pub.conferenceScope ?? 'international';
       if (showDomesticConference && scope === 'domestic') return true;
       if (showInternationalConference && scope === 'international') return true;

@@ -49,6 +49,11 @@ export default function ProfileSection({
           <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300">
             {profile.currentAffiliation}
           </p>
+          {profile.researchInterests && (
+            <p className="mt-1 text-sm sm:text-base text-gray-600 dark:text-gray-400">
+              {profile.researchInterests}
+            </p>
+          )}
         </div>
 
         {/* Location */}

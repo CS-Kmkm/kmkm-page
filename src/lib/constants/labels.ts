@@ -122,7 +122,7 @@ export const UI_LABELS = {
   // Publication types
   publicationType: '論文タイプ',
   journal: 'ジャーナル',
-  conference: '国際会議',
+  conference: '国外',
   workshop: 'ワークショップ',
   preprint: 'プレプリント',
   other: 'その他',

@@ -6,7 +6,10 @@ import { getBackdropClassesWithFallback } from '@/lib/ui/modalStyles';
 import {
   getPublicationTypeLabel,
   getPublicationTypeColor,
-  shouldShowPublicationTypeBadge
+  getPublicationScopeLabel,
+  getPublicationScopeColor,
+  shouldShowPublicationTypeBadge,
+  shouldShowPublicationScopeBadge
 } from '@/lib/publications/utils';
 
 const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
@@ -135,14 +138,12 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
 
             {/* Badges */}
             <div className="flex flex-wrap items-center gap-2">
-              {/* Publication Type Badge */}
-              {shouldShowPublicationTypeBadge(publication) && (
+              {/* Publication Scope Badge */}
+              {shouldShowPublicationScopeBadge(publication) && (
                 <span
-                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getPublicationTypeColor(
-                    publication.publicationType
-                  )}`}
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getPublicationScopeColor()}`}
                 >
-                  {getPublicationTypeLabel(publication.publicationType, publication.conferenceScope)}
+                  {getPublicationScopeLabel(publication.conferenceScope)}
                 </span>
               )}
 
@@ -168,6 +169,17 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
                   {award.title}
                 </span>
               ))}
+
+              {/* Publication Type Badge */}
+              {shouldShowPublicationTypeBadge(publication) && (
+                <span
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getPublicationTypeColor(
+                    publication.publicationType
+                  )}`}
+                >
+                  {getPublicationTypeLabel(publication.publicationType)}
+                </span>
+              )}
             </div>
 
             {/* Links */}
