@@ -13,7 +13,8 @@ test.describe('Accessibility Tests', () => {
     test(`${name} should be accessible`, async ({ page }) => {
       await page.goto(url);
       await page.waitForFunction(() => {
-        return document.getAnimations({ subtree: true })
+        return Array.from(document.querySelectorAll('.animate-fade-in, .animate-slide-in-right'))
+          .flatMap((element) => element.getAnimations())
           .every((animation) => animation.playState === 'finished');
       });
 
