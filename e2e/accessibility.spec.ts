@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Accessibility Tests', () => {
   const pages = [
@@ -11,6 +12,15 @@ test.describe('Accessibility Tests', () => {
   pages.forEach(({ url, name }) => {
     test(`${name} should be accessible`, async ({ page }) => {
       await page.goto(url);
+      await page.waitForFunction(() => {
+        return document.getAnimations({ subtree: true })
+          .every((animation) => animation.playState === 'finished');
+      });
+
+      const accessibilityScanResults = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa'])
+        .analyze();
+      expect(accessibilityScanResults.violations).toEqual([]);
 
       // Check for proper heading hierarchy (allow screen reader h1 + visible h1)
       const visibleH1Elements = page.locator('h1:not(.sr-only)');
@@ -72,24 +82,6 @@ test.describe('Accessibility Tests', () => {
 
         // Link should have either text content or aria-label
         expect(ariaLabel || textContent?.trim()).toBeTruthy();
-      }
-    });
-
-    test(`${name} should have proper color contrast`, async ({ page }) => {
-      await page.goto(url);
-
-      // Check that text has sufficient contrast
-      // This is a basic check - in a real scenario, you'd use axe-core or similar
-      const textElements = page.locator('p, h1:not(.sr-only), h2:not(.sr-only), h3, h4, h5, h6, span, div').filter({ hasText: /.+/ });
-      const count = await textElements.count();
-
-      // Ensure visible text elements are accessible (basic contrast check)
-      for (let i = 0; i < Math.min(count, 10); i++) {
-        const element = textElements.nth(i);
-        const isVisible = await element.isVisible();
-        if (isVisible) {
-          await expect(element).toBeVisible();
-        }
       }
     });
 

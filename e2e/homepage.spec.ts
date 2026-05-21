@@ -8,21 +8,22 @@ test.describe('Homepage', () => {
   test('should load and display main content', async ({ page }) => {
     // Check page title
     await expect(page).toHaveTitle(/茂木光志/);
-    
+
     // Check main heading is visible (exclude screen reader only headings)
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
-    
+
     // Check profile section is visible
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
     await expect(page.getByText('名古屋大学大学院 情報学研究科 知能システム学専攻 松原研究室', { exact: true })).toBeVisible();
-    
+
     // Check social media section
     await expect(page.getByLabel('ソーシャルメディアリンク')).toBeVisible();
-    
-    // Check navigation cards are present
-    await expect(page.getByRole('link', { name: '経歴', exact: true })).toBeVisible();
-    await expect(page.getByRole('link', { name: '開発経験', exact: true })).toBeVisible();
-    await expect(page.getByRole('link', { name: '論文', exact: true })).toBeVisible();
+
+    // Check primary navigation is present
+    await expect(page.getByRole('navigation', { name: 'メインナビゲーション' })).toBeVisible();
+    await expect(page.getByRole('link', { name: '経歴ページへ移動' })).toBeVisible();
+    await expect(page.getByRole('link', { name: '開発経験ページへ移動' })).toBeVisible();
+    await expect(page.getByRole('link', { name: '論文ページへ移動' })).toBeVisible();
   });
 
   test('should have working navigation', async ({ page }) => {
@@ -30,18 +31,18 @@ test.describe('Homepage', () => {
     await page.getByRole('link', { name: /経歴/ }).first().click();
     await expect(page).toHaveURL('/career');
     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
-    
+
     // Go back to home
     await page.goto('/');
-    
+
     // Test navigation to dev experience page
     await page.getByRole('link', { name: /開発経験/ }).first().click();
     await expect(page).toHaveURL('/dev-experience');
     await expect(page.getByRole('heading', { name: '開発経験' })).toBeVisible();
-    
+
     // Go back to home
     await page.goto('/');
-    
+
     // Test navigation to publications page
     await page.getByRole('link', { name: /論文/ }).first().click();
     await expect(page).toHaveURL('/publications');
@@ -129,7 +130,7 @@ test.describe('Homepage', () => {
     const skipLink = page.getByRole('link', { name: 'メインコンテンツへスキップ' }).first();
     await skipLink.focus();
     await expect(skipLink).toBeFocused();
-    
+
     // Check main content exists and is accessible
     const mainContent = page.locator('#main-content');
     await expect(mainContent).toBeVisible();
@@ -139,15 +140,16 @@ test.describe('Homepage', () => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
     await page.waitForLoadState('networkidle');
-    
+
     // Check that content is still visible and properly laid out
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
     await expect(page.getByLabel('ソーシャルメディアリンク')).toBeVisible();
-    
-    // Check navigation cards stack vertically on mobile
-    const navigationCards = page.locator('article').filter({ hasText: /経歴|開発経験|論文/ });
-    await expect(navigationCards.first()).toBeVisible();
-    
+
+    // Check primary navigation remains available through the mobile menu
+    await page.getByRole('button', { name: 'メインメニューを開く' }).click();
+    await expect(page.getByRole('navigation', { name: 'モバイルナビゲーション' })).toBeVisible();
+    await expect(page.getByRole('link', { name: '経歴ページへ移動' })).toBeVisible();
+
     // Check no horizontal scroll
     const hasHorizontalScroll = await page.evaluate(() => {
       return document.body.scrollWidth > window.innerWidth;
@@ -159,14 +161,14 @@ test.describe('Homepage', () => {
     // Set tablet viewport
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.waitForLoadState('networkidle');
-    
+
     // Check that content is visible
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
-    
-    // Check that layout adapts to tablet (2-column layout)
+
+    // Check that updates section remains visible on tablet
     const updatesSection = page.locator('div').filter({ hasText: '最新の更新情報' }).first();
     await expect(updatesSection).toBeVisible();
-    
+
     // Check no horizontal scroll
     const hasHorizontalScroll = await page.evaluate(() => {
       return document.body.scrollWidth > window.innerWidth;
@@ -178,14 +180,10 @@ test.describe('Homepage', () => {
     // Set desktop viewport
     await page.setViewportSize({ width: 1280, height: 720 });
     await page.waitForLoadState('networkidle');
-    
+
     // Check that all content is visible
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
     await expect(page.getByText('最新の更新情報')).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'コンテンツ' })).toBeVisible();
-    
-    // Check 3-column layout is applied
-    const navigationSection = page.locator('div').filter({ hasText: 'コンテンツ' }).first();
-    await expect(navigationSection).toBeVisible();
+    await expect(page.getByRole('navigation', { name: 'メインナビゲーション' })).toBeVisible();
   });
 });
