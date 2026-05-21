@@ -2,42 +2,49 @@ name: E2E Tests
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop, test]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
   e2e-tests:
     name: E2E Tests
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v6
-      
+
     - name: Setup Node.js
       uses: actions/setup-node@v6
       with:
         node-version: '22.x'
-        cache: 'npm'
-        
+
+    - name: Enable Corepack
+      run: corepack enable
+
     - name: Install dependencies
-      run: npm ci
-      
+      run: corepack pnpm install --frozen-lockfile
+
+    - name: Install fonts
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y fonts-noto-cjk fonts-noto-color-emoji
+
     - name: Install Playwright browsers
-      run: npx playwright install --with-deps
-      
+      run: corepack pnpm exec playwright install --with-deps chromium
+
     - name: Build application
-      run: npm run build
+      run: corepack pnpm build
       env:
         NEXT_PUBLIC_SITE_URL: http://localhost:3000
         NEXT_PUBLIC_SITE_NAME: Personal Portfolio
-        
+
     - name: Run E2E tests
-      run: npm run test:e2e
+      run: corepack pnpm exec playwright test --project=chromium
       env:
         PLAYWRIGHT_TEST_BASE_URL: http://localhost:3000
-        
+
     - name: Upload test results
       uses: actions/upload-artifact@v6
       if: always()
@@ -45,7 +52,7 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 7
-        
+
     - name: Upload test videos
       uses: actions/upload-artifact@v6
       if: failure()
