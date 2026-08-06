@@ -124,10 +124,20 @@ export function detectCircularReferences(entries: ExtendedCareerEntry[]): string
  */
 export function isValidDate(dateStr: string | null | undefined): boolean {
   if (dateStr === null || dateStr === undefined) return true; // null is valid for endDate
-  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!dateRegex.test(dateStr)) return false;
-  const date = new Date(dateStr);
-  return date instanceof Date && !isNaN(date.getTime());
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr);
+  if (!match) return false;
+
+  const [, yearValue, monthValue, dayValue] = match;
+  const year = Number(yearValue);
+  const month = Number(monthValue);
+  const day = Number(dayValue);
+  const date = new Date(year, month - 1, day);
+
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
 }
 
 /**

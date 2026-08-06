@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "corepack pnpm build",
   "outputDirectory": ".next",
   "framework": "nextjs",
   "regions": ["hnd1"],

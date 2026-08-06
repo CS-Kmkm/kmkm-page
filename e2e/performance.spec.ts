@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Performance Tests', () => {
-  test('Homepage should load within acceptable time', async ({ page }) => {
+  test('Homepage should pass a basic load-time smoke check', async ({ page }) => {
     const startTime = Date.now();
 
     await page.goto('/', { waitUntil: 'networkidle' });
@@ -15,57 +15,43 @@ test.describe('Performance Tests', () => {
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
   });
 
-  test('Should have good Core Web Vitals', async ({ page }) => {
+  test('Should expose navigation timing metrics', async ({ page }) => {
     await page.goto('/');
 
-    // Wait for page to fully load
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
 
-    // Get performance metrics
     const metrics = await page.evaluate(() => {
-      return new Promise((resolve) => {
-        new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          const metrics: Record<string, number> = {};
-
-          entries.forEach((entry) => {
-            if (entry.entryType === 'navigation') {
-              const navEntry = entry as PerformanceNavigationTiming;
-              metrics.domContentLoaded = navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart;
-              metrics.loadComplete = navEntry.loadEventEnd - navEntry.loadEventStart;
-            }
-          });
-
-          resolve(metrics);
-        }).observe({ entryTypes: ['navigation'] });
-
-        // Fallback timeout
-        setTimeout(() => resolve({}), 1000);
-      });
+      const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+      return navigation
+        ? {
+            domContentLoaded: navigation.domContentLoadedEventEnd - navigation.startTime,
+            loadComplete: navigation.loadEventEnd - navigation.startTime,
+          }
+        : null;
     });
 
-    console.log('Performance metrics:', metrics);
+    expect(metrics).not.toBeNull();
+    expect(metrics?.domContentLoaded).toBeGreaterThan(0);
+    expect(metrics?.loadComplete).toBeGreaterThan(0);
   });
 
   test('Images should load efficiently', async ({ page }) => {
     await page.goto('/');
 
-    // Check that images have proper loading attributes
-    const images = page.locator('img');
-    const imageCount = await images.count();
+    await expect(page.locator('img').first()).toBeVisible();
 
-    for (let i = 0; i < imageCount; i++) {
-      const img = images.nth(i);
+    const imageAttributes = await page.locator('img').evaluateAll((images) =>
+      images.map((image) => ({
+        alt: image.getAttribute('alt'),
+        loading: image.getAttribute('loading'),
+        priority: image.getAttribute('data-priority'),
+      }))
+    );
 
-      // Check that images have alt text
-      await expect(img).toHaveAttribute('alt');
-
-      // Check that non-critical images have lazy loading
-      const loading = await img.getAttribute('loading');
-      const priority = await img.getAttribute('data-priority');
-
-      if (!priority && loading !== null) {
-        expect(loading).toBe('lazy');
+    for (const image of imageAttributes) {
+      expect(image.alt).not.toBeNull();
+      if (!image.priority && image.loading !== null) {
+        expect(image.loading).toBe('lazy');
       }
     }
   });
@@ -90,7 +76,7 @@ test.describe('Performance Tests', () => {
     expect(consoleErrors).toHaveLength(0);
   });
 
-  test('Should handle network failures gracefully', async ({ page }) => {
+  test('Should remain usable with delayed network responses', async ({ page }) => {
     // Simulate slow network
     await page.route('**/*', (route) => {
       setTimeout(() => route.continue(), 100);
@@ -102,7 +88,7 @@ test.describe('Performance Tests', () => {
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible({ timeout: 10000 });
   });
 
-  test('Should be efficient on mobile devices', async ({ page }) => {
+  test('Mobile homepage should pass a basic load-time smoke check', async ({ page }) => {
     // Simulate mobile device
     await page.setViewportSize({ width: 375, height: 667 });
 
@@ -118,7 +104,7 @@ test.describe('Performance Tests', () => {
     await expect(page.getByLabel('ソーシャルメディアリンク')).toBeVisible();
   });
 
-  test('Should handle large datasets efficiently', async ({ page }) => {
+  test('Publications filtering should remain responsive', async ({ page }) => {
     // Go to pages with more data
     await page.goto('/publications');
 
@@ -130,12 +116,12 @@ test.describe('Performance Tests', () => {
     expect(loadTime).toBeLessThan(3000);
 
     // Check that publications page loads
-    await expect(page.getByRole('heading', { name: '論文' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '論文', exact: true })).toBeVisible();
 
     // Test filtering performance
     const filterStartTime = Date.now();
     await page.getByRole('button', { name: '第一著者' }).click();
-    await page.waitForTimeout(100); // Small delay for filter to apply
+    await expect(page.getByRole('button', { name: '第一著者' })).toHaveAttribute('aria-pressed', 'true');
     const filterTime = Date.now() - filterStartTime;
 
     // Filtering should be reasonably fast (increased threshold for slower browsers)

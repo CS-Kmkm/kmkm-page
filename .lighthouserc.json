@@ -7,8 +7,8 @@
         "http://localhost:3000/dev-experience",
         "http://localhost:3000/publications"
       ],
-      "startServerCommand": "npm run start",
-      "startServerReadyPattern": "ready on",
+      "startServerCommand": "corepack pnpm start",
+      "startServerReadyPattern": "started server on|Local:|Ready in|started server",
       "numberOfRuns": 3
     },
     "assert": {

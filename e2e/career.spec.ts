@@ -119,7 +119,6 @@ test.describe('Career Page', () => {
 
     // Click to reverse
     await reverseButton.click();
-    await page.waitForTimeout(500); // Wait for animation
 
     // Check button text changed
     await expect(reverseButton).toContainText('↑');
