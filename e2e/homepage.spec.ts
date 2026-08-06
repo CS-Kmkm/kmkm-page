@@ -1,4 +1,15 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+async function openNavigation(page: Page) {
+  const mobileMenuButton = page.getByRole('button', { name: 'メインメニューを開く' });
+
+  if (await mobileMenuButton.isVisible()) {
+    await mobileMenuButton.click();
+    return page.getByRole('navigation', { name: 'モバイルナビゲーション' });
+  }
+
+  return page.getByRole('navigation', { name: 'メインナビゲーション' });
+}
 
 test.describe('Homepage', () => {
   test.beforeEach(async ({ page }) => {
@@ -19,16 +30,18 @@ test.describe('Homepage', () => {
     // Check social media section
     await expect(page.getByLabel('ソーシャルメディアリンク')).toBeVisible();
 
-    // Check primary navigation is present
-    await expect(page.getByRole('navigation', { name: 'メインナビゲーション' })).toBeVisible();
-    await expect(page.getByRole('link', { name: '経歴ページへ移動' })).toBeVisible();
-    await expect(page.getByRole('link', { name: '開発経験ページへ移動' })).toBeVisible();
-    await expect(page.getByRole('link', { name: '論文ページへ移動' })).toBeVisible();
+    // Check primary navigation is available in the desktop nav or mobile menu.
+    const navigation = await openNavigation(page);
+    await expect(navigation).toBeVisible();
+    await expect(navigation.getByRole('link', { name: '経歴ページへ移動' })).toBeVisible();
+    await expect(navigation.getByRole('link', { name: '開発経験ページへ移動' })).toBeVisible();
+    await expect(navigation.getByRole('link', { name: '論文ページへ移動' })).toBeVisible();
   });
 
   test('should have working navigation', async ({ page }) => {
     // Test navigation to career page
-    await page.getByRole('link', { name: /経歴/ }).first().click();
+    let navigation = await openNavigation(page);
+    await navigation.getByRole('link', { name: '経歴ページへ移動' }).click();
     await expect(page).toHaveURL('/career');
     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
 
@@ -36,7 +49,8 @@ test.describe('Homepage', () => {
     await page.goto('/');
 
     // Test navigation to dev experience page
-    await page.getByRole('link', { name: /開発経験/ }).first().click();
+    navigation = await openNavigation(page);
+    await navigation.getByRole('link', { name: '開発経験ページへ移動' }).click();
     await expect(page).toHaveURL('/dev-experience');
     await expect(page.getByRole('heading', { name: '開発経験' })).toBeVisible();
 
@@ -44,7 +58,8 @@ test.describe('Homepage', () => {
     await page.goto('/');
 
     // Test navigation to publications page
-    await page.getByRole('link', { name: /論文/ }).first().click();
+    navigation = await openNavigation(page);
+    await navigation.getByRole('link', { name: '論文ページへ移動' }).click();
     await expect(page).toHaveURL('/publications');
     await expect(page.getByRole('heading', { name: '論文', exact: true })).toBeVisible();
   });
