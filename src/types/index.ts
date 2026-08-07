@@ -8,6 +8,7 @@ export interface UpdateItem {
   title: string;
   description: string;
   category: 'career' | 'development' | 'publication' | 'award' | 'other';
+  publicationLinks?: PublicationLink[];
 }
 
 export interface CareerEntry {
@@ -143,6 +144,11 @@ export interface PublicationAward {
   description?: string;     // 補足説明
 }
 
+export interface PublicationLink {
+  title: string;
+  url: string;
+}
+
 export interface SocialLink {
   id: string;
   platform: 'twitter' | 'github' | 'linkedin' | 'orcid' | 'researchgate' | 'email' | 'website';
@@ -172,6 +178,7 @@ export interface EventEntry {
   location?: string;
   duration?: string;         // For events with duration
   relatedLinks?: string[];   // URLs to related resources
+  publicationLinks?: PublicationLink[]; // Paper titles and their source URLs
   tags?: string[];          // Additional categorization
 }
 
@@ -399,6 +406,7 @@ export interface TimelineEventEntry {
   description: string;
   category?: string;      // Optional: event category
   year: string;          // Display year (auto-calculated from date)
+  publicationLinks?: PublicationLink[];
 }
 
 /**

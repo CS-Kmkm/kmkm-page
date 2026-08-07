@@ -9,6 +9,7 @@ import {
   getDescriptionClasses,
   getMetaClasses,
 } from '@/lib/ui/listItemStyles';
+import LinkedPublicationTitles from './LinkedPublicationTitles';
 
 const EventItem: React.FC<EventItemProps> = ({ event, onClick }) => {
   const getCategoryVariant = (category: EventCategory): 'blue' | 'green' | 'purple' | 'orange' | 'yellow' | 'gray' => {
@@ -103,7 +104,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, onClick }) => {
 
       {/* Description */}
       <p className={`${getDescriptionClasses()} mb-2 whitespace-pre-line`}>
-        {event.description}
+        <LinkedPublicationTitles text={event.description} links={event.publicationLinks} />
       </p>
 
       {/* Additional info */}

@@ -17,13 +17,18 @@ const events: EventEntry[] = [
   {
     id: 'second',
     title: 'Second event',
-    description: 'Second description',
+    description: 'Paper titleを第一著者として発表',
     date: '2026-02-01',
     year: 2026,
     category: EventCategory.PUBLICATION,
     displayDate: '2026-02-01',
     location: 'Online',
-    relatedLinks: ['https://example.com'],
+    publicationLinks: [
+      {
+        title: 'Paper title',
+        url: 'https://example.com/paper',
+      },
+    ],
     tags: ['research'],
   },
   {
@@ -79,9 +84,10 @@ describe('EventDetailModal', () => {
 
     expect(screen.getByRole('dialog')).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Second event' })).toBeInTheDocument()
-    expect(screen.getAllByText('Second description')).toHaveLength(2)
     expect(screen.getByText('Online')).toBeInTheDocument()
-    expect(screen.getByText('https://example.com')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Paper title' }))
+      .toHaveAttribute('href', 'https://example.com/paper')
+    expect(screen.queryByText('関連リンク')).not.toBeInTheDocument()
     expect(screen.getByText('#research')).toBeInTheDocument()
     expect(screen.getByText('2 / 3')).toBeInTheDocument()
 

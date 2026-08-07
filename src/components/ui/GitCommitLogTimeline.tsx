@@ -376,6 +376,7 @@ export default function GitCommitLogTimeline({
         description: event.description,
         category: event.category,
         year: String(event.year),
+        publicationLinks: event.publicationLinks,
       };
 
       const existing = grouped.get(event.year);

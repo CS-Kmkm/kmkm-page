@@ -12,6 +12,7 @@ import { getEventCategoryConfig } from '@/lib/constants/categories';
 import { UI_LABELS, ARIA_LABELS } from '@/lib/constants/labels';
 import { getBadgeClasses } from '@/lib/ui/listItemStyles';
 import { tokens } from '@/lib/theme/tokens';
+import LinkedPublicationTitles from './LinkedPublicationTitles';
 
 const EventDetailModal: React.FC<EventDetailModalProps> = ({
   isOpen,
@@ -122,7 +123,7 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
 
       {/* Description */}
       <div className={`${tokens.text.secondary} leading-relaxed mb-6 whitespace-pre-line`}>
-        {event.description}
+        <LinkedPublicationTitles text={event.description} links={event.publicationLinks} />
       </div>
 
       {/* Additional Information */}

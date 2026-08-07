@@ -14,6 +14,7 @@ import { getUpdateCategoryConfig } from '@/lib/constants/categories';
 import { HEADING_LABELS, UI_LABELS } from '@/lib/constants/labels';
 import { EMPTY_STATE_MESSAGES, COUNT_MESSAGES } from '@/lib/constants/messages';
 import { tokens } from '@/lib/theme/tokens';
+import LinkedPublicationTitles from './LinkedPublicationTitles';
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -57,7 +58,7 @@ function UpdateModal({ update, onClose }: { update: UpdateItem | null; onClose: 
 
       {/* Description */}
       <div className={`${tokens.text.secondary} leading-relaxed whitespace-pre-line`}>
-        {update.description}
+        <LinkedPublicationTitles text={update.description} links={update.publicationLinks} />
       </div>
     </Modal>
   );

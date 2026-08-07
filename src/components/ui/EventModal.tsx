@@ -13,6 +13,7 @@ import { getEventCategoryConfig } from '@/lib/constants/categories';
 import { UI_LABELS } from '@/lib/constants/labels';
 import { getBadgeClasses } from '@/lib/ui/listItemStyles';
 import { tokens } from '@/lib/theme/tokens';
+import LinkedPublicationTitles from './LinkedPublicationTitles';
 
 /**
  * EventModal component for displaying detailed event information
@@ -65,7 +66,7 @@ export default function EventModal({
 
       {/* Description */}
       <div className={`${tokens.text.secondary} leading-relaxed whitespace-pre-line`}>
-        {event.description}
+        <LinkedPublicationTitles text={event.description} links={event.publicationLinks} />
       </div>
     </Modal>
   );

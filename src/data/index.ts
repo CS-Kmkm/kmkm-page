@@ -154,7 +154,8 @@ export const getUpdates = (): UpdateItem[] => {
     date: event.date,
     title: event.title,
     description: event.description,
-    category: mapEventCategoryToUpdateCategory(event.category)
+    category: mapEventCategoryToUpdateCategory(event.category),
+    publicationLinks: event.publicationLinks
   }));
 };
 
@@ -229,6 +230,18 @@ function getPublicationEventVenue(publication: PublicationEntry): string {
   return publication.shortVenue ?? publication.venue;
 }
 
+function getPublicationSourceUrl(publication: PublicationEntry): string | undefined {
+  if (publication.url) return publication.url;
+  return publication.doi ? `https://doi.org/${publication.doi}` : undefined;
+}
+
+function getPublicationLinks(publications: PublicationEntry[]) {
+  return publications.flatMap(publication => {
+    const url = getPublicationSourceUrl(publication);
+    return url ? [{ title: publication.title, url }] : [];
+  });
+}
+
 export const getProfile = (): ProfileInfo => {
   const profile = loadProfileData();
   return profile || {
@@ -256,7 +269,8 @@ export const getTimelineEvents = (): TimelineEventEntry[] => {
         description: appendPresentationSchedule(getPublicationRoleDescription(pub), pub),
         date: visibleDate,
         year: pubYear.toString(),
-        category: '研究成果'
+        category: '研究成果',
+        publicationLinks: getPublicationLinks([pub])
       });
     }
   });
@@ -519,13 +533,7 @@ export const getEvents = (): EventEntry[] => {
       new Set(groupedPublications.map(pub => pub.publicationType))
     );
 
-    const relatedLinks = Array.from(
-      new Set(
-        groupedPublications
-          .map(pub => pub.url)
-          .filter((url): url is string => Boolean(url))
-      )
-    );
+    const publicationLinks = getPublicationLinks(groupedPublications);
 
     const eventId = groupedPublications.length === 1
       ? `pub-${newestPublication.id}`
@@ -545,7 +553,7 @@ export const getEvents = (): EventEntry[] => {
       displayDate: latestDisplayDate,
       toBeAppear: groupedPublications.some(pub => pub.toBeAppear === true),
       location: eventVenue,
-      relatedLinks: relatedLinks.length > 0 ? relatedLinks : undefined,
+      publicationLinks: publicationLinks.length > 0 ? publicationLinks : undefined,
       tags: ['research', 'publication', ...authorshipTags, ...reviewTags, ...publicationTypeTags]
     });
   });
@@ -565,7 +573,7 @@ export const getEvents = (): EventEntry[] => {
         displayDate: award.date,
         toBeAppear: publication.toBeAppear,
         location: award.organization ?? publication.venue,
-        relatedLinks: publication.url ? [publication.url] : undefined,
+        publicationLinks: getPublicationLinks([publication]),
         tags: ['award', 'publication', publication.id]
       });
     });
