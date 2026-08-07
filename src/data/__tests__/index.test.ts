@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { EventCategory, type EventEntry } from '@/types';
-import { filterEvents, validateDataIntegrity } from '../index';
+import { filterEvents, getEvents, validateDataIntegrity } from '../index';
 
 const event = (overrides: Partial<EventEntry>): EventEntry => ({
   id: 'event',
@@ -25,6 +25,12 @@ const noFilters = {
 describe('data filtering', () => {
   it('validates the checked-in data and generated events/updates', () => {
     expect(validateDataIntegrity()).toEqual({ isValid: true, errors: [] });
+  });
+
+  it('uses an award announcement URL as the related link for its event', () => {
+    const awardEvent = getEvents().find(item => item.id === 'award-pub-003-0');
+
+    expect(awardEvent?.relatedLinks).toEqual(['https://axies.jp/news/6554/']);
   });
 
   it('returns all events when no filters are active', () => {

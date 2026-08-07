@@ -574,6 +574,7 @@ export const getEvents = (): EventEntry[] => {
         toBeAppear: publication.toBeAppear,
         location: award.organization ?? publication.venue,
         publicationLinks: getPublicationLinks([publication]),
+        relatedLinks: award.url ? [award.url] : undefined,
         tags: ['award', 'publication', publication.id]
       });
     });

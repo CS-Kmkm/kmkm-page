@@ -131,6 +131,12 @@ publications.publications?.forEach((pub, index) => {
   if (pub.url && !isValidUrl(pub.url)) {
     errors.push(`Publication: Entry "${pub.id}" has invalid URL format: "${pub.url}"`);
   }
+
+  pub.awards?.forEach((award, awardIndex) => {
+    if (award.url && !isValidUrl(award.url)) {
+      errors.push(`Publication: Award ${awardIndex} in "${pub.id}" has invalid URL format: "${award.url}"`);
+    }
+  });
 });
 
 // 4. Validate Tech Experience Data
