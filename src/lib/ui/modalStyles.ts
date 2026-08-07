@@ -59,13 +59,13 @@ export const modalStyles: ModalStyleConfig = {
     border: '',
     shadow: tokens.shadow.xl,
     padding: 'p-6',
-    maxWidth: 'w-[min(calc(100vw-2rem),42rem)]',
-    maxHeight: 'max-h-[90vh]',
+    maxWidth: 'w-[min(calc(100vw-2rem),64rem)]',
+    maxHeight: 'max-h-[calc(100dvh-2rem)] sm:max-h-[90vh]',
   },
   header: {
     base: 'flex items-start justify-between mb-4',
-    title: `text-xl sm:text-2xl font-bold ${tokens.text.primary} leading-tight pr-4`,
-    closeButton: `flex-shrink-0 ${tokens.text.muted} hover:${tokens.text.secondary.replace('text-', '')} ${tokens.transition.colors} p-2 ${tokens.radius.md} ${tokens.surface.secondary.replace('bg-', 'hover:bg-')} ${tokens.focus.ring} focus:ring-offset-2 dark:focus:ring-offset-gray-800`,
+    title: `text-lg sm:text-2xl font-bold ${tokens.text.primary} leading-tight pr-2 sm:pr-4`,
+    closeButton: `flex min-h-11 min-w-11 flex-shrink-0 items-center justify-center ${tokens.text.muted} hover:${tokens.text.secondary.replace('text-', '')} ${tokens.transition.colors} p-2 ${tokens.radius.md} ${tokens.surface.secondary.replace('bg-', 'hover:bg-')} ${tokens.focus.ring} focus:ring-offset-2 dark:focus:ring-offset-gray-800`,
   },
   content: {
     base: 'space-y-4',
@@ -88,9 +88,8 @@ export const getBackdropClasses = (): string => {
 /**
  * Get complete modal container class string
  */
-export const getModalContainerClasses = (customMaxWidth?: string): string => {
-  const maxWidth = customMaxWidth || modalStyles.container.maxWidth;
-  return `${modalStyles.container.base} ${modalStyles.container.background} ${modalStyles.container.shadow} ${maxWidth} ${modalStyles.container.maxHeight}`;
+export const getModalContainerClasses = (): string => {
+  return `${modalStyles.container.base} ${modalStyles.container.background} ${modalStyles.container.shadow} ${modalStyles.container.maxWidth} ${modalStyles.container.maxHeight}`;
 };
 
 /**

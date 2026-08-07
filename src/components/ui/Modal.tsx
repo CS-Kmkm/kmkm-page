@@ -20,11 +20,6 @@ import {
 import { ARIA_LABELS } from '@/lib/constants/labels';
 
 /**
- * Modal size variants
- */
-export type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
-
-/**
  * Modal props interface
  */
 export interface ModalProps {
@@ -38,10 +33,10 @@ export interface ModalProps {
   description?: string;
   /** Modal content */
   children: ReactNode;
-  /** Modal size variant */
-  size?: ModalSize;
   /** Whether to show the close button */
   showCloseButton?: boolean;
+  /** Accessible label for the close button */
+  closeButtonLabel?: string;
   /** Optional footer content */
   footer?: ReactNode;
   /** Additional CSS classes */
@@ -53,16 +48,6 @@ export interface ModalProps {
 }
 
 /**
- * Size to max-width mapping
- */
-const sizeMap: Record<ModalSize, string> = {
-  sm: 'w-[min(calc(100vw-2rem),28rem)]',
-  md: 'w-[min(calc(100vw-2rem),42rem)]',
-  lg: 'w-[min(calc(100vw-2rem),56rem)]',
-  xl: 'w-[min(calc(100vw-2rem),72rem)]',
-};
-
-/**
  * Generic Modal Component
  */
 export function Modal({
@@ -71,8 +56,8 @@ export function Modal({
   title,
   description,
   children,
-  size = 'md',
   showCloseButton = true,
+  closeButtonLabel = ARIA_LABELS.closeModal,
   footer,
   className = '',
   ariaLabelledBy,
@@ -204,14 +189,14 @@ export function Modal({
           {/* Modal container */}
           <motion.div
             ref={modalRef}
-            className={`${getModalContainerClasses(sizeMap[size])} ${className}`}
+            className={`${getModalContainerClasses()} ${className}`}
             {...animationProps}
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
             aria-describedby={descriptionId}
           >
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               {/* Header */}
               <div className={getModalHeaderClasses()}>
                 <div className="flex-1">
@@ -235,7 +220,7 @@ export function Modal({
                     ref={closeButtonRef}
                     onClick={onClose}
                     className={getCloseButtonClasses()}
-                    aria-label={ARIA_LABELS.closeModal}
+                    aria-label={closeButtonLabel}
                   >
                     <svg
                       className="w-5 h-5"

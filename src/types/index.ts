@@ -142,6 +142,7 @@ export interface PublicationAward {
   date: string;             // 受賞日（YYYY-MM-DD形式）
   organization?: string;    // 授与元
   description?: string;     // 補足説明
+  url?: string;             // 受賞情報のURL
 }
 
 export interface PublicationLink {

@@ -11,7 +11,7 @@ import { UpdatesListProps, UpdateItem } from '@/types';
 import { Modal } from './Modal';
 import { ListItem } from './ListItem';
 import { getUpdateCategoryConfig } from '@/lib/constants/categories';
-import { HEADING_LABELS, UI_LABELS } from '@/lib/constants/labels';
+import { HEADING_LABELS } from '@/lib/constants/labels';
 import { EMPTY_STATE_MESSAGES, COUNT_MESSAGES } from '@/lib/constants/messages';
 import { tokens } from '@/lib/theme/tokens';
 import LinkedPublicationTitles from './LinkedPublicationTitles';
@@ -34,17 +34,6 @@ function UpdateModal({ update, onClose }: { update: UpdateItem | null; onClose: 
       onClose={onClose}
       title={update.title}
       description={update.description}
-      size="md"
-      footer={
-        <div className="flex justify-end">
-          <button
-            onClick={onClose}
-            className={`px-4 py-2 text-sm font-medium ${tokens.text.secondary} ${tokens.surface.primary} border ${tokens.border.default} ${tokens.radius.md} ${tokens.surface.secondary.replace('bg-', 'hover:bg-')} ${tokens.focus.ringFull} ${tokens.transition.colors}`}
-          >
-            {UI_LABELS.close}
-          </button>
-        </div>
-      }
     >
       {/* Date and Category */}
       <div className="flex items-center gap-3 mb-4">

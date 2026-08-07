@@ -27,12 +27,11 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
       onClose={onClose}
       title={project.name}
       description={project.description}
-      size="xl"
       showCloseButton={true}
     >
       {/* Project image */}
       {project.imageUrl && (
-        <div className="relative w-full h-48 sm:h-64 md:h-80 bg-gray-100 -mt-6 -mx-6 mb-6">
+        <div className="relative -mx-4 -mt-4 mb-6 h-48 w-auto bg-gray-100 sm:-mx-6 sm:-mt-6 sm:h-64 md:h-80">
           <Image
             src={project.imageUrl}
             alt={`Screenshot of ${project.name}`}

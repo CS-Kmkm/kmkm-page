@@ -10,7 +10,6 @@ import { EventModalProps, TimelineEventEntry } from '@/types';
 import { formatEventDate } from '@/lib/career/eventUtils';
 import { Modal } from './Modal';
 import { getEventCategoryConfig } from '@/lib/constants/categories';
-import { UI_LABELS } from '@/lib/constants/labels';
 import { getBadgeClasses } from '@/lib/ui/listItemStyles';
 import { tokens } from '@/lib/theme/tokens';
 import LinkedPublicationTitles from './LinkedPublicationTitles';
@@ -36,18 +35,7 @@ export default function EventModal({
       onClose={onClose}
       title={event.title}
       description={event.description}
-      size="sm"
       className={className}
-      footer={
-        <div className="flex justify-end">
-          <button
-            onClick={onClose}
-            className={`px-4 py-2 text-sm font-medium ${tokens.text.secondary} ${tokens.surface.primary} border ${tokens.border.default} ${tokens.radius.md} ${tokens.surface.secondary.replace('bg-', 'hover:bg-')} ${tokens.focus.ringFull} ${tokens.transition.colors}`}
-          >
-            {UI_LABELS.close}
-          </button>
-        </div>
-      }
     >
       {/* Date */}
       <div className={`text-sm ${tokens.text.muted} font-medium`}>

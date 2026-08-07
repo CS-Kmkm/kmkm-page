@@ -60,55 +60,40 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
       onClose={onClose}
       title={event.title}
       description={event.description}
-      size="md"
-      footer={
+      footer={filteredEvents.length > 1 ? (
         <div className="flex items-center justify-between w-full">
           {/* Navigation buttons */}
           <div className="flex items-center gap-2">
-            {filteredEvents.length > 1 && (
-              <>
-                <button
-                  onClick={() => onNavigate && onNavigate(eventIndex - 1)}
-                  disabled={eventIndex === 0}
-                  className={`inline-flex items-center px-4 py-2 text-sm font-medium ${tokens.text.secondary} ${tokens.surface.primary} border ${tokens.border.default} ${tokens.radius.md} ${tokens.surface.secondary.replace('bg-', 'hover:bg-')} ${tokens.focus.ringFull} ${tokens.transition.colors} disabled:opacity-50 disabled:cursor-not-allowed`}
-                  aria-label={ARIA_LABELS.previousEvent}
-                >
-                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                  {UI_LABELS.previous}
-                </button>
-                <button
-                  onClick={() => onNavigate && onNavigate(eventIndex + 1)}
-                  disabled={eventIndex === filteredEvents.length - 1}
-                  className={`inline-flex items-center px-4 py-2 text-sm font-medium ${tokens.text.secondary} ${tokens.surface.primary} border ${tokens.border.default} ${tokens.radius.md} ${tokens.surface.secondary.replace('bg-', 'hover:bg-')} ${tokens.focus.ringFull} ${tokens.transition.colors} disabled:opacity-50 disabled:cursor-not-allowed`}
-                  aria-label={ARIA_LABELS.nextEvent}
-                >
-                  {UI_LABELS.next}
-                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </>
-            )}
-          </div>
-
-          {/* Page indicator and close button */}
-          <div className="flex items-center gap-4">
-            {filteredEvents.length > 1 && (
-              <div className={`text-xs ${tokens.text.muted}`}>
-                {eventIndex + 1} / {filteredEvents.length}
-              </div>
-            )}
             <button
-              onClick={onClose}
-              className={`px-4 py-2 text-sm font-medium ${tokens.text.secondary} ${tokens.surface.primary} border ${tokens.border.default} ${tokens.radius.md} ${tokens.surface.secondary.replace('bg-', 'hover:bg-')} ${tokens.focus.ringFull} ${tokens.transition.colors}`}
+              onClick={() => onNavigate && onNavigate(eventIndex - 1)}
+              disabled={eventIndex === 0}
+              className={`inline-flex items-center px-4 py-2 text-sm font-medium ${tokens.text.secondary} ${tokens.surface.primary} border ${tokens.border.default} ${tokens.radius.md} ${tokens.surface.secondary.replace('bg-', 'hover:bg-')} ${tokens.focus.ringFull} ${tokens.transition.colors} disabled:opacity-50 disabled:cursor-not-allowed`}
+              aria-label={ARIA_LABELS.previousEvent}
             >
-              {UI_LABELS.close}
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              {UI_LABELS.previous}
+            </button>
+            <button
+              onClick={() => onNavigate && onNavigate(eventIndex + 1)}
+              disabled={eventIndex === filteredEvents.length - 1}
+              className={`inline-flex items-center px-4 py-2 text-sm font-medium ${tokens.text.secondary} ${tokens.surface.primary} border ${tokens.border.default} ${tokens.radius.md} ${tokens.surface.secondary.replace('bg-', 'hover:bg-')} ${tokens.focus.ringFull} ${tokens.transition.colors} disabled:opacity-50 disabled:cursor-not-allowed`}
+              aria-label={ARIA_LABELS.nextEvent}
+            >
+              {UI_LABELS.next}
+              <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </button>
           </div>
+
+          {/* Page indicator */}
+          <div className={`text-xs ${tokens.text.muted}`}>
+            {eventIndex + 1} / {filteredEvents.length}
+          </div>
         </div>
-      }
+      ) : undefined}
     >
       {/* Event metadata */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
@@ -169,21 +154,6 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
           </div>
         )}
 
-        {event.tags && event.tags.length > 0 && (
-          <div className="space-y-2">
-            <h4 className={`text-sm font-medium ${tokens.text.primary}`}>{UI_LABELS.tags}</h4>
-            <div className="flex flex-wrap gap-1">
-              {event.tags.map((tag, index) => (
-                <span
-                  key={index}
-                  className={`inline-flex items-center px-2 py-0.5 ${tokens.radius.md} text-xs ${tokens.badge.gray.bg} ${tokens.badge.gray.text}`}
-                >
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </Modal>
   );

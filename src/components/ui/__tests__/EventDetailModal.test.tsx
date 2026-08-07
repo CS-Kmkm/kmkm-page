@@ -88,7 +88,7 @@ describe('EventDetailModal', () => {
     expect(screen.getByRole('link', { name: 'Paper title' }))
       .toHaveAttribute('href', 'https://example.com/paper')
     expect(screen.queryByText('関連リンク')).not.toBeInTheDocument()
-    expect(screen.getByText('#research')).toBeInTheDocument()
+    expect(screen.queryByText('#research')).not.toBeInTheDocument()
     expect(screen.getByText('2 / 3')).toBeInTheDocument()
 
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }))

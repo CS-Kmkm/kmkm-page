@@ -93,7 +93,6 @@ export default function EventListModal({
       isOpen={isOpen}
       onClose={onClose}
       title={`${yearGroup.year}年の出来事`}
-      size="md"
       className={className}
     >
       {/* Event List */}

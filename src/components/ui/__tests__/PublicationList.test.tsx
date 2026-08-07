@@ -13,6 +13,14 @@ const mockPublications: PublicationEntry[] = [
     year: 2024,
     displayDate: '2024-01-01',
     doi: '10.1000/test.001',
+    awards: [
+      {
+        title: 'Test Award',
+        date: '2026-03-31',
+        organization: 'Test Organization',
+        url: 'https://example.com/award'
+      }
+    ],
     isFirstAuthor: true,
     isPeerReviewed: true,
     publicationType: 'journal'
@@ -215,6 +223,17 @@ describe('PublicationList', () => {
 
     // "国内" はフィルタボタンには表示されるが、論文種別バッジには表示しない
     expect(screen.getAllByText('国内')).toHaveLength(1)
+  })
+
+  it('renders an award source as an external link in the detail modal', () => {
+    render(<PublicationList publications={mockPublications} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Test Publication 1の詳細を表示' }))
+
+    expect(screen.getByRole('link', { name: 'Test Award' })).toHaveAttribute(
+      'href',
+      'https://example.com/award'
+    )
   })
 
   it('displays international workshop with type and international badge labels', () => {

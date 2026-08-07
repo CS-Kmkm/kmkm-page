@@ -157,7 +157,7 @@ test.describe('Publications Page', () => {
     await expect(publications.first()).toBeVisible();
   });
 
-  test('should display publication detail modal fullscreen on mobile', async ({ page }) => {
+  test('should display publication detail modal with readable gutters on mobile', async ({ page }) => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
     await page.waitForLoadState('networkidle');
@@ -171,6 +171,16 @@ test.describe('Publications Page', () => {
     const modal = page.getByRole('dialog');
     await expect(modal).toBeVisible();
     await expect(page.getByText('論文詳細')).toBeVisible();
+
+    await expect.poll(async () => {
+      const box = await modal.boundingBox();
+      return Math.abs((box?.x ?? 0) - 16);
+    }).toBeLessThanOrEqual(1);
+    await expect.poll(async () => {
+      const box = await modal.boundingBox();
+      return Math.abs((box?.width ?? 0) - 343);
+    }).toBeLessThanOrEqual(1);
+    expect(await modal.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
 
     // Close modal
     const closeButton = page.getByRole('button', { name: 'モーダルを閉じる' });

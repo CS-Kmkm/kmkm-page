@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { PublicationDetailModalProps } from '@/types';
-import { getBackdropClassesWithFallback } from '@/lib/ui/modalStyles';
+import { Modal } from './Modal';
 import {
   getPublicationTypeLabel,
   getPublicationTypeColor,
@@ -17,39 +17,11 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
   isOpen,
   onClose
 }) => {
-  const modalRef = useRef<HTMLDivElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null);
-
-  // Handle Escape key and focus management
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      closeButtonRef.current?.focus();
-      document.body.style.overflow = 'hidden';
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen, onClose]);
 
   if (!isOpen || !publication) return null;
 
   const imageError = failedImageUrl === publication.imageUrl;
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
 
   const formatAuthors = (authors: string[], isFirstAuthor: boolean) => {
     if (authors.length === 0) return '';
@@ -76,48 +48,14 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
   };
 
   return (
-    <div
-      className={`${getBackdropClassesWithFallback()} p-0 sm:p-4`}
-      onClick={handleBackdropClick}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="publication-detail-title"
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="論文詳細"
+      description={publication.title}
+      closeButtonLabel="モーダルを閉じる"
     >
-      <div
-        ref={modalRef}
-        className="bg-white dark:bg-gray-800 rounded-none sm:rounded-lg shadow-xl w-full h-full sm:max-w-3xl sm:w-full sm:max-h-[90vh] sm:h-auto overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header with Close Button */}
-        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-start z-10">
-          <h2 id="publication-detail-title" className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 pr-8">
-            論文詳細
-          </h2>
-          <button
-            ref={closeButtonRef}
-            onClick={onClose}
-            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 rounded-full p-1 min-h-[44px] min-w-[44px] flex items-center justify-center"
-            aria-label="モーダルを閉じる"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-
-        {/* Content */}
-        <div className="px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
+      <div className="space-y-4 sm:space-y-6">
           {/* Bibliographic Information */}
           <div className="space-y-3 sm:space-y-4">
             {/* Title */}
@@ -221,7 +159,18 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
               <ul className="mt-2 sm:mt-3 space-y-2 text-sm sm:text-base text-gray-700 dark:text-gray-300">
                 {publication.awards.map((award, index) => (
                   <li key={`${publication.id}-award-${index}`} className="leading-relaxed">
-                    <div className="font-medium text-gray-900 dark:text-gray-100">{award.title}</div>
+                    <div className="font-medium text-gray-900 dark:text-gray-100">
+                      {award.url ? (
+                        <a
+                          href={award.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline focus:outline-none focus:underline dark:text-blue-400"
+                        >
+                          {award.title}
+                        </a>
+                      ) : award.title}
+                    </div>
                     <div>{new Date(award.date).toLocaleDateString('ja-JP')}</div>
                     {award.organization && <div>{award.organization}</div>}
                     {award.description && <div>{award.description}</div>}
@@ -279,9 +228,8 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
               )}
             </div>
           )}
-        </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 
