@@ -19,6 +19,7 @@
     "test:e2e:headed": "playwright test --headed",
     "analyze": "cross-env ANALYZE=true BASELINE_BROWSER_MAPPING_IGNORE_OLD_DATA=true BROWSERSLIST_IGNORE_OLD_DATA=true next build",
     "build:analyze": "pnpm analyze",
+    "measure:client": "node scripts/measure-client-bundles.mjs",
     "export": "pnpm build && next export",
     "type-check": "tsc --noEmit",
     "validate-data": "node scripts/validate-data.mjs"
