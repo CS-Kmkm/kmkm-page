@@ -128,4 +128,16 @@ test.describe('Career Page', () => {
     const svg = timelineSection.locator('svg').first();
     await expect(svg).toBeVisible();
   });
+
+  test('should align list year presentation with publications and hide tags', async ({ page }) => {
+    await page.goto('/career?view=list');
+
+    const firstEvent = page.getByRole('button', { name: /View details for/ }).first();
+    await expect(firstEvent).toBeVisible();
+    await expect(page.getByText(/^\d{4}$/).first()).toBeVisible();
+    await expect(firstEvent.locator('time')).toHaveText(/^\d{1,2}月\d{1,2}日$/);
+    await expect(
+      page.locator('[role="button"][aria-label^="View details for"] span').filter({ hasText: /^#/ })
+    ).toHaveCount(0);
+  });
 });

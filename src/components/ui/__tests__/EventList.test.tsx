@@ -55,4 +55,34 @@ describe('EventList', () => {
 
     expect(onEventClick).toHaveBeenCalledWith(events[1], 1, events)
   })
+
+  it('shows the year once in the group heading and omits it from item dates', () => {
+    render(<EventList events={[event({})]} />)
+
+    expect(screen.getByText('2026')).toBeInTheDocument()
+    expect(screen.getByText('5月21日')).toBeInTheDocument()
+    expect(screen.queryByText('2026年5月21日')).not.toBeInTheDocument()
+  })
+
+  it('does not show event tags in the list', () => {
+    render(<EventList events={[event({ tags: ['research'] })]} />)
+
+    expect(screen.queryByText('#research')).not.toBeInTheDocument()
+  })
+
+  it('shows related URLs directly without opening the detail modal', () => {
+    const onEventClick = vi.fn()
+    render(
+      <EventList
+        events={[event({ relatedLinks: ['https://example.com/details'] })]}
+        onEventClick={onEventClick}
+      />
+    )
+
+    const link = screen.getByRole('link', { name: 'https://example.com/details' })
+    expect(link).toHaveAttribute('href', 'https://example.com/details')
+
+    fireEvent.click(link)
+    expect(onEventClick).not.toHaveBeenCalled()
+  })
 })

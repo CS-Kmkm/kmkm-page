@@ -52,7 +52,6 @@ const EventItem: React.FC<EventItemProps> = ({ event, onClick }) => {
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString('ja-JP', {
-      year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
@@ -64,43 +63,43 @@ const EventItem: React.FC<EventItemProps> = ({ event, onClick }) => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if ((e.key === 'Enter' || e.key === ' ') && onClick) {
-      e.preventDefault();
-      onClick();
-    }
-  };
-
   return (
     <div
       className={getListItemContainerClasses()}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      tabIndex={onClick ? 0 : undefined}
-      role={onClick ? 'button' : undefined}
-      aria-label={onClick ? `View details for ${event.title}` : undefined}
+      onClick={onClick ? handleClick : undefined}
     >
-      {/* Header with category and date */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-2">
-        <div className="flex items-center gap-2">
-          <span className={getBadgeClasses(getCategoryVariant(event.category))}>
-            {getCategoryLabel(event.category)}
-          </span>
-          {event.location && (
-            <span className={`${getMetaClasses()} hidden sm:inline`}>
-              @ {event.location}
+      <button
+        type="button"
+        className="block w-full rounded-sm text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+        onClick={(clickEvent) => {
+          clickEvent.stopPropagation();
+          handleClick();
+        }}
+        aria-label={onClick ? `View details for ${event.title}` : undefined}
+        disabled={!onClick}
+      >
+        {/* Header with category and date */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-2">
+          <div className="flex items-center gap-2">
+            <span className={getBadgeClasses(getCategoryVariant(event.category))}>
+              {getCategoryLabel(event.category)}
             </span>
-          )}
+            {event.location && (
+              <span className={`${getMetaClasses()} hidden sm:inline`}>
+                @ {event.location}
+              </span>
+            )}
+          </div>
+          <time className={`${getMetaClasses()} font-medium`}>
+            {formatDate(event.date)}
+          </time>
         </div>
-        <time className={`${getMetaClasses()} font-medium`}>
-          {formatDate(event.date)}
-        </time>
-      </div>
 
-      {/* Title */}
-      <h3 className={`${getTitleClasses()} mb-1.5`}>
-        {event.title}
-      </h3>
+        {/* Title */}
+        <h3 className={`${getTitleClasses()} mb-1.5`}>
+          {event.title}
+        </h3>
+      </button>
 
       {/* Description */}
       <p className={`${getDescriptionClasses()} mb-2 whitespace-pre-line`}>
@@ -108,42 +107,38 @@ const EventItem: React.FC<EventItemProps> = ({ event, onClick }) => {
       </p>
 
       {/* Additional info */}
-      <div className={`flex flex-col sm:flex-row gap-2 sm:gap-4 ${getMetaClasses()}`}>
-        {event.location && (
-          <span className="sm:hidden">
-            📍 {event.location}
-          </span>
-        )}
-        {event.duration && (
-          <span>
-            ⏱️ {event.duration}
-          </span>
-        )}
-        {event.tags && event.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {event.tags.slice(0, 3).map((tag, index) => (
-              <span
-                key={index}
-                className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
-              >
-                #{tag}
-              </span>
-            ))}
-            {event.tags.length > 3 && (
-              <span className="text-xs">
-                +{event.tags.length - 3} more
-              </span>
-            )}
-          </div>
-        )}
-      </div>
+      {(event.location || event.duration) && (
+        <div className={`flex flex-col sm:flex-row gap-2 sm:gap-4 ${getMetaClasses()}`}>
+          {event.location && (
+            <span className="sm:hidden">
+              📍 {event.location}
+            </span>
+          )}
+          {event.duration && (
+            <span>
+              ⏱️ {event.duration}
+            </span>
+          )}
+        </div>
+      )}
 
-      {/* Related links indicator */}
       {event.relatedLinks && event.relatedLinks.length > 0 && (
-        <div className="mt-2 pt-2 border-t border-gray-100 dark:border-gray-700">
-          <span className="text-xs text-gray-500 dark:text-gray-400">
-            🔗 {event.relatedLinks.length} related link{event.relatedLinks.length > 1 ? 's' : ''}
-          </span>
+        <div
+          className="mt-2 space-y-1 border-t border-gray-100 pt-2 dark:border-gray-700"
+          aria-label="関連リンク"
+        >
+          {event.relatedLinks.map((link, index) => (
+            <a
+              key={`${link}-${index}`}
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block break-all text-xs text-blue-600 hover:underline focus:outline-none focus:underline dark:text-blue-400"
+              onClick={(clickEvent) => clickEvent.stopPropagation()}
+            >
+              {link}
+            </a>
+          ))}
         </div>
       )}
     </div>
