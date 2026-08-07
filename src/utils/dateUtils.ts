@@ -4,15 +4,25 @@
 
 import { DateFilterOptions } from '@/types';
 
+const DISPLAY_TIME_ZONE = 'Asia/Tokyo';
+
 /**
  * Get current date in YYYY-MM-DD format
  * @returns Current date string in YYYY-MM-DD format
  */
-export function getCurrentDate(): string {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
+export function getCurrentDate(now: Date = new Date()): string {
+  const dateParts = new Intl.DateTimeFormat('en-US', {
+    timeZone: DISPLAY_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(now);
+  const partValues = Object.fromEntries(
+    dateParts.map(({ type, value }) => [type, value]),
+  );
+  const year = partValues.year;
+  const month = partValues.month;
+  const day = partValues.day;
   return `${year}-${month}-${day}`;
 }
 

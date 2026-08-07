@@ -433,6 +433,22 @@ export default function GitCommitLogTimeline({
     return merged;
   }, [processedEntries]);
 
+  const activeEntriesByMonth = useMemo(() => {
+    const activeByMonth = new Map<number, ProcessedEntry[]>();
+    const renderedMonths = new Set(rows.map((row) => row.monthIndex));
+
+    renderedMonths.forEach((monthIndex) => {
+      activeByMonth.set(
+        monthIndex,
+        processedEntries.filter((entry) =>
+          monthIndex >= entry.startMonth && monthIndex <= entry.endMonth
+        ),
+      );
+    });
+
+    return activeByMonth;
+  }, [processedEntries, rows]);
+
   useEffect(() => {
     const updateLayoutMetrics = () => {
       if (!containerRef.current) {
@@ -553,9 +569,7 @@ export default function GitCommitLogTimeline({
         const yearGroup = yearEventGroups.get(row.year);
         const hasYearEvents = Boolean(yearGroup && yearGroup.events.length > 0);
         const showYearEventButton = hasYearEvents && row.showYear;
-        const activeEntries = processedEntries.filter(e =>
-          row.monthIndex >= e.startMonth && row.monthIndex <= e.endMonth
-        );
+        const activeEntries = activeEntriesByMonth.get(row.monthIndex) ?? [];
         const hasStartAndMergeOnSameRow = Boolean(
           row.entry && row.isFirstMonthRow && hasMergeAtMonth.has(row.monthIndex)
         );

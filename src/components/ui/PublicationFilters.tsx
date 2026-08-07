@@ -1,143 +1,57 @@
 'use client';
 
-import React from 'react';
+import FilterControls, { type FilterControlGroup } from './FilterControls';
+
+export const PUBLICATION_FILTER_GROUPS = [
+  {
+    id: 'authorship',
+    options: [
+      { key: 'showFirstAuthor', label: '第一著者' },
+      { key: 'showCoAuthor', label: '共著者' },
+    ],
+  },
+  {
+    id: 'peerReview',
+    options: [
+      { key: 'showPeerReviewed', label: '査読あり' },
+      { key: 'showNonPeerReviewed', label: '査読なし' },
+    ],
+  },
+  {
+    id: 'scope',
+    options: [
+      { key: 'showDomesticConference', label: '国内' },
+      { key: 'showInternationalConference', label: '国外' },
+    ],
+  },
+] as const satisfies readonly FilterControlGroup<string>[];
+
+export type PublicationFilterKey = typeof PUBLICATION_FILTER_GROUPS[number]['options'][number]['key'];
+
+export const PUBLICATION_FILTER_KEYS = PUBLICATION_FILTER_GROUPS.flatMap((group) =>
+  group.options.map((option) => option.key)
+);
 
 interface PublicationFiltersProps {
-  showFirstAuthor: boolean;
-  showCoAuthor: boolean;
-  showPeerReviewed: boolean;
-  showNonPeerReviewed: boolean;
-  showDomesticConference: boolean;
-  showInternationalConference: boolean;
-  onToggleFirstAuthor: () => void;
-  onToggleCoAuthor: () => void;
-  onTogglePeerReviewed: () => void;
-  onToggleNonPeerReviewed: () => void;
-  onToggleDomesticConference: () => void;
-  onToggleInternationalConference: () => void;
+  filters: Record<PublicationFilterKey, boolean>;
+  onToggleFilter: (key: PublicationFilterKey) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
   resultCount: number;
   totalCount: number;
 }
 
-const PublicationFilters: React.FC<PublicationFiltersProps> = ({
-  showFirstAuthor,
-  showCoAuthor,
-  showPeerReviewed,
-  showNonPeerReviewed,
-  showDomesticConference,
-  showInternationalConference,
-  onToggleFirstAuthor,
-  onToggleCoAuthor,
-  onTogglePeerReviewed,
-  onToggleNonPeerReviewed,
-  onToggleDomesticConference,
-  onToggleInternationalConference,
-  onClearFilters,
-  hasActiveFilters,
-  resultCount,
-  totalCount
-}) => {
-  const filterButtonClass = (isActive: boolean) =>
-    `px-3 sm:px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 min-h-[44px] ${
-      isActive
-        ? 'bg-blue-600 dark:bg-blue-700 text-white hover:bg-blue-700 dark:hover:bg-blue-800'
-        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600'
-    }`;
-
+export default function PublicationFilters(props: PublicationFiltersProps) {
   return (
-    <div className="space-y-3 sm:space-y-4">
-      {/* Filter Buttons */}
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-        {/* Authorship Filters */}
-        <button
-          onClick={onToggleFirstAuthor}
-          className={filterButtonClass(showFirstAuthor)}
-          aria-pressed={showFirstAuthor}
-        >
-          第一著者
-        </button>
-        <button
-          onClick={onToggleCoAuthor}
-          className={filterButtonClass(showCoAuthor)}
-          aria-pressed={showCoAuthor}
-        >
-          共著者
-        </button>
-
-        {/* Divider */}
-        <div className="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1" aria-hidden="true"></div>
-
-        {/* Peer Reviewed Filters */}
-        <button
-          onClick={onTogglePeerReviewed}
-          className={filterButtonClass(showPeerReviewed)}
-          aria-pressed={showPeerReviewed}
-        >
-          査読あり
-        </button>
-        <button
-          onClick={onToggleNonPeerReviewed}
-          className={filterButtonClass(showNonPeerReviewed)}
-          aria-pressed={showNonPeerReviewed}
-        >
-          査読なし
-        </button>
-
-        {/* Divider */}
-        <div className="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1" aria-hidden="true"></div>
-
-        {/* Conference Scope Filters */}
-        <button
-          onClick={onToggleDomesticConference}
-          className={filterButtonClass(showDomesticConference)}
-          aria-pressed={showDomesticConference}
-        >
-          国内
-        </button>
-        <button
-          onClick={onToggleInternationalConference}
-          className={filterButtonClass(showInternationalConference)}
-          aria-pressed={showInternationalConference}
-        >
-          国外
-        </button>
-
-        {/* Clear Filters Button */}
-        {hasActiveFilters && (
-          <>
-            <div className="hidden sm:block h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1" aria-hidden="true"></div>
-            <button
-              onClick={onClearFilters}
-              className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 min-h-[44px]"
-            >
-              <svg
-                className="w-4 h-4 mr-1.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-              クリア
-            </button>
-          </>
-        )}
-      </div>
-
-      {/* Results Count */}
-      <div className="text-sm text-gray-600 dark:text-gray-400">
-        {resultCount}件 / {totalCount}件の論文を表示
-      </div>
-    </div>
+    <FilterControls
+      groups={PUBLICATION_FILTER_GROUPS}
+      filters={props.filters}
+      onToggleFilter={props.onToggleFilter}
+      onClearFilters={props.onClearFilters}
+      hasActiveFilters={props.hasActiveFilters}
+      resultCount={props.resultCount}
+      totalCount={props.totalCount}
+      resultNoun="論文"
+    />
   );
-};
-
-export default PublicationFilters;
+}

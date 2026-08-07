@@ -1,0 +1,61 @@
+import Link from 'next/link';
+
+export interface PageErrorProps {
+  title: string;
+  description: string;
+  reset: () => void;
+  containerWidth: '4xl' | '6xl';
+}
+
+const containerWidthClassNames = {
+  '4xl': 'max-w-4xl',
+  '6xl': 'max-w-6xl',
+};
+
+const PageError = ({
+  title,
+  description,
+  reset,
+  containerWidth,
+}: PageErrorProps) => (
+  <div className={`${containerWidthClassNames[containerWidth]} mx-auto px-4 sm:px-6 lg:px-8 py-8`}>
+    <div className="text-center">
+      <div className="mb-4">
+        <svg
+          className="mx-auto h-12 w-12 text-red-500"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+          />
+        </svg>
+      </div>
+      <h2 className="text-xl font-semibold text-gray-900 mb-2">{title}</h2>
+
+      <p className="text-gray-600 mb-6">{description}</p>
+
+      <div className="space-x-4">
+        <button
+          onClick={reset}
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+        >
+          再読み込み
+        </button>
+        <Link
+          href="/"
+          className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+        >
+          トップへ戻る
+        </Link>
+      </div>
+    </div>
+  </div>
+);
+
+export default PageError;

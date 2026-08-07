@@ -19,6 +19,7 @@ export { default as ProjectModal } from '../ui/ProjectModal';
 export { default as TechBadge } from '../ui/TechBadge';
 export { default as ProfileSection } from '../ui/ProfileSection';
 export { default as SocialLinks } from '../ui/SocialLinks';
+export { default as PageError } from './PageError';
 
 // Note: Exports are commented out until components are implemented
 export {};

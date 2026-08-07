@@ -1,5 +1,7 @@
-import { UpdateItem, CareerEntry, ExtendedCareerEntry, TechItem, ProjectDetail, PublicationEntry, ProfileInfo, EventEntry, EventFilters, EventCategory, TimelineEventEntry } from '@/types';
+import { UpdateItem, CareerEntry, ExtendedCareerEntry, TechItem, ProjectDetail, PublicationEntry, ProfileInfo, EventEntry, EventCategory, TimelineEventEntry } from '@/types';
 import { filterByDisplayDate, getCurrentDate } from '@/utils/dateUtils';
+
+export { filterEvents } from '@/lib/career/eventFilters';
 
 // Import JSON data with error handling
 let publicationsData: { publications: PublicationEntry[] } | null = null;
@@ -731,35 +733,6 @@ export const getTechByCategory = (category: TechItem['category']): TechItem[] =>
 
 export const getTechByProficiency = (proficiency: TechItem['proficiency']): TechItem[] => {
   return getTechExperience().filter(tech => tech.proficiency === proficiency);
-};
-
-// Event utility functions
-export const filterEvents = (events: EventEntry[], filters: EventFilters): EventEntry[] => {
-  return events.filter(event => {
-    // If no filters are active, show all events
-    const hasActiveFilters = Object.values(filters).some(filter => filter);
-    if (!hasActiveFilters) {
-      return true;
-    }
-
-    // Check if event matches any active filter
-    switch (event.category) {
-      case EventCategory.AFFILIATION:
-        return filters.showAffiliation;
-      case EventCategory.PUBLICATION:
-        return filters.showPublication;
-      case EventCategory.EVENT:
-        return filters.showEvent;
-      case EventCategory.INTERNSHIP:
-        return filters.showInternship;
-      case EventCategory.AWARD:
-        return filters.showAward;
-      case EventCategory.OTHER:
-        return filters.showOther;
-      default:
-        return false;
-    }
-  });
 };
 
 export const getEventsByCategory = (category: EventEntry['category']): EventEntry[] => {

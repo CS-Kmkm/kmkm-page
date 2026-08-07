@@ -15,6 +15,7 @@ import RelatedLanguages from './RelatedLanguages';
 const TechDetailView: React.FC<TechDetailViewProps> = ({
   tech,
   projects,
+  technologyCategories,
   relatedFrameworks = [],
   relatedLanguages = [],
   onBack,
@@ -129,6 +130,7 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
               <div className="xl:flex-1 xl:overflow-y-auto custom-scrollbar">
                 <ProjectList
                   projects={projects}
+                  technologyCategories={technologyCategories}
                   onProjectSelect={onProjectSelect}
                 />
               </div>

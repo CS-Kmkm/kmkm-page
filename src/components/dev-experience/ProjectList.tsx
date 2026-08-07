@@ -10,7 +10,11 @@ const listClasses = 'space-y-3 overflow-visible custom-scrollbar lg:overflow-y-a
 /**
  * ProjectList component displays related projects.
  */
-const ProjectList: React.FC<ProjectListProps> = ({ projects, onProjectSelect }) => {
+const ProjectList: React.FC<ProjectListProps> = ({
+  projects,
+  technologyCategories,
+  onProjectSelect,
+}) => {
   if (projects.length === 0) {
     return (
       <div className="rounded-lg border border-dashed border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-800/60 p-4 text-center">
@@ -30,6 +34,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, onProjectSelect }) 
         <div key={project.id} role="listitem">
           <ProjectListItem
             project={project}
+            technologyCategories={technologyCategories}
             onClick={() => onProjectSelect(project)}
           />
         </div>

@@ -1,115 +1,47 @@
 'use client';
 
-import React from 'react';
-import { EventFiltersProps } from '@/types';
+import FilterControls, { type FilterControlGroup } from './FilterControls';
 
-const EventFilters: React.FC<EventFiltersProps> = ({
-  showAffiliation,
-  showPublication,
-  showEvent,
-  showInternship,
-  showAward,
-  showOther,
-  onToggleAffiliation,
-  onTogglePublication,
-  onToggleEvent,
-  onToggleInternship,
-  onToggleAward,
-  onToggleOther,
-  onClearFilters,
-  hasActiveFilters,
-  resultCount,
-  totalCount
-}) => {
-  const filterButtonClass = (isActive: boolean) =>
-    `px-3 sm:px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 min-h-[44px] ${
-      isActive
-        ? 'bg-blue-600 dark:bg-blue-700 text-white hover:bg-blue-700 dark:hover:bg-blue-800'
-        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600'
-    }`;
+export const EVENT_FILTER_GROUPS = [
+  {
+    id: 'category',
+    options: [
+      { key: 'showAffiliation', label: '所属' },
+      { key: 'showPublication', label: '論文' },
+      { key: 'showEvent', label: 'イベント' },
+      { key: 'showInternship', label: 'インターン' },
+      { key: 'showAward', label: '受賞' },
+      { key: 'showOther', label: 'その他' },
+    ],
+  },
+] as const satisfies readonly FilterControlGroup<string>[];
 
+export type EventFilterKey = typeof EVENT_FILTER_GROUPS[number]['options'][number]['key'];
+
+export const EVENT_FILTER_KEYS = EVENT_FILTER_GROUPS.flatMap((group) =>
+  group.options.map((option) => option.key)
+);
+
+interface EventFiltersProps {
+  filters: Record<EventFilterKey, boolean>;
+  onToggleFilter: (key: EventFilterKey) => void;
+  onClearFilters: () => void;
+  hasActiveFilters: boolean;
+  resultCount: number;
+  totalCount: number;
+}
+
+export default function EventFilters(props: EventFiltersProps) {
   return (
-    <div className="space-y-3 sm:space-y-4">
-      {/* Filter Buttons */}
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-        {/* Category Filters */}
-        <button
-          onClick={onToggleAffiliation}
-          className={filterButtonClass(showAffiliation)}
-          aria-pressed={showAffiliation}
-        >
-          所属
-        </button>
-        <button
-          onClick={onTogglePublication}
-          className={filterButtonClass(showPublication)}
-          aria-pressed={showPublication}
-        >
-          論文
-        </button>
-        <button
-          onClick={onToggleEvent}
-          className={filterButtonClass(showEvent)}
-          aria-pressed={showEvent}
-        >
-          イベント
-        </button>
-        <button
-          onClick={onToggleInternship}
-          className={filterButtonClass(showInternship)}
-          aria-pressed={showInternship}
-        >
-          インターン
-        </button>
-        <button
-          onClick={onToggleAward}
-          className={filterButtonClass(showAward)}
-          aria-pressed={showAward}
-        >
-          受賞
-        </button>
-        <button
-          onClick={onToggleOther}
-          className={filterButtonClass(showOther)}
-          aria-pressed={showOther}
-        >
-          その他
-        </button>
-
-        {/* Clear Filters Button */}
-        {hasActiveFilters && (
-          <>
-            <div className="hidden sm:block h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1" aria-hidden="true"></div>
-            <button
-              onClick={onClearFilters}
-              className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 min-h-[44px]"
-            >
-              <svg
-                className="w-4 h-4 mr-1.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-              クリア
-            </button>
-          </>
-        )}
-      </div>
-
-      {/* Results Count */}
-      <div className="text-sm text-gray-600 dark:text-gray-400">
-        {resultCount}件 / {totalCount}件のイベントを表示
-      </div>
-    </div>
+    <FilterControls
+      groups={EVENT_FILTER_GROUPS}
+      filters={props.filters}
+      onToggleFilter={props.onToggleFilter}
+      onClearFilters={props.onClearFilters}
+      hasActiveFilters={props.hasActiveFilters}
+      resultCount={props.resultCount}
+      totalCount={props.totalCount}
+      resultNoun="イベント"
+    />
   );
-};
-
-export default EventFilters;
+}

@@ -1,51 +1,54 @@
-import { useMemo } from 'react';
-import { getTechExperience, getProjectDetails } from '@/data';
-import { TechItem, ProjectDetail } from '@/types';
+import { useCallback, useMemo } from 'react';
+import { createTechCategoryLookup } from '@/lib/devExperience';
+import type { ProjectDetail, TechItem } from '@/types';
 
 /**
- * Custom hook for managing tech experience data and related logic
+ * Builds the interactive development-experience view model from server-loaded data.
  */
-export const useTechExperience = () => {
-  const allTechItems = getTechExperience();
-  const allProjects = getProjectDetails();
+export const useTechExperience = (
+  allTechItems: TechItem[],
+  allProjects: ProjectDetail[],
+) => {
+  const categorizedTech = useMemo(() => ({
+    languages: allTechItems.filter((item) => item.category === 'language'),
+    frameworks: allTechItems.filter((item) => item.category === 'framework'),
+    tools: allTechItems.filter((item) => item.category === 'tool'),
+    databases: allTechItems.filter((item) => item.category === 'database'),
+  }), [allTechItems]);
 
-  // Categorize tech items
-  const categorizedTech = useMemo(() => {
-    const languages = allTechItems.filter(item => item.category === 'language');
-    const frameworks = allTechItems.filter(item => item.category === 'framework');
-    const tools = allTechItems.filter(item => item.category === 'tool');
-    const databases = allTechItems.filter(item => item.category === 'database');
+  const projectsById = useMemo(
+    () => new Map(allProjects.map((project) => [project.id, project])),
+    [allProjects],
+  );
 
-    return { languages, frameworks, tools, databases };
-  }, [allTechItems]);
+  const techCategoryByName = useMemo(
+    () => createTechCategoryLookup(allTechItems),
+    [allTechItems],
+  );
 
-  // Get related frameworks for a language based on explicit relationships
-  const getRelatedFrameworks = (tech: TechItem): TechItem[] => {
+  const getRelatedFrameworks = useCallback((tech: TechItem): TechItem[] => {
     if (!tech.relatedFrameworks) return [];
-    return categorizedTech.frameworks.filter(framework =>
-      tech.relatedFrameworks!.includes(framework.name)
+    return categorizedTech.frameworks.filter((framework) =>
+      tech.relatedFrameworks?.includes(framework.name),
     );
-  };
+  }, [categorizedTech.frameworks]);
 
-  // Get related languages for a framework based on explicit relationships
-  const getRelatedLanguages = (tech: TechItem): TechItem[] => {
+  const getRelatedLanguages = useCallback((tech: TechItem): TechItem[] => {
     if (!tech.relatedLanguages) return [];
-    return categorizedTech.languages.filter(language =>
-      tech.relatedLanguages!.includes(language.name)
+    return categorizedTech.languages.filter((language) =>
+      tech.relatedLanguages?.includes(language.name),
     );
-  };
+  }, [categorizedTech.languages]);
 
-  // Get projects for selected tech
-  const getProjectsForTech = (tech: TechItem): ProjectDetail[] => {
-    return tech.projects
-      .map(projectId => allProjects.find(p => p.id === projectId))
-      .filter((project): project is ProjectDetail => project !== undefined);
-  };
+  const getProjectsForTech = useCallback((tech: TechItem): ProjectDetail[] => (
+    tech.projects
+      .map((projectId) => projectsById.get(projectId))
+      .filter((project): project is ProjectDetail => project !== undefined)
+  ), [projectsById]);
 
   return {
-    allTechItems,
-    allProjects,
     categorizedTech,
+    techCategoryByName,
     getRelatedFrameworks,
     getRelatedLanguages,
     getProjectsForTech,

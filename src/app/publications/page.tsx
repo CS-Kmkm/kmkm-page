@@ -1,4 +1,7 @@
-import { PageLayout, PublicationList } from '@/components/common';
+import PageLayout from '@/components/layout/PageLayout';
+import PageContainer from '@/components/layout/PageContainer';
+import PageHeading from '@/components/layout/PageHeading';
+import PublicationList from '@/components/ui/PublicationList';
 import { getPublications } from '@/data';
 import { generatePageMetadata } from '@/lib/metadata';
 
@@ -14,12 +17,10 @@ export default function PublicationsPage() {
 
   return (
     <PageLayout title="論文">
-      <div className="w-[90%] max-w-7xl mx-auto px-4">
+      <PageContainer>
         {/* Page Header */}
         <div className="mb-4 sm:mb-6 md:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3 md:mb-4">
-            論文
-          </h1>
+          <PageHeading className="mb-2 sm:mb-3 md:mb-4">論文</PageHeading>
         </div>
 
         {/* Publications List */}
@@ -53,7 +54,7 @@ export default function PublicationsPage() {
             </div>
           )}
         </div>
-      </div>
+      </PageContainer>
     </PageLayout>
   );
 }

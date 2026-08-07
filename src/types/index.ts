@@ -114,6 +114,8 @@ export interface TechItem {
   relatedPlatforms?: string[]; // For languages: related platform/environment names
 }
 
+export type TechCategoryLookup = Readonly<Record<string, TechItem['category']>>;
+
 export interface PublicationEntry {
   id: string;
   title: string;
@@ -284,7 +286,7 @@ export interface ProjectModalProps {
 
 export interface TechBadgeProps {
   name: string;
-  category: 'language' | 'framework' | 'tool' | 'database';
+  category: TechItem['category'];
   experienceYears: number;
   proficiency: 'beginner' | 'intermediate' | 'advanced' | 'expert';
   logoUrl?: string;
@@ -328,17 +330,20 @@ export interface TechDescriptionProps {
 
 export interface ProjectListItemProps {
   project: ProjectDetail;
+  technologyCategories: TechCategoryLookup;
   onClick: () => void;
 }
 
 export interface ProjectListProps {
   projects: ProjectDetail[];
+  technologyCategories: TechCategoryLookup;
   onProjectSelect: (project: ProjectDetail) => void;
 }
 
 export interface TechDetailViewProps {
   tech: TechItem;
   projects: ProjectDetail[];
+  technologyCategories: TechCategoryLookup;
   relatedFrameworks?: TechItem[];
   relatedLanguages?: TechItem[];
   onBack: () => void;
@@ -362,25 +367,6 @@ export interface EventListProps {
   events: EventEntry[];
   showFilters?: boolean;
   onEventClick?: (event: EventEntry, eventIndex: number, filteredEvents: EventEntry[]) => void;
-}
-
-export interface EventFiltersProps {
-  showAffiliation: boolean;
-  showPublication: boolean;
-  showEvent: boolean;
-  showInternship: boolean;
-  showAward: boolean;
-  showOther: boolean;
-  onToggleAffiliation: () => void;
-  onTogglePublication: () => void;
-  onToggleEvent: () => void;
-  onToggleInternship: () => void;
-  onToggleAward: () => void;
-  onToggleOther: () => void;
-  onClearFilters: () => void;
-  hasActiveFilters: boolean;
-  resultCount: number;
-  totalCount: number;
 }
 
 export interface EventEmptyStateProps {

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { TechIconProps } from '@/types';
+import { getTechnologyCategoryMetadata } from '@/lib/tech/categories';
 
 /**
  * TechIcon component displays a clickable technology icon
@@ -22,21 +23,6 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
     'focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400',
     'focus:ring-offset-2 dark:focus:ring-offset-gray-900',
   ].join(' ');
-
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'language':
-        return '💻';
-      case 'framework':
-        return '🔧';
-      case 'tool':
-        return '⚙️';
-      case 'database':
-        return '🗄️';
-      default:
-        return '📦';
-    }
-  };
 
   const handleClick = () => {
     onClick();
@@ -82,7 +68,7 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
               />
             ) : (
               <span className="text-2xl sm:text-3xl" role="img" aria-label={`${tech.name}のアイコン`}>
-                {getCategoryIcon(tech.category)}
+                {getTechnologyCategoryMetadata(tech.category).icon}
               </span>
             )}
           </div>

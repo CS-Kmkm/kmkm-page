@@ -22,6 +22,7 @@ const dataDir = join(__dirname, '..', 'src', 'data');
 console.log('🔍 Starting data integrity validation...\n');
 
 const errors = [];
+const technologyCategories = new Set(['language', 'framework', 'tool', 'database']);
 
 // Helper function to validate date format (YYYY-MM-DD)
 const isValidDate = (dateStr) => {
@@ -146,7 +147,11 @@ const projectIds = new Set(techExperience.projects?.map(p => p.id) || []);
 techExperience.technologies?.forEach((tech, index) => {
   if (!tech.id) errors.push(`Technology: Entry at index ${index} missing required field "id"`);
   if (!tech.name) errors.push(`Technology: Entry "${tech.id || index}" missing required field "name"`);
-  if (!tech.category) errors.push(`Technology: Entry "${tech.id || index}" missing required field "category"`);
+  if (!tech.category) {
+    errors.push(`Technology: Entry "${tech.id || index}" missing required field "category"`);
+  } else if (!technologyCategories.has(tech.category)) {
+    errors.push(`Technology: Entry "${tech.id || index}" has invalid category "${tech.category}"`);
+  }
   if (!tech.proficiency) errors.push(`Technology: Entry "${tech.id || index}" missing required field "proficiency"`);
   if (tech.experienceYears === undefined) {
     errors.push(`Technology: Entry "${tech.id || index}" missing required field "experienceYears"`);

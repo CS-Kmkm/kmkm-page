@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useId, useState } from 'react';
-import { ProjectDetail } from '@/types';
+import type { ProjectDetail, TechCategoryLookup } from '@/types';
 import ProjectListItem from './ProjectListItem';
 import { getProjectListStyle } from '@/utils/projectList';
 
 interface AllProjectsSectionProps {
   projects: ProjectDetail[];
+  technologyCategories: TechCategoryLookup;
   onProjectSelect: (project: ProjectDetail) => void;
 }
 
@@ -18,6 +19,7 @@ const listClasses = 'space-y-3 overflow-visible custom-scrollbar xl:min-h-0 xl:f
  */
 const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
   projects,
+  technologyCategories,
   onProjectSelect,
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -88,6 +90,7 @@ const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
             <div key={project.id} role="listitem">
               <ProjectListItem
                 project={project}
+                technologyCategories={technologyCategories}
                 onClick={() => onProjectSelect(project)}
               />
             </div>

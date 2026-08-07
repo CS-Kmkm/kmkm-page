@@ -3,26 +3,12 @@
 import React from 'react';
 import Image from 'next/image';
 import { TechHeaderProps } from '@/types';
+import { getTechnologyCategoryMetadata } from '@/lib/tech/categories';
 
 /**
  * TechHeader component displays technology logo, name, proficiency badge, and experience years
  */
 const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'language':
-        return '💻';
-      case 'framework':
-        return '🔧';
-      case 'tool':
-        return '⚙️';
-      case 'database':
-        return '🗄️';
-      default:
-        return '📦';
-    }
-  };
-
   const getProficiencyColor = (level: string) => {
     switch (level) {
       case 'expert':
@@ -67,7 +53,7 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
           />
         ) : (
           <span className="text-2xl sm:text-3xl" role="img" aria-label={`${tech.name}のアイコン`}>
-            {getCategoryIcon(tech.category)}
+            {getTechnologyCategoryMetadata(tech.category).icon}
           </span>
         )}
       </div>

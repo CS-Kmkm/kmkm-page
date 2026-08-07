@@ -51,9 +51,10 @@ describe('EventList', () => {
     const onEventClick = vi.fn()
     render(<EventList events={events} onEventClick={onEventClick} />)
 
+    fireEvent.click(screen.getByRole('button', { name: '論文' }))
     fireEvent.click(screen.getByText('Publication event'))
 
-    expect(onEventClick).toHaveBeenCalledWith(events[1], 1, events)
+    expect(onEventClick).toHaveBeenCalledWith(events[1], 0, [events[1]])
   })
 
   it('shows the year once in the group heading and omits it from item dates', () => {

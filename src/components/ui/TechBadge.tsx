@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { TechBadgeProps } from '@/types';
+import { getTechnologyCategoryMetadata } from '@/lib/tech/categories';
 
 const TechBadge: React.FC<TechBadgeProps> = ({
   name,
@@ -24,21 +25,6 @@ const TechBadge: React.FC<TechBadgeProps> = ({
         return 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-300 border-gray-300 dark:border-gray-600';
       default:
         return 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-300 border-gray-300 dark:border-gray-600';
-    }
-  };
-
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'language':
-        return '💻';
-      case 'framework':
-        return '🔧';
-      case 'tool':
-        return '⚙️';
-      case 'database':
-        return '🗄️';
-      default:
-        return '📦';
     }
   };
 
@@ -71,7 +57,7 @@ const TechBadge: React.FC<TechBadgeProps> = ({
           />
         ) : (
           <span className="text-base sm:text-lg" role="img" aria-label={`${category} icon`}>
-            {getCategoryIcon(category)}
+            {getTechnologyCategoryMetadata(category).icon}
           </span>
         )}
       </div>
@@ -80,8 +66,8 @@ const TechBadge: React.FC<TechBadgeProps> = ({
       <div className="flex-grow min-w-0">
         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
           <h3 className="font-semibold text-xs sm:text-sm truncate">{name}</h3>
-          <span className="text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full bg-white/50 dark:bg-gray-900/50 capitalize self-start sm:self-auto">
-            {category}
+            <span className="text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full bg-white/50 dark:bg-gray-900/50 capitalize self-start sm:self-auto">
+            {getTechnologyCategoryMetadata(category).label}
           </span>
         </div>
         

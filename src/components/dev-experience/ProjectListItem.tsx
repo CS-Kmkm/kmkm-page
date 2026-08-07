@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ProjectListItemProps } from '@/types';
-import { getTechExperience } from '@/data';
+import { sortTechnologyNames } from '@/lib/devExperience';
 import {
   getButtonListItemClasses,
   getTitleClasses,
@@ -20,30 +20,15 @@ const getProjectListItemClasses = (): string =>
  * ProjectListItem component displays a clickable project list item
  * with project name, duration, and role
  */
-const ProjectListItem: React.FC<ProjectListItemProps> = ({ project, onClick }) => {
-  const allTechItems = getTechExperience();
-  
-  // Sort technologies by category priority
-  const sortedTechs = React.useMemo(() => {
-    const categoryOrder = {
-      'language': 1,
-      'framework': 2,
-      'database': 3,
-      'tool': 4
-    };
-    
-    return project.technologies
-      .map(techName => {
-        const techItem = allTechItems.find(item => item.name === techName);
-        return {
-          name: techName,
-          category: techItem?.category || 'tool',
-          order: categoryOrder[techItem?.category as keyof typeof categoryOrder] || 5
-        };
-      })
-      .sort((a, b) => a.order - b.order)
-      .map(tech => tech.name);
-  }, [project.technologies, allTechItems]);
+const ProjectListItem: React.FC<ProjectListItemProps> = ({
+  project,
+  technologyCategories,
+  onClick,
+}) => {
+  const sortedTechs = React.useMemo(
+    () => sortTechnologyNames(project.technologies, technologyCategories),
+    [project.technologies, technologyCategories],
+  );
 
   const handleClick = () => {
     onClick();

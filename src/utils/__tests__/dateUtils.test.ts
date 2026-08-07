@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { filterByDisplayDate, isDisplayable, parseDisplayDate } from '../dateUtils';
+import { filterByDisplayDate, getCurrentDate, isDisplayable, parseDisplayDate } from '../dateUtils';
 
 describe('dateUtils', () => {
   afterEach(() => {
@@ -26,6 +26,10 @@ describe('dateUtils', () => {
     expect(isDisplayable('2026-05-20', '2026-05-21')).toBe(true);
     expect(isDisplayable('2026-05-21', '2026-05-21')).toBe(true);
     expect(isDisplayable('2026-05-22', '2026-05-21')).toBe(false);
+  });
+
+  it('uses the Japan calendar date when the server clock is UTC', () => {
+    expect(getCurrentDate(new Date('2026-08-07T15:00:00.000Z'))).toBe('2026-08-08');
   });
 
   it('filters by display date with includeToday control and toBeAppear override', () => {
