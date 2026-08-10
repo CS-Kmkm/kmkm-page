@@ -3,14 +3,6 @@
 import React, { useState } from 'react';
 import { PublicationDetailModalProps } from '@/types';
 import { Modal } from './Modal';
-import {
-  getPublicationTypeLabel,
-  getPublicationTypeColor,
-  getPublicationScopeLabel,
-  getPublicationScopeColor,
-  shouldShowPublicationTypeBadge,
-  shouldShowPublicationScopeBadge
-} from '@/lib/publications/utils';
 
 const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
   publication,
@@ -73,52 +65,6 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
               <em>{publication.venue}</em>
               {!publication.venue.includes(String(publication.year)) && `, ${publication.year}`}
             </p>
-
-            {/* Badges */}
-            <div className="flex flex-wrap items-center gap-2">
-              {/* Publication Scope Badge */}
-              {shouldShowPublicationScopeBadge(publication) && (
-                <span
-                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getPublicationScopeColor()}`}
-                >
-                  {getPublicationScopeLabel(publication.conferenceScope)}
-                </span>
-              )}
-
-              {/* First Author Badge */}
-              {publication.isFirstAuthor && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
-                  第一著者
-                </span>
-              )}
-
-              {/* Peer Reviewed Badge */}
-              {publication.isPeerReviewed && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800">
-                  査読あり
-                </span>
-              )}
-
-              {publication.awards?.map((award, index) => (
-                <span
-                  key={`${publication.id}-award-badge-${index}`}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-900"
-                >
-                  {award.title}
-                </span>
-              ))}
-
-              {/* Publication Type Badge */}
-              {shouldShowPublicationTypeBadge(publication) && (
-                <span
-                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getPublicationTypeColor(
-                    publication.publicationType
-                  )}`}
-                >
-                  {getPublicationTypeLabel(publication.publicationType)}
-                </span>
-              )}
-            </div>
 
             {/* Links */}
             <div className="space-y-3">

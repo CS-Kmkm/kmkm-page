@@ -1,85 +1,6 @@
 import { PublicationEntry } from '@/types';
 
 /**
- * Publication type labels mapping
- */
-export const PUBLICATION_TYPE_LABELS: Record<string, string> = {
-  journal: 'ジャーナル',
-  conference: '国外',
-  workshop: 'ワークショップ',
-  preprint: 'プレプリント',
-  other: 'その他'
-};
-
-/**
- * Publication type color classes mapping
- */
-export const PUBLICATION_TYPE_COLORS: Record<string, string> = {
-  journal: 'bg-blue-100 text-blue-900 border border-blue-200',
-  conference: 'bg-green-100 text-green-900 border border-green-200',
-  workshop: 'bg-yellow-100 text-yellow-900 border border-yellow-200',
-  preprint: 'bg-gray-100 text-gray-900 border border-gray-200',
-  other: 'bg-purple-100 text-purple-900 border border-purple-200'
-};
-
-const isVenueScopedPublicationType = (type: string): boolean =>
-  type === 'conference' || type === 'workshop';
-
-/**
- * Get publication type label
- */
-export const getPublicationTypeLabel = (
-  type: string
-): string => {
-  return PUBLICATION_TYPE_LABELS[type] || type.charAt(0).toUpperCase() + type.slice(1);
-};
-
-/**
- * Get publication type color classes
- */
-export const getPublicationTypeColor = (type: string): string => {
-  return PUBLICATION_TYPE_COLORS[type] || 'bg-gray-100 text-gray-900 border border-gray-200';
-};
-
-/**
- * Domestic conference labels should not be displayed as publication type badges.
- */
-export const shouldShowPublicationTypeBadge = (publication: PublicationEntry): boolean => {
-  if (publication.publicationType === 'conference' && publication.conferenceScope === 'domestic') {
-    return false;
-  }
-  return true;
-};
-
-/**
- * Get venue scope label for conference/workshop publications.
- */
-export const getPublicationScopeLabel = (
-  conferenceScope?: PublicationEntry['conferenceScope']
-): string => {
-  if (conferenceScope === 'international') return '国外';
-  if (conferenceScope === 'domestic') return '国内';
-  return '';
-};
-
-/**
- * Get venue scope color classes.
- */
-export const getPublicationScopeColor = (): string => {
-  return 'bg-green-100 text-green-900 border border-green-200';
-};
-
-/**
- * Show a separate scope badge only when it adds information beyond the type badge.
- */
-export const shouldShowPublicationScopeBadge = (publication: PublicationEntry): boolean => {
-  if (!isVenueScopedPublicationType(publication.publicationType)) return false;
-  if (publication.conferenceScope !== 'international') return false;
-
-  return getPublicationTypeLabel(publication.publicationType) !== getPublicationScopeLabel(publication.conferenceScope);
-};
-
-/**
  * Format authors - returns plain string or JSX for highlighting first author
  * Note: This function is meant to be used in React components
  */
@@ -119,17 +40,13 @@ export const filterPublications = (
     showCoAuthor: boolean;
     showPeerReviewed: boolean;
     showNonPeerReviewed: boolean;
-    showDomesticConference: boolean;
-    showInternationalConference: boolean;
   }
 ): PublicationEntry[] => {
   const {
     showFirstAuthor,
     showCoAuthor,
     showPeerReviewed,
-    showNonPeerReviewed,
-    showDomesticConference,
-    showInternationalConference
+    showNonPeerReviewed
   } = filters;
   
   let result = [...publications];
@@ -137,7 +54,6 @@ export const filterPublications = (
   // Check if any filter is active in each category
   const hasAuthorshipFilter = showFirstAuthor || showCoAuthor;
   const hasPeerReviewedFilter = showPeerReviewed || showNonPeerReviewed;
-  const hasConferenceScopeFilter = showDomesticConference || showInternationalConference;
   
   // Apply authorship filter
   if (hasAuthorshipFilter) {
@@ -157,19 +73,5 @@ export const filterPublications = (
     });
   }
 
-  // Apply venue scope filter
-  if (hasConferenceScopeFilter) {
-    result = result.filter(pub => {
-      if (!pub.conferenceScope && pub.publicationType !== 'conference') return false;
-
-      // Backward compatibility: conference entries without scope are treated as international.
-      // Workshops and other publication types must opt in with conferenceScope.
-      const scope = pub.conferenceScope ?? 'international';
-      if (showDomesticConference && scope === 'domestic') return true;
-      if (showInternationalConference && scope === 'international') return true;
-      return false;
-    });
-  }
-  
   return sortPublications(result);
 };
