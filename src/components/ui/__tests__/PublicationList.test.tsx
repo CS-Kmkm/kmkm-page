@@ -70,33 +70,17 @@ describe('PublicationList', () => {
     expect(screen.getByText(/2022/)).toBeInTheDocument()
   })
 
-  it('displays author status badges correctly', () => {
+  it('does not render metadata badges inside publication entries', () => {
     render(<PublicationList publications={mockPublications} />)
 
-    // Check for first author badges
-    const firstAuthorBadges = screen.getAllByText('第一著者', { selector: 'span' })
-    expect(firstAuthorBadges).toHaveLength(2) // pub-001 and pub-003 are first author
+    const firstPublication = screen.getByRole('button', {
+      name: 'Test Publication 1の詳細を表示'
+    })
 
-    // Check that first author names are wrapped in strong tags
-    const emphasizedAuthors = screen.getAllByText(/Koshi Motegi|茂木光志/, { selector: 'strong' })
-    expect(emphasizedAuthors).toHaveLength(2)
-  })
-
-  it('displays peer-review badges correctly', () => {
-    render(<PublicationList publications={mockPublications} />)
-
-    // Check for peer reviewed badges
-    const peerReviewedBadges = screen.getAllByText('査読あり', { selector: 'span' })
-    expect(peerReviewedBadges).toHaveLength(2) // pub-001 and pub-003 are peer reviewed
-  })
-
-  it('displays publication type badges correctly', () => {
-    render(<PublicationList publications={mockPublications} />)
-
-    // Check for publication type badges
-    expect(screen.getByText('ジャーナル')).toBeInTheDocument()
-    expect(screen.getByText('国外', { selector: 'span' })).toBeInTheDocument()
-    expect(screen.getByText('ワークショップ')).toBeInTheDocument()
+    expect(firstPublication).not.toHaveTextContent('第一著者')
+    expect(firstPublication).not.toHaveTextContent('査読あり')
+    expect(firstPublication).not.toHaveTextContent('ジャーナル')
+    expect(firstPublication).not.toHaveTextContent('Test Award')
   })
 
   it('renders publication items correctly', () => {
@@ -146,189 +130,39 @@ describe('PublicationList', () => {
     render(<PublicationList publications={mockPublications} />)
 
     // Check for filter buttons
-    expect(screen.getByRole('button', { name: '第一著者' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '共著者' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '査読あり' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '査読なし' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '国内' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '国外' })).toBeInTheDocument()
+    expect(screen.getByRole('group', { name: '著者区分' })).toBeInTheDocument()
+    expect(screen.getByRole('group', { name: '査読区分' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '主著' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '共著' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'あり' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'なし' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: '国内' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: '国外' })).not.toBeInTheDocument()
   })
 
-  it('filters publications by domestic conference', () => {
-    const conferenceScopePublications: PublicationEntry[] = [
-      {
-        id: 'pub-a',
-        title: 'Domestic Conference Paper',
-        authors: ['Author A'],
-        venue: 'NLP Conference',
-        year: 2024,
-        displayDate: '2024-01-01',
-        isFirstAuthor: true,
-        isPeerReviewed: false,
-        publicationType: 'conference',
-        conferenceScope: 'domestic'
-      },
-      {
-        id: 'pub-b',
-        title: 'International Conference Paper',
-        authors: ['Author B'],
-        venue: 'ICML',
-        year: 2024,
-        displayDate: '2024-02-01',
-        isFirstAuthor: false,
-        isPeerReviewed: true,
-        publicationType: 'conference',
-        conferenceScope: 'international'
-      },
-      {
-        id: 'pub-c',
-        title: 'Journal Paper',
-        authors: ['Author C'],
-        venue: 'Journal X',
-        year: 2023,
-        displayDate: '2023-01-01',
-        isFirstAuthor: true,
-        isPeerReviewed: true,
-        publicationType: 'journal'
-      }
-    ]
-
-    render(<PublicationList publications={conferenceScopePublications} />)
-
-    fireEvent.click(screen.getByRole('button', { name: '国内' }))
-
-    expect(screen.getByText('Domestic Conference Paper')).toBeInTheDocument()
-    expect(screen.queryByText('International Conference Paper')).not.toBeInTheDocument()
-    expect(screen.queryByText('Journal Paper')).not.toBeInTheDocument()
-    expect(screen.getByText('1件 / 3件の論文を表示')).toBeInTheDocument()
-  })
-
-  it('does not display domestic conference badge label', () => {
-    const conferenceScopePublications: PublicationEntry[] = [
-      {
-        id: 'pub-a',
-        title: 'Domestic Conference Paper',
-        authors: ['Author A'],
-        venue: 'NLP Conference',
-        year: 2024,
-        displayDate: '2024-01-01',
-        isFirstAuthor: true,
-        isPeerReviewed: false,
-        publicationType: 'conference',
-        conferenceScope: 'domestic'
-      }
-    ]
-
-    render(<PublicationList publications={conferenceScopePublications} />)
-
-    // "国内" はフィルタボタンには表示されるが、論文種別バッジには表示しない
-    expect(screen.getAllByText('国内')).toHaveLength(1)
-  })
-
-  it('renders an award source as an external link in the detail modal', () => {
+  it('removes modal badges while preserving the award source link', () => {
     render(<PublicationList publications={mockPublications} />)
 
     fireEvent.click(screen.getByRole('button', { name: 'Test Publication 1の詳細を表示' }))
 
+    const dialog = screen.getByRole('dialog')
+    expect(dialog).not.toHaveTextContent('第一著者')
+    expect(dialog).not.toHaveTextContent('査読あり')
+    expect(dialog).not.toHaveTextContent('ジャーナル')
+    expect(screen.getAllByText('Test Award')).toHaveLength(1)
     expect(screen.getByRole('link', { name: 'Test Award' })).toHaveAttribute(
       'href',
       'https://example.com/award'
     )
   })
 
-  it('displays international workshop with type and international badge labels', () => {
-    const conferenceScopePublications: PublicationEntry[] = [
-      {
-        id: 'pub-nslp',
-        title: 'NSLP Workshop Paper',
-        authors: ['Koshi Motegi'],
-        venue: 'NSLP',
-        year: 2026,
-        displayDate: '2026-04-27',
-        isFirstAuthor: true,
-        isPeerReviewed: true,
-        publicationType: 'workshop',
-        conferenceScope: 'international'
-      }
-    ]
-
-    render(<PublicationList publications={conferenceScopePublications} />)
-
-    expect(screen.getByText('国外', { selector: 'span' })).toBeInTheDocument()
-    expect(screen.getByText('ワークショップ', { selector: 'span' })).toBeInTheDocument()
-    const badges = Array.from(
-      screen.getByRole('button', { name: 'NSLP Workshop Paperの詳細を表示' }).querySelectorAll('span')
-    ).map((badge) => badge.textContent)
-    expect(badges.at(-1)).toBe('ワークショップ')
-  })
-
-  it('filters publications by international conference', () => {
-    const conferenceScopePublications: PublicationEntry[] = [
-      {
-        id: 'pub-a',
-        title: 'Domestic Conference Paper',
-        authors: ['Author A'],
-        venue: 'NLP Conference',
-        year: 2024,
-        displayDate: '2024-01-01',
-        isFirstAuthor: true,
-        isPeerReviewed: false,
-        publicationType: 'conference',
-        conferenceScope: 'domestic'
-      },
-      {
-        id: 'pub-b',
-        title: 'International Conference Paper',
-        authors: ['Author B'],
-        venue: 'ICML',
-        year: 2024,
-        displayDate: '2024-02-01',
-        isFirstAuthor: false,
-        isPeerReviewed: true,
-        publicationType: 'conference',
-        conferenceScope: 'international'
-      },
-      {
-        id: 'pub-d',
-        title: 'International Workshop Paper',
-        authors: ['Author D'],
-        venue: 'NSLP',
-        year: 2024,
-        displayDate: '2024-03-01',
-        isFirstAuthor: true,
-        isPeerReviewed: true,
-        publicationType: 'workshop',
-        conferenceScope: 'international'
-      },
-      {
-        id: 'pub-c',
-        title: 'Journal Paper',
-        authors: ['Author C'],
-        venue: 'Journal X',
-        year: 2023,
-        displayDate: '2023-01-01',
-        isFirstAuthor: true,
-        isPeerReviewed: true,
-        publicationType: 'journal'
-      }
-    ]
-
-    render(<PublicationList publications={conferenceScopePublications} />)
-
-    fireEvent.click(screen.getByRole('button', { name: '国外' }))
-
-    expect(screen.queryByText('Domestic Conference Paper')).not.toBeInTheDocument()
-    expect(screen.getByText('International Conference Paper')).toBeInTheDocument()
-    expect(screen.getByText('International Workshop Paper')).toBeInTheDocument()
-    expect(screen.queryByText('Journal Paper')).not.toBeInTheDocument()
-    expect(screen.getByText('2件 / 4件の論文を表示')).toBeInTheDocument()
-  })
-
   it('filters publications correctly when filter is selected', () => {
     render(<PublicationList publications={mockPublications} />)
 
     // Click on first author filter
-    fireEvent.click(screen.getByRole('button', { name: '第一著者' }))
+    fireEvent.click(screen.getByRole('button', { name: '主著' }))
+
+    expect(screen.queryByRole('button', { name: 'クリア' })).not.toBeInTheDocument()
 
     // Should only show first author publications
     expect(screen.getByText('Test Publication 1')).toBeInTheDocument()
@@ -336,14 +170,14 @@ describe('PublicationList', () => {
     expect(screen.getByText('Test Publication 3')).toBeInTheDocument()
 
     // Check results count
-    expect(screen.getByText('2件 / 3件の論文を表示')).toBeInTheDocument()
+    expect(screen.getByText('2 / 3件')).toBeInTheDocument()
   })
 
   it('has proper aria-pressed attributes on filter buttons', () => {
     render(<PublicationList publications={mockPublications} />)
 
-    const firstAuthorButton = screen.getByRole('button', { name: '第一著者' })
-    const peerReviewedButton = screen.getByRole('button', { name: '査読あり' })
+    const firstAuthorButton = screen.getByRole('button', { name: '主著' })
+    const peerReviewedButton = screen.getByRole('button', { name: 'あり' })
 
     // Initially filters should not be pressed
     expect(firstAuthorButton).toHaveAttribute('aria-pressed', 'false')
@@ -361,13 +195,13 @@ describe('PublicationList', () => {
     render(<PublicationList publications={mockPublications} />)
 
     // Click on non-peer-reviewed filter - should show only 1 publication
-    fireEvent.click(screen.getByRole('button', { name: '査読なし' }))
+    fireEvent.click(screen.getByRole('button', { name: 'なし' }))
 
     // Should show only the non-peer-reviewed publication
     expect(screen.getByText('Test Publication 2')).toBeInTheDocument()
     expect(screen.queryByText('Test Publication 1')).not.toBeInTheDocument()
     expect(screen.queryByText('Test Publication 3')).not.toBeInTheDocument()
-    expect(screen.getByText('1件 / 3件の論文を表示')).toBeInTheDocument()
+    expect(screen.getByText('1 / 3件')).toBeInTheDocument()
   })
 
   it('handles empty publications array', () => {

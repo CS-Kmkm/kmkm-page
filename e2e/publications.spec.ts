@@ -10,13 +10,13 @@ test.describe('Publications Page', () => {
     await expect(page.getByRole('heading', { name: '論文', exact: true })).toBeVisible();
 
     // Check that filter controls are displayed
-    await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
-    await expect(page.getByRole('button', { name: '共著者' })).toBeVisible();
-    await expect(page.getByRole('button', { name: '査読あり' })).toBeVisible();
-    await expect(page.getByRole('button', { name: '査読なし' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '主著' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '共著' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'あり' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'なし' })).toBeVisible();
 
     // Check that results count is displayed
-    await expect(page.getByText(/\d+件 \/ \d+件の論文を表示/)).toBeVisible();
+    await expect(page.getByText(/\d+ \/ \d+件/)).toBeVisible();
 
     // Check that publications are displayed
     const publications = page.getByRole('button', { name: /の詳細を表示/ });
@@ -25,20 +25,38 @@ test.describe('Publications Page', () => {
 
   test('should have working publication filters', async ({ page }) => {
     // Test first author filter
-    await page.getByRole('button', { name: '第一著者' }).click();
+    await page.getByRole('button', { name: '主著' }).click();
 
     // Check that filter is active (button should have blue background)
-    const firstAuthorButton = page.getByRole('button', { name: '第一著者' });
+    const firstAuthorButton = page.getByRole('button', { name: '主著' });
     await expect(firstAuthorButton).toHaveAttribute('aria-pressed', 'true');
 
-    // Clear filters
-    const clearButton = page.getByRole('button', { name: 'クリア' });
-    await expect(clearButton).toBeVisible();
-    await clearButton.click();
+    // Clear the filter by pressing the active option again without showing a separate button.
+    await expect(page.getByRole('button', { name: 'クリア' })).toHaveCount(0);
+    await firstAuthorButton.click();
     await expect(firstAuthorButton).toHaveAttribute('aria-pressed', 'false');
   });
 
-  test('should display publication badges correctly', async ({ page }) => {
+  test('should place filters to the right of the heading on desktop', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 720 });
+
+    const heading = page.getByRole('heading', { name: '論文', exact: true });
+    const filters = page.getByRole('region', { name: '論文フィルタ' });
+    const headingBox = await heading.boundingBox();
+    const filterBox = await filters.boundingBox();
+
+    expect(headingBox).not.toBeNull();
+    expect(filterBox).not.toBeNull();
+    expect(filterBox!.x).toBeGreaterThan(headingBox!.x + headingBox!.width);
+    expect(
+      Math.abs(
+        filterBox!.y + filterBox!.height / 2 -
+        (headingBox!.y + headingBox!.height / 2)
+      )
+    ).toBeLessThanOrEqual(2);
+  });
+
+  test('should not display metadata badges in publication entries', async ({ page }) => {
     // Wait for publications to load
     await page.waitForLoadState('networkidle');
 
@@ -46,9 +64,7 @@ test.describe('Publications Page', () => {
     const publications = page.getByRole('button', { name: /の詳細を表示/ });
     await expect(publications.first()).toBeVisible();
 
-    // Check for badges within publications (they may vary by data)
-    const badges = page.locator('span.inline-flex.items-center');
-    await expect(badges.first()).toBeVisible();
+    await expect(publications.first().locator('span')).toHaveCount(0);
   });
 
   test('should open publication detail modal', async ({ page }) => {
@@ -89,12 +105,12 @@ test.describe('Publications Page', () => {
 
   test('should show results count', async ({ page }) => {
     // Check results count is displayed
-    await expect(page.getByText(/\d+件 \/ \d+件の論文を表示/)).toBeVisible();
+    await expect(page.getByText(/\d+ \/ \d+件/)).toBeVisible();
   });
 
   test('should handle keyboard navigation for filters', async ({ page }) => {
     // Tab to first filter button
-    const firstAuthorButton = page.getByRole('button', { name: '第一著者' });
+    const firstAuthorButton = page.getByRole('button', { name: '主著' });
     await firstAuthorButton.focus();
 
     // Check focus is visible
@@ -114,7 +130,7 @@ test.describe('Publications Page', () => {
     await expect(page.getByRole('heading', { name: '論文', exact: true })).toBeVisible();
 
     // Check that filter buttons are visible
-    await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '主著' })).toBeVisible();
 
     // Check that publications are displayed
     const publications = page.getByRole('button', { name: /の詳細を表示/ });
@@ -134,7 +150,7 @@ test.describe('Publications Page', () => {
 
     // Check that content is visible
     await expect(page.getByRole('heading', { name: '論文', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '主著' })).toBeVisible();
 
     // Check no horizontal scroll
     const hasHorizontalScroll = await page.evaluate(() => {
@@ -150,7 +166,7 @@ test.describe('Publications Page', () => {
 
     // Check that all content is visible
     await expect(page.getByRole('heading', { name: '論文', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: '第一著者' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '主著' })).toBeVisible();
 
     // Check that publications are displayed
     const publications = page.getByRole('button', { name: /の詳細を表示/ });

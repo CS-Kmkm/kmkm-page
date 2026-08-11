@@ -2,14 +2,6 @@
 
 import React from 'react';
 import { PublicationItemProps } from '@/types';
-import {
-  getPublicationTypeLabel,
-  getPublicationTypeColor,
-  getPublicationScopeLabel,
-  getPublicationScopeColor,
-  shouldShowPublicationTypeBadge,
-  shouldShowPublicationScopeBadge
-} from '@/lib/publications/utils';
 
 const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick }) => {
   const formatAuthors = (authors: string[], isFirstAuthor: boolean) => {
@@ -55,55 +47,9 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
       </p>
 
       {/* Venue */}
-      <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-3">
+      <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
         <em>{publication.venue}</em>
       </p>
-
-      {/* Badges */}
-      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-        {/* Publication Scope Badge */}
-        {shouldShowPublicationScopeBadge(publication) && (
-          <span
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPublicationScopeColor()}`}
-          >
-            {getPublicationScopeLabel(publication.conferenceScope)}
-          </span>
-        )}
-
-        {/* First Author Badge */}
-        {publication.isFirstAuthor && (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
-            第一著者
-          </span>
-        )}
-
-        {/* Peer Reviewed Badge */}
-        {publication.isPeerReviewed && (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-            査読あり
-          </span>
-        )}
-
-        {publication.awards?.map((award, index) => (
-          <span
-            key={`${publication.id}-award-${index}`}
-            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-900"
-          >
-            {award.title}
-          </span>
-        ))}
-
-        {/* Publication Type Badge */}
-        {shouldShowPublicationTypeBadge(publication) && (
-          <span
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPublicationTypeColor(
-              publication.publicationType
-            )}`}
-          >
-            {getPublicationTypeLabel(publication.publicationType)}
-          </span>
-        )}
-      </div>
     </button>
   );
 };

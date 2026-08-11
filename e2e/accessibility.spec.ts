@@ -12,10 +12,13 @@ test.describe('Accessibility Tests', () => {
   pages.forEach(({ url, name }) => {
     test(`${name} should be accessible`, async ({ page }) => {
       await page.goto(url);
-      await page.waitForFunction(() => {
-        return Array.from(document.querySelectorAll('.animate-fade-in, .animate-slide-in-right'))
-          .flatMap((element) => element.getAnimations())
-          .every((animation) => animation.playState === 'finished');
+      await page.addStyleTag({
+        content: `
+          *, *::before, *::after {
+            animation: none !important;
+            transition: none !important;
+          }
+        `,
       });
 
       const accessibilityScanResults = await new AxeBuilder({ page })

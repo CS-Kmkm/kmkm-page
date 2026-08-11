@@ -14,7 +14,7 @@ import {
 const getProjectListItemClasses = (): string =>
   getButtonListItemClasses()
     .replace('hover:bg-gray-300 dark:hover:bg-gray-600', 'hover:bg-gray-50 dark:hover:bg-gray-800/80 hover:border-gray-300 dark:hover:border-gray-600')
-    .replace('active:scale-[0.98]', 'active:scale-[0.995]');
+    .replace('active:scale-[0.98]', 'active:scale-[0.995]') + ' h-full';
 
 /**
  * ProjectListItem component displays a clickable project list item
@@ -24,7 +24,9 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({
   project,
   technologyCategories,
   onClick,
+  headingLevel = 'h4',
 }) => {
+  const Heading = headingLevel;
   const sortedTechs = React.useMemo(
     () => sortTechnologyNames(project.technologies, technologyCategories),
     [project.technologies, technologyCategories],
@@ -52,9 +54,9 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({
       <div className="flex items-start justify-between gap-3">
         <div className="flex-grow min-w-0">
           {/* Project Name */}
-          <h4 className={`${getTitleClasses()} mb-2 line-clamp-2`}>
+          <Heading className={`${getTitleClasses()} mb-2 line-clamp-2`}>
             {project.name}
-          </h4>
+          </Heading>
 
           {/* Duration and Role */}
           <div className={`flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 ${getMetaClasses()} mb-3`}>

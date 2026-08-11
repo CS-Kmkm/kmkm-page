@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import type { PublicationEntry, PublicationListProps } from '@/types';
 import { useBooleanFilters } from '@/hooks/useBooleanFilters';
 import { filterPublications } from '@/lib/publications/utils';
+import PageHeading from '@/components/layout/PageHeading';
 import PublicationDetailModal from './PublicationDetailModal';
 import PublicationEmptyState from './PublicationEmptyState';
 import PublicationFilters, { PUBLICATION_FILTER_KEYS } from './PublicationFilters';
@@ -37,15 +38,16 @@ const PublicationList = ({ publications }: PublicationListProps) => {
   };
 
   return (
-    <div className="space-y-6">
-      <PublicationFilters
-        filters={filters}
-        onToggleFilter={toggleFilter}
-        onClearFilters={clearFilters}
-        hasActiveFilters={hasActiveFilters}
-        resultCount={filteredPublications.length}
-        totalCount={publications.length}
-      />
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <PageHeading>論文</PageHeading>
+        <PublicationFilters
+          filters={filters}
+          onToggleFilter={toggleFilter}
+          resultCount={filteredPublications.length}
+          totalCount={publications.length}
+        />
+      </div>
 
       <div className="space-y-4 sm:space-y-6">
         {filteredPublications.length === 0 ? (

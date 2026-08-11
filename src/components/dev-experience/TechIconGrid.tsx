@@ -72,10 +72,7 @@ const TechIconGrid: React.FC<TechIconGridProps> = ({
 
   return (
     <div
-      className="grid w-full justify-start gap-3 animate-fade-in"
-      style={{
-        gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 6.75rem), 6.75rem))'
-      }}
+      className="grid w-full grid-cols-2 gap-2.5 animate-fade-in sm:grid-cols-3 sm:gap-3 lg:grid-cols-4"
       role="list"
       aria-label="技術スタック一覧"
     >

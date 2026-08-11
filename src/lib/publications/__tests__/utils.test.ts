@@ -3,9 +3,6 @@ import type { PublicationEntry } from '@/types';
 import {
   filterPublications,
   formatAuthorsString,
-  getPublicationScopeLabel,
-  shouldShowPublicationScopeBadge,
-  shouldShowPublicationTypeBadge,
   sortPublications,
 } from '../utils';
 
@@ -39,7 +36,7 @@ describe('publication utils', () => {
     expect(sorted.map(item => item.id)).toEqual(['dated-new', 'dated-old', 'a', 'b']);
   });
 
-  it('filters by authorship, peer-review status, and venue scope', () => {
+  it('filters by authorship and peer-review status', () => {
     const publications = [
       publication({ id: 'domestic', isFirstAuthor: true, isPeerReviewed: false, conferenceScope: 'domestic' }),
       publication({ id: 'international', isFirstAuthor: false, isPeerReviewed: true, conferenceScope: 'international' }),
@@ -51,26 +48,13 @@ describe('publication utils', () => {
       showCoAuthor: false,
       showPeerReviewed: false,
       showNonPeerReviewed: false,
-      showDomesticConference: false,
-      showInternationalConference: false,
     }).map(item => item.id)).toEqual(['domestic', 'journal']);
 
     expect(filterPublications(publications, {
       showFirstAuthor: false,
       showCoAuthor: false,
-      showPeerReviewed: false,
+      showPeerReviewed: true,
       showNonPeerReviewed: false,
-      showDomesticConference: false,
-      showInternationalConference: true,
-    }).map(item => item.id)).toEqual(['international']);
-  });
-
-  it('keeps publication and scope badge rules distinct', () => {
-    expect(shouldShowPublicationTypeBadge(publication({ conferenceScope: 'domestic' }))).toBe(false);
-    expect(shouldShowPublicationTypeBadge(publication({ conferenceScope: 'international' }))).toBe(true);
-    expect(getPublicationScopeLabel('domestic')).toBe('国内');
-    expect(getPublicationScopeLabel('international')).toBe('国外');
-    expect(shouldShowPublicationScopeBadge(publication({ publicationType: 'workshop', conferenceScope: 'international' })))
-      .toBe(true);
+    }).map(item => item.id)).toEqual(['international', 'journal']);
   });
 });

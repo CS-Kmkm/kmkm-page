@@ -352,8 +352,7 @@ export const getEvents = (): EventEntry[] => {
     if (!extendedCareer.parentId) {
       const startYear = new Date(career.startDate).getFullYear();
 
-      // Generate start event (入学/着任)
-      let startTitle = '';
+      // Generate start event (admission/employment start)
       const isPrimaryToHighSchool =
         career.organization.includes('小学校') ||
         career.organization.includes('中学校') ||
@@ -375,13 +374,9 @@ export const getEvents = (): EventEntry[] => {
         ? `${educationDescriptionOrg}に入学しました`
         : (career.description || '');
 
-      if (isPrimaryToHighSchool) {
-        startTitle = `${career.organization} ${career.role === '生徒' ? '入学' : '着任'}`;
-      } else if (isUniversity) {
-        startTitle = `${career.organization} ${career.role === '学士' ? '入学' : career.role.includes('大学院生') ? '入学' : '着任'}`;
-      } else {
-        startTitle = `${career.organization} ${career.role} 着任`;
-      }
+      const startTitle = isAdmission
+        ? `${career.organization} 入学`
+        : `${career.organization} ${career.role}として勤務開始`;
 
       const location = career.organization.includes('名古屋大学') ? '名古屋大学' :
         career.organization.includes('岐阜') ? '岐阜県' : undefined;

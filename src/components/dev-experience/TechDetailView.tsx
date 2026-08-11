@@ -125,9 +125,9 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
           <div className="xl:h-full">
             <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-5 xl:h-full xl:flex xl:flex-col transition-colors duration-200">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 xl:flex-shrink-0">
-                関連プロジェクト ({projects.length})
+                関連プロジェクト
               </h3>
-              <div className="xl:flex-1 xl:overflow-y-auto custom-scrollbar">
+              <div className="xl:flex-1">
                 <ProjectList
                   projects={projects}
                   technologyCategories={technologyCategories}

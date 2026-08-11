@@ -24,6 +24,7 @@ test.describe('Modal layout', () => {
     await expectModalWidth(page.getByRole('dialog'), 1024);
 
     await page.goto('/dev-experience');
+    await page.getByRole('tab', { name: 'プロジェクト' }).click();
     const projects = page.getByRole('list', { name: '全プロジェクト一覧' });
     await projects.getByRole('button').first().click();
 
