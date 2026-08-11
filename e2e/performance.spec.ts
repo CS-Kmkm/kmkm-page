@@ -120,8 +120,8 @@ test.describe('Performance Tests', () => {
 
     // Test filtering performance
     const filterStartTime = Date.now();
-    await page.getByRole('button', { name: '第一著者' }).click();
-    await expect(page.getByRole('button', { name: '第一著者' })).toHaveAttribute('aria-pressed', 'true');
+    await page.getByRole('button', { name: '主著' }).click();
+    await expect(page.getByRole('button', { name: '主著' })).toHaveAttribute('aria-pressed', 'true');
     const filterTime = Date.now() - filterStartTime;
 
     // Filtering should be reasonably fast (increased threshold for slower browsers)
