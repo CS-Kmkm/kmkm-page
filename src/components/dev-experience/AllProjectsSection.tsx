@@ -11,8 +11,7 @@ interface AllProjectsSectionProps {
   onProjectSelect: (project: ProjectDetail) => void;
 }
 
-const sectionClasses = 'xl:h-[var(--experience-panel-height)] xl:flex xl:flex-col';
-const listClasses = 'space-y-3 overflow-visible custom-scrollbar xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:pr-2';
+const listClasses = 'grid grid-cols-1 gap-3 overflow-visible lg:grid-cols-2';
 
 /**
  * AllProjectsSection component displays all projects.
@@ -26,18 +25,16 @@ const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
   const contentId = useId();
 
   const header = (
-    <div className="mb-4 border-b border-gray-200 pb-3 dark:border-gray-700">
-      <h3>
+    <div className="mb-5">
+      <h2>
         <button
           type="button"
-          className="group flex min-h-10 w-full items-center justify-between gap-3 rounded-md text-left text-lg font-semibold text-gray-900 transition-colors duration-150 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:text-gray-100 dark:hover:text-blue-300 dark:focus:ring-blue-400 dark:focus:ring-offset-gray-900"
+          className="group flex min-h-11 w-full items-center justify-between gap-3 rounded-lg text-left text-xl font-bold text-gray-900 transition-colors duration-150 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:text-gray-100 dark:hover:text-blue-300 dark:focus:ring-blue-400 dark:focus:ring-offset-gray-900 sm:text-2xl"
           aria-expanded={isExpanded}
           aria-controls={contentId}
           onClick={() => setIsExpanded((expanded) => !expanded)}
         >
-          <span className="min-w-0">
-            全プロジェクト <span className="text-xs text-gray-500 dark:text-gray-400 font-normal">({projects.length}件)</span>
-          </span>
+          <span className="min-w-0">全プロジェクト</span>
           <svg
             className={`h-5 w-5 flex-shrink-0 text-gray-400 transition-transform duration-200 group-hover:text-blue-600 dark:text-gray-500 dark:group-hover:text-blue-300 ${isExpanded ? 'rotate-180' : ''}`}
             fill="none"
@@ -53,14 +50,14 @@ const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
             />
           </svg>
         </button>
-      </h3>
+      </h2>
     </div>
   );
 
   if (projects.length === 0) {
     return (
-      <section className="h-full" aria-label="全プロジェクト">
-        <div className={sectionClasses}>
+      <section aria-label="全プロジェクト">
+        <div>
           {header}
           <div
             id={contentId}
@@ -75,8 +72,8 @@ const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
   }
 
   return (
-    <section className="h-full" aria-label="全プロジェクト">
-      <div className={sectionClasses}>
+    <section aria-label="全プロジェクト">
+      <div>
         {header}
         <div
           id={contentId}
@@ -92,6 +89,7 @@ const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
                 project={project}
                 technologyCategories={technologyCategories}
                 onClick={() => onProjectSelect(project)}
+                headingLevel="h3"
               />
             </div>
           ))}

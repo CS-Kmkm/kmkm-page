@@ -22,6 +22,28 @@ test.describe('Development Experience Page', () => {
     // Check that technology icons are displayed
     const techList = page.getByRole('list', { name: '技術スタック一覧' }).first();
     await expect(techList).toBeVisible();
+
+    // The overview does not display numeric self-assessments or counts.
+    await expect(page.getByText(/習熟度|年の経験|経験 \d+年|\d+件|関連プロジェクト \(\d+\)/)).toHaveCount(0);
+  });
+
+  test('should switch between technology stack and projects', async ({ page }) => {
+    const technologyTab = page.getByRole('tab', { name: '技術スタック' });
+    const projectsTab = page.getByRole('tab', { name: 'プロジェクト' });
+    const technologyPanel = page.getByRole('tabpanel', { name: '技術スタック', includeHidden: true });
+    const projectsPanel = page.getByRole('tabpanel', { name: 'プロジェクト', includeHidden: true });
+
+    await expect(technologyTab).toHaveAttribute('aria-selected', 'true');
+    await expect(technologyPanel).toBeVisible();
+    await expect(projectsPanel).toBeHidden();
+
+    await projectsTab.click();
+    await expect(projectsTab).toHaveAttribute('aria-selected', 'true');
+    await expect(projectsPanel).toBeVisible();
+    await expect(technologyPanel).toBeHidden();
+
+    await technologyTab.click();
+    await expect(technologyPanel).toBeVisible();
   });
 
   test('should display tech detail view when clicking technology', async ({ page }) => {
@@ -43,6 +65,7 @@ test.describe('Development Experience Page', () => {
     // Check back button works
     await backButton.click();
     await expect(page.getByRole('heading', { name: 'プログラミング言語' })).toBeVisible({ timeout: 10000 });
+    await expect(techButton).toBeFocused();
   });
 
   test('should handle keyboard navigation', async ({ page }) => {
@@ -79,6 +102,7 @@ test.describe('Development Experience Page', () => {
   });
 
   test('should collapse and expand all projects', async ({ page }) => {
+    await page.getByRole('tab', { name: 'プロジェクト' }).click();
     const projectsToggle = page.getByRole('button', { name: /全プロジェクト/ });
     const projectList = page.getByRole('list', { name: '全プロジェクト一覧' });
 
@@ -146,9 +170,16 @@ test.describe('Development Experience Page', () => {
     const techList = page.getByRole('list', { name: '技術スタック一覧' }).first();
     await expect(techList).toBeVisible();
 
-    const leftPanelHeight = await page.getByRole('region', { name: '技術カテゴリ一覧' }).evaluate((element) => element.getBoundingClientRect().height);
-    const rightPanelHeight = await page.getByRole('region', { name: '全プロジェクト' }).evaluate((element) => element.getBoundingClientRect().height);
-    expect(Math.abs(leftPanelHeight - rightPanelHeight)).toBeLessThanOrEqual(1);
+    const technologySection = page.getByRole('region', { name: '技術カテゴリ一覧' });
+    await expect(technologySection).toBeVisible();
+
+    // Page content follows the document scroll instead of adding nested panels.
+    await expect(technologySection).toHaveCSS('overflow-y', 'visible');
+
+    await page.getByRole('tab', { name: 'プロジェクト' }).click();
+    const projectSection = page.getByRole('region', { name: '全プロジェクト' });
+    await expect(projectSection).toBeVisible();
+    await expect(projectSection.getByRole('list', { name: '全プロジェクト一覧' })).toHaveCSS('overflow-y', 'visible');
   });
 
   test('should display tech detail view on mobile', async ({ page }) => {

@@ -5,7 +5,7 @@ import { ProjectListProps } from '@/types';
 import ProjectListItem from './ProjectListItem';
 import { getProjectListStyle } from '@/utils/projectList';
 
-const listClasses = 'space-y-3 overflow-visible custom-scrollbar lg:overflow-y-auto lg:pr-2 lg:max-h-[var(--project-list-max-height)]';
+const listClasses = 'space-y-3 overflow-visible';
 
 /**
  * ProjectList component displays related projects.
@@ -36,6 +36,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
             project={project}
             technologyCategories={technologyCategories}
             onClick={() => onProjectSelect(project)}
+            headingLevel="h4"
           />
         </div>
       ))}

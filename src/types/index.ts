@@ -332,6 +332,7 @@ export interface ProjectListItemProps {
   project: ProjectDetail;
   technologyCategories: TechCategoryLookup;
   onClick: () => void;
+  headingLevel?: 'h3' | 'h4';
 }
 
 export interface ProjectListProps {
