@@ -33,6 +33,15 @@ describe('data filtering', () => {
     expect(awardEvent?.relatedLinks).toEqual(['https://axies.jp/news/6554/']);
   });
 
+  it.each([
+    ['career-start-career-001', '名古屋大学大学院 情報学研究科 知能システム学専攻 入学'],
+    ['career-start-career-000', '東海国立大学機構 情報環境部 技術補佐員として勤務開始'],
+  ])('uses an appropriate career start label for %s', (id, expectedTitle) => {
+    const careerEvent = getEvents().find(item => item.id === id);
+
+    expect(careerEvent?.title).toBe(expectedTitle);
+  });
+
   it('returns all events when no filters are active', () => {
     const events = [
       event({ id: 'affiliation', category: EventCategory.AFFILIATION }),
