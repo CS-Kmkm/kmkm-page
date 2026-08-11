@@ -13,6 +13,7 @@ import { getEventCategoryConfig } from '@/lib/constants/categories';
 import { getBadgeClasses } from '@/lib/ui/listItemStyles';
 import { tokens } from '@/lib/theme/tokens';
 import LinkedPublicationTitles from './LinkedPublicationTitles';
+import { useI18n } from '@/lib/i18n';
 
 /**
  * EventModal component for displaying detailed event information
@@ -24,10 +25,22 @@ export default function EventModal({
   event,
   className = ''
 }: EventModalProps) {
+  const { locale, messages } = useI18n();
   if (!event) return null;
 
   // Get category configuration
   const categoryConfig = event.category ? getEventCategoryConfig(event.category) : null;
+  const categoryLabel = event.category === 'affiliation'
+    ? messages.affiliation
+    : event.category === 'publication'
+      ? messages.publication
+      : event.category === 'event'
+        ? messages.event
+        : event.category === 'internship'
+          ? messages.internship
+          : event.category === 'award'
+            ? messages.award
+            : messages.other;
 
   return (
     <Modal
@@ -39,15 +52,15 @@ export default function EventModal({
     >
       {/* Date */}
       <div className={`text-sm ${tokens.text.muted} font-medium`}>
-        {formatEventDate(event.date)}
+        {formatEventDate(event.date, locale)}
       </div>
 
       {/* Category Badge */}
       {categoryConfig && (
         <div className="inline-block">
-          <span className={getBadgeClasses(categoryConfig.variant)} aria-label={categoryConfig.ariaLabel}>
+          <span className={getBadgeClasses(categoryConfig.variant)} aria-label={messages.categoryLabel(categoryLabel)}>
             <span aria-hidden="true">{categoryConfig.icon}</span>
-            {categoryConfig.label}
+            {categoryLabel}
           </span>
         </div>
       )}

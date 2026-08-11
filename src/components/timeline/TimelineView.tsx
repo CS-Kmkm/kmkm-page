@@ -3,6 +3,7 @@
 import React from 'react';
 import GitCommitLogTimeline from '@/components/ui/GitCommitLogTimeline';
 import type { ExtendedCareerEntry, EventEntry } from '@/types';
+import { useI18n } from '@/lib/i18n';
 
 export interface TimelineViewProps {
   careerEntries: ExtendedCareerEntry[];
@@ -15,12 +16,13 @@ const TimelineView: React.FC<TimelineViewProps> = ({
   events,
   isReversed
 }) => {
+  const { messages } = useI18n();
   const hasCareerData = careerEntries.length > 0;
 
   return (
     <section aria-labelledby="timeline-heading">
       <h2 id="timeline-heading" className="sr-only">
-        経歴タイムライン
+        {messages.careerTimeline}
       </h2>
 
       {hasCareerData ? (
@@ -37,7 +39,7 @@ const TimelineView: React.FC<TimelineViewProps> = ({
       ) : (
         <div className="text-center py-12">
           <p className="text-gray-500 dark:text-gray-400">
-            経歴情報が見つかりませんでした。
+            {messages.careerNotFound}
           </p>
         </div>
       )}

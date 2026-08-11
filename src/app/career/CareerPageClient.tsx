@@ -8,10 +8,10 @@ import ViewToggleButton, { type ViewMode } from '@/components/ui/ViewToggleButto
 import EventDetailModal from '@/components/ui/EventDetailModal';
 import PageHeading from '@/components/layout/PageHeading';
 import type { EventEntry, ExtendedCareerEntry } from '@/types';
+import { useI18n } from '@/lib/i18n';
 
 const DEFAULT_VIEW_MODE: ViewMode = 'timeline';
 const DEFAULT_REVERSED_STATE = true;
-const PAGE_TITLE = '経歴';
 
 interface CareerPageClientProps {
   careerEntries: ExtendedCareerEntry[];
@@ -26,21 +26,25 @@ interface PageHeaderProps {
 }
 
 function PageHeader({ viewMode, isReversed, onToggleView, onToggleReverse }: PageHeaderProps) {
+  const { locale } = useI18n();
+  const pageTitle = locale === 'en' ? 'Career' : '経歴';
   return (
     <div className="mb-6">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-        <PageHeading compact className="flex-shrink-0">{PAGE_TITLE}</PageHeading>
+        <PageHeading compact className="flex-shrink-0">{pageTitle}</PageHeading>
         <div className="sm:ml-auto flex-shrink-0 flex items-center gap-2 sm:gap-3">
           <ViewToggleButton currentView={viewMode} onToggle={onToggleView} />
           {viewMode === 'timeline' && (
             <button
               onClick={onToggleReverse}
               className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-slate-300 dark:border-gray-600 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-              aria-label="ブランチの順序を反転"
+              aria-label={locale === 'en' ? 'Reverse branch order' : 'ブランチの順序を反転'}
               aria-pressed={isReversed}
               type="button"
             >
-              {isReversed ? '↓ 古い順' : '↑ 新しい順'}
+              {isReversed
+                ? (locale === 'en' ? '↓ Oldest first' : '↓ 古い順')
+                : (locale === 'en' ? '↑ Newest first' : '↑ 新しい順')}
             </button>
           )}
         </div>

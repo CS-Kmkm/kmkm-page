@@ -4,12 +4,14 @@ import React, { useState } from 'react';
 import { TechGridProps, TechItem, ProjectDetail } from '@/types';
 import TechBadge from './TechBadge';
 import ProjectModal from './ProjectModal';
+import { useI18n } from '@/lib/i18n';
 
 const TechGrid: React.FC<TechGridProps> = ({
   techItems,
   projectDetails,
   showProjects = true
 }) => {
+  const { messages } = useI18n();
   const [selectedProject, setSelectedProject] = useState<ProjectDetail | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -33,13 +35,13 @@ const TechGrid: React.FC<TechGridProps> = ({
   const getCategoryDisplayName = (category: string) => {
     switch (category) {
       case 'language':
-        return 'プログラミング言語';
+        return messages.programmingLanguages;
       case 'framework':
-        return 'フレームワーク・ライブラリ';
+        return messages.frameworks;
       case 'tool':
-        return 'ツール・プラットフォーム';
+        return messages.tools;
       case 'database':
-        return 'データベース';
+        return messages.databases;
       default:
         return category.charAt(0).toUpperCase() + category.slice(1);
     }

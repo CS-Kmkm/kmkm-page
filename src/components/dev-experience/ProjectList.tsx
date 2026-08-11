@@ -4,6 +4,7 @@ import React from 'react';
 import { ProjectListProps } from '@/types';
 import ProjectListItem from './ProjectListItem';
 import { getProjectListStyle } from '@/utils/projectList';
+import { useI18n } from '@/lib/i18n';
 
 const listClasses = 'space-y-3 overflow-visible';
 
@@ -15,10 +16,11 @@ const ProjectList: React.FC<ProjectListProps> = ({
   technologyCategories,
   onProjectSelect,
 }) => {
+  const { messages } = useI18n();
   if (projects.length === 0) {
     return (
       <div className="rounded-lg border border-dashed border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-800/60 p-4 text-center">
-        <p className="text-gray-500 dark:text-gray-400 text-sm">関連プロジェクトがありません</p>
+        <p className="text-gray-500 dark:text-gray-400 text-sm">{messages.noRelatedProjects}</p>
       </div>
     );
   }
@@ -28,7 +30,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
       className={listClasses}
       style={getProjectListStyle()}
       role="list"
-      aria-label="関連プロジェクト一覧"
+      aria-label={messages.relatedProjectsList}
     >
       {projects.map((project) => (
         <div key={project.id} role="listitem">

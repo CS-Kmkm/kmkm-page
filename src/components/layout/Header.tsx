@@ -5,12 +5,22 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { HeaderProps } from '@/types';
 import ThemeToggle from '@/components/ui/ThemeToggle';
-import { navigationItems } from '@/lib/site';
+import { englishNavigationItems, navigationItems } from '@/lib/site';
+import { Locale, localizeHref, useI18n } from '@/lib/i18n';
 
-const Header: React.FC<HeaderProps> = ({ currentPath }) => {
+type LocalizedHeaderProps = HeaderProps & { locale?: Locale };
+
+const Header: React.FC<LocalizedHeaderProps> = ({ currentPath, locale: localeProp }) => {
+  const { locale: contextLocale, messages } = useI18n();
+  const locale = localeProp ?? contextLocale;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const activePath = currentPath || pathname;
+  const localizedNavigationItems = locale === 'en' ? englishNavigationItems : navigationItems;
+  const localizedJapanesePaths = new Set(['/', '/career', '/publications', '/dev-experience']);
+  const languageSwitchHref = locale === 'en'
+    ? (pathname.replace(/^\/en(?=\/|$)/, '') || '/')
+    : (localizedJapanesePaths.has(pathname) ? (pathname === '/' ? '/en' : `/en${pathname}`) : '/en');
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -27,9 +37,9 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
           {/* Logo/Brand */}
           <div className="flex-shrink-0">
             <Link
-              href="/"
+              href={localizeHref('/', locale)}
               className="text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
-              aria-label="トップページへ移動"
+              aria-label={messages.home}
             >
               <span className="text-base sm:text-lg font-semibold tracking-wide">
                 Koshi Motegi
@@ -38,14 +48,15 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:block" role="navigation" aria-label="メインナビゲーション">
+          <nav className="hidden md:block" role="navigation" aria-label={messages.mainNavigation}>
             <ul className="flex items-center gap-1">
-              {navigationItems.map((item) => {
-                const isActive = activePath === item.href;
+              {localizedNavigationItems.map((item) => {
+                const href = localizeHref(item.href, locale);
+                const isActive = activePath === href;
                 return (
                   <li key={item.href}>
                     <Link
-                      href={item.href}
+                      href={href}
                       className={`
                         relative px-4 py-2 rounded-full text-sm font-medium 
                         transition-all duration-200 ease-out
@@ -67,18 +78,20 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
+            <Link href={languageSwitchHref} className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" aria-label={locale === 'en' ? messages.switchToJapanese : messages.switchToEnglish}>{locale === 'en' ? 'JA' : 'EN'}</Link>
             <ThemeToggle size="md" />
           </div>
 
           {/* Mobile menu button and theme toggle */}
           <div className="md:hidden flex items-center space-x-2">
             <ThemeToggle size="sm" />
+            <Link href={languageSwitchHref} className="px-2 text-sm font-medium text-gray-600 dark:text-gray-300" aria-label={locale === 'en' ? messages.switchToJapanese : messages.switchToEnglish}>{locale === 'en' ? 'JA' : 'EN'}</Link>
             <button
               type="button"
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200"
               aria-controls="mobile-menu"
               aria-expanded={isMobileMenuOpen}
-              aria-label={isMobileMenuOpen ? 'メインメニューを閉じる' : 'メインメニューを開く'}
+              aria-label={isMobileMenuOpen ? messages.closeMenu : messages.openMenu}
               onClick={toggleMobileMenu}
             >
               {/* Hamburger icon */}
@@ -123,15 +136,16 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
         className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}
         id="mobile-menu"
         role="navigation"
-        aria-label="モバイルナビゲーション"
+        aria-label={messages.mobileNavigation}
       >
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
-          {navigationItems.map((item) => {
-            const isActive = activePath === item.href;
+          {localizedNavigationItems.map((item) => {
+            const href = localizeHref(item.href, locale);
+            const isActive = activePath === href;
             return (
               <Link
                 key={item.href}
-                href={item.href}
+                href={href}
                 className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${isActive
                   ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-600 dark:border-blue-400'
                   : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800'

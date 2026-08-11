@@ -139,9 +139,9 @@ export function calculateEventPointPositions(
  * @param dateStr - Date string in ISO format
  * @returns Formatted date string
  */
-export function formatEventDate(dateStr: string): string {
+export function formatEventDate(dateStr: string, locale: 'ja' | 'en' = 'ja'): string {
   const date = new Date(dateStr);
-  return date.toLocaleDateString('ja-JP', {
+  return date.toLocaleDateString(locale === 'en' ? 'en-US' : 'ja-JP', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'

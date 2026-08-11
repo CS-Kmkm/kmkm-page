@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { TechBadgeProps } from '@/types';
 import { getTechnologyCategoryMetadata } from '@/lib/tech/categories';
+import { useI18n } from '@/lib/i18n';
 
 const TechBadge: React.FC<TechBadgeProps> = ({
   name,
@@ -13,6 +14,7 @@ const TechBadge: React.FC<TechBadgeProps> = ({
   onClick,
   className = ''
 }) => {
+  const { locale, messages } = useI18n();
   const getProficiencyColor = (level: string) => {
     switch (level) {
       case 'expert':
@@ -73,13 +75,13 @@ const TechBadge: React.FC<TechBadgeProps> = ({
         
         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs">
           <span className="flex items-center gap-1">
-            <span className="font-medium">経験年数:</span>
-            <span>{experienceYears}年</span>
+            <span className="font-medium">{messages.experienceYears}</span>
+            <span>{experienceYears}{locale === 'ja' ? '年' : ' years'}</span>
           </span>
           
           <span className="flex items-center gap-1">
-            <span className="font-medium">習熟度:</span>
-            <span className="font-medium">{proficiency === 'expert' ? '高' : proficiency === 'intermediate' ? '中' : '低'}</span>
+            <span className="font-medium">{messages.proficiency}</span>
+            <span className="font-medium">{proficiency === 'expert' ? messages.high : proficiency === 'intermediate' ? messages.medium : messages.low}</span>
           </span>
         </div>
       </div>

@@ -1,4 +1,5 @@
 'use client';
+import { useI18n } from '@/lib/i18n';
 
 export const PUBLICATION_FILTER_GROUPS = [
   {
@@ -35,13 +36,18 @@ interface PublicationFiltersProps {
 }
 
 export default function PublicationFilters(props: PublicationFiltersProps) {
+  const { messages } = useI18n();
+  const groups = [
+    { id: 'authorship', label: messages.authors, ariaLabel: messages.authorship, options: [{ key: 'showFirstAuthor', label: messages.firstAuthor }, { key: 'showCoAuthor', label: messages.coAuthor }] },
+    { id: 'peerReview', label: messages.peerReview, ariaLabel: messages.peerReviewType, options: [{ key: 'showPeerReviewed', label: messages.yes }, { key: 'showNonPeerReviewed', label: messages.no }] },
+  ] as const;
   return (
     <div
       role="region"
-      aria-label="論文フィルタ"
+      aria-label={messages.publicationFilters}
       className="flex w-full flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-gray-200/80 bg-white/70 px-3 py-2 shadow-sm backdrop-blur-sm dark:border-gray-700/80 dark:bg-gray-800/60 sm:w-auto"
     >
-      {PUBLICATION_FILTER_GROUPS.map((group) => (
+      {groups.map((group) => (
         <div
           key={group.id}
           role="group"
@@ -80,7 +86,7 @@ export default function PublicationFilters(props: PublicationFiltersProps) {
           className="whitespace-nowrap text-xs tabular-nums text-gray-500 dark:text-gray-400"
           aria-live="polite"
         >
-          {props.resultCount} / {props.totalCount}件
+          {messages.publicationsFound(props.resultCount, props.totalCount)}
         </span>
       </div>
     </div>

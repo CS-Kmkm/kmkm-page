@@ -10,8 +10,10 @@ import {
   getMetaClasses,
 } from '@/lib/ui/listItemStyles';
 import LinkedPublicationTitles from './LinkedPublicationTitles';
+import { useI18n } from '@/lib/i18n';
 
 const EventItem: React.FC<EventItemProps> = ({ event, onClick }) => {
+  const { locale, messages } = useI18n();
   const getCategoryVariant = (category: EventCategory): 'blue' | 'green' | 'purple' | 'orange' | 'yellow' | 'gray' => {
     switch (category) {
       case EventCategory.AFFILIATION:
@@ -33,25 +35,25 @@ const EventItem: React.FC<EventItemProps> = ({ event, onClick }) => {
   const getCategoryLabel = (category: EventCategory): string => {
     switch (category) {
       case EventCategory.AFFILIATION:
-        return '所属';
+        return messages.affiliation;
       case EventCategory.PUBLICATION:
-        return '論文';
+        return messages.publication;
       case EventCategory.EVENT:
-        return 'イベント';
+        return messages.event;
       case EventCategory.INTERNSHIP:
-        return 'インターン';
+        return messages.internship;
       case EventCategory.AWARD:
-        return '受賞';
+        return messages.award;
       case EventCategory.OTHER:
-        return 'その他';
+        return messages.other;
       default:
-        return 'その他';
+        return messages.other;
     }
   };
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('ja-JP', {
+    return date.toLocaleDateString(locale === 'en' ? 'en-US' : 'ja-JP', {
       month: 'long',
       day: 'numeric'
     });
@@ -125,7 +127,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, onClick }) => {
       {event.relatedLinks && event.relatedLinks.length > 0 && (
         <div
           className="mt-2 space-y-1 border-t border-gray-100 pt-2 dark:border-gray-700"
-          aria-label="関連リンク"
+          aria-label={messages.relatedLinks}
         >
           {event.relatedLinks.map((link, index) => (
             <a

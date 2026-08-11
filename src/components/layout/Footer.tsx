@@ -1,5 +1,8 @@
 import type { FooterProps, SocialLink } from '@/types';
-import { footerSocialLinks, siteConfig } from '@/lib/site';
+import { englishSiteConfig, footerSocialLinks, siteConfig } from '@/lib/site';
+import type { Locale } from '@/lib/i18n';
+
+type LocalizedFooterProps = FooterProps & { locale?: Locale };
 
 const getSocialIcon = (platform: SocialLink['platform']) => {
   switch (platform) {
@@ -39,15 +42,16 @@ const getSocialIcon = (platform: SocialLink['platform']) => {
   }
 };
 
-const Footer: React.FC<FooterProps> = ({ className = '' }) => {
+const Footer: React.FC<LocalizedFooterProps> = ({ className = '', locale = 'ja' }) => {
+  const localizedSite = locale === 'en' ? englishSiteConfig : siteConfig;
   return (
     <footer className={`border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950/60 transition-colors duration-200 ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3">
         <div className="flex items-center justify-between gap-3">
           <p className="text-xs text-gray-500 dark:text-gray-500 truncate pr-2">
-            <span className="font-semibold text-gray-700 dark:text-gray-300">{siteConfig.personName}</span>
+            <span className="font-semibold text-gray-700 dark:text-gray-300">{localizedSite.personName}</span>
             <span className="mx-1 text-gray-400 dark:text-gray-600">|</span>
-            {siteConfig.currentPosition} / {siteConfig.currentAffiliation}
+            {localizedSite.currentPosition} / {localizedSite.currentAffiliation}
           </p>
 
           <div className="flex items-center">
@@ -59,7 +63,7 @@ const Footer: React.FC<FooterProps> = ({ className = '' }) => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex h-6 w-6 items-center justify-center rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-200/70 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-100 transition-colors duration-200"
-                    aria-label={`${link.label}を新しいタブで開く`}
+                    aria-label={locale === 'en' ? `Open ${link.label} in a new tab` : `${link.label}を新しいタブで開く`}
                     title={link.label}
                   >
                     {getSocialIcon(link.platform)}

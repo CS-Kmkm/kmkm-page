@@ -3,6 +3,7 @@
 import React from 'react';
 import { ProjectListItemProps } from '@/types';
 import { sortTechnologyNames } from '@/lib/devExperience';
+import { useI18n } from '@/lib/i18n';
 import {
   getButtonListItemClasses,
   getTitleClasses,
@@ -26,6 +27,7 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({
   onClick,
   headingLevel = 'h4',
 }) => {
+  const { messages } = useI18n();
   const Heading = headingLevel;
   const sortedTechs = React.useMemo(
     () => sortTechnologyNames(project.technologies, technologyCategories),
@@ -48,7 +50,7 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       className={getProjectListItemClasses()}
-      aria-label={`${project.name}の詳細を表示`}
+      aria-label={messages.projectDetails(project.name)}
       type="button"
     >
       <div className="flex items-start justify-between gap-3">

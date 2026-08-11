@@ -6,6 +6,7 @@
 
 import { useState, useMemo } from 'react';
 import { EventPointProps } from '@/types';
+import { useI18n } from '@/lib/i18n';
 
 // Constants for consistent styling
 const EVENT_POINT_STYLES = {
@@ -35,6 +36,7 @@ export default function EventPoint({
   isReversed = false,
   className = ''
 }: EventPointComponentProps) {
+  const { messages } = useI18n();
   const [isHovered, setIsHovered] = useState(false);
 
   // Memoized calculations
@@ -54,10 +56,8 @@ export default function EventPoint({
   );
 
   const ariaLabel = useMemo(() => 
-    eventCount === 1
-      ? `${eventCount}件のイベント。クリックして詳細を表示`
-      : `${eventCount}件のイベント。クリックしてリストを表示`,
-    [eventCount]
+    messages.eventPoint(eventCount, eventCount !== 1),
+    [eventCount, messages]
   );
 
   // Event handlers

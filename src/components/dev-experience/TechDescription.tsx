@@ -2,11 +2,13 @@
 
 import React from 'react';
 import { TechDescriptionProps } from '@/types';
+import { useI18n } from '@/lib/i18n';
 
 /**
  * TechDescription component displays the description text for a technology
  */
 const TechDescription: React.FC<TechDescriptionProps> = ({ description }) => {
+  const { messages } = useI18n();
   if (!description) {
     return null;
   }
@@ -14,7 +16,7 @@ const TechDescription: React.FC<TechDescriptionProps> = ({ description }) => {
   return (
     <div className="min-w-full w-full p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-200 box-border overflow-hidden">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
-        概要
+        {messages.overview}
       </h3>
       <div className="w-full overflow-hidden">
         <p className="text-gray-700 dark:text-gray-300 leading-relaxed block w-full overflow-hidden break-words">

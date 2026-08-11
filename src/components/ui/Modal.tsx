@@ -17,7 +17,7 @@ import {
   getCloseButtonClasses,
   getModalContentClasses,
 } from '@/lib/ui/modalStyles';
-import { ARIA_LABELS } from '@/lib/constants/labels';
+import { useI18n } from '@/lib/i18n';
 
 /**
  * Modal props interface
@@ -57,12 +57,14 @@ export function Modal({
   description,
   children,
   showCloseButton = true,
-  closeButtonLabel = ARIA_LABELS.closeModal,
+  closeButtonLabel,
   footer,
   className = '',
   ariaLabelledBy,
   ariaDescribedBy,
 }: ModalProps) {
+  const { locale, messages } = useI18n();
+  const resolvedCloseButtonLabel = closeButtonLabel ?? (locale === 'en' ? messages.closeModal : 'Close modal');
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   
@@ -220,7 +222,7 @@ export function Modal({
                     ref={closeButtonRef}
                     onClick={onClose}
                     className={getCloseButtonClasses()}
-                    aria-label={closeButtonLabel}
+                    aria-label={resolvedCloseButtonLabel}
                   >
                     <svg
                       className="w-5 h-5"

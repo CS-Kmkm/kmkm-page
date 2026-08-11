@@ -29,10 +29,29 @@ export const siteConfig = {
   currentPosition: profile.currentPosition,
 } as const;
 
+export const englishSiteConfig = {
+  personName: profile.nameEn ?? 'Koshi Motegi',
+  siteName: `${profile.nameEn ?? 'Koshi Motegi'}'s Portfolio`,
+  defaultTitle: `${profile.nameEn ?? 'Koshi Motegi'} | Portfolio`,
+  description:
+    "Koshi Motegi's portfolio featuring research in natural language processing and scholarly communication, software development experience, and publications.",
+  locale: 'en_US',
+  lang: 'en',
+  siteUrl,
+  currentAffiliation: 'Matsubara Laboratory, Graduate School of Informatics, Nagoya University',
+  currentPosition: "Master's Student",
+} as const;
+
 export const navigationItems: NavigationItem[] = [
   { href: '/career', label: '経歴', ariaLabel: '経歴ページへ移動' },
   { href: '/publications', label: '論文', ariaLabel: '論文ページへ移動' },
   { href: '/dev-experience', label: '開発経験', ariaLabel: '開発経験ページへ移動' },
+];
+
+export const englishNavigationItems: NavigationItem[] = [
+  { href: '/career', label: 'Career', ariaLabel: 'Go to career page' },
+  { href: '/publications', label: 'Publications', ariaLabel: 'Go to publications page' },
+  { href: '/dev-experience', label: 'Development', ariaLabel: 'Go to development experience page' },
 ];
 
 export const footerLinks: FooterLink[] = [

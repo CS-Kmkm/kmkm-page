@@ -1,0 +1,121 @@
+{
+  "technologies": {
+    "tech-001": { "proficiencyLevel": "High", "description": "Used for research data analysis and experiments, personal development (web scraping), competitive programming (AtCoder), coursework, and part-time work (chatbot development and data management). My strongest language." },
+    "tech-002": { "proficiencyLevel": "Intermediate", "description": "Used for hackathons (JPHACKS2024 and JPHACKS2025), internships, and building this website." },
+    "tech-003": { "proficiencyLevel": "Intermediate", "description": "Used for personal development (Chrome extension development) and part-time work (chatbot development)." },
+    "tech-004": { "proficiencyLevel": "Intermediate", "description": "Used in coursework and competitive programming. Built a Puyo Puyo-like game in a course." },
+    "tech-005": { "proficiencyLevel": "Basic", "description": "Used during an internship to develop an employee management system with OracleDB. I remember little of it now." },
+    "tech-015": { "proficiencyLevel": "Intermediate", "description": "Used in coursework. I remember struggling with pointers." },
+    "tech-016": { "proficiencyLevel": "Basic", "description": "Used while studying functional programming. It is the language I can write least well but like most." },
+    "tech-017": { "proficiencyLevel": "Intermediate", "description": "Used in coursework for data analysis." },
+    "tech-018": { "proficiencyLevel": "Intermediate", "description": "Used for web application development." },
+    "tech-023": { "proficiencyLevel": "Basic", "description": "Used with Ruby on Rails during an internship. I wrote it with Cursor, so I am not very confident with it." },
+    "tech-019": { "proficiencyLevel": "Intermediate", "description": "Used for database operations, including data handling with MySQL and OracleDB." },
+    "tech-024": { "proficiencyLevel": "Intermediate", "description": "Used for web application development. It is not one of my strengths." },
+    "tech-025": { "proficiencyLevel": "Basic", "description": "Used in a PBL course to operate a four-wheeled vehicle." },
+    "tech-006": { "proficiencyLevel": "Intermediate", "description": "Used in hackathons, internships, and part-time work. I have been writing it more often recently." },
+    "tech-007": { "proficiencyLevel": "Basic", "description": "Used for JPHACKS2025 and to build this website." },
+    "tech-008": { "proficiencyLevel": "Basic", "description": "Used in a hackathon. I like it because it is easy to work with." },
+    "tech-009": { "proficiencyLevel": "Basic", "description": "Used in an internship, including the development of additional system features." },
+    "tech-010": { "proficiencyLevel": "Intermediate", "description": "Used in coursework, hackathons, and research. I manage the development environment in my laboratory, so I can use it competently." },
+    "tech-011": { "proficiencyLevel": "Intermediate", "description": "Used in coursework, hackathons, and research for version control and team development." },
+    "tech-012": { "proficiencyLevel": "Basic", "description": "Used for part-time work to develop and maintain a chatbot using S3, Lambda, and CloudWatch." },
+    "tech-013": { "proficiencyLevel": "Basic", "description": "Used in a hackathon." },
+    "tech-014": { "proficiencyLevel": "Basic", "description": "Used in an internship to develop an employee management system with C#." },
+    "tech-022": { "proficiencyLevel": "Basic", "description": "Used for personal development and coursework." },
+    "tech-020": { "proficiencyLevel": "Intermediate", "description": "Used as a version control system for all development projects." },
+    "tech-021": { "proficiencyLevel": "Intermediate", "description": "Used as a web application deployment platform, including for developing this website." }
+  },
+  "projects": {
+    "proj-001": {
+      "name": "Generative AI Chatbot Development (Part-time Work)",
+      "description": "A generative AI chatbot that answers questions about methods for managing research outputs (research data). A product intended to support people who manage research data. I took over development from a senior colleague and was responsible for fixing issues in web-search-based answer generation, migrating the vector database service (Pinecone to AWS S3 Vector), and adding data.",
+      "duration": "April 2025–Present",
+      "role": "Sole developer and maintenance engineer"
+    },
+    "proj-002": {
+      "name": "Data Analysis and Experiments (Research)",
+      "description": "Conducting data analysis and experiments for research activities, including data analysis and visualization, text generation with LLMs, and training classification models.",
+      "duration": "April 2021–Present",
+      "role": "Researcher"
+    },
+    "proj-003": {
+      "name": "Web Scraping (Personal Development)",
+      "description": "Developed web scraping tools using Python for automated data collection and analysis.",
+      "duration": "April 2021–Present",
+      "role": "Independent developer"
+    },
+    "proj-004": {
+      "name": "Competitive Programming (AtCoder)",
+      "description": "Competitive programming activities on AtCoder, implementing algorithms and data structures in practical problems.",
+      "duration": "April 2021–Present",
+      "role": "Competitive programmer"
+    },
+    "proj-005": {
+      "name": "JPHACKS2024",
+      "description": "A development project for the JPHACKS2024 hackathon, where the team developed a web application.",
+      "duration": "October 26, 2024",
+      "role": "Backend developer, Project Manager"
+    },
+    "proj-006": {
+      "name": "JPHACKS2025",
+      "description": "A development project for the JPHACKS2025 hackathon, where the team developed a web application using Next.js.",
+      "duration": "October 2025",
+      "role": "Frontend developer, Project Manager"
+    },
+    "proj-007": {
+      "name": "SmartHR Internship",
+      "description": "A hackathon-style frontend internship at SmartHR, Inc. Conducted frontend development using TypeScript and React, and experienced the full process from user interviews to feature development.",
+      "duration": "September 2025",
+      "role": "Frontend developer"
+    },
+    "proj-008": {
+      "name": "Chrome Extension Development (Personal Development)",
+      "description": "Developed Chrome extensions using JavaScript to extend browser functionality and improve usability.",
+      "duration": "August 2023–April 2025",
+      "role": "Independent developer"
+    },
+    "proj-009": {
+      "name": "Toyota Systems Internship (Two Weeks)",
+      "description": "An internship at Toyota Systems Corporation involving system development with C# and OracleDB.",
+      "duration": "August 2023",
+      "role": "Developer"
+    },
+    "proj-010": {
+      "name": "Raksul Internship",
+      "description": "A hackathon-style backend internship at Raksul Inc. Conducted backend development using Ruby on Rails, and experienced the full process from user interviews to feature development.",
+      "duration": "September 2025",
+      "role": "Backend developer"
+    },
+    "proj-011": {
+      "name": "PBL",
+      "description": "Developed in a four-person team in PBL (Project Based Learning). Worked on driving a car with Arduino and handled requirements definition.",
+      "duration": "June–July 2023",
+      "role": "Project Manager, Programmer"
+    },
+    "proj-012": {
+      "name": "Gikusei Festival 2025 [Spring] (In-person Attendance)",
+      "description": "Attended Gikusei Festival 2025 [Spring] in person. This event for technology students included visiting company booths and attending technical sessions.",
+      "duration": "March 2025",
+      "role": "Participant"
+    },
+    "proj-013": {
+      "name": "BIPROGY Internship",
+      "description": "A one-week data scientist/AI engineer internship at BIPROGY Inc. Developed an AI-powered system in a four-person team.",
+      "duration": "August 2025",
+      "role": "Data Scientist / AI Engineer"
+    },
+    "proj-014": {
+      "name": "MonotaRO Internship",
+      "description": "A one-week data scientist/AI engineer internship at MonotaRO Co., Ltd. Developed a system using generative AI.",
+      "duration": "August 2025",
+      "role": "Data Scientist / AI Engineer"
+    },
+    "proj-015": {
+      "name": "Personal Portfolio Website Launch",
+      "description": "Launched a personal portfolio website, building a modern site with Next.js and TypeScript.",
+      "duration": "October 2025",
+      "role": "Independent developer"
+    }
+  }
+}

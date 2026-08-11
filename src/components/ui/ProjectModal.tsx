@@ -9,14 +9,15 @@ import React from 'react';
 import Image from 'next/image';
 import { ProjectModalProps } from '@/types';
 import { Modal } from './Modal';
-import { UI_LABELS } from '@/lib/constants/labels';
 import { tokens } from '@/lib/theme/tokens';
+import { useI18n } from '@/lib/i18n';
 
 const ProjectModal: React.FC<ProjectModalProps> = ({
   project,
   isOpen,
   onClose
 }) => {
+  const { messages } = useI18n();
   if (!isOpen || !project) {
     return null;
   }
@@ -85,7 +86,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
       {/* Description */}
       <div className="mb-6">
         <h3 className={`text-lg font-semibold ${tokens.text.primary} mb-3`}>
-          {UI_LABELS.projectDescription}
+          {messages.projectDescription}
         </h3>
         <p className={`${tokens.text.secondary} leading-relaxed`}>
           {project.description}
@@ -95,7 +96,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
       {/* Technology stack */}
       <div className="mb-6">
         <h3 className={`text-lg font-semibold ${tokens.text.primary} mb-3`}>
-          {UI_LABELS.technologyStack}
+          {messages.technologyStack}
         </h3>
         <div className="flex flex-wrap gap-2">
           {project.technologies.map((tech, index) => (
@@ -133,7 +134,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                   d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                 />
               </svg>
-              {UI_LABELS.viewLiveSite}
+              {messages.liveSite}
             </a>
           )}
           
@@ -156,7 +157,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                   clipRule="evenodd"
                 />
               </svg>
-              {UI_LABELS.viewOnGitHub}
+              {messages.github}
             </a>
           )}
         </div>

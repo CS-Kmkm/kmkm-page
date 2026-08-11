@@ -1,4 +1,7 @@
+'use client';
+
 import { SocialLinksProps, SocialLink } from '@/types';
+import { useI18n } from '@/lib/i18n';
 
 // Platform icon components
 const TwitterIcon = ({ className }: { className?: string }) => (
@@ -91,6 +94,7 @@ function SocialLinkItem({
   showLabel: boolean; 
   orientation: 'horizontal' | 'vertical';
 }) {
+  const { messages } = useI18n();
   const config = platformConfig[link.platform];
   const IconComponent = config.icon;
   
@@ -108,7 +112,7 @@ function SocialLinkItem({
         focus:ring-offset-2 dark:focus:ring-offset-gray-900
         ${orientation === 'vertical' ? 'w-full justify-start' : 'justify-center'}
       `}
-      aria-label={`${config.name}で${link.username || 'プロフィール'}を見る`}
+      aria-label={messages.socialProfile(config.name, link.username || 'profile')}
     >
       <IconComponent className="w-5 h-5 flex-shrink-0" />
       {showLabel && (
@@ -126,6 +130,7 @@ export default function SocialLinks({
   orientation = 'horizontal',
   className = ''
 }: SocialLinksProps) {
+  const { messages } = useI18n();
   if (!socialLinks || socialLinks.length === 0) {
     return null;
   }
@@ -140,7 +145,7 @@ export default function SocialLinks({
         ${className}
       `}
       role="list"
-      aria-label="ソーシャルメディアリンク"
+      aria-label={messages.socialLinks}
     >
       {socialLinks.map((link) => (
         <div key={link.id} role="listitem">

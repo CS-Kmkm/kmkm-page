@@ -1,4 +1,6 @@
+'use client';
 import Link from 'next/link';
+import { useI18n } from '@/lib/i18n';
 
 export interface PageErrorProps {
   title: string;
@@ -17,7 +19,9 @@ const PageError = ({
   description,
   reset,
   containerWidth,
-}: PageErrorProps) => (
+}: PageErrorProps) => {
+  const { locale, messages } = useI18n();
+  return (
   <div className={`${containerWidthClassNames[containerWidth]} mx-auto px-4 sm:px-6 lg:px-8 py-8`}>
     <div className="text-center">
       <div className="mb-4">
@@ -45,17 +49,18 @@ const PageError = ({
           onClick={reset}
           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
         >
-          再読み込み
+          {messages.reload}
         </button>
         <Link
-          href="/"
+          href={locale === 'en' ? '/en' : '/'}
           className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
         >
-          トップへ戻る
+          {messages.backToTop}
         </Link>
       </div>
     </div>
   </div>
-);
+  );
+};
 
 export default PageError;

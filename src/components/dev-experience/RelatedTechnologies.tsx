@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { getTechnologyCategoryMetadata } from '@/lib/tech/categories';
 import type { TechItem } from '@/types';
+import { useI18n } from '@/lib/i18n';
 
 interface RelatedTechnologiesProps {
   title: string;
@@ -15,6 +16,7 @@ export default function RelatedTechnologies({
   technologies,
   onSelect,
 }: RelatedTechnologiesProps) {
+  const { messages } = useI18n();
   if (technologies.length === 0) {
     return null;
   }
@@ -35,7 +37,7 @@ export default function RelatedTechnologies({
           <button
             key={technology.id}
             onClick={() => onSelect?.(technology)}
-            aria-label={`${technology.name}の詳細を表示`}
+            aria-label={messages.showTechDetails(technology.name)}
             className="
               group relative flex items-center gap-2.5 px-3 py-2
               bg-gray-50 dark:bg-gray-700/40
@@ -64,7 +66,7 @@ export default function RelatedTechnologies({
                   className="object-contain w-5 h-5"
                 />
               ) : (
-                <span className="text-base" role="img" aria-label={`${technology.name}のアイコン`}>
+                <span className="text-base" role="img" aria-label={messages.techIcon(technology.name)}>
                   {getTechnologyCategoryMetadata(technology.category).icon}
                 </span>
               )}

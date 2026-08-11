@@ -1,5 +1,7 @@
+'use client';
 import Image from 'next/image';
 import { ProfileSectionProps } from '@/types';
+import { useI18n } from '@/lib/i18n';
 
 export default function ProfileSection({
   profile,
@@ -7,6 +9,7 @@ export default function ProfileSection({
   showLocation = true,
   className = ''
 }: ProfileSectionProps) {
+  const { messages } = useI18n();
   const avatarSrc = profile.avatarUrl || '/images/avatar.jpg';
 
   return (
@@ -17,7 +20,7 @@ export default function ProfileSection({
       <div className="relative h-32 w-32 sm:h-40 sm:w-40 md:h-44 md:w-44 overflow-hidden rounded-3xl border border-gray-200/80 dark:border-gray-700/80 bg-gray-100 dark:bg-gray-800 shadow-soft">
         <Image
           src={avatarSrc}
-          alt={`${profile.name}のプロフィール写真`}
+          alt={messages.profilePhoto(profile.name)}
           fill
           priority
           sizes="(max-width: 768px) 128px, 176px"
@@ -82,7 +85,7 @@ export default function ProfileSection({
               />
             </svg>
             <span>
-              <span className="sr-only">所在地: </span>
+              <span className="sr-only">{messages.location}</span>
               {profile.location}
             </span>
           </p>

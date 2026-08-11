@@ -4,11 +4,13 @@ import React from 'react';
 import Image from 'next/image';
 import { TechHeaderProps } from '@/types';
 import { getTechnologyCategoryMetadata } from '@/lib/tech/categories';
+import { useI18n } from '@/lib/i18n';
 
 /**
  * TechHeader component displays a technology logo and name.
  */
 const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
+  const { messages } = useI18n();
   return (
     <div className="min-w-full w-full flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm transition-colors duration-200 box-border overflow-hidden">
       {/* Logo */}
@@ -22,7 +24,7 @@ const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
             className="object-contain w-full h-full"
           />
         ) : (
-          <span className="text-2xl sm:text-3xl" role="img" aria-label={`${tech.name}のアイコン`}>
+          <span className="text-2xl sm:text-3xl" role="img" aria-label={messages.techIcon(tech.name)}>
             {getTechnologyCategoryMetadata(tech.category).icon}
           </span>
         )}

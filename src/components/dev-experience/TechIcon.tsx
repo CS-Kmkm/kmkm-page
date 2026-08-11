@@ -4,12 +4,14 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { TechIconProps } from '@/types';
 import { getTechnologyCategoryMetadata } from '@/lib/tech/categories';
+import { useI18n } from '@/lib/i18n';
 
 /**
  * TechIcon component displays a clickable technology icon
  * as a concise logo-and-name card
  */
 const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
+  const { messages } = useI18n();
   const [imageError, setImageError] = useState(false);
 
   const buttonClassName = [
@@ -45,14 +47,14 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         className={buttonClassName}
-        aria-label={`${tech.name}の詳細を表示`}
+        aria-label={messages.showTechDetails(tech.name)}
         type="button"
       >
         <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-gray-100 bg-white p-2 shadow-sm dark:border-gray-300 dark:bg-gray-100 sm:h-11 sm:w-11">
           {tech.logoUrl && !imageError ? (
             <Image
               src={tech.logoUrl}
-              alt={tech.logoAlt || `${tech.name}のロゴ`}
+              alt={tech.logoAlt || messages.techLogo(tech.name)}
               width={48}
               height={48}
               onError={handleImageError}
@@ -61,7 +63,7 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
               unoptimized={true}
             />
           ) : (
-            <span className="text-2xl sm:text-3xl" role="img" aria-label={`${tech.name}のアイコン`}>
+            <span className="text-2xl sm:text-3xl" role="img" aria-label={messages.techIcon(tech.name)}>
               {getTechnologyCategoryMetadata(tech.category).icon}
             </span>
           )}

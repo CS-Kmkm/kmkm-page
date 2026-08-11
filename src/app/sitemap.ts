@@ -8,30 +8,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const baseUrl = siteConfig.siteUrl;
 
-  return [
+  const primaryPaths = ['', '/career', '/dev-experience', '/publications'];
+
+  return primaryPaths.flatMap((path, index) => {
+    const japaneseUrl = `${baseUrl}${path}`;
+    const englishUrl = `${baseUrl}/en${path}`;
+    const alternates = {
+      languages: {
+        ja: japaneseUrl,
+        en: englishUrl,
+      },
+    };
+
+    return [
     {
-      url: baseUrl,
+      url: japaneseUrl,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1,
+      changeFrequency: index === 0 ? 'weekly' as const : 'monthly' as const,
+      priority: index === 0 ? 1 : 0.8,
+      alternates,
     },
     {
-      url: `${baseUrl}/career`,
+      url: englishUrl,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
+      changeFrequency: index === 0 ? 'weekly' as const : 'monthly' as const,
+      priority: index === 0 ? 1 : 0.8,
+      alternates,
     },
-    {
-      url: `${baseUrl}/dev-experience`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/publications`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-  ];
+    ];
+  });
 }

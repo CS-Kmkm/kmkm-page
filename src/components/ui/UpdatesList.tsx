@@ -11,21 +11,20 @@ import { UpdatesListProps, UpdateItem } from '@/types';
 import { Modal } from './Modal';
 import { ListItem } from './ListItem';
 import { getUpdateCategoryConfig } from '@/lib/constants/categories';
-import { HEADING_LABELS } from '@/lib/constants/labels';
-import { EMPTY_STATE_MESSAGES, COUNT_MESSAGES } from '@/lib/constants/messages';
 import { tokens } from '@/lib/theme/tokens';
 import LinkedPublicationTitles from './LinkedPublicationTitles';
+import { localizeHref, useI18n } from '@/lib/i18n';
 
-function formatDate(dateString: string): string {
+function formatDate(dateString: string, locale: 'ja' | 'en'): string {
   const date = new Date(dateString);
-  return date.toLocaleDateString('ja-JP', {
+  return date.toLocaleDateString(locale === 'en' ? 'en-US' : 'ja-JP', {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
   });
 }
 
-function UpdateModal({ update, onClose }: { update: UpdateItem | null; onClose: () => void }) {
+function UpdateModal({ update, onClose, locale }: { update: UpdateItem | null; onClose: () => void; locale: 'ja' | 'en' }) {
   if (!update) return null;
 
   return (
@@ -41,7 +40,7 @@ function UpdateModal({ update, onClose }: { update: UpdateItem | null; onClose: 
           dateTime={update.date}
           className={`text-sm ${tokens.text.muted} font-medium`}
         >
-          {formatDate(update.date)}
+          {formatDate(update.date, locale)}
         </time>
       </div>
 
@@ -61,6 +60,7 @@ export default function UpdatesList({
   moreItemsHref,
   className = ''
 }: UpdatesListProps & { showScrollable?: boolean; className?: string }) {
+  const { locale, messages } = useI18n();
   const [selectedUpdate, setSelectedUpdate] = useState<UpdateItem | null>(null);
   const [autoFitItems, setAutoFitItems] = useState(() => Math.max(1, maxItems));
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -146,7 +146,7 @@ export default function UpdatesList({
   if (sortedUpdates.length === 0) {
     return (
       <div className={`text-center py-8 ${className}`}>
-        <p className={tokens.text.muted}>{EMPTY_STATE_MESSAGES.noUpdates}</p>
+        <p className={tokens.text.muted}>{messages.noUpdatesAvailable}</p>
       </div>
     );
   }
@@ -156,6 +156,19 @@ export default function UpdatesList({
   // Display logic: show a compact subset unless scrollable display is explicitly requested
   const displayUpdates = showScrollable ? sortedUpdates : sortedUpdates.slice(0, visibleItemCount);
   const hiddenUpdateCount = updates.length - displayUpdates.length;
+  const localizedCategory = (category: UpdateItem['category']) => {
+    const config = getUpdateCategoryConfig(category);
+    const label = category === 'career'
+      ? messages.affiliation
+      : category === 'development'
+        ? (locale === 'en' ? 'Development' : '開発')
+        : category === 'publication'
+          ? messages.publication
+          : category === 'award'
+            ? messages.award
+            : messages.other;
+    return { ...config, label, ariaLabel: messages.categoryLabel(label) };
+  };
 
   return (
     <>
@@ -164,7 +177,7 @@ export default function UpdatesList({
           id="updates-heading"
           className={`text-lg sm:text-xl font-bold ${tokens.text.primary} mb-2`}
         >
-          {HEADING_LABELS.latestUpdates}
+          {messages.latestUpdates}
         </h2>
 
         <div
@@ -173,7 +186,7 @@ export default function UpdatesList({
           style={showScrollable ? { scrollbarWidth: 'thin' } : undefined}
         >
           {displayUpdates.map((update) => {
-            const categoryConfig = getUpdateCategoryConfig(update.category);
+            const categoryConfig = localizedCategory(update.category);
             
             return (
               <div key={update.id} data-visible-update-item>
@@ -183,7 +196,7 @@ export default function UpdatesList({
                   compact
                   meta={
                     <time dateTime={update.date}>
-                      {formatDate(update.date)}
+                      {formatDate(update.date, locale)}
                     </time>
                   }
                   badge={{
@@ -207,7 +220,7 @@ export default function UpdatesList({
               className="pointer-events-none invisible absolute left-0 top-0 -z-10 h-0 w-full space-y-1.5 overflow-hidden"
             >
               {sortedUpdates.map((update) => {
-                const categoryConfig = getUpdateCategoryConfig(update.category);
+                const categoryConfig = localizedCategory(update.category);
 
                 return (
                   <div key={update.id} data-update-measure-item>
@@ -218,7 +231,7 @@ export default function UpdatesList({
                       compact
                       meta={
                         <time dateTime={update.date}>
-                          {formatDate(update.date)}
+                          {formatDate(update.date, locale)}
                         </time>
                       }
                       badge={{
@@ -239,7 +252,7 @@ export default function UpdatesList({
             >
               <div ref={moreMessageMeasureRef} className="mt-3 text-center">
                 <p className={`text-sm ${tokens.text.muted}`}>
-                  {COUNT_MESSAGES.moreItems(sortedUpdates.length)}
+                  {messages.moreItems(sortedUpdates.length)}
                 </p>
               </div>
             </div>
@@ -250,24 +263,25 @@ export default function UpdatesList({
           <div className="mt-3 text-center" data-visible-update-more>
             {moreItemsHref ? (
               <Link
-                href={moreItemsHref}
+                href={localizeHref(moreItemsHref, locale)}
                 className={`inline-flex rounded-md px-2 py-1 text-sm ${tokens.text.muted} hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900`}
-                aria-label={`${COUNT_MESSAGES.moreItems(hiddenUpdateCount)}を経歴リストで表示`}
+                aria-label={messages.viewMoreUpdates(hiddenUpdateCount)}
               >
-                {COUNT_MESSAGES.moreItems(hiddenUpdateCount)}
+                {messages.moreItems(hiddenUpdateCount)}
               </Link>
             ) : (
               <p className={`text-sm ${tokens.text.muted}`}>
-                {COUNT_MESSAGES.moreItems(hiddenUpdateCount)}
+                {messages.moreItems(hiddenUpdateCount)}
               </p>
             )}
           </div>
         )}
       </section>
 
-      <UpdateModal 
-        update={selectedUpdate} 
-        onClose={() => setSelectedUpdate(null)} 
+      <UpdateModal
+        update={selectedUpdate}
+        onClose={() => setSelectedUpdate(null)}
+        locale={locale}
       />
     </>
   );

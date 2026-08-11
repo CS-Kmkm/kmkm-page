@@ -6,6 +6,7 @@
 
 import { useState } from 'react';
 import { ExtendedCareerEntry, ComputedBranch } from '@/types';
+import { useI18n } from '@/lib/i18n';
 
 export interface BranchNodeProps {
   branch: ComputedBranch;
@@ -33,6 +34,7 @@ export default function BranchNode({
   onHover,
   onFocus,
 }: BranchNodeProps) {
+  const { locale, messages } = useI18n();
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -59,14 +61,14 @@ export default function BranchNode({
 
   // Generate ARIA label based on node type
   const getAriaLabel = (): string => {
-    const dateStr = new Date(entry.startDate).toLocaleDateString('ja-JP');
+    const dateStr = new Date(entry.startDate).toLocaleDateString(locale === 'en' ? 'en-US' : 'ja-JP');
     switch (type) {
       case 'start':
-        return `${dateStr}に${entry.organization}に入学/入社`;
+        return locale === 'en' ? `Started at ${entry.organization} on ${dateStr}` : `${dateStr}に${entry.organization}に入学/入社`;
       case 'end':
-        return `${entry.endDate ? new Date(entry.endDate).toLocaleDateString('ja-JP') : '現在'}に${entry.organization}を卒業/退職`;
+        return locale === 'en' ? `Ended at ${entry.organization} on ${entry.endDate ? new Date(entry.endDate).toLocaleDateString('en-US') : messages.current}` : `${entry.endDate ? new Date(entry.endDate).toLocaleDateString('ja-JP') : messages.current}に${entry.organization}を卒業/退職`;
       case 'milestone':
-        return `${dateStr}の${entry.organization}でのマイルストーン`;
+        return locale === 'en' ? `Milestone at ${entry.organization} on ${dateStr}` : `${dateStr}の${entry.organization}でのマイルストーン`;
       default:
         return `${entry.organization} - ${entry.role}`;
     }

@@ -4,6 +4,7 @@ import React, { useMemo, useId, useEffect, useRef, useState } from 'react';
 import type { ExtendedCareerEntry, EventEntry, YearEventGroup, TimelineEventEntry } from '@/types';
 import EventListModal from './EventListModal';
 import EventModal from './EventModal';
+import { useI18n } from '@/lib/i18n';
 
 /**
  * Git-style Career Timeline - Complete Implementation
@@ -328,10 +329,10 @@ function formatYearMonth(dateStr: string): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 }
 
-function formatDateRangeLabel(startDate: string, endDate: string | null): string {
+function formatDateRangeLabel(startDate: string, endDate: string | null, currentLabel: string): string {
   const startStr = formatYearMonth(startDate);
   if (!endDate) {
-    return `${startStr}-現在`;
+    return `${startStr}-${currentLabel}`;
   }
   return `${startStr}-${formatYearMonth(endDate)}`;
 }
@@ -351,6 +352,7 @@ export default function GitCommitLogTimeline({
   fitToViewport = false,
   viewportBottomOffset = 24,
 }: GitCommitLogTimelineProps) {
+  const { messages } = useI18n();
   const clipBaseId = useId();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [resolvedRowHeight, setResolvedRowHeight] = useState(rowHeight);
@@ -536,7 +538,7 @@ export default function GitCommitLogTimeline({
           ? formatYearMonth(entry.endDate)
           : '';
         const fullDateText = entry
-          ? formatDateRangeLabel(entry.startDate, entry.endDate)
+          ? formatDateRangeLabel(entry.startDate, entry.endDate, messages.current)
           : '';
         const trailingReservedWidth = entry
           ? STATUS_COLUMN_WIDTH
@@ -604,8 +606,8 @@ export default function GitCommitLogTimeline({
                       type="button"
                       onClick={() => openYearEventModal(row.year)}
                       className="inline-flex min-w-6 h-6 items-center justify-center px-1.5 rounded-full text-[11px] font-semibold text-white bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-500 transition-colors"
-                      aria-label={`${row.year}年のイベント${yearGroup.events.length}件を表示`}
-                      title={`${row.year}年のイベント`}
+                      aria-label={messages.yearEventsLabel(row.year, yearGroup.events.length)}
+                      title={messages.yearEventsTitle(row.year)}
                     >
                       {yearGroup.events.length}
                     </button>
@@ -962,7 +964,7 @@ export default function GitCommitLogTimeline({
                       {entry.isOngoing ? (
                         <span className="flex justify-center">
                           <span className="inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] leading-none font-bold bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300 rounded-full">
-                            現在
+                            {messages.current}
                           </span>
                         </span>
                       ) : (

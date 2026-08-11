@@ -102,7 +102,7 @@ export interface TechItem {
   name: string;
   category: 'language' | 'framework' | 'tool' | 'database';
   proficiency: 'beginner' | 'intermediate' | 'advanced' | 'expert';
-  proficiencyLevel: '低' | '中' | '高';
+  proficiencyLevel: '低' | '中' | '高' | 'Basic' | 'Intermediate' | 'High';
   experienceYears: number;
   projects: string[]; // ProjectDetail IDs
   description?: string;
@@ -210,16 +210,19 @@ export interface ProfileInfo {
 // Component prop interfaces
 export interface HeaderProps {
   currentPath?: string;
+  locale?: 'ja' | 'en';
 }
 
 export interface FooterProps {
   className?: string;
+  locale?: 'ja' | 'en';
 }
 
 export interface PageLayoutProps {
   children: React.ReactNode;
   title: string;
   className?: string;
+  locale?: 'ja' | 'en';
 }
 
 export interface UpdatesListProps {
@@ -300,6 +303,7 @@ export interface ProfileSectionProps {
   showBio?: boolean;
   showLocation?: boolean;
   className?: string;
+  locale?: 'ja' | 'en';
 }
 
 export interface SocialLinksProps {

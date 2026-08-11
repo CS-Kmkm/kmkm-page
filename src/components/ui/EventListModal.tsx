@@ -11,9 +11,9 @@ import { EventListModalProps, YearEventGroup } from '@/types';
 import { formatEventDate } from '@/lib/career/eventUtils';
 import { Modal } from './Modal';
 import { getEventCategoryConfig } from '@/lib/constants/categories';
-import { ARIA_LABELS } from '@/lib/constants/labels';
 import { getBadgeClasses } from '@/lib/ui/listItemStyles';
 import { tokens } from '@/lib/theme/tokens';
+import { useI18n } from '@/lib/i18n';
 
 /**
  * EventListModal component for displaying multiple events from the same year
@@ -25,6 +25,7 @@ export default function EventListModal({
   onEventSelect,
   className = ''
 }: EventListModalProps) {
+  const { locale, messages } = useI18n();
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const activeFocusedIndex = focusedIndex ?? 0;
 
@@ -92,7 +93,7 @@ export default function EventListModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`${yearGroup.year}年の出来事`}
+      title={messages.eventYear(yearGroup.year)}
       className={className}
     >
       {/* Event List */}
@@ -100,6 +101,17 @@ export default function EventListModal({
         <ul role="list" className="space-y-2">
           {yearGroup.events.map((event, index) => {
             const categoryConfig = event.category ? getEventCategoryConfig(event.category) : null;
+            const categoryLabel = event.category === 'affiliation'
+              ? messages.affiliation
+              : event.category === 'publication'
+                ? messages.publication
+                : event.category === 'event'
+                  ? messages.event
+                  : event.category === 'internship'
+                    ? messages.internship
+                    : event.category === 'award'
+                      ? messages.award
+                      : messages.other;
             
             return (
               <motion.li
@@ -118,7 +130,7 @@ export default function EventListModal({
                   }`}
                   onClick={() => onEventSelect(event)}
                   onMouseEnter={() => setFocusedIndex(index)}
-                  aria-label={`${event.title} - ${ARIA_LABELS.viewEventDetails}`}
+                  aria-label={`${event.title} - ${locale === 'en' ? messages.viewDetails : 'View event details'}`}
                 >
                   <div className="flex justify-between items-start">
                     <div className="flex-1 min-w-0">
@@ -126,12 +138,12 @@ export default function EventListModal({
                         {event.title}
                       </h3>
                       <p className={`text-sm ${tokens.text.muted} mt-1`}>
-                        {formatEventDate(event.date)}
+                        {formatEventDate(event.date, locale)}
                       </p>
                       {categoryConfig && (
                         <span className={`${getBadgeClasses(categoryConfig.variant)} mt-2`}>
                           <span aria-hidden="true">{categoryConfig.icon}</span>
-                          {categoryConfig.label}
+                          {categoryLabel}
                         </span>
                       )}
                     </div>

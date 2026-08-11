@@ -5,6 +5,7 @@
 'use client';
 
 import { ExtendedCareerEntry } from '@/types';
+import { useI18n } from '@/lib/i18n';
 
 export interface BranchLabelProps {
   entry: ExtendedCareerEntry;
@@ -36,12 +37,13 @@ export default function BranchLabel({
   isHighlighted = false,
   fontSize = 14,
 }: BranchLabelProps) {
+  const { messages } = useI18n();
   const labelOffset = 20;
   const labelX = alignment === 'right' ? position.x + labelOffset : position.x - labelOffset;
   const textAnchor = alignment === 'right' ? 'start' : 'end';
 
   const startDate = formatDate(entry.startDate);
-  const endDate = entry.endDate ? formatDate(entry.endDate) : '現在';
+  const endDate = entry.endDate ? formatDate(entry.endDate) : messages.current;
   const dateRange = `${startDate} - ${endDate}`;
 
   return (
@@ -125,8 +127,7 @@ export default function BranchLabel({
 
       {/* Hidden details for screen readers */}
       <desc id={`branch-${entry.id}-details`}>
-        {entry.organization}、{entry.role}。
-        期間: {startDate}から{endDate}まで。
+        {entry.organization}、{entry.role}。{messages.period(startDate, endDate)}
         {entry.description && entry.description}
       </desc>
     </g>

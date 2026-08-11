@@ -10,8 +10,10 @@ import PublicationEmptyState from './PublicationEmptyState';
 import PublicationFilters, { PUBLICATION_FILTER_KEYS } from './PublicationFilters';
 import PublicationItem from './PublicationItem';
 import YearGroupedList from './YearGroupedList';
+import { useI18n } from '@/lib/i18n';
 
 const PublicationList = ({ publications }: PublicationListProps) => {
+  const { messages } = useI18n();
   const {
     filters,
     hasActiveFilters,
@@ -40,7 +42,7 @@ const PublicationList = ({ publications }: PublicationListProps) => {
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <PageHeading>論文</PageHeading>
+        <PageHeading>{messages.publications}</PageHeading>
         <PublicationFilters
           filters={filters}
           onToggleFilter={toggleFilter}

@@ -1,0 +1,39 @@
+{
+  "publications": {
+    "pub-006": {
+      "title": "Identifying Implicit Research Data References in Paper Citations",
+      "venue": "Proceedings of the 3rd International Workshop on Natural Scientific Language Processing (NSLP 2026) co-located with LREC 2026, pp. 186–192, May 2026",
+      "shortVenue": "The 3rd International Workshop on Natural Scientific Language Processing (NSLP 2026)"
+    },
+    "pub-001": {
+      "title": "Where Did the Research Data Originate? Acquiring Provenance of Research Data from Scholarly Papers",
+      "venue": "The 27th International Conference on Asia-Pacific Digital Libraries (ICADL 2025)"
+    },
+    "pub-002": {
+      "title": "Generating Responses That Demonstrate Attentive Listening to Narratives by Paraphrasing the Narrator's Utterances",
+      "authors": ["Koshi Motegi", "Koichiro Ito", "Masaki Murata", "Shigeki Matsubara"],
+      "venue": "The 31st Annual Meeting of the Association for Natural Language Processing (NLP2025)"
+    },
+    "pub-003": {
+      "title": "Accelerating Open Access to Research Data: Metadata Generation Using Generative AI and Deposit in Institutional Repositories",
+      "authors": ["Yu Watanabe", "Koshi Motegi", "Shigeki Matsubara"],
+      "venue": "AXIES 2025 Annual Conference",
+      "awards": [
+        {
+          "title": "Best Paper Award, AXIES 2025 Annual Conference",
+          "organization": "Academic eXchange for Information Environment and Strategy (AXIES)"
+        }
+      ]
+    },
+    "pub-004": {
+      "title": "Identifying Paper Citations That Reference Research Data in Scholarly Articles",
+      "authors": ["Koshi Motegi", "Koichiro Ito", "Shigeki Matsubara"],
+      "venue": "The 32nd Annual Meeting of the Association for Natural Language Processing (NLP2026)"
+    },
+    "pub-005": {
+      "title": "Linking Publications and Research Data Produced Through Research Activities",
+      "authors": ["Ryoma Okada", "Koshi Motegi", "Koichiro Ito", "Shigeki Matsubara"],
+      "venue": "The 32nd Annual Meeting of the Association for Natural Language Processing (NLP2026)"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import { useI18n } from '@/lib/i18n';
 
 interface FilteredEmptyStateProps {
   icon: ReactNode;
@@ -17,6 +18,7 @@ export default function FilteredEmptyState({
   hasActiveFilters,
   onClearFilters
 }: FilteredEmptyStateProps) {
+  const { messages } = useI18n();
   return (
     <div className="text-center py-12">
       <div className="text-gray-400 mb-4">{icon}</div>
@@ -27,7 +29,7 @@ export default function FilteredEmptyState({
           onClick={onClearFilters}
           className="text-blue-600 hover:text-blue-700 font-medium focus:outline-none focus:underline"
         >
-          すべてのフィルタをクリア
+          {messages.clearAllFilters}
         </button>
       )}
     </div>

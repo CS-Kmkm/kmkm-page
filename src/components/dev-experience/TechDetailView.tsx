@@ -7,6 +7,7 @@ import TechDescription from './TechDescription';
 import ProjectList from './ProjectList';
 import RelatedFrameworks from './RelatedFrameworks';
 import RelatedLanguages from './RelatedLanguages';
+import { useI18n } from '@/lib/i18n';
 
 /**
  * TechDetailView component displays detailed information about a technology
@@ -22,6 +23,7 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
   onProjectSelect,
   onRelatedTechSelect
 }) => {
+  const { messages } = useI18n();
   // Handle Escape key to go back
   useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
@@ -49,7 +51,7 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
     <section
       className="animate-slide-in-right w-full transition-colors duration-200"
       role="region"
-      aria-label={`${tech.name}の詳細`}
+      aria-label={messages.techDetails(tech.name)}
     >
       <div className="w-full">
         {/* Back Button */}
@@ -64,7 +66,7 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
             focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900
             min-h-[44px]
           "
-          aria-label="技術一覧に戻る"
+          aria-label={messages.backToTechList}
           type="button"
         >
           <svg
@@ -81,7 +83,7 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          <span className="font-medium">戻る</span>
+          <span className="font-medium">{messages.back}</span>
         </button>
 
         {/* Content - Two Column Layout */}
@@ -125,7 +127,7 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
           <div className="xl:h-full">
             <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-5 xl:h-full xl:flex xl:flex-col transition-colors duration-200">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 xl:flex-shrink-0">
-                関連プロジェクト
+                {messages.relatedProjects}
               </h3>
               <div className="xl:flex-1">
                 <ProjectList

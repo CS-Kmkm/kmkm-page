@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { ExtendedCareerEntry } from '@/types';
+import { useI18n } from '@/lib/i18n';
 
 interface CareerCardProps {
   entry: ExtendedCareerEntry;
@@ -68,12 +69,12 @@ function getCareerIcon(entry: ExtendedCareerEntry) {
 /**
  * Format date range for display
  */
-function formatDateRange(startDate: string, endDate?: string | null): string {
+function formatDateRange(startDate: string, current: string, endDate?: string | null): string {
   const start = new Date(startDate);
   const startStr = `${start.getFullYear()}.${String(start.getMonth() + 1).padStart(2, '0')}`;
   
   if (!endDate) {
-    return `${startStr} - 現在`;
+    return `${startStr} - ${current}`;
   }
   
   const end = new Date(endDate);
@@ -90,8 +91,9 @@ export default function CareerCard({
   branchColor,
   onClick
 }: CareerCardProps) {
+  const { messages } = useI18n();
   const icon = getCareerIcon(entry);
-  const dateRange = formatDateRange(entry.startDate, entry.endDate);
+  const dateRange = formatDateRange(entry.startDate, messages.current, entry.endDate);
   const isOngoing = !entry.endDate;
   
   return (
@@ -141,7 +143,7 @@ export default function CareerCard({
           <span>{dateRange}</span>
           {isOngoing && (
             <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-              進行中
+              {messages.ongoing}
             </span>
           )}
         </div>

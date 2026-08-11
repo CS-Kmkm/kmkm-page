@@ -3,6 +3,7 @@
 import React, { useId, useState } from 'react';
 import { TechItem } from '@/types';
 import TechIconGrid from './TechIconGrid';
+import { useI18n } from '@/lib/i18n';
 
 interface TechCategorySectionProps {
   title: string;
@@ -18,6 +19,7 @@ const TechCategorySection: React.FC<TechCategorySectionProps> = ({
   techItems,
   onTechSelect
 }) => {
+  const { messages } = useI18n();
   const [isExpanded, setIsExpanded] = useState(true);
   const contentId = useId();
 
@@ -26,7 +28,7 @@ const TechCategorySection: React.FC<TechCategorySectionProps> = ({
   }
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800/70 sm:p-5" aria-label={`${title}カテゴリ`}>
+    <section className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800/70 sm:p-5" aria-label={messages.category(title)}>
       {/* Section Header */}
       <div>
         <h3>

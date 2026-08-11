@@ -3,6 +3,7 @@
 import React from 'react';
 import EventList from '@/components/ui/EventList';
 import { EventEntry } from '@/types';
+import { useI18n } from '@/lib/i18n';
 
 export interface ListViewProps {
   events: EventEntry[];
@@ -10,10 +11,11 @@ export interface ListViewProps {
 }
 
 const ListView: React.FC<ListViewProps> = ({ events, onEventClick }) => {
+  const { messages } = useI18n();
   return (
     <section aria-labelledby="list-heading">
       <h2 id="list-heading" className="sr-only">
-        イベントリスト
+        {messages.eventList}
       </h2>
 
       {/* Description - Fixed height to match TimelineView */}
@@ -40,10 +42,10 @@ const ListView: React.FC<ListViewProps> = ({ events, onEventClick }) => {
             </svg>
           </div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-            イベントが見つかりませんでした
+            {messages.eventsNotFound}
           </h3>
           <p className="text-gray-500 dark:text-gray-400">
-            イベントが登録されていません。イベントが追加されると、ここに表示されます。
+            {messages.noEvents}
           </p>
         </div>
       )}

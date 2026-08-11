@@ -1,6 +1,7 @@
 'use client';
 
 import { Fragment } from 'react';
+import { useI18n } from '@/lib/i18n';
 
 export interface FilterControlOption<FilterKey extends string> {
   key: FilterKey;
@@ -40,6 +41,7 @@ export default function FilterControls<FilterKey extends string>({
   totalCount,
   resultNoun
 }: FilterControlsProps<FilterKey>) {
+  const { messages } = useI18n();
   return (
     <div className="space-y-3 sm:space-y-4">
       <div className="flex flex-wrap items-center gap-2 sm:gap-3">
@@ -91,14 +93,14 @@ export default function FilterControls<FilterKey extends string>({
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
-              クリア
+              {messages.clear}
             </button>
           </>
         )}
       </div>
 
       <div className="text-sm text-gray-600 dark:text-gray-400">
-        {resultCount}件 / {totalCount}件の{resultNoun}を表示
+        {messages.results(resultCount, totalCount, resultNoun)}
       </div>
     </div>
   );

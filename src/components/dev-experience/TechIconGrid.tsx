@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import { TechIconGridProps, TechItem } from '@/types';
 import TechIcon from './TechIcon';
+import { useI18n } from '@/lib/i18n';
 
 /**
  * TechIconGrid component displays a responsive grid of technology icons
@@ -12,6 +13,7 @@ const TechIconGrid: React.FC<TechIconGridProps> = ({
   techItems,
   onTechSelect
 }) => {
+  const { messages } = useI18n();
   // Sort tech items with custom order for languages, then by proficiency and experience years
   const sortedTechItems = useMemo(() => {
     const proficiencyOrder = {
@@ -62,9 +64,9 @@ const TechIconGrid: React.FC<TechIconGridProps> = ({
   if (sortedTechItems.length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="text-gray-500 text-lg mb-2">技術データが見つかりません</div>
+        <div className="text-gray-500 text-lg mb-2">{messages.techNotFound}</div>
         <div className="text-gray-400 text-sm">
-          技術スタックのデータが存在しません
+          {messages.techDataMissing}
         </div>
       </div>
     );
@@ -74,7 +76,7 @@ const TechIconGrid: React.FC<TechIconGridProps> = ({
     <div
       className="grid w-full grid-cols-2 gap-2.5 animate-fade-in sm:grid-cols-3 sm:gap-3 lg:grid-cols-4"
       role="list"
-      aria-label="技術スタック一覧"
+      aria-label={messages.techStackList}
     >
       {sortedTechItems.map((tech, index) => (
         <div

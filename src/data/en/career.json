@@ -1,0 +1,52 @@
+{
+  "entries": {
+    "career-007": {
+      "year": "2009–2015",
+      "organization": "Elementary School",
+      "role": "Student",
+      "description": "Attended and graduated from local public elementary, middle, and high schools."
+    },
+    "career-006": {
+      "year": "2015–2018",
+      "organization": "Middle School",
+      "role": "Student",
+      "description": "Attended and graduated from local public elementary, middle, and high schools."
+    },
+    "career-005": {
+      "year": "2018–2021",
+      "organization": "High School",
+      "role": "Student",
+      "description": "Attended and graduated from local public elementary, middle, and high schools."
+    },
+    "career-004": {
+      "year": "2021–2025",
+      "organization": "Department of Computer Science, School of Informatics, Nagoya University",
+      "role": "Bachelor's degree student",
+      "description": "Undergraduate study."
+    },
+    "career-003": {
+      "year": "2023–2025",
+      "organization": "Intelligent Systems Program",
+      "role": "Assigned",
+      "description": "Assigned to the Intelligent Systems Program."
+    },
+    "career-002": {
+      "year": "2024–Present",
+      "organization": "Matsubara Laboratory",
+      "role": "Assigned",
+      "description": "Assigned to the Matsubara Laboratory."
+    },
+    "career-001": {
+      "year": "2025–Present",
+      "organization": "Department of Intelligent Systems, Graduate School of Informatics, Nagoya University",
+      "role": "Master's degree student",
+      "description": "Graduate research activities."
+    },
+    "career-000": {
+      "year": "2025–Present",
+      "organization": "Information and Communications Department, Tokai National Higher Education and Research System",
+      "role": "Technical Assistant",
+      "description": "Technical assistance work in the Information and Communications Department."
+    }
+  }
+}

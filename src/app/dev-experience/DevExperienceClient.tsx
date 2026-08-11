@@ -8,8 +8,8 @@ import ProjectModal from '@/components/ui/ProjectModal';
 import PageHeading from '@/components/layout/PageHeading';
 import { useTechExperience } from '@/hooks/useTechExperience';
 import type { ProjectDetail, TechItem } from '@/types';
+import { useI18n } from '@/lib/i18n';
 
-const PAGE_TITLE = '開発経験';
 type OverviewSection = 'technologies' | 'projects';
 
 const tabClassName = (isActive: boolean) => [
@@ -29,6 +29,8 @@ export default function DevExperienceClient({
   allTechItems,
   allProjects,
 }: DevExperienceClientProps) {
+  const { locale } = useI18n();
+  const pageTitle = locale === 'en' ? 'Development Experience' : '開発経験';
   const {
     categorizedTech,
     techCategoryByName,
@@ -101,12 +103,12 @@ export default function DevExperienceClient({
     <>
       <div className="space-y-8 sm:space-y-10">
         <header className="flex items-center justify-between gap-4">
-          <PageHeading>{PAGE_TITLE}</PageHeading>
+          <PageHeading>{pageTitle}</PageHeading>
           {!selectedTech && (
             <div
               className="flex flex-shrink-0 gap-3 border-b border-gray-200 dark:border-gray-700 sm:gap-6"
               role="tablist"
-              aria-label="表示内容"
+              aria-label={locale === 'en' ? 'Content view' : '表示内容'}
             >
               <button
                 id="technologies-tab"
@@ -119,7 +121,7 @@ export default function DevExperienceClient({
                 onClick={() => setActiveSection('technologies')}
                 onKeyDown={handleTabKeyDown}
               >
-                技術スタック
+                {locale === 'en' ? 'Technology Stack' : '技術スタック'}
               </button>
               <button
                 id="projects-tab"
@@ -132,7 +134,7 @@ export default function DevExperienceClient({
                 onClick={() => setActiveSection('projects')}
                 onKeyDown={handleTabKeyDown}
               >
-                プロジェクト
+                {locale === 'en' ? 'Projects' : 'プロジェクト'}
               </button>
             </div>
           )}
@@ -148,30 +150,32 @@ export default function DevExperienceClient({
             >
               <section
                 className="min-w-0 space-y-5 overflow-visible"
-                aria-label="技術カテゴリ一覧"
+                aria-label={locale === 'en' ? 'Technology categories' : '技術カテゴリ一覧'}
               >
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 sm:text-2xl">技術スタック</h2>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 sm:text-2xl">
+                    {locale === 'en' ? 'Technology Stack' : '技術スタック'}
+                  </h2>
                 </div>
 
                 <div className="space-y-4 sm:space-y-5">
                   <TechCategorySection
-                    title="プログラミング言語"
+                    title={locale === 'en' ? 'Programming Languages' : 'プログラミング言語'}
                     techItems={categorizedTech.languages}
                     onTechSelect={handleTechSelect}
                   />
                   <TechCategorySection
-                    title="フレームワーク・ライブラリ"
+                    title={locale === 'en' ? 'Frameworks and Libraries' : 'フレームワーク・ライブラリ'}
                     techItems={categorizedTech.frameworks}
                     onTechSelect={handleTechSelect}
                   />
                   <TechCategorySection
-                    title="ツール・プラットフォーム"
+                    title={locale === 'en' ? 'Tools and Platforms' : 'ツール・プラットフォーム'}
                     techItems={categorizedTech.tools}
                     onTechSelect={handleTechSelect}
                   />
                   <TechCategorySection
-                    title="データベース"
+                    title={locale === 'en' ? 'Databases' : 'データベース'}
                     techItems={categorizedTech.databases}
                     onTechSelect={handleTechSelect}
                   />

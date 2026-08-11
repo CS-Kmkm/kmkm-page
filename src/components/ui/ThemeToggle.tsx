@@ -4,6 +4,7 @@ import React from 'react';
 import { useTheme } from '@/hooks/useTheme';
 import { ThemeToggleProps } from '@/types';
 import { prefersReducedMotion } from '@/lib/theme';
+import { useI18n } from '@/lib/i18n';
 
 type ThemeIconProps = {
   className: string;
@@ -90,6 +91,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   className = '',
 }) => {
   const { resolvedTheme, toggleTheme, isLoading } = useTheme();
+  const { messages } = useI18n();
   
   // Size configurations
   const sizeClasses = {
@@ -131,12 +133,12 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
    * Get appropriate ARIA label based on current theme
    */
   const getAriaLabel = (): string => {
-    if (isLoading) return 'テーマ切替を読み込み中';
+    if (isLoading) return messages.themeLoading;
     
-    const currentMode = resolvedTheme === 'dark' ? 'ダーク' : 'ライト';
-    const nextMode = resolvedTheme === 'dark' ? 'ライト' : 'ダーク';
+    const currentMode = resolvedTheme === 'dark' ? messages.dark : messages.light;
+    const nextMode = resolvedTheme === 'dark' ? messages.light : messages.dark;
     
-    return `${currentMode}モードから${nextMode}モードへ切り替え`;
+    return messages.switchTheme(currentMode, nextMode);
   };
 
   return (
@@ -173,7 +175,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
       
       {showLabel && (
         <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-          {isLoading ? '読み込み中...' : `${resolvedTheme === 'dark' ? 'ダーク' : 'ライト'}モード`}
+          {isLoading ? messages.loading : `${resolvedTheme === 'dark' ? messages.dark : messages.light}${messages.mode}`}
         </span>
       )}
     </div>

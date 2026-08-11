@@ -6,6 +6,7 @@ interface GenerateMetadataProps {
   description?: string;
   path?: string;
   keywords?: string[];
+  locale?: 'ja' | 'en';
 }
 
 /**
@@ -17,18 +18,41 @@ export function generatePageMetadata({
   description = siteConfig.description,
   path = '',
   keywords = [],
+  locale = 'ja',
 }: GenerateMetadataProps = {}): Metadata {
-  const fullTitle = title ? `${title} | ${siteConfig.personName}` : siteConfig.defaultTitle;
-  const siteUrl = siteConfig.siteUrl;
+  const localizedSite = locale === 'en'
+    ? {
+        ...siteConfig,
+        personName: siteConfig.personNameEn,
+        siteName: `${siteConfig.personNameEn}'s Portfolio`,
+        defaultTitle: `${siteConfig.personNameEn} | Portfolio`,
+        description: "Koshi Motegi's portfolio featuring research, development experience, and publications.",
+        locale: 'en_US',
+      }
+    : siteConfig;
+  const resolvedDescription = description === siteConfig.description && locale === 'en'
+    ? localizedSite.description
+    : description;
+  const fullTitle = title ? `${title} | ${localizedSite.personName}` : localizedSite.defaultTitle;
+  const siteUrl = localizedSite.siteUrl;
   const fullUrl = siteUrl ? new URL(path || '/', siteUrl).toString() : undefined;
+  const counterpartPath = locale === 'en'
+    ? (path.replace(/^\/en(?=\/|$)/, '') || '/')
+    : (path === '/' || path === '' ? '/en' : `/en${path}`);
+  const counterpartUrl = siteUrl ? new URL(counterpartPath, siteUrl).toString() : undefined;
+  const localizedPrimaryPaths = new Set([
+    '', '/', '/career', '/publications', '/dev-experience',
+    '/en', '/en/career', '/en/publications', '/en/dev-experience',
+  ]);
+  const hasLanguageAlternate = localizedPrimaryPaths.has(path);
 
   return {
     title: fullTitle,
-    description,
+    description: resolvedDescription,
     keywords,
-    authors: [{ name: siteConfig.personName }],
-    creator: siteConfig.personName,
-    publisher: siteConfig.personName,
+    authors: [{ name: localizedSite.personName }],
+    creator: localizedSite.personName,
+    publisher: localizedSite.personName,
     robots: {
       index: true,
       follow: true,
@@ -42,20 +66,26 @@ export function generatePageMetadata({
     },
     openGraph: {
       type: 'website',
-      locale: siteConfig.locale,
+      locale: localizedSite.locale,
       title: fullTitle,
-      description,
-      siteName: siteConfig.siteName,
+      description: resolvedDescription,
+      siteName: localizedSite.siteName,
       ...(fullUrl ? { url: fullUrl } : {}),
     },
     twitter: {
       card: 'summary_large_image',
       title: fullTitle,
-      description,
+      description: resolvedDescription,
     },
     alternates: fullUrl
       ? {
           canonical: fullUrl,
+          ...(hasLanguageAlternate ? {
+            languages: {
+              ja: locale === 'ja' ? fullUrl : counterpartUrl!,
+              en: locale === 'en' ? fullUrl : counterpartUrl!,
+            },
+          } : {}),
         }
       : undefined,
     icons: {

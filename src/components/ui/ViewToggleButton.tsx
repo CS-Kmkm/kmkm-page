@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useI18n } from '@/lib/i18n';
 
 export type ViewMode = 'timeline' | 'list';
 
@@ -15,6 +16,7 @@ const ViewToggleButton: React.FC<ViewToggleButtonProps> = ({
   onToggle,
   className = ''
 }) => {
+  const { messages } = useI18n();
   const isTimeline = currentView === 'timeline';
 
   return (
@@ -35,7 +37,7 @@ const ViewToggleButton: React.FC<ViewToggleButtonProps> = ({
         flex items-center justify-center gap-2
         ${className}
       `}
-      aria-label={`表示モードを切り替え: 現在は${isTimeline ? 'タイムライン' : 'リスト'}表示`}
+      aria-label={messages.viewMode(isTimeline ? messages.timeline : messages.list)}
       aria-pressed={isTimeline}
       type="button"
     >
@@ -76,7 +78,7 @@ const ViewToggleButton: React.FC<ViewToggleButtonProps> = ({
 
       {/* Label */}
       <span className="hidden sm:inline whitespace-nowrap">
-        {isTimeline ? 'リスト表示' : 'タイムライン表示'}
+        {isTimeline ? messages.listView : messages.timelineView}
       </span>
     </button>
   );

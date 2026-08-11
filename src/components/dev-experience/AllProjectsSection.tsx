@@ -4,6 +4,7 @@ import React, { useId, useState } from 'react';
 import type { ProjectDetail, TechCategoryLookup } from '@/types';
 import ProjectListItem from './ProjectListItem';
 import { getProjectListStyle } from '@/utils/projectList';
+import { useI18n } from '@/lib/i18n';
 
 interface AllProjectsSectionProps {
   projects: ProjectDetail[];
@@ -21,6 +22,7 @@ const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
   technologyCategories,
   onProjectSelect,
 }) => {
+  const { messages } = useI18n();
   const [isExpanded, setIsExpanded] = useState(true);
   const contentId = useId();
 
@@ -34,7 +36,7 @@ const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
           aria-controls={contentId}
           onClick={() => setIsExpanded((expanded) => !expanded)}
         >
-          <span className="min-w-0">全プロジェクト</span>
+          <span className="min-w-0">{messages.allProjects}</span>
           <svg
             className={`h-5 w-5 flex-shrink-0 text-gray-400 transition-transform duration-200 group-hover:text-blue-600 dark:text-gray-500 dark:group-hover:text-blue-300 ${isExpanded ? 'rotate-180' : ''}`}
             fill="none"
@@ -56,7 +58,7 @@ const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
 
   if (projects.length === 0) {
     return (
-      <section aria-label="全プロジェクト">
+      <section aria-label={messages.allProjects}>
         <div>
           {header}
           <div
@@ -64,7 +66,7 @@ const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
             className="rounded-lg bg-gray-50/80 p-4 text-center dark:bg-gray-800/60"
             hidden={!isExpanded}
           >
-            <p className="text-gray-500 dark:text-gray-400 text-sm">プロジェクトがありません</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">{messages.noProjects}</p>
           </div>
         </div>
       </section>
@@ -72,7 +74,7 @@ const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
   }
 
   return (
-    <section aria-label="全プロジェクト">
+    <section aria-label={messages.allProjects}>
       <div>
         {header}
         <div
@@ -80,7 +82,7 @@ const AllProjectsSection: React.FC<AllProjectsSectionProps> = ({
           className={listClasses}
           style={getProjectListStyle()}
           role="list"
-          aria-label="全プロジェクト一覧"
+          aria-label={messages.allProjectsList}
           hidden={!isExpanded}
         >
           {projects.map((project) => (

@@ -2,11 +2,14 @@
 
 import type { EventEmptyStateProps } from '@/types';
 import FilteredEmptyState from './FilteredEmptyState';
+import { useI18n } from '@/lib/i18n';
 
 const EventEmptyState = ({
   hasActiveFilters,
   onClearFilters
-}: EventEmptyStateProps) => (
+}: EventEmptyStateProps) => {
+  const { messages } = useI18n();
+  return (
   <FilteredEmptyState
     icon={
       <svg
@@ -24,15 +27,16 @@ const EventEmptyState = ({
         />
       </svg>
     }
-    title={hasActiveFilters ? 'イベントが見つかりません' : 'イベントがありません'}
+    title={hasActiveFilters ? messages.noMatchingEvents : messages.noEventsRegistered}
     description={
       hasActiveFilters
-        ? '選択したフィルタに一致するイベントがありません。'
-        : 'イベントが登録されていません。'
+        ? messages.matchingEvents
+        : messages.eventsRegistered
     }
     hasActiveFilters={hasActiveFilters}
     onClearFilters={onClearFilters}
   />
-);
+  );
+};
 
 export default EventEmptyState;

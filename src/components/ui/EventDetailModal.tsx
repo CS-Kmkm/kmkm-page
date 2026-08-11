@@ -9,10 +9,10 @@ import React, { useEffect } from 'react';
 import { EventDetailModalProps } from '@/types';
 import { Modal } from './Modal';
 import { getEventCategoryConfig } from '@/lib/constants/categories';
-import { UI_LABELS, ARIA_LABELS } from '@/lib/constants/labels';
 import { getBadgeClasses } from '@/lib/ui/listItemStyles';
 import { tokens } from '@/lib/theme/tokens';
 import LinkedPublicationTitles from './LinkedPublicationTitles';
+import { useI18n } from '@/lib/i18n';
 
 const EventDetailModal: React.FC<EventDetailModalProps> = ({
   isOpen,
@@ -22,6 +22,7 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
   onClose,
   onNavigate
 }) => {
+  const { locale, messages } = useI18n();
   // Handle keyboard navigation (Arrow keys)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -53,6 +54,17 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
   if (!isOpen || !event) return null;
 
   const categoryConfig = getEventCategoryConfig(event.category);
+  const categoryLabel = event.category === 'affiliation'
+    ? messages.affiliation
+    : event.category === 'publication'
+      ? messages.publication
+      : event.category === 'event'
+        ? messages.event
+        : event.category === 'internship'
+          ? messages.internship
+          : event.category === 'award'
+            ? messages.award
+            : messages.other;
 
   return (
     <Modal
@@ -68,20 +80,20 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
               onClick={() => onNavigate && onNavigate(eventIndex - 1)}
               disabled={eventIndex === 0}
               className={`inline-flex items-center px-4 py-2 text-sm font-medium ${tokens.text.secondary} ${tokens.surface.primary} border ${tokens.border.default} ${tokens.radius.md} ${tokens.surface.secondary.replace('bg-', 'hover:bg-')} ${tokens.focus.ringFull} ${tokens.transition.colors} disabled:opacity-50 disabled:cursor-not-allowed`}
-              aria-label={ARIA_LABELS.previousEvent}
+              aria-label={messages.previousEvent}
             >
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              {UI_LABELS.previous}
+              {messages.previous}
             </button>
             <button
               onClick={() => onNavigate && onNavigate(eventIndex + 1)}
               disabled={eventIndex === filteredEvents.length - 1}
               className={`inline-flex items-center px-4 py-2 text-sm font-medium ${tokens.text.secondary} ${tokens.surface.primary} border ${tokens.border.default} ${tokens.radius.md} ${tokens.surface.secondary.replace('bg-', 'hover:bg-')} ${tokens.focus.ringFull} ${tokens.transition.colors} disabled:opacity-50 disabled:cursor-not-allowed`}
-              aria-label={ARIA_LABELS.nextEvent}
+              aria-label={messages.nextEvent}
             >
-              {UI_LABELS.next}
+              {messages.next}
               <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
@@ -97,9 +109,9 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
     >
       {/* Event metadata */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        <span className={getBadgeClasses(categoryConfig.variant)} aria-label={categoryConfig.ariaLabel}>
+        <span className={getBadgeClasses(categoryConfig.variant)} aria-label={messages.categoryLabel(categoryLabel)}>
           <span aria-hidden="true">{categoryConfig.icon}</span>
-          {categoryConfig.label}
+          {categoryLabel}
         </span>
         <time className={`text-sm ${tokens.text.muted} font-medium`}>
           {formatDate(event.date)}
@@ -134,7 +146,7 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({
 
         {event.relatedLinks && event.relatedLinks.length > 0 && (
           <div className="space-y-2">
-            <h4 className={`text-sm font-medium ${tokens.text.primary}`}>{UI_LABELS.relatedLinks}</h4>
+            <h4 className={`text-sm font-medium ${tokens.text.primary}`}>{messages.relatedLinks}</h4>
             <div className="space-y-1">
               {event.relatedLinks.map((link, index) => (
                 <a

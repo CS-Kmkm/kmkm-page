@@ -3,12 +3,14 @@
 import React, { useState } from 'react';
 import { PublicationDetailModalProps } from '@/types';
 import { Modal } from './Modal';
+import { useI18n } from '@/lib/i18n';
 
 const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
   publication,
   isOpen,
   onClose
 }) => {
+  const { locale, messages } = useI18n();
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null);
 
   if (!isOpen || !publication) return null;
@@ -43,9 +45,9 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="論文詳細"
+      title={messages.publicationDetails}
       description={publication.title}
-      closeButtonLabel="モーダルを閉じる"
+      closeButtonLabel={messages.closeModal}
     >
       <div className="space-y-4 sm:space-y-6">
           {/* Bibliographic Information */}
@@ -100,7 +102,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
           {publication.awards && publication.awards.length > 0 && (
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
               <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
-                受賞
+                {messages.award}
               </h4>
               <ul className="mt-2 sm:mt-3 space-y-2 text-sm sm:text-base text-gray-700 dark:text-gray-300">
                 {publication.awards.map((award, index) => (
@@ -117,7 +119,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
                         </a>
                       ) : award.title}
                     </div>
-                    <div>{new Date(award.date).toLocaleDateString('ja-JP')}</div>
+                    <div>{new Date(award.date).toLocaleDateString(locale === 'en' ? 'en-US' : 'ja-JP')}</div>
                     {award.organization && <div>{award.organization}</div>}
                     {award.description && <div>{award.description}</div>}
                   </li>
@@ -130,7 +132,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
           {publication.abstract && (
             <details className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
               <summary className="cursor-pointer text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
-                Abstract（概要）
+                Abstract ({messages.overview})
               </summary>
               <p className="mt-2 sm:mt-3 text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
                 {publication.abstract}
@@ -142,7 +144,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
           {publication.memo && (
             <details className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
               <summary className="cursor-pointer text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
-                メモ・受賞履歴
+                {locale === 'en' ? 'Notes and award history' : 'メモ・受賞履歴'}
               </summary>
               {Array.isArray(publication.memo) ? (
                 <ul className="mt-2 sm:mt-3 list-disc pl-5 space-y-2 text-sm sm:text-base text-gray-700 dark:text-gray-300">
@@ -161,11 +163,13 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
           {/* Image Section */}
           {publication.imageUrl && !imageError && (
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
-              <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">図</h4>
+              <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">
+                {locale === 'en' ? 'Figure' : '図'}
+              </h4>
               {/* eslint-disable-next-line @next/next/no-img-element -- publication images may be arbitrary external assets */}
               <img
                 src={publication.imageUrl}
-                alt={publication.imageAlt || '論文の関連図'}
+                alt={publication.imageAlt || (locale === 'en' ? 'Publication figure' : '論文の関連図')}
                 onError={() => setFailedImageUrl(publication.imageUrl ?? null)}
                 className="w-full rounded-lg border border-gray-200 dark:border-gray-700"
               />

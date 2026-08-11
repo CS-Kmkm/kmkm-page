@@ -1,6 +1,7 @@
 'use client';
 
 import FilteredEmptyState from './FilteredEmptyState';
+import { useI18n } from '@/lib/i18n';
 
 interface PublicationEmptyStateProps {
   hasActiveFilters: boolean;
@@ -10,7 +11,9 @@ interface PublicationEmptyStateProps {
 const PublicationEmptyState = ({
   hasActiveFilters,
   onClearFilters
-}: PublicationEmptyStateProps) => (
+}: PublicationEmptyStateProps) => {
+  const { messages } = useI18n();
+  return (
   <FilteredEmptyState
     icon={
       <svg
@@ -28,11 +31,12 @@ const PublicationEmptyState = ({
         />
       </svg>
     }
-    title="論文が見つかりません"
-    description="選択したフィルタに一致する論文がありません。"
+    title={messages.noPublications}
+    description={messages.noMatchingPublications}
     hasActiveFilters={hasActiveFilters}
     onClearFilters={onClearFilters}
   />
-);
+  );
+};
 
 export default PublicationEmptyState;

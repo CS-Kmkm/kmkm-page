@@ -2,8 +2,10 @@
 
 import React from 'react';
 import { PublicationItemProps } from '@/types';
+import { useI18n } from '@/lib/i18n';
 
 const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick }) => {
+  const { messages } = useI18n();
   const formatAuthors = (authors: string[], isFirstAuthor: boolean) => {
     if (authors.length === 0) return '';
 
@@ -34,7 +36,7 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
       tabIndex={0}
       onClick={onClick}
       className="block w-full text-left border-l-4 border-gray-200 dark:border-gray-700 pl-3 sm:pl-4 py-2 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 min-h-[44px]"
-      aria-label={`${publication.title}の詳細を表示`}
+      aria-label={messages.showPublicationDetails(publication.title)}
     >
       {/* Title */}
       <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 leading-tight">
