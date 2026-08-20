@@ -132,6 +132,7 @@ export interface PublicationEntry {
   isPeerReviewed: boolean;
   publicationType: 'journal' | 'conference' | 'workshop' | 'preprint' | 'other';
   conferenceScope?: 'international' | 'domestic'; // 会議・ワークショップ等の開催範囲
+  hasOfficialEnglishTitle?: boolean; // 英語版で表示できる正式な英語タイトルがあるか
   abstract?: string;        // 論文の抄録
   awards?: PublicationAward[];
   memo?: string | string[]; // 受賞履歴などの補足メモ

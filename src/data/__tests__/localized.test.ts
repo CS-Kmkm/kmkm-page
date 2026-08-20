@@ -34,17 +34,29 @@ function userFacingStrings(value: unknown, key = ''): string[] {
 
 describe('localized portfolio data', () => {
   it('preserves source IDs and cross-reference fields in English overlays', () => {
-    const pairs = [
-      [getCareerEntries(), getLocalizedCareerEntries('en')],
-      [getPublications(), getLocalizedPublications('en')],
-      [getTechExperience(), getLocalizedTechExperience('en')],
-      [getProjectDetails(), getLocalizedProjectDetails('en')],
-      [getEvents(), getLocalizedEvents('en')],
-    ] as const;
+    expect(getLocalizedCareerEntries('en').map(item => item.id))
+      .toEqual(getCareerEntries().map(item => item.id));
+    const visiblePublications = getPublications().filter(
+      publication => publication.conferenceScope === 'international'
+        || publication.hasOfficialEnglishTitle === true,
+    );
+    expect(getLocalizedPublications('en').map(item => item.id))
+      .toEqual(visiblePublications.map(item => item.id));
+    expect(getLocalizedTechExperience('en').map(item => item.id))
+      .toEqual(getTechExperience().map(item => item.id));
+    expect(getLocalizedProjectDetails('en').map(item => item.id))
+      .toEqual(getProjectDetails().map(item => item.id));
 
-    for (const [source, english] of pairs) {
-      expect(english.map(item => item.id)).toEqual(source.map(item => item.id));
-    }
+    const visiblePublicationIds = new Set(visiblePublications.map(item => item.id));
+    const visibleEvents = getEvents().filter(event => {
+      if (event.category === 'event') return false;
+      if (event.category === 'publication' || event.category === 'award') {
+        return [...visiblePublicationIds].some(publicationId => event.id.includes(publicationId));
+      }
+      return true;
+    });
+    const englishEvents = getLocalizedEvents('en');
+    expect(englishEvents.map(item => item.id)).toEqual(visibleEvents.map(item => item.id));
 
     expect(getLocalizedTechExperience('en').map(item => item.projects))
       .toEqual(getTechExperience().map(item => item.projects));
@@ -56,11 +68,11 @@ describe('localized portfolio data', () => {
     expect(getLocalizedCareerEntries('en').map(({ startDate, endDate, displayDate }) => ({ startDate, endDate, displayDate })))
       .toEqual(getCareerEntries().map(({ startDate, endDate, displayDate }) => ({ startDate, endDate, displayDate })));
     expect(getLocalizedPublications('en').map(({ date, displayDate, doi, url }) => ({ date, displayDate, doi, url })))
-      .toEqual(getPublications().map(({ date, displayDate, doi, url }) => ({ date, displayDate, doi, url })));
+      .toEqual(visiblePublications.map(({ date, displayDate, doi, url }) => ({ date, displayDate, doi, url })));
     expect(getLocalizedProjectDetails('en').map(({ date, displayDate, url, githubUrl }) => ({ date, displayDate, url, githubUrl })))
       .toEqual(getProjectDetails().map(({ date, displayDate, url, githubUrl }) => ({ date, displayDate, url, githubUrl })));
-    expect(getLocalizedEvents('en').map(({ date, displayDate, relatedLinks }) => ({ date, displayDate, relatedLinks })))
-      .toEqual(getEvents().map(({ date, displayDate, relatedLinks }) => ({ date, displayDate, relatedLinks })));
+    expect(englishEvents.map(({ date, displayDate, relatedLinks }) => ({ date, displayDate, relatedLinks })))
+      .toEqual(visibleEvents.map(({ date, displayDate, relatedLinks }) => ({ date, displayDate, relatedLinks })));
   });
 
   it('returns English profile, content records, generated events, and updates', () => {
@@ -77,6 +89,16 @@ describe('localized portfolio data', () => {
 
     expect(getLocalizedProfile('en').name).toBe('Koshi Motegi');
     expect(japaneseStrings).toEqual([]);
+  });
+
+  it('includes domestic publications with an official English title', () => {
+    const axiesPublication = getLocalizedPublications('en').find(
+      publication => publication.id === 'pub-003',
+    );
+
+    expect(axiesPublication?.title).toBe(
+      'Accelerating Open Access to Research Data: Metadata Generation Using Generative AI and Its Deposition in Institutional Repositories',
+    );
   });
 
   it('returns the original objects for the Japanese locale', () => {

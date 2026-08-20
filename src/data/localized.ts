@@ -44,6 +44,11 @@ const careerEnglish = careerEnglishJson as unknown as CareerOverlay;
 const publicationsEnglish = publicationsEnglishJson as unknown as PublicationOverlay;
 const techExperienceEnglish = techExperienceEnglishJson as unknown as TechExperienceOverlay;
 
+function isEnglishPublicationVisible(publication: PublicationEntry): boolean {
+  return publication.conferenceScope === 'international'
+    || publication.hasOfficialEnglishTitle === true;
+}
+
 export function getLocalizedProfile(locale: ContentLocale): ProfileInfo {
   const profile = getProfile();
   if (locale === 'ja') return profile;
@@ -70,17 +75,19 @@ export function getLocalizedPublications(locale: ContentLocale): PublicationEntr
   const publications = getPublications();
   if (locale === 'ja') return publications;
 
-  return publications.map(publication => {
-    const overlay = publicationsEnglish.publications[publication.id];
-    return {
-      ...publication,
-      ...overlay,
-      awards: publication.awards?.map((award, index) => ({
-        ...award,
-        ...(overlay?.awards?.[index] ?? {}),
-      })),
-    };
-  });
+  return publications
+    .filter(isEnglishPublicationVisible)
+    .map(publication => {
+      const overlay = publicationsEnglish.publications[publication.id];
+      return {
+        ...publication,
+        ...overlay,
+        awards: publication.awards?.map((award, index) => ({
+          ...award,
+          ...(overlay?.awards?.[index] ?? {}),
+        })),
+      };
+    });
 }
 
 export function getLocalizedTechExperience(locale: ContentLocale): TechItem[] {
@@ -220,17 +227,32 @@ function localizeProjectEvent(event: EventEntry): EventEntry {
   };
 }
 
+function isEnglishEventVisible(event: EventEntry): boolean {
+  // Event participation records currently have no official English event name.
+  if (event.category === 'event') return false;
+
+  // Do not expose publication or award events for papers hidden from the
+  // English publications page.
+  if (event.category === 'publication' || event.category === 'award') {
+    return publicationsForEvent(event.id).length > 0;
+  }
+
+  return true;
+}
+
 export function getLocalizedEvents(locale: ContentLocale): EventEntry[] {
   const events = getEvents();
   if (locale === 'ja') return events;
 
-  return events.map(event => {
-    if (event.id.startsWith('career-')) return localizeCareerEvent(event);
-    if (event.id.startsWith('award-')) return localizeAwardEvent(event);
-    if (event.id.startsWith('pub-')) return localizePublicationEvent(event);
-    if (event.id.startsWith('project-')) return localizeProjectEvent(event);
-    return event;
-  });
+  return events
+    .map(event => {
+      if (event.id.startsWith('career-')) return localizeCareerEvent(event);
+      if (event.id.startsWith('award-')) return localizeAwardEvent(event);
+      if (event.id.startsWith('pub-')) return localizePublicationEvent(event);
+      if (event.id.startsWith('project-')) return localizeProjectEvent(event);
+      return event;
+    })
+    .filter(isEnglishEventVisible);
 }
 
 export function getLocalizedUpdates(locale: ContentLocale): UpdateItem[] {
