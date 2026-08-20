@@ -228,8 +228,9 @@ function localizeProjectEvent(event: EventEntry): EventEntry {
 }
 
 function isEnglishEventVisible(event: EventEntry): boolean {
-  // Event participation records currently have no official English event name.
-  if (event.category === 'event') return false;
+  // Project-backed participation records are localized from the English project
+  // overlays; other event records have no English user-facing copy.
+  if (event.category === 'event') return event.id.startsWith('project-');
 
   // Do not expose publication or award events for papers hidden from the
   // English publications page.

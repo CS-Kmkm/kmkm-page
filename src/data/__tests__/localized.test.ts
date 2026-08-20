@@ -49,7 +49,7 @@ describe('localized portfolio data', () => {
 
     const visiblePublicationIds = new Set(visiblePublications.map(item => item.id));
     const visibleEvents = getEvents().filter(event => {
-      if (event.category === 'event') return false;
+      if (event.category === 'event' && !event.id.startsWith('project-')) return false;
       if (event.category === 'publication' || event.category === 'award') {
         return [...visiblePublicationIds].some(publicationId => event.id.includes(publicationId));
       }
@@ -57,6 +57,11 @@ describe('localized portfolio data', () => {
     });
     const englishEvents = getLocalizedEvents('en');
     expect(englishEvents.map(item => item.id)).toEqual(visibleEvents.map(item => item.id));
+    expect(englishEvents.map(item => item.id)).toEqual(expect.arrayContaining([
+      'project-proj-005',
+      'project-proj-006',
+      'project-proj-012',
+    ]));
 
     expect(getLocalizedTechExperience('en').map(item => item.projects))
       .toEqual(getTechExperience().map(item => item.projects));
