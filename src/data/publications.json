@@ -73,6 +73,7 @@
       "isPeerReviewed": false,
       "publicationType": "conference",
       "conferenceScope": "domestic",
+      "hasOfficialEnglishTitle": true,
       "awards": [
         {
           "title": "大学ICT推進協議会2025年度年次大会（AXIES2025）最優秀論文賞",
