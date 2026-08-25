@@ -60,12 +60,12 @@ export default function FilterControls<FilterKey extends string>({
             <div
               role="group"
               aria-label={group.ariaLabel}
-              className={`flex items-end gap-2 sm:gap-3 ${
+              className={`flex min-w-0 flex-wrap items-end gap-2 sm:gap-3 ${
                 groupIndex > 0 ? 'sm:border-l sm:border-gray-200 sm:pl-4 dark:sm:border-gray-700' : ''
               }`}
             >
               {group.label && (
-                <span className="mb-2 whitespace-nowrap text-xs font-semibold tracking-wide text-gray-400 dark:text-gray-500">
+                <span className="mb-2 whitespace-nowrap text-xs font-semibold tracking-wide text-gray-500 dark:text-gray-400">
                   {group.label}
                 </span>
               )}

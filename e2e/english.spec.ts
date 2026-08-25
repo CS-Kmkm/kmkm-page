@@ -61,6 +61,15 @@ test.describe('English portfolio', () => {
     await expectVisibleCopyToBeEnglish(page);
   });
 
+  test('wraps English event filters within a narrow viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto('/en/career?view=list');
+
+    const filters = page.getByRole('region', { name: 'Event filters' });
+    await expect(filters).toBeVisible();
+    await expect.poll(() => filters.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
+  });
+
   test('keeps English controls and dialogs usable', async ({ page }) => {
     await page.goto('/en/publications');
     await page.getByRole('button', { name: /Show details for/ }).first().click();

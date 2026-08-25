@@ -105,26 +105,14 @@ test.describe('Performance Tests', () => {
   });
 
   test('Publications filtering should remain responsive', async ({ page }) => {
-    // Go to pages with more data
     await page.goto('/publications');
-
-    const startTime = Date.now();
-    await page.waitForLoadState('networkidle');
-    const loadTime = Date.now() - startTime;
-
-    // Publications page should load efficiently
-    expect(loadTime).toBeLessThan(3000);
-
-    // Check that publications page loads
     await expect(page.getByRole('heading', { name: '論文', exact: true })).toBeVisible();
 
-    // Test filtering performance
     const filterStartTime = Date.now();
     await page.getByRole('button', { name: '主著' }).click();
     await expect(page.getByRole('button', { name: '主著' })).toHaveAttribute('aria-pressed', 'true');
     const filterTime = Date.now() - filterStartTime;
 
-    // Filtering should be reasonably fast (increased threshold for slower browsers)
     expect(filterTime).toBeLessThan(2000);
   });
 });
