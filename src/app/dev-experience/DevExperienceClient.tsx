@@ -152,12 +152,6 @@ export default function DevExperienceClient({
                 className="min-w-0 space-y-5 overflow-visible"
                 aria-label={locale === 'en' ? 'Technology categories' : '技術カテゴリ一覧'}
               >
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 sm:text-2xl">
-                    {locale === 'en' ? 'Technology Stack' : '技術スタック'}
-                  </h2>
-                </div>
-
                 <div className="space-y-4 sm:space-y-5">
                   <TechCategorySection
                     title={locale === 'en' ? 'Programming Languages' : 'プログラミング言語'}

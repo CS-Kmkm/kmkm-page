@@ -22,12 +22,12 @@ export default function RelatedTechnologies({
   }
 
   return (
-    <div className="min-w-full w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-5 transition-colors duration-200">
+    <div className="min-w-full w-full border-t border-gray-200/80 py-5 dark:border-gray-700/60 sm:py-6 transition-colors duration-200">
       <div className="flex items-center gap-2 mb-3">
         <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
           {title}
         </h3>
-        <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 px-2 py-0.5 rounded-lg">
+        <span className="text-xs text-gray-500 dark:text-gray-400">
           {technologies.length}
         </span>
       </div>
@@ -40,11 +40,10 @@ export default function RelatedTechnologies({
             aria-label={messages.showTechDetails(technology.name)}
             className="
               group relative flex items-center gap-2.5 px-3 py-2
-              bg-gray-50 dark:bg-gray-700/40
-              rounded-lg
-              border border-gray-200 dark:border-gray-600
+              bg-transparent dark:bg-transparent
+              rounded-md
               transition-colors duration-150
-              hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-500
+              hover:bg-gray-50 dark:hover:bg-gray-800/60
               focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
               focus:ring-offset-2 dark:focus:ring-offset-gray-900
             "

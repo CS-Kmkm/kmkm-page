@@ -16,11 +16,9 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
 
   const buttonClassName = [
     'group relative flex h-full min-h-16 w-full items-center gap-2 p-2.5 text-left sm:min-h-20 sm:gap-3 sm:p-4',
-    'bg-gray-50/80 dark:bg-gray-900/30 rounded-xl',
-    'border border-gray-200/80 dark:border-gray-700/60',
+    'rounded-md bg-transparent',
     'transition-all duration-200',
-    'hover:-translate-y-0.5 hover:bg-white dark:hover:bg-gray-800',
-    'hover:border-blue-300 hover:shadow-md dark:hover:border-blue-700',
+    'hover:bg-gray-50 dark:hover:bg-gray-800/60',
     'focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400',
     'focus:ring-offset-2 dark:focus:ring-offset-gray-900',
   ].join(' ');
@@ -50,7 +48,7 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, onClick }) => {
         aria-label={messages.showTechDetails(tech.name)}
         type="button"
       >
-        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-gray-100 bg-white p-2 shadow-sm dark:border-gray-300 dark:bg-gray-100 sm:h-11 sm:w-11">
+        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md border border-gray-200/70 bg-white p-2 dark:border-gray-300 dark:bg-gray-100 sm:h-11 sm:w-11">
           {tech.logoUrl && !imageError ? (
             <Image
               src={tech.logoUrl}

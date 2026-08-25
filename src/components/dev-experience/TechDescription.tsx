@@ -14,7 +14,7 @@ const TechDescription: React.FC<TechDescriptionProps> = ({ description }) => {
   }
 
   return (
-    <div className="min-w-full w-full p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-200 box-border overflow-hidden">
+    <div className="min-w-full w-full border-t border-gray-200/80 py-5 dark:border-gray-700/60 sm:py-6 transition-colors duration-200 box-border overflow-hidden">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
         {messages.overview}
       </h3>

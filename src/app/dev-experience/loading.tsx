@@ -20,7 +20,7 @@ export default function DevExperienceLoading() {
                 <div className="grid w-full justify-start gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 6.75rem), 6.75rem))' }}>
                   {[...Array(6)].map((_, i) => (
                     <div key={i} className="space-y-2">
-                      <div className="aspect-square rounded-lg border border-gray-200/80 dark:border-gray-700/50 bg-white dark:bg-gray-800/80 p-3 animate-pulse"></div>
+                      <div className="aspect-square rounded-md bg-gray-100 dark:bg-gray-800/80 p-3 animate-pulse"></div>
                       <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-16 mx-auto animate-pulse"></div>
                     </div>
                   ))}
@@ -29,11 +29,11 @@ export default function DevExperienceLoading() {
             ))}
           </div>
 
-          <div className="rounded-lg border border-gray-200/80 dark:border-gray-700/50 bg-white dark:bg-gray-800/80 shadow-sm p-4 sm:p-6">
+          <div className="border-t border-gray-200/80 pt-5 dark:border-gray-700/60 xl:border-l xl:border-t-0 xl:pl-6 xl:pt-0">
             <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-40 mb-4 animate-pulse"></div>
             <div className="space-y-3">
               {[...Array(5)].map((_, i) => (
-                <div key={i} className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 animate-pulse">
+                <div key={i} className="border-l-2 border-gray-200 py-3 pl-4 pr-2 dark:border-gray-700 animate-pulse">
                   <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3"></div>
                   <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-3"></div>
                   <div className="flex gap-2">

@@ -35,11 +35,13 @@ test.describe('Development Experience Page', () => {
 
     await expect(technologyTab).toHaveAttribute('aria-selected', 'true');
     await expect(technologyPanel).toBeVisible();
+    await expect(technologyPanel.getByRole('heading', { name: '技術スタック' })).toHaveCount(0);
     await expect(projectsPanel).toBeHidden();
 
     await projectsTab.click();
     await expect(projectsTab).toHaveAttribute('aria-selected', 'true');
     await expect(projectsPanel).toBeVisible();
+    await expect(projectsPanel.getByRole('heading', { name: '全プロジェクト' })).toHaveCount(0);
     await expect(technologyPanel).toBeHidden();
 
     await technologyTab.click();
@@ -101,21 +103,12 @@ test.describe('Development Experience Page', () => {
     await expect(pythonButton).toBeVisible();
   });
 
-  test('should collapse and expand all projects', async ({ page }) => {
+  test('should display all projects without a duplicate section heading', async ({ page }) => {
     await page.getByRole('tab', { name: 'プロジェクト' }).click();
-    const projectsToggle = page.getByRole('button', { name: /全プロジェクト/ });
     const projectList = page.getByRole('list', { name: '全プロジェクト一覧' });
 
-    await expect(projectsToggle).toHaveAttribute('aria-expanded', 'true');
     await expect(projectList).toBeVisible();
-
-    await projectsToggle.click();
-    await expect(projectsToggle).toHaveAttribute('aria-expanded', 'false');
-    await expect(projectList).toBeHidden();
-
-    await projectsToggle.click();
-    await expect(projectsToggle).toHaveAttribute('aria-expanded', 'true');
-    await expect(projectList).toBeVisible();
+    await expect(page.getByRole('heading', { name: '全プロジェクト' })).toHaveCount(0);
   });
 
   test('should be responsive on mobile', async ({ page }) => {
