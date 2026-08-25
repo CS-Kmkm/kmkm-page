@@ -9,7 +9,7 @@ import EventFilters, { EVENT_FILTER_KEYS } from './EventFilters';
 import EventItem from './EventItem';
 import YearGroupedList from './YearGroupedList';
 
-const EventList = ({ events, onEventClick }: EventListProps) => {
+const EventList = ({ events, isNewestFirst = true, onEventClick }: EventListProps) => {
   const {
     filters,
     hasActiveFilters,
@@ -22,8 +22,13 @@ const EventList = ({ events, onEventClick }: EventListProps) => {
     [events, filters]
   );
 
+  const orderedEvents = useMemo(
+    () => isNewestFirst ? filteredEvents : [...filteredEvents].reverse(),
+    [filteredEvents, isNewestFirst]
+  );
+
   const handleEventClick = (event: EventEntry, eventIndex: number) => {
-    onEventClick?.(event, eventIndex, filteredEvents);
+    onEventClick?.(event, eventIndex, orderedEvents);
   };
 
   return (
@@ -45,7 +50,7 @@ const EventList = ({ events, onEventClick }: EventListProps) => {
           />
         ) : (
           <YearGroupedList
-            items={filteredEvents}
+            items={orderedEvents}
             getKey={event => event.id}
             getYear={event => event.year}
             renderItem={(event, index) => (

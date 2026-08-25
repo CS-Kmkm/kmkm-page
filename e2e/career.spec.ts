@@ -13,9 +13,11 @@ test.describe('Career Page', () => {
     const timelineSection = page.locator('section[aria-labelledby="timeline-heading"]');
     await expect(timelineSection).toBeVisible();
 
-    // Check timeline/list toggle controls are visible
-    await expect(page.getByRole('button', { name: /表示モードを切り替え/ })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'ブランチの順序を反転' })).toBeVisible();
+    // Check timeline/list tabs and the separate order control are visible
+    await expect(page.getByRole('tablist', { name: '経歴の表示' })).toBeVisible();
+    await expect(page.getByRole('tab', { name: 'タイムライン表示' })).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByRole('tab', { name: 'リスト表示' })).toHaveAttribute('aria-selected', 'false');
+    await expect(page.getByRole('button', { name: '経歴の表示順を反転' })).toBeVisible();
   });
 
   test('should display timeline in chronological order', async ({ page }) => {
@@ -48,7 +50,8 @@ test.describe('Career Page', () => {
 
     // Check that timeline is still readable on mobile
     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'ブランチの順序を反転' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '経歴の表示順を反転' })).toBeVisible();
+    await expect(page.getByRole('tab', { name: 'タイムライン表示' })).toHaveCSS('min-height', '44px');
 
     // Check SVG timeline is rendered and responsive
     const timelineSection = page.locator('section[aria-labelledby="timeline-heading"]');
@@ -76,7 +79,7 @@ test.describe('Career Page', () => {
 
     // Check that content is visible
     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'ブランチの順序を反転' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '経歴の表示順を反転' })).toBeVisible();
 
     // Check SVG timeline is rendered
     const timelineSection = page.locator('section[aria-labelledby="timeline-heading"]');
@@ -97,7 +100,7 @@ test.describe('Career Page', () => {
 
     // Check that all content is visible
     await expect(page.getByRole('heading', { name: '経歴', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: /表示モードを切り替え/ })).toBeVisible();
+    await expect(page.getByRole('tablist', { name: '経歴の表示' })).toBeVisible();
 
     // Check SVG timeline is rendered
     const timelineSection = page.locator('section[aria-labelledby="timeline-heading"]');
@@ -105,13 +108,13 @@ test.describe('Career Page', () => {
     await expect(svg).toBeVisible();
 
     // Check reverse button is visible
-    const reverseButton = page.getByRole('button', { name: 'ブランチの順序を反転' });
+    const reverseButton = page.getByRole('button', { name: '経歴の表示順を反転' });
     await expect(reverseButton).toBeVisible();
   });
 
   test('should toggle timeline order', async ({ page }) => {
     // Click reverse button
-    const reverseButton = page.getByRole('button', { name: 'ブランチの順序を反転' });
+    const reverseButton = page.getByRole('button', { name: '経歴の表示順を反転' });
     await expect(reverseButton).toBeVisible();
 
     // Check initial button text (default is reversed, so should show ↓)
@@ -129,6 +132,32 @@ test.describe('Career Page', () => {
     await expect(svg).toBeVisible();
   });
 
+  test('should switch career views with accessible tabs and arrow keys', async ({ page }) => {
+    const timelineTab = page.getByRole('tab', { name: 'タイムライン表示' });
+    const listTab = page.getByRole('tab', { name: 'リスト表示' });
+
+    await listTab.click();
+    await expect(listTab).toHaveAttribute('aria-selected', 'true');
+    await expect(page.locator('section[aria-labelledby="list-heading"]')).toBeVisible();
+    await expect(page.getByRole('button', { name: '経歴の表示順を反転' })).toBeVisible();
+
+    await listTab.press('Home');
+    await expect(timelineTab).toBeFocused();
+    await expect(timelineTab).toHaveAttribute('aria-selected', 'true');
+
+    await timelineTab.press('End');
+    await expect(listTab).toBeFocused();
+    await expect(listTab).toHaveAttribute('aria-selected', 'true');
+
+    await listTab.press('ArrowLeft');
+    await expect(timelineTab).toHaveAttribute('aria-selected', 'true');
+
+    await timelineTab.press('ArrowRight');
+    await expect(listTab).toHaveAttribute('aria-selected', 'true');
+    await listTab.press('ArrowLeft');
+    await expect(page.locator('section[aria-labelledby="timeline-heading"]')).toBeVisible();
+  });
+
   test('should align list year presentation with publications and hide tags', async ({ page }) => {
     await page.goto('/career?view=list');
 
@@ -139,5 +168,30 @@ test.describe('Career Page', () => {
     await expect(
       page.locator('[role="button"][aria-label^="View details for"] span').filter({ hasText: /^#/ })
     ).toHaveCount(0);
+
+    const affiliationFilter = page.getByRole('button', { name: '所属' });
+    await expect(affiliationFilter).toHaveAttribute('aria-pressed', 'false');
+    await expect(affiliationFilter).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+    await expect(affiliationFilter).toHaveCSS('border-top-width', '0px');
+    await affiliationFilter.click();
+    await expect(affiliationFilter).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  test('should toggle list order between newest and oldest first', async ({ page }) => {
+    await page.goto('/career?view=list');
+
+    const reverseButton = page.getByRole('button', { name: '経歴の表示順を反転' });
+    const eventButtons = page.getByRole('button', { name: /View details for/ });
+    const initialFirstEvent = await eventButtons.first().getAttribute('aria-label');
+    const initialLastEvent = await eventButtons.last().getAttribute('aria-label');
+
+    expect(initialFirstEvent).not.toBe(initialLastEvent);
+    await expect(reverseButton).toContainText('↓ 古い順');
+
+    await reverseButton.click();
+
+    await expect(reverseButton).toContainText('↑ 新しい順');
+    await expect(eventButtons.first()).toHaveAttribute('aria-label', initialLastEvent!);
+    await expect(eventButtons.last()).toHaveAttribute('aria-label', initialFirstEvent!);
   });
 });

@@ -10,6 +10,8 @@ export interface FilterControlOption<FilterKey extends string> {
 
 export interface FilterControlGroup<FilterKey extends string> {
   id: string;
+  label?: string;
+  ariaLabel?: string;
   options: readonly FilterControlOption<FilterKey>[];
 }
 
@@ -17,18 +19,20 @@ interface FilterControlsProps<FilterKey extends string> {
   groups: readonly FilterControlGroup<FilterKey>[];
   filters: Readonly<Record<FilterKey, boolean>>;
   onToggleFilter: (key: FilterKey) => void;
-  hasActiveFilters: boolean;
-  onClearFilters: () => void;
+  hasActiveFilters?: boolean;
+  onClearFilters?: () => void;
   resultCount: number;
   totalCount: number;
-  resultNoun: string;
+  resultNoun?: string;
+  resultText?: string;
+  regionLabel?: string;
 }
 
 const filterButtonClass = (isActive: boolean) =>
-  `px-3 sm:px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 min-h-[44px] ${
+  `relative min-h-11 min-w-11 border-0 border-b-2 bg-transparent px-0.5 pb-2 text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-blue-400 dark:focus-visible:ring-offset-gray-900 sm:px-1 sm:pb-3 sm:text-sm ${
     isActive
-      ? 'bg-blue-600 dark:bg-blue-700 text-white hover:bg-blue-700 dark:hover:bg-blue-800'
-      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600'
+      ? 'border-blue-600 text-blue-700 dark:border-blue-400 dark:text-blue-300'
+      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-900 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-100'
   }`;
 
 export default function FilterControls<FilterKey extends string>({
@@ -39,45 +43,56 @@ export default function FilterControls<FilterKey extends string>({
   onClearFilters,
   resultCount,
   totalCount,
-  resultNoun
+  resultNoun,
+  resultText,
+  regionLabel,
 }: FilterControlsProps<FilterKey>) {
   const { messages } = useI18n();
   return (
-    <div className="space-y-3 sm:space-y-4">
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+    <div
+      className="flex w-full min-w-0 flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-4"
+      role={regionLabel ? 'region' : undefined}
+      aria-label={regionLabel}
+    >
+      <div className="flex min-w-0 flex-wrap items-end gap-x-3 gap-y-1 sm:gap-x-4">
         {groups.map((group, groupIndex) => (
           <Fragment key={group.id}>
-            {groupIndex > 0 && (
-              <div
-                className="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1"
-                aria-hidden="true"
-              ></div>
-            )}
-            {group.options.map((option) => {
-              const isActive = filters[option.key];
-              return (
-                <button
-                  key={option.key}
-                  onClick={() => onToggleFilter(option.key)}
-                  className={filterButtonClass(isActive)}
-                  aria-pressed={isActive}
-                >
-                  {option.label}
-                </button>
-              );
-            })}
+            <div
+              role="group"
+              aria-label={group.ariaLabel}
+              className={`flex items-end gap-2 sm:gap-3 ${
+                groupIndex > 0 ? 'sm:border-l sm:border-gray-200 sm:pl-4 dark:sm:border-gray-700' : ''
+              }`}
+            >
+              {group.label && (
+                <span className="mb-2 whitespace-nowrap text-xs font-semibold tracking-wide text-gray-400 dark:text-gray-500">
+                  {group.label}
+                </span>
+              )}
+              {group.options.map((option) => {
+                const isActive = filters[option.key];
+                return (
+                  <button
+                    key={option.key}
+                    type="button"
+                    onClick={() => onToggleFilter(option.key)}
+                    className={filterButtonClass(isActive)}
+                    aria-pressed={isActive}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
           </Fragment>
         ))}
 
-        {hasActiveFilters && (
-          <>
-            <div
-              className="hidden sm:block h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1"
-              aria-hidden="true"
-            ></div>
+        {hasActiveFilters && onClearFilters && (
+          <div className="sm:border-l sm:border-gray-200 sm:pl-4 dark:sm:border-gray-700">
             <button
+              type="button"
               onClick={onClearFilters}
-              className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 min-h-[44px]"
+              className="inline-flex min-h-11 min-w-11 items-center border-0 bg-transparent px-0.5 pb-2 text-xs font-medium text-gray-500 transition-colors hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus-visible:ring-blue-400 dark:focus-visible:ring-offset-gray-900 sm:px-1 sm:pb-3 sm:text-sm"
             >
               <svg
                 className="w-4 h-4 mr-1.5"
@@ -95,12 +110,16 @@ export default function FilterControls<FilterKey extends string>({
               </svg>
               {messages.clear}
             </button>
-          </>
+          </div>
         )}
       </div>
 
-      <div className="text-sm text-gray-600 dark:text-gray-400">
-        {messages.results(resultCount, totalCount, resultNoun)}
+      <div
+        className="whitespace-nowrap text-xs tabular-nums text-gray-500 dark:text-gray-400"
+        role="status"
+        aria-live="polite"
+      >
+        {resultText ?? messages.results(resultCount, totalCount, resultNoun ?? '')}
       </div>
     </div>
   );

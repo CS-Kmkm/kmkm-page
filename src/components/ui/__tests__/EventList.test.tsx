@@ -57,6 +57,27 @@ describe('EventList', () => {
     expect(onEventClick).toHaveBeenCalledWith(events[1], 0, [events[1]])
   })
 
+  it('renders and reports events in oldest-first order when requested', () => {
+    const onEventClick = vi.fn()
+    render(
+      <EventList
+        events={events}
+        isNewestFirst={false}
+        onEventClick={onEventClick}
+      />
+    )
+
+    const eventButtons = screen.getAllByRole('button', { name: /View details for/ })
+    expect(eventButtons.map(button => button.getAttribute('aria-label'))).toEqual([
+      'View details for Award event',
+      'View details for Publication event',
+      'View details for Career event',
+    ])
+
+    fireEvent.click(eventButtons[0])
+    expect(onEventClick).toHaveBeenCalledWith(events[2], 0, [...events].reverse())
+  })
+
   it('shows the year once in the group heading and omits it from item dates', () => {
     render(<EventList events={[event({})]} />)
 
