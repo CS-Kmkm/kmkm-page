@@ -8,7 +8,7 @@ interface UpdatesSectionProps {
 export default function UpdatesSection({ updates }: UpdatesSectionProps) {
   return (
     <div className="lg:col-span-2">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-2 sm:p-2.5 lg:p-3 transition-colors duration-200">
+      <div className="border-t border-gray-200/80 py-4 dark:border-gray-700/60 sm:py-5">
         <UpdatesList
           updates={updates}
           maxItems={1}
