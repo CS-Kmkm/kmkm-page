@@ -12,7 +12,7 @@ import { useI18n } from '@/lib/i18n';
 const TechHeader: React.FC<TechHeaderProps> = ({ tech }) => {
   const { messages } = useI18n();
   return (
-    <div className="min-w-full w-full flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm transition-colors duration-200 box-border overflow-hidden">
+    <div className="min-w-full w-full flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 py-2 sm:py-3 transition-colors duration-200 box-border overflow-hidden">
       {/* Logo */}
       <div className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center bg-gray-50 dark:bg-gray-200 rounded-lg border border-gray-100 dark:border-gray-300 p-2.5">
         {tech.logoUrl ? (

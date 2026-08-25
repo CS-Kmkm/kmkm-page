@@ -26,7 +26,7 @@ const TimelineView: React.FC<TimelineViewProps> = ({
       </h2>
 
       {hasCareerData ? (
-        <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
+        <div className="overflow-hidden">
           <GitCommitLogTimeline
             entries={careerEntries}
             events={events}

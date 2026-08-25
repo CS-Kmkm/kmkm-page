@@ -305,6 +305,7 @@ export interface ProfileSectionProps {
   showLocation?: boolean;
   className?: string;
   locale?: 'ja' | 'en';
+  children?: React.ReactNode;
 }
 
 export interface SocialLinksProps {
@@ -372,6 +373,7 @@ export interface EventItemProps {
 export interface EventListProps {
   events: EventEntry[];
   showFilters?: boolean;
+  isNewestFirst?: boolean;
   onEventClick?: (event: EventEntry, eventIndex: number, filteredEvents: EventEntry[]) => void;
 }
 

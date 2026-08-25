@@ -21,35 +21,33 @@ interface CareerPageClientProps {
 interface PageHeaderProps {
   viewMode: ViewMode;
   isReversed: boolean;
-  onToggleView: () => void;
+  onViewChange: (view: ViewMode) => void;
   onToggleReverse: () => void;
 }
 
-function PageHeader({ viewMode, isReversed, onToggleView, onToggleReverse }: PageHeaderProps) {
+function PageHeader({ viewMode, isReversed, onViewChange, onToggleReverse }: PageHeaderProps) {
   const { locale } = useI18n();
   const pageTitle = locale === 'en' ? 'Career' : '経歴';
   return (
-    <div className="mb-6">
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-        <PageHeading compact className="flex-shrink-0">{pageTitle}</PageHeading>
-        <div className="sm:ml-auto flex-shrink-0 flex items-center gap-2 sm:gap-3">
-          <ViewToggleButton currentView={viewMode} onToggle={onToggleView} />
-          {viewMode === 'timeline' && (
-            <button
-              onClick={onToggleReverse}
-              className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-slate-300 dark:border-gray-600 rounded-lg hover:bg-slate-50 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-              aria-label={locale === 'en' ? 'Reverse branch order' : 'ブランチの順序を反転'}
-              aria-pressed={isReversed}
-              type="button"
-            >
-              {isReversed
-                ? (locale === 'en' ? '↓ Oldest first' : '↓ 古い順')
-                : (locale === 'en' ? '↑ Newest first' : '↑ 新しい順')}
-            </button>
-          )}
+    <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+      <PageHeading className="flex-shrink-0">{pageTitle}</PageHeading>
+      <div className="flex min-w-0 items-end justify-between gap-4 sm:ml-auto sm:justify-end">
+        <ViewToggleButton currentView={viewMode} onViewChange={onViewChange} />
+        <div className="border-l border-gray-200 pl-4 dark:border-gray-700">
+          <button
+            onClick={onToggleReverse}
+            className="min-h-11 border-0 bg-transparent px-0.5 pb-2 text-xs font-medium text-gray-500 transition-colors hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus-visible:ring-blue-400 dark:focus-visible:ring-offset-gray-900 sm:px-1 sm:pb-3 sm:text-sm"
+            aria-label={locale === 'en' ? 'Reverse career order' : '経歴の表示順を反転'}
+            aria-pressed={isReversed}
+            type="button"
+          >
+            {isReversed
+              ? (locale === 'en' ? '↓ Oldest first' : '↓ 古い順')
+              : (locale === 'en' ? '↑ Newest first' : '↑ 新しい順')}
+          </button>
         </div>
       </div>
-    </div>
+    </header>
   );
 }
 
@@ -66,17 +64,38 @@ function ViewContent({
   isReversed,
   onEventClick,
 }: ViewContentProps) {
-  if (viewMode === 'timeline') {
-    return (
-      <TimelineView
-        careerEntries={careerEntries}
-        events={events}
-        isReversed={isReversed}
-      />
-    );
-  }
-
-  return <ListView events={events} onEventClick={onEventClick} />;
+  return (
+    <>
+      <div
+        id="career-timeline-panel"
+        role="tabpanel"
+        aria-labelledby="career-timeline-tab"
+        hidden={viewMode !== 'timeline'}
+      >
+        {viewMode === 'timeline' && (
+          <TimelineView
+            careerEntries={careerEntries}
+            events={events}
+            isReversed={isReversed}
+          />
+        )}
+      </div>
+      <div
+        id="career-list-panel"
+        role="tabpanel"
+        aria-labelledby="career-list-tab"
+        hidden={viewMode !== 'list'}
+      >
+        {viewMode === 'list' && (
+          <ListView
+            events={events}
+            isNewestFirst={isReversed}
+            onEventClick={onEventClick}
+          />
+        )}
+      </div>
+    </>
+  );
 }
 
 function useViewState(initialViewMode: ViewMode) {
@@ -113,7 +132,7 @@ function useViewState(initialViewMode: ViewMode) {
     eventIndex,
     filteredEvents,
     isModalOpen,
-    toggleViewMode: () => setViewMode((current) => current === 'timeline' ? 'list' : 'timeline'),
+    changeViewMode: setViewMode,
     toggleReverse: () => setIsReversed((current) => !current),
     handleEventClick,
     handleCloseModal,
@@ -131,7 +150,7 @@ export default function CareerPageClient({ careerEntries, events }: CareerPageCl
       <PageHeader
         viewMode={viewState.viewMode}
         isReversed={viewState.isReversed}
-        onToggleView={viewState.toggleViewMode}
+        onViewChange={viewState.changeViewMode}
         onToggleReverse={viewState.toggleReverse}
       />
 

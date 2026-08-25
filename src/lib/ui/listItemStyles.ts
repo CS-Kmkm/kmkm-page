@@ -39,12 +39,12 @@ export interface ListItemStyleConfig {
  */
 export const listItemStyles: ListItemStyleConfig = {
   container: {
-    base: `${tokens.radius.lg} cursor-pointer`,
-    background: tokens.surface.primary,
-    border: `border ${tokens.border.default}`,
-    shadow: tokens.shadow.sm,
-    padding: 'p-3 sm:p-4',
-    hover: 'hover:bg-gray-300 dark:hover:bg-gray-600',
+    base: 'cursor-pointer rounded-sm',
+    background: 'bg-transparent',
+    border: 'border-l-2 border-gray-200 dark:border-gray-700',
+    shadow: '',
+    padding: 'py-3 pl-3 pr-2 sm:py-4 sm:pl-4 sm:pr-3',
+    hover: 'hover:border-gray-400 hover:bg-gray-50/70 dark:hover:border-gray-500 dark:hover:bg-gray-800/50',
     focus: tokens.focus.ringFull,
     transition: tokens.transition.normal,
   },
@@ -137,10 +137,10 @@ export const getTechBadgeClasses = (isPrimary: boolean = true): string => {
  * Grid item styles (for grid layouts like RelatedFrameworks) using Design Tokens
  */
 export const gridItemStyles = {
-  container: `flex items-center gap-3 p-3 ${tokens.radius.lg} border ${tokens.transition.fast} min-h-[44px]`,
-  background: tokens.surface.primary,
-  border: tokens.border.default,
-  hover: 'hover:bg-gray-300 dark:hover:bg-gray-600',
+  container: `flex items-center gap-3 p-3 ${tokens.radius.md} ${tokens.transition.fast} min-h-[44px]`,
+  background: 'bg-transparent',
+  border: 'border-l-2 border-gray-200 dark:border-gray-700',
+  hover: 'hover:border-gray-400 hover:bg-gray-50/70 dark:hover:border-gray-500 dark:hover:bg-gray-800/50',
   focus: tokens.focus.ringFull,
 };
 

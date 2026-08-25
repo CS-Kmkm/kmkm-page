@@ -7,7 +7,8 @@ export default function ProfileSection({
   profile,
   showBio = true,
   showLocation = true,
-  className = ''
+  className = '',
+  children,
 }: ProfileSectionProps) {
   const { messages } = useI18n();
   const avatarSrc = profile.avatarUrl || '/images/avatar.jpg';
@@ -58,6 +59,8 @@ export default function ProfileSection({
             </p>
           )}
         </div>
+
+        {children}
 
         {/* Location */}
         {showLocation && profile.location && (

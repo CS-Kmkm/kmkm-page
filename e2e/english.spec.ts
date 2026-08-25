@@ -36,10 +36,10 @@ test.describe('English portfolio', () => {
     await page.getByRole('link', { name: 'Go to career page' }).click();
     await expect(page).toHaveURL('/en/career');
     await expect(page.getByRole('heading', { name: 'Career', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Reverse branch order' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Reverse career order' })).toBeVisible();
     await expectVisibleCopyToBeEnglish(page);
 
-    await page.getByRole('button', { name: /Switch display mode/ }).click();
+    await page.getByRole('tab', { name: 'List view' }).click();
     await expect(page.getByRole('heading', { name: 'Event list' })).toBeAttached();
     await expect(page.getByRole('button', { name: 'Affiliation' })).toBeVisible();
     await page.getByRole('button', { name: /View details for/ }).first().click();
@@ -59,6 +59,15 @@ test.describe('English portfolio', () => {
     await expect(page.getByRole('heading', { name: 'Development Experience' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Programming Languages' })).toBeVisible();
     await expectVisibleCopyToBeEnglish(page);
+  });
+
+  test('wraps English event filters within a narrow viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto('/en/career?view=list');
+
+    const filters = page.getByRole('region', { name: 'Event filters' });
+    await expect(filters).toBeVisible();
+    await expect.poll(() => filters.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
   });
 
   test('keeps English controls and dialogs usable', async ({ page }) => {

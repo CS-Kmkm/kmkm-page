@@ -1,42 +1,36 @@
-Goal: Add a coherent English version of the portfolio at /en while preserving the existing Japanese site.
+Goal: Refine the career and publications view-switching/filtering UI to match the solid, minimal visual language of the current development-experience page.
 
 Scope / non-scope:
-- In scope: /en, /en/career, /en/publications, /en/dev-experience; shared locale infrastructure; English profile, career, publication, technology, project, generated-event, metadata, navigation, accessibility, and modal/filter text; sitemap language alternates.
-- Out of scope: English versions of the legacy /events redirect and the non-navigated /privacy and /terms pages; redesigning either locale; changing factual dates, links, identifiers, or Japanese copy.
+- In scope: Japanese and English career/publications controls, shared control components, focused E2E assertions for the changed behavior and responsive layout.
+- In scope: removal of unnecessary rounded frames, filled control surfaces, and redundant decoration around switching/filtering UI.
+- Out of scope: changing career/publication data, route structure, modal content, timeline rendering logic, or unrelated in-progress development-experience/home-page work.
 
 Constraints:
-- Use the existing Next.js App Router structure and shared components instead of duplicating complete component trees.
-- Keep all current Japanese routes and behavior stable.
-- Use pnpm through `corepack pnpm` for JavaScript commands.
-- English data overlays must be keyed by stable IDs so references remain aligned with the Japanese source data.
-- User-facing English must include visible copy and accessibility labels; the English route subtree must expose `lang="en"` at its content boundary even if changing the document root would require a disruptive route-group migration.
+- Preserve all existing control labels, accessible names, keyboard operability, filter semantics, and mobile touch targets.
+- Use the current development-experience underline-tab pattern as the visual reference while keeping filter controls recognizable as independently toggleable options.
+- Preserve the user's existing uncommitted changes; do not revert or rewrite unrelated files.
+- Use `corepack pnpm` with escalated permissions for JavaScript commands and redirect long command output to temporary log files.
 
 Acceptance criteria:
-1. Visiting /en renders an English profile and English recent updates, with English header/footer/navigation and no Japanese user-facing copy. Verify with a focused Playwright English-route test and source audit.
-2. English navigation reaches /en/career, /en/publications, and /en/dev-experience; each route renders its primary content, generated labels, controls, filters, dialogs, and empty/loading/error states in English. Verify with focused Playwright flows and a Japanese-character audit of rendered pages.
-3. English profile, career, publication, technology, and project content preserves the IDs, dates, URLs, and cross-references of the Japanese source data. Verify with unit tests for localized data integrity.
-4. English pages publish English metadata and language-alternate/canonical information, and sitemap includes both language variants for primary routes. Verify with unit/source assertions and production build output.
-5. Existing Japanese routes and tests remain unchanged in behavior. Verify with the existing relevant unit and Playwright suites.
-6. Type-check, unit tests, lint, production build, and the focused English E2E suite pass.
+1. Career view mode is presented as a two-option underline tablist aligned with the page heading; both timeline and list panels remain operable and expose correct tab semantics. Verify with focused Playwright assertions for click and keyboard navigation.
+2. Timeline order is a quiet inline control without a bordered/filled container and remains available only in timeline view. Verify by DOM/class audit and focused Playwright interaction.
+3. Career list and publication filters use a consistent low-chrome treatment with no rounded outer frame or nested filled segmented-control frame; active states remain unambiguous without relying only on color. Verify by DOM/class audit and pressed-state E2E flows.
+4. Publication filters remain heading-aligned on desktop, wrap cleanly on mobile, and both pages have no horizontal overflow at 375px and 1280px. Verify with focused Playwright checks.
+5. Japanese and English labels/accessibility remain correct, and filter result counts update. Verify with existing Japanese and English E2E suites plus targeted assertions.
+6. Type-check, lint, unit tests, production build, and focused career/publication E2E tests pass.
 
 Open questions:
-- Decided: English /events, /privacy, and /terms are excluded because they are not part of the site's primary navigation; add them later if explicitly requested.
-- Decided: Prefer shared locale-aware components and ID-keyed overlays over duplicated route/component trees to prevent language versions drifting.
-- Decided: Mark the English subtree at its content boundary with lang="en" unless repository-safe implementation of document-level language is found during integration; preserving every Japanese URL takes priority over a broad route migration.
+- Decided: use true tab semantics for mutually exclusive career views, matching development experience; filters remain toggle buttons because multiple selections are allowed.
+- Decided: keep the result count inline on desktop and let it move to a secondary row on narrow viewports; focused responsive E2E confirms no horizontal overflow.
+- Decided: retain only thin separators between distinct control concepts/groups; decorative enclosing borders are removed.
 
 Context:
-- Read src/app/** for route composition and metadata.
-- Read src/components/** containing user-facing strings to make shared controls locale-aware.
-- Read src/data/*.json and src/data/index.ts because generated updates/events contain both source copy and template copy.
-- Read src/lib/constants/** and src/lib/site.ts for navigation, labels, categories, and global metadata.
-- Read e2e/*.spec.ts and existing unit tests for behavioral contracts; do not rewrite unrelated tests.
+- Read the latest uncommitted development-experience changes as the design baseline, especially DevExperienceClient.tsx and listItemStyles.ts.
+- Read CareerPageClient.tsx, ViewToggleButton.tsx, FilterControls.tsx, PublicationFilters.tsx, PublicationList.tsx, and the focused E2E specs.
+- Do not broadly refactor timeline SVG/modal implementations; they are outside the visual-control scope.
 
-Completion report (2026-08-11):
-- Criterion 1: done. /en renders localized profile and generated updates; the English E2E audits visible text and accessibility attributes for Japanese characters.
-- Criterion 2: done. English primary navigation and all three nested routes render localized controls, filters, dialogs, dates, and error UI. Playwright English flows passed 3/3.
-- Criterion 3: done. ID-keyed overlays cover 8 career entries, 6 publications, 25 technologies, and 15 projects. Unit tests preserve IDs, dates, URLs, technology/project references, and generated event identifiers.
-- Criterion 4: done. English metadata, canonical/language alternates for localized routes only, and bilingual sitemap entries are implemented; the production build passed.
-- Criterion 5: done. Existing Japanese defaults and compatibility assertions remain green; all 53 unit tests passed.
-- Criterion 6: done. `corepack pnpm type-check`, `corepack pnpm test -- --reporter=dot`, `corepack pnpm lint`, production build, and `corepack pnpm exec playwright test e2e/english.spec.ts --project=chromium --reporter=line` passed.
-- Review: independent contract review found five issues; all were corrected, and the focused re-review confirmed every finding resolved.
-- Limitation: the in-app browser had no available tab in this environment, so visual inspection there was unavailable. Chromium Playwright rendered and exercised the pages successfully.
+Verification status (2026-08-25):
+- Criteria 1-5: done. Career tabs, keyboard switching, order control, shared low-chrome filters, pressed states, desktop alignment, and responsive overflow checks pass in focused Chromium E2E.
+- Criterion 6: done. Type-check, 54 unit tests, lint (0 errors; one pre-existing unrelated warning), production build, 10 career E2E tests, 12 publication E2E tests, and 3 English E2E tests pass.
+- Final independent review: no blocking issues. Adopted all findings by enforcing 44px minimum control dimensions, attaching separators to their following groups, and covering ArrowLeft/ArrowRight/Home/End tab navigation.
+- Visual inspection limitation: the in-app browser runtime reported no available browser tabs. Chromium E2E rendered and exercised the target pages, including computed-style assertions, but no manual in-app visual review was possible.

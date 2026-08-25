@@ -124,8 +124,8 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
           </div>
 
           {/* Right Column - Project List */}
-          <div className="xl:h-full">
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-5 xl:h-full xl:flex xl:flex-col transition-colors duration-200">
+          <div className="border-t border-gray-200/80 pt-5 dark:border-gray-700/60 xl:h-full xl:border-l xl:border-t-0 xl:pl-6 xl:pt-0">
+            <div className="xl:h-full xl:flex xl:flex-col transition-colors duration-200">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 xl:flex-shrink-0">
                 {messages.relatedProjects}
               </h3>

@@ -14,7 +14,6 @@ import {
 
 const getProjectListItemClasses = (): string =>
   getButtonListItemClasses()
-    .replace('hover:bg-gray-300 dark:hover:bg-gray-600', 'hover:bg-gray-50 dark:hover:bg-gray-800/80 hover:border-gray-300 dark:hover:border-gray-600')
     .replace('active:scale-[0.98]', 'active:scale-[0.995]') + ' h-full';
 
 /**

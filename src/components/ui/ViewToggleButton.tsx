@@ -1,87 +1,79 @@
 'use client';
 
-import React from 'react';
+import type { KeyboardEvent } from 'react';
 import { useI18n } from '@/lib/i18n';
 
 export type ViewMode = 'timeline' | 'list';
 
 export interface ViewToggleButtonProps {
   currentView: ViewMode;
-  onToggle: () => void;
+  onViewChange: (view: ViewMode) => void;
   className?: string;
 }
 
-const ViewToggleButton: React.FC<ViewToggleButtonProps> = ({
+const tabClassName = (isActive: boolean) => [
+  'relative min-h-11 border-0 bg-transparent px-0.5 pb-2 text-xs font-semibold transition-colors sm:px-1 sm:pb-3 sm:text-sm',
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-blue-400 dark:focus-visible:ring-offset-gray-900',
+  isActive
+    ? 'text-blue-700 after:absolute after:inset-x-0 after:bottom-[-1px] after:h-0.5 after:bg-blue-600 dark:text-blue-300 dark:after:bg-blue-400'
+    : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100',
+].join(' ');
+
+const VIEW_ORDER: readonly ViewMode[] = ['timeline', 'list'];
+
+export default function ViewToggleButton({
   currentView,
-  onToggle,
+  onViewChange,
   className = ''
-}) => {
-  const { messages } = useI18n();
-  const isTimeline = currentView === 'timeline';
+}: ViewToggleButtonProps) {
+  const { locale, messages } = useI18n();
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
+      return;
+    }
+
+    event.preventDefault();
+    const currentIndex = VIEW_ORDER.indexOf(currentView);
+    const nextIndex = event.key === 'Home'
+      ? 0
+      : event.key === 'End'
+        ? VIEW_ORDER.length - 1
+        : event.key === 'ArrowLeft'
+          ? (currentIndex - 1 + VIEW_ORDER.length) % VIEW_ORDER.length
+          : (currentIndex + 1) % VIEW_ORDER.length;
+    const nextView = VIEW_ORDER[nextIndex];
+    onViewChange(nextView);
+    requestAnimationFrame(() => {
+      document.getElementById(`career-${nextView}-tab`)?.focus();
+    });
+  };
 
   return (
-    <button
-      onClick={onToggle}
-      className={`
-        px-4 py-2 text-sm font-medium
-        text-slate-700 dark:text-gray-300
-        bg-white dark:bg-gray-700
-        border border-slate-300 dark:border-gray-600
-        rounded-lg
-        hover:bg-slate-50 dark:hover:bg-gray-600
-        transition-colors
-        min-h-[44px] min-w-[44px]
-        w-[44px] sm:w-[180px]
-        focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
-        focus:ring-offset-2 dark:focus:ring-offset-gray-900
-        flex items-center justify-center gap-2
-        ${className}
-      `}
-      aria-label={messages.viewMode(isTimeline ? messages.timeline : messages.list)}
-      aria-pressed={isTimeline}
-      type="button"
+    <div
+      className={`flex flex-shrink-0 gap-4 border-b border-gray-200 dark:border-gray-700 sm:gap-6 ${className}`}
+      role="tablist"
+      aria-label={locale === 'en' ? 'Career view' : '経歴の表示'}
     >
-      {/* Icon */}
-      <span className="flex-shrink-0" aria-hidden="true">
-        {isTimeline ? (
-          // List icon
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+      {VIEW_ORDER.map((view) => {
+        const isActive = currentView === view;
+        return (
+          <button
+            key={view}
+            id={`career-${view}-tab`}
+            type="button"
+            role="tab"
+            aria-selected={isActive}
+            aria-controls={`career-${view}-panel`}
+            tabIndex={isActive ? 0 : -1}
+            className={tabClassName(isActive)}
+            onClick={() => onViewChange(view)}
+            onKeyDown={handleKeyDown}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        ) : (
-          // Branch/Timeline icon
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 7h12M8 12h12M8 17h12M3 7h.01M3 12h.01M3 17h.01"
-            />
-          </svg>
-        )}
-      </span>
-
-      {/* Label */}
-      <span className="hidden sm:inline whitespace-nowrap">
-        {isTimeline ? messages.listView : messages.timelineView}
-      </span>
-    </button>
+            {view === 'timeline' ? messages.timelineView : messages.listView}
+          </button>
+        );
+      })}
+    </div>
   );
-};
-
-export default ViewToggleButton;
+}

@@ -33,7 +33,7 @@ interface EventFiltersProps {
 }
 
 export default function EventFilters(props: EventFiltersProps) {
-  const { messages } = useI18n();
+  const { locale, messages } = useI18n();
   const groups = [{ id: 'category', options: [
     { key: 'showAffiliation', label: messages.affiliation }, { key: 'showPublication', label: messages.publication },
     { key: 'showEvent', label: messages.event }, { key: 'showInternship', label: messages.internship },
@@ -49,6 +49,7 @@ export default function EventFilters(props: EventFiltersProps) {
       resultCount={props.resultCount}
       totalCount={props.totalCount}
       resultNoun={messages.events}
+      regionLabel={locale === 'en' ? 'Event filters' : 'イベントフィルタ'}
     />
   );
 }

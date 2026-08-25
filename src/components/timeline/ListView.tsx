@@ -7,10 +7,11 @@ import { useI18n } from '@/lib/i18n';
 
 export interface ListViewProps {
   events: EventEntry[];
+  isNewestFirst: boolean;
   onEventClick: (event: EventEntry, index: number, filtered: EventEntry[]) => void;
 }
 
-const ListView: React.FC<ListViewProps> = ({ events, onEventClick }) => {
+const ListView: React.FC<ListViewProps> = ({ events, isNewestFirst, onEventClick }) => {
   const { messages } = useI18n();
   return (
     <section aria-labelledby="list-heading">
@@ -22,7 +23,11 @@ const ListView: React.FC<ListViewProps> = ({ events, onEventClick }) => {
 
       {/* Event List */}
       {events.length > 0 ? (
-        <EventList events={events} onEventClick={onEventClick} />
+        <EventList
+          events={events}
+          isNewestFirst={isNewestFirst}
+          onEventClick={onEventClick}
+        />
       ) : (
         <div className="text-center py-12">
           <div className="text-gray-400 dark:text-gray-500 mb-4">

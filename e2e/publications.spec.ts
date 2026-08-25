@@ -54,6 +54,14 @@ test.describe('Publications Page', () => {
         (headingBox!.y + headingBox!.height / 2)
       )
     ).toBeLessThanOrEqual(2);
+
+    await expect(filters).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+    await expect(filters).toHaveCSS('border-top-width', '0px');
+    await expect(filters).toHaveCSS('box-shadow', 'none');
+
+    const firstAuthorButton = page.getByRole('button', { name: '主著' });
+    await expect(firstAuthorButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+    await expect(firstAuthorButton).toHaveCSS('border-top-width', '0px');
   });
 
   test('should not display metadata badges in publication entries', async ({ page }) => {
@@ -131,6 +139,8 @@ test.describe('Publications Page', () => {
 
     // Check that filter buttons are visible
     await expect(page.getByRole('button', { name: '主著' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '主著' })).toHaveCSS('min-height', '44px');
+    await expect(page.getByRole('button', { name: '主著' })).toHaveCSS('min-width', '44px');
 
     // Check that publications are displayed
     const publications = page.getByRole('button', { name: /の詳細を表示/ });

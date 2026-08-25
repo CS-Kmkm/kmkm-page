@@ -28,7 +28,7 @@ const TechCategorySection: React.FC<TechCategorySectionProps> = ({
   }
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800/70 sm:p-5" aria-label={messages.category(title)}>
+    <section className="border-t border-gray-200/80 py-4 first:border-t-0 first:pt-0 dark:border-gray-700/60 sm:py-5" aria-label={messages.category(title)}>
       {/* Section Header */}
       <div>
         <h3>
@@ -58,7 +58,7 @@ const TechCategorySection: React.FC<TechCategorySectionProps> = ({
       </div>
 
       {/* Tech Grid */}
-      <div id={contentId} className="mt-4 border-t border-gray-100 pt-4 dark:border-gray-700/70" hidden={!isExpanded}>
+      <div id={contentId} className="mt-3 sm:mt-4" hidden={!isExpanded}>
         <TechIconGrid
           techItems={techItems}
           onTechSelect={onTechSelect}
