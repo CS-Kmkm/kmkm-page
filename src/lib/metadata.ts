@@ -36,12 +36,14 @@ export function generatePageMetadata({
   const fullTitle = title ? `${title} | ${localizedSite.personName}` : localizedSite.defaultTitle;
   const siteUrl = localizedSite.siteUrl;
   const fullUrl = siteUrl ? new URL(path || '/', siteUrl).toString() : undefined;
-  const counterpartPath = locale === 'en'
-    ? (path.replace(/^\/en(?=\/|$)/, '') || '/')
-    : (path === '/' || path === '' ? '/en' : `/en${path}`);
+  const unprefixedPath = path.replace(/^\/(?:ja|en)(?=\/|$)/, '') || '/';
+  const counterpartPrefix = locale === 'en' ? '/ja' : '/en';
+  const counterpartPath = unprefixedPath === '/'
+    ? counterpartPrefix
+    : `${counterpartPrefix}${unprefixedPath}`;
   const counterpartUrl = siteUrl ? new URL(counterpartPath, siteUrl).toString() : undefined;
   const localizedPrimaryPaths = new Set([
-    '', '/', '/career', '/publications', '/dev-experience',
+    '/ja', '/ja/career', '/ja/publications', '/ja/dev-experience',
     '/en', '/en/career', '/en/publications', '/en/dev-experience',
   ]);
   const hasLanguageAlternate = localizedPrimaryPaths.has(path);
@@ -103,5 +105,6 @@ export function generatePageMetadata({
  * Default metadata for the site
  */
 export const defaultMetadata: Metadata = generatePageMetadata({
+  path: '/ja',
   keywords: ['茂木光志', 'Koshi Motegi', '自然言語処理', 'NLP', '名古屋大学', '開発経験', '論文'],
 });

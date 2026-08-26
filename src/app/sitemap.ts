@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const primaryPaths = ['', '/career', '/dev-experience', '/publications'];
 
   return primaryPaths.flatMap((path, index) => {
-    const japaneseUrl = `${baseUrl}${path}`;
+    const japaneseUrl = `${baseUrl}/ja${path}`;
     const englishUrl = `${baseUrl}/en${path}`;
     const alternates = {
       languages: {

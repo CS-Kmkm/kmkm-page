@@ -12,7 +12,7 @@ import { generatePageMetadata } from '@/lib/metadata';
 export const metadata = generatePageMetadata({
   title: 'Career',
   description: 'My professional career timeline and experience.',
-  path: '/career',
+  path: '/ja/career',
 });
 
 export default function CareerPage() {

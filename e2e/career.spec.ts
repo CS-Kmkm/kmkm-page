@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Career Page', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/career');
+    await page.goto('/ja/career');
   });
 
   test('should load and display career timeline', async ({ page }) => {
@@ -68,7 +68,7 @@ test.describe('Career Page', () => {
   test('should navigate back to home', async ({ page }) => {
     // Click header brand link
     await page.getByRole('link', { name: 'トップページへ移動' }).first().click();
-    await expect(page).toHaveURL('/');
+    await expect(page).toHaveURL('/ja');
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
   });
 
@@ -159,7 +159,7 @@ test.describe('Career Page', () => {
   });
 
   test('should align list year presentation with publications and hide tags', async ({ page }) => {
-    await page.goto('/career?view=list');
+    await page.goto('/ja/career?view=list');
 
     const firstEvent = page.getByRole('button', { name: /View details for/ }).first();
     await expect(firstEvent).toBeVisible();
@@ -178,7 +178,7 @@ test.describe('Career Page', () => {
   });
 
   test('should toggle list order between newest and oldest first', async ({ page }) => {
-    await page.goto('/career?view=list');
+    await page.goto('/ja/career?view=list');
 
     const reverseButton = page.getByRole('button', { name: '経歴の表示順を反転' });
     const eventButtons = page.getByRole('button', { name: /View details for/ });

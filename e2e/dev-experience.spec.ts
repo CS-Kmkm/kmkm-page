@@ -5,7 +5,7 @@ test.describe('Development Experience Page', () => {
   test.setTimeout(60_000);
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('/dev-experience');
+    await page.goto('/ja/dev-experience');
     await expect(page.getByRole('heading', { name: '開発経験' })).toBeVisible();
   });
 

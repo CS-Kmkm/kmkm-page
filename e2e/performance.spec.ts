@@ -4,7 +4,7 @@ test.describe('Performance Tests', () => {
   test('Homepage should pass a basic load-time smoke check', async ({ page }) => {
     const startTime = Date.now();
 
-    await page.goto('/', { waitUntil: 'networkidle' });
+    await page.goto('/ja', { waitUntil: 'networkidle' });
 
     const loadTime = Date.now() - startTime;
 
@@ -16,7 +16,7 @@ test.describe('Performance Tests', () => {
   });
 
   test('Should expose navigation timing metrics', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/ja');
 
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
 
@@ -36,7 +36,7 @@ test.describe('Performance Tests', () => {
   });
 
   test('Images should load efficiently', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/ja');
 
     await expect(page.locator('img').first()).toBeVisible();
 
@@ -69,7 +69,7 @@ test.describe('Performance Tests', () => {
       }
     });
 
-    await page.goto('/');
+    await page.goto('/ja');
     await page.waitForLoadState('networkidle');
 
     // Check that there are no JavaScript console errors
@@ -82,7 +82,7 @@ test.describe('Performance Tests', () => {
       setTimeout(() => route.continue(), 100);
     });
 
-    await page.goto('/');
+    await page.goto('/ja');
 
     // Check that page still loads and displays content
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible({ timeout: 10000 });
@@ -93,7 +93,7 @@ test.describe('Performance Tests', () => {
     await page.setViewportSize({ width: 375, height: 667 });
 
     const startTime = Date.now();
-    await page.goto('/', { waitUntil: 'networkidle' });
+    await page.goto('/ja', { waitUntil: 'networkidle' });
     const loadTime = Date.now() - startTime;
 
     // Mobile should still load reasonably fast
@@ -105,7 +105,7 @@ test.describe('Performance Tests', () => {
   });
 
   test('Publications filtering should remain responsive', async ({ page }) => {
-    await page.goto('/publications');
+    await page.goto('/ja/publications');
     await expect(page.getByRole('heading', { name: '論文', exact: true })).toBeVisible();
 
     const filterStartTime = Date.now();

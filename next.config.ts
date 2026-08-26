@@ -7,6 +7,19 @@ const nextConfig: NextConfig = {
   // Performance optimizations
   compress: true,
   poweredByHeader: false,
+
+  async redirects() {
+    return [
+      { source: '/', destination: '/ja', permanent: true },
+      { source: '/career', destination: '/ja/career', permanent: true },
+      { source: '/publications', destination: '/ja/publications', permanent: true },
+      { source: '/dev-experience', destination: '/ja/dev-experience', permanent: true },
+      { source: '/privacy', destination: '/ja/privacy', permanent: true },
+      { source: '/terms', destination: '/ja/terms', permanent: true },
+      { source: '/events', destination: '/ja/career', permanent: true },
+      { source: '/ja/events', destination: '/ja/career', permanent: true },
+    ];
+  },
   
   // Image optimization
   images: {

@@ -7,10 +7,6 @@ export const metadata = generatePageMetadata({
   keywords: ['経歴', '学歴', '研究活動', '開発活動', 'イベント'],
 });
 
-export default function CareerLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function CareerLayout({ children }: { children: React.ReactNode }) {
   return children;
 }

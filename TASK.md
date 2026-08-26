@@ -1,36 +1,37 @@
-Goal: Refine the career and publications view-switching/filtering UI to match the solid, minimal visual language of the current development-experience page.
+Goal: Make `/ja` the canonical URL prefix for every Japanese page while preserving working redirects from the previous unprefixed URLs.
 
 Scope / non-scope:
-- In scope: Japanese and English career/publications controls, shared control components, focused E2E assertions for the changed behavior and responsive layout.
-- In scope: removal of unnecessary rounded frames, filled control surfaces, and redundant decoration around switching/filtering UI.
-- Out of scope: changing career/publication data, route structure, modal content, timeline rendering logic, or unrelated in-progress development-experience/home-page work.
+- In scope: Japanese App Router entries, root and legacy redirects, locale-aware links, metadata alternates/canonicals, sitemap and manifest URLs, route-focused E2E/unit tests, and README route documentation.
+- In scope: Japanese home, career, publications, development experience, privacy, terms, and the legacy events redirect.
+- Out of scope: English page content, portfolio data, component visual design, and a broad i18n architecture refactor.
 
 Constraints:
-- Preserve all existing control labels, accessible names, keyboard operability, filter semantics, and mobile touch targets.
-- Use the current development-experience underline-tab pattern as the visual reference while keeping filter controls recognizable as independently toggleable options.
-- Preserve the user's existing uncommitted changes; do not revert or rewrite unrelated files.
-- Use `corepack pnpm` with escalated permissions for JavaScript commands and redirect long command output to temporary log files.
+- Keep English routes at `/en` and `/en/...`.
+- Use `/ja` and `/ja/...` for every generated or internal Japanese page link.
+- Preserve old public URLs with permanent redirects instead of leaving duplicate content or returning 404.
+- Preserve the user's existing README changes and use `corepack pnpm` for JavaScript commands.
+- New route behavior is test-first; long command output is redirected outside the worktree.
 
 Acceptance criteria:
-1. Career view mode is presented as a two-option underline tablist aligned with the page heading; both timeline and list panels remain operable and expose correct tab semantics. Verify with focused Playwright assertions for click and keyboard navigation.
-2. Timeline order is a quiet inline control without a bordered/filled container and remains available only in timeline view. Verify by DOM/class audit and focused Playwright interaction.
-3. Career list and publication filters use a consistent low-chrome treatment with no rounded outer frame or nested filled segmented-control frame; active states remain unambiguous without relying only on color. Verify by DOM/class audit and pressed-state E2E flows.
-4. Publication filters remain heading-aligned on desktop, wrap cleanly on mobile, and both pages have no horizontal overflow at 375px and 1280px. Verify with focused Playwright checks.
-5. Japanese and English labels/accessibility remain correct, and filter result counts update. Verify with existing Japanese and English E2E suites plus targeted assertions.
-6. Type-check, lint, unit tests, production build, and focused career/publication E2E tests pass.
+1. `/ja`, `/ja/career`, `/ja/publications`, `/ja/dev-experience`, `/ja/privacy`, and `/ja/terms` render the corresponding Japanese content. Verify with focused Playwright route and content assertions.
+2. `/`, `/career`, `/publications`, `/dev-experience`, `/privacy`, `/terms`, and `/events` permanently redirect to their `/ja` targets. Verify status and `Location` headers with a table-driven route test.
+3. Japanese navigation, home/update links, recovery links, and language switching use `/ja`; English navigation stays under `/en`. Verify with focused unit/E2E assertions for Japanese and English pages.
+4. Japanese canonical URLs and sitemap entries use `/ja`, English alternates remain under `/en`, and the manifest starts at `/ja`. Verify with unit tests or route responses and a source/config audit.
+5. README route documentation matches the new canonical URLs and its document contract remains accurate. Verify with technical and expression review lenses.
+6. Type-check, lint, unit tests, production build, and focused Chromium E2E tests pass.
 
 Open questions:
-- Decided: use true tab semantics for mutually exclusive career views, matching development experience; filters remain toggle buttons because multiple selections are allowed.
-- Decided: keep the result count inline on desktop and let it move to a secondary row on narrow viewports; focused responsive E2E confirms no horizontal overflow.
-- Decided: retain only thin separators between distinct control concepts/groups; decorative enclosing borders are removed.
+- Decided: `/` redirects to `/ja` so both supported locales have explicit prefixes; this avoids treating Japanese as an implicit special case.
+- Decided: legacy unprefixed Japanese routes use permanent redirects to preserve inbound links while preventing duplicate canonical content.
+- Decided: keep shared/client implementation files in their existing directories where practical; route entry files under `/ja` may import them to avoid a broad move-only refactor.
 
 Context:
-- Read the latest uncommitted development-experience changes as the design baseline, especially DevExperienceClient.tsx and listItemStyles.ts.
-- Read CareerPageClient.tsx, ViewToggleButton.tsx, FilterControls.tsx, PublicationFilters.tsx, PublicationList.tsx, and the focused E2E specs.
-- Do not broadly refactor timeline SVG/modal implementations; they are outside the visual-control scope.
+- Route definitions: `src/app`, especially the Japanese root/primary/policy pages and the existing `src/app/en` tree.
+- URL generation: `src/lib/i18n/index.tsx`, `src/lib/metadata.ts`, `src/lib/site.ts`, `src/app/sitemap.ts`, and `src/app/manifest.ts`.
+- Internal links: `src/components/layout/Header.tsx`, `src/components/common/PageError.tsx`, `src/components/ui/UpdatesList.tsx`, `src/components/ui/NavigationCard.tsx`, and root error/not-found pages.
+- Verification: `e2e/*.spec.ts` and existing unit tests under `src/**/__tests__`.
 
-Verification status (2026-08-25):
-- Criteria 1-5: done. Career tabs, keyboard switching, order control, shared low-chrome filters, pressed states, desktop alignment, and responsive overflow checks pass in focused Chromium E2E.
-- Criterion 6: done. Type-check, 54 unit tests, lint (0 errors; one pre-existing unrelated warning), production build, 10 career E2E tests, 12 publication E2E tests, and 3 English E2E tests pass.
-- Final independent review: no blocking issues. Adopted all findings by enforcing 44px minimum control dimensions, attaching separators to their following groups, and covering ArrowLeft/ArrowRight/Home/End tab navigation.
-- Visual inspection limitation: the in-app browser runtime reported no available browser tabs. Chromium E2E rendered and exercised the target pages, including computed-style assertions, but no manual in-app visual review was possible.
+Verification status (2026-08-26):
+- Criteria 1-5: done. Canonical `/ja` pages, legacy 308 redirects with query preservation, locale-aware links, metadata alternates, sitemap/manifest URLs, and README route documentation are implemented and covered.
+- Criterion 6: done. Type-check passed; lint passed with one pre-existing unrelated warning; 63 unit tests passed; production build passed; Chromium E2E passed 68/68 tests.
+- Independent defect review: one missing `/ja/events` regression case was adopted; the focused route suite passed 3/3 afterward.
