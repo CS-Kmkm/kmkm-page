@@ -7,10 +7,6 @@ export const metadata = generatePageMetadata({
   keywords: ['開発経験', 'プログラミング言語', 'フレームワーク', 'プロジェクト', '技術スタック'],
 });
 
-export default function DevExperienceLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DevExperienceLayout({ children }: { children: React.ReactNode }) {
   return children;
 }

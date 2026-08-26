@@ -3,10 +3,10 @@ import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Accessibility Tests', () => {
   const pages = [
-    { url: '/', name: 'Homepage' },
-    { url: '/career', name: 'Career Page' },
-    { url: '/dev-experience', name: 'Dev Experience Page' },
-    { url: '/publications', name: 'Publications Page' },
+    { url: '/ja', name: 'Homepage' },
+    { url: '/ja/career', name: 'Career Page' },
+    { url: '/ja/dev-experience', name: 'Dev Experience Page' },
+    { url: '/ja/publications', name: 'Publications Page' },
   ];
 
   pages.forEach(({ url, name }) => {
@@ -125,7 +125,7 @@ test.describe('Accessibility Tests', () => {
   test('Should handle error states accessibly', async ({ page }) => {
     // This test would need to trigger an error state
     // For now, we'll just check that error components have proper structure
-    await page.goto('/');
+    await page.goto('/ja');
 
     // Check that the page loads without errors
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();

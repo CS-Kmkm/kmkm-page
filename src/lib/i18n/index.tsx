@@ -46,6 +46,6 @@ export function getMessages(locale: Locale = 'ja') {
 }
 
 export function localizeHref(href: string, locale: Locale) {
-  if (locale === 'ja') return href;
-  return href === '/' ? '/en' : `/en${href}`;
+  const prefix = `/${locale}`;
+  return href === '/' ? prefix : `${prefix}${href}`;
 }

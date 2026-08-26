@@ -28,7 +28,7 @@ export default function NotFound() {
         </p>
         <div className="space-y-3">
           <Link
-            href="/"
+            href="/ja"
             className="block w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
           >
             トップへ戻る
@@ -39,19 +39,19 @@ export default function NotFound() {
 
           <div className="space-y-2 text-sm">
             <Link
-              href="/career"
+              href="/ja/career"
               className="block text-blue-600 hover:text-blue-800 focus:outline-none focus:underline"
             >
               経歴
             </Link>
             <Link
-              href="/dev-experience"
+              href="/ja/dev-experience"
               className="block text-blue-600 hover:text-blue-800 focus:outline-none focus:underline"
             >
               開発経験
             </Link>
             <Link
-              href="/publications"
+              href="/ja/publications"
               className="block text-blue-600 hover:text-blue-800 focus:outline-none focus:underline"
             >
               論文

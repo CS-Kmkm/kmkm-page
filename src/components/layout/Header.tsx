@@ -17,10 +17,15 @@ const Header: React.FC<LocalizedHeaderProps> = ({ currentPath, locale: localePro
   const pathname = usePathname();
   const activePath = currentPath || pathname;
   const localizedNavigationItems = locale === 'en' ? englishNavigationItems : navigationItems;
-  const localizedJapanesePaths = new Set(['/', '/career', '/publications', '/dev-experience']);
+  const localizedPrimaryPaths = new Set(['/', '/career', '/publications', '/dev-experience']);
   const languageSwitchHref = locale === 'en'
-    ? (pathname.replace(/^\/en(?=\/|$)/, '') || '/')
-    : (localizedJapanesePaths.has(pathname) ? (pathname === '/' ? '/en' : `/en${pathname}`) : '/en');
+    ? localizeHref(pathname.replace(/^\/en(?=\/|$)/, '') || '/', 'ja')
+    : (() => {
+        const unprefixedPath = pathname.replace(/^\/ja(?=\/|$)/, '') || '/';
+        return localizedPrimaryPaths.has(unprefixedPath)
+          ? localizeHref(unprefixedPath, 'en')
+          : '/en';
+      })();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
