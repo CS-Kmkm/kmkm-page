@@ -70,17 +70,27 @@ describe('PublicationList', () => {
     expect(screen.getByText(/2022/)).toBeInTheDocument()
   })
 
-  it('does not render metadata badges inside publication entries', () => {
+  it('renders the filterable facts as badges inside publication entries', () => {
     render(<PublicationList publications={mockPublications} />)
 
     const firstPublication = screen.getByRole('button', {
       name: 'Test Publication 1の詳細を表示'
     })
 
+    expect(firstPublication).toHaveTextContent('査読あり')
+    expect(firstPublication).toHaveTextContent('ジャーナル')
+    expect(firstPublication).toHaveTextContent('受賞')
+    // Authorship stays out of the badges (the own-name emphasis already conveys it) and the
+    // award title stays in the detail modal.
     expect(firstPublication).not.toHaveTextContent('第一著者')
-    expect(firstPublication).not.toHaveTextContent('査読あり')
-    expect(firstPublication).not.toHaveTextContent('ジャーナル')
     expect(firstPublication).not.toHaveTextContent('Test Award')
+
+    const secondPublication = screen.getByRole('button', {
+      name: 'Test Publication 2の詳細を表示'
+    })
+    expect(secondPublication).toHaveTextContent('査読なし')
+    expect(secondPublication).toHaveTextContent('会議')
+    expect(secondPublication).not.toHaveTextContent('受賞')
   })
 
   it('renders publication items correctly', () => {

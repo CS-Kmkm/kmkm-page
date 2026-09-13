@@ -64,15 +64,19 @@ test.describe('Publications Page', () => {
     await expect(firstAuthorButton).toHaveCSS('border-top-width', '0px');
   });
 
-  test('should not display metadata badges in publication entries', async ({ page }) => {
+  test('should display the filterable facts as badges in publication entries', async ({ page }) => {
     // Wait for publications to load
     await page.waitForLoadState('networkidle');
 
     // Check that publication articles are displayed
     const publications = page.getByRole('button', { name: /の詳細を表示/ });
-    await expect(publications.first()).toBeVisible();
+    const first = publications.first();
+    await expect(first).toBeVisible();
 
-    await expect(publications.first().locator('span')).toHaveCount(0);
+    // The filters offer authorship, peer review and venue criteria, so each row has to say
+    // why it matched. The badges are the button's description, never part of its name.
+    await expect(first).toContainText(/査読(あり|なし)/);
+    await expect(first).toHaveAccessibleName(/の詳細を表示$/);
   });
 
   test('should open publication detail modal', async ({ page }) => {
