@@ -3,16 +3,14 @@
     "pub-006": {
       "title": "Identifying Implicit Research Data References in Paper Citations",
       "venue": "Proceedings of the 3rd International Workshop on Natural Scientific Language Processing (NSLP 2026) co-located with LREC 2026, pp. 186–192, May 2026",
-      "shortVenue": "The 3rd International Workshop on Natural Scientific Language Processing (NSLP 2026)"
+      "shortVenue": "The 3rd International Workshop on Natural Scientific Language Processing (NSLP 2026)",
+      "abstract": "To encourage the public release of research data under open science, it is beneficial to establish mechanisms for evaluating research data based on metrics such as citation counts. In scholarly papers, authors sometimes cite papers that report the creation or release of research data instead of citing the research data themselves. In this paper, as a step toward computing citation counts of research data, we investigate the feasibility of identifying paper citations that refer to research data. We conducted an identification experiment using large language models and evaluated their performance."
     },
     "pub-001": {
       "title": "Where Did the Research Data Originate? Acquiring Provenance of Research Data from Scholarly Papers",
-      "venue": "The 27th International Conference on Asia-Pacific Digital Libraries (ICADL 2025)"
-    },
-    "pub-002": {
-      "title": "Generating Responses That Demonstrate Attentive Listening to Narratives by Paraphrasing the Narrator's Utterances",
-      "authors": ["Koshi Motegi", "Koichiro Ito", "Masaki Murata", "Shigeki Matsubara"],
-      "venue": "The 31st Annual Meeting of the Association for Natural Language Processing (NLP2025)"
+      "venue": "The 27th International Conference on Asia-Pacific Digital Libraries (ICADL 2025)",
+      "shortVenue": "ICADL 2025",
+      "abstract": "Prior knowledge of existing methodologies and resources is essential for a comprehensive understanding of research. In scholarly papers, citations help readers identify prior knowledge. However, research data, such as datasets, lack such mechanisms, making it difficult to trace their origins. In this study, we discuss approaches to acquiring information about the origins of research data, i.e., research data provenance. We focused on scholarly papers as a source for acquiring information about research data provenance, as they often include descriptions of how research data were created. Accordingly, we conducted a preliminary experiment on extracting information about research data provenance from scholarly papers using large language models (LLMs). The results demonstrated the feasibility of extracting information about research data provenance from scholarly papers."
     },
     "pub-003": {
       "title": "Accelerating Open Access to Research Data: Metadata Generation Using Generative AI and Its Deposition in Institutional Repositories",
@@ -24,16 +22,6 @@
           "organization": "Academic eXchange for Information Environment and Strategy (AXIES)"
         }
       ]
-    },
-    "pub-004": {
-      "title": "Identifying Paper Citations That Reference Research Data in Scholarly Articles",
-      "authors": ["Koshi Motegi", "Koichiro Ito", "Shigeki Matsubara"],
-      "venue": "The 32nd Annual Meeting of the Association for Natural Language Processing (NLP2026)"
-    },
-    "pub-005": {
-      "title": "Linking Publications and Research Data Produced Through Research Activities",
-      "authors": ["Ryoma Okada", "Koshi Motegi", "Koichiro Ito", "Shigeki Matsubara"],
-      "venue": "The 32nd Annual Meeting of the Association for Natural Language Processing (NLP2026)"
     }
   }
 }

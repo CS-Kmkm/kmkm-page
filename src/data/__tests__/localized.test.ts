@@ -16,6 +16,7 @@ import {
   getLocalizedTechExperience,
   getLocalizedUpdates,
 } from '../localized';
+import publicationsEnglishJson from '../en/publications.json';
 
 const japanesePattern = /[ぁ-んァ-ヶ一-龠々ー]/;
 
@@ -65,8 +66,15 @@ describe('localized portfolio data', () => {
 
     expect(getLocalizedTechExperience('en').map(item => item.projects))
       .toEqual(getTechExperience().map(item => item.projects));
-    expect(getLocalizedProjectDetails('en').map(item => item.technologies))
-      .toEqual(getProjectDetails().map(item => item.technologies));
+    // Technology names are cross-reference keys into the technology registry and
+    // must stay identical across locales. Labels that are not registered
+    // technologies (the participation label of the non-coding event project) are
+    // plain copy and may be localized.
+    const registeredTechnologies = new Set(getTechExperience().map(tech => tech.name));
+    const registeredNamesOf = (project: { technologies: string[] }) =>
+      project.technologies.filter(name => registeredTechnologies.has(name));
+    expect(getLocalizedProjectDetails('en').map(registeredNamesOf))
+      .toEqual(getProjectDetails().map(registeredNamesOf));
 
     expect(getLocalizedProfile('en').socialLinks.map(({ id, url }) => ({ id, url })))
       .toEqual(getProfile().socialLinks.map(({ id, url }) => ({ id, url })));
@@ -104,6 +112,59 @@ describe('localized portfolio data', () => {
     expect(axiesPublication?.title).toBe(
       'Accelerating Open Access to Research Data: Metadata Generation Using Generative AI and Its Deposition in Institutional Repositories',
     );
+  });
+
+  it('shows only international venues and papers with an official English title', () => {
+    const englishIds = getLocalizedPublications('en').map(publication => publication.id);
+    const hiddenIds = getPublications()
+      .filter(publication => publication.conferenceScope !== 'international'
+        && publication.hasOfficialEnglishTitle !== true)
+      .map(publication => publication.id);
+
+    expect(englishIds).toEqual(['pub-006', 'pub-001', 'pub-003']);
+    expect(hiddenIds).toEqual(['pub-002', 'pub-004', 'pub-005']);
+    hiddenIds.forEach(hiddenId => expect(englishIds).not.toContain(hiddenId));
+  });
+
+  it('carries an English overlay entry for the visible publications and none for the hidden ones', () => {
+    const overlayIds = Object.keys(publicationsEnglishJson.publications).sort();
+    const visibleIds = getLocalizedPublications('en').map(publication => publication.id).sort();
+
+    expect(overlayIds).toEqual(visibleIds);
+  });
+
+  it('applies the English overlay to the publications the English page shows', () => {
+    const englishPublications = getLocalizedPublications('en');
+    const nslp = englishPublications.find(publication => publication.id === 'pub-006');
+    const icadl = englishPublications.find(publication => publication.id === 'pub-001');
+
+    expect(icadl?.shortVenue).toBe('ICADL 2025');
+    expect(nslp?.abstract).toContain('citation counts');
+    expect(icadl?.abstract).toContain('research data provenance');
+  });
+
+  it('omits prose the English overlay does not translate instead of inheriting it', () => {
+    const axies = getLocalizedPublications('en').find(publication => publication.id === 'pub-003');
+
+    // The AXIES paper has no official English abstract, so the English page shows none
+    // rather than falling back to the Japanese one.
+    expect(axies).not.toHaveProperty('abstract');
+    expect(getPublications().find(publication => publication.id === 'pub-003')?.abstract)
+      .toMatch(japanesePattern);
+  });
+
+  it('translates the tags derived from the project technology labels', () => {
+    const event = getLocalizedEvents('en').find(item => item.id === 'project-proj-012');
+
+    expect(event?.tags).toEqual(['development', 'Event Participation']);
+  });
+
+  it('localizes the participation label of the non-coding event project', () => {
+    const japaneseProject = getProjectDetails().find(project => project.id === 'proj-012');
+    const englishProject = getLocalizedProjectDetails('en').find(project => project.id === 'proj-012');
+
+    expect(japaneseProject?.technologies).toEqual(['イベント参加']);
+    expect(englishProject?.technologies).toEqual(['Event Participation']);
   });
 
   it('returns the original objects for the Japanese locale', () => {

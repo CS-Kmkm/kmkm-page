@@ -71,6 +71,10 @@ export function getLocalizedCareerEntries(locale: ContentLocale): CareerEntry[] 
   return entries.map(entry => ({ ...entry, ...(careerEnglish.entries[entry.id] ?? {}) }));
 }
 
+// Prose that only exists in the source language must not fall through to the English record:
+// an untranslated field would render Japanese text on an English page.
+const translatedOnlyPublicationFields = ['abstract', 'memo', 'shortVenue', 'imageAlt'] as const;
+
 export function getLocalizedPublications(locale: ContentLocale): PublicationEntry[] {
   const publications = getPublications();
   if (locale === 'ja') return publications;
@@ -79,7 +83,7 @@ export function getLocalizedPublications(locale: ContentLocale): PublicationEntr
     .filter(isEnglishPublicationVisible)
     .map(publication => {
       const overlay = publicationsEnglish.publications[publication.id];
-      return {
+      const localized: PublicationEntry = {
         ...publication,
         ...overlay,
         awards: publication.awards?.map((award, index) => ({
@@ -87,6 +91,14 @@ export function getLocalizedPublications(locale: ContentLocale): PublicationEntr
           ...(overlay?.awards?.[index] ?? {}),
         })),
       };
+
+      translatedOnlyPublicationFields.forEach(field => {
+        if (!overlay || !(field in overlay)) {
+          delete localized[field];
+        }
+      });
+
+      return localized;
     });
 }
 
@@ -217,6 +229,11 @@ function localizeProjectEvent(event: EventEntry): EventEntry {
   const project = getLocalizedProjectDetails('en').find(item => item.id === projectId);
   if (!source || !project) return event;
   const title = source.name.includes('JPHACKS') ? `${project.name} Participation` : project.name;
+  // Event tags are derived from the Japanese technology labels, so translate them through the
+  // project's own overlay instead of leaving source-language strings on the English record.
+  const technologyLabels = new Map(
+    source.technologies.map((name, index) => [name, project.technologies[index] ?? name]),
+  );
 
   return {
     ...event,
@@ -224,6 +241,7 @@ function localizeProjectEvent(event: EventEntry): EventEntry {
     description: project.description,
     duration: project.duration,
     location: event.location ? (projectLocations[event.location] ?? event.location) : undefined,
+    tags: event.tags?.map(tag => technologyLabels.get(tag) ?? tag),
   };
 }
 

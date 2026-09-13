@@ -96,6 +96,9 @@
     "proj-012": {
       "name": "Gikusei Festival 2025 [Spring] (In-person Attendance)",
       "description": "Attended Gikusei Festival 2025 [Spring] in person. This event for technology students included visiting company booths and attending technical sessions.",
+      "technologies": [
+        "Event Participation"
+      ],
       "duration": "March 2025",
       "role": "Participant"
     },
