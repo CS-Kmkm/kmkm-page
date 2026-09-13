@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { defaultMetadata } from "@/lib/metadata";
 import WebVitals from "@/components/common/WebVitals";
+import StructuredData, { buildPersonSchema } from "@/components/common/StructuredData";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { LocaleHtml } from "@/lib/i18n";
 import { siteConfig } from "@/lib/site";
@@ -39,6 +40,9 @@ export default function RootLayout({
   return (
     <LocaleHtml className={inter.variable}>
       <body className={`font-sans antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200`}>
+        {/* Site-wide schema.org identity, shared by both locale trees */}
+        <StructuredData data={buildPersonSchema()} />
+
         <ThemeProvider>
           {children}
         </ThemeProvider>

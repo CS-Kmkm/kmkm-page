@@ -2,6 +2,7 @@ import PageLayout from '@/components/layout/PageLayout';
 import PageContainer from '@/components/layout/PageContainer';
 import PageHeading from '@/components/layout/PageHeading';
 import PublicationList from '@/components/ui/PublicationList';
+import StructuredData, { buildPublicationsSchema } from '@/components/common/StructuredData';
 import { getLocalizedPublications } from '@/data/localized';
 import { generatePageMetadata } from '@/lib/metadata';
 
@@ -18,6 +19,8 @@ export default function EnglishPublicationsPage() {
 
   return (
     <PageLayout title="Publications" locale="en">
+      {/* schema.org records for exactly the papers this page lists */}
+      <StructuredData data={buildPublicationsSchema(publications)} />
       <PageContainer>
         <div className="bg-white dark:bg-gray-900 transition-colors duration-200">
           {publications.length > 0 ? (
