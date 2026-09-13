@@ -29,7 +29,7 @@ describe('localized metadata routes', () => {
     });
   });
 
-  it('lists only locale-prefixed primary routes in the sitemap', async () => {
+  it('lists every locale-prefixed route in the sitemap', async () => {
     vi.stubEnv('NEXT_PUBLIC_SITE_URL', 'https://portfolio.example');
     const { default: sitemap } = await import('@/app/sitemap');
 
@@ -44,6 +44,10 @@ describe('localized metadata routes', () => {
       'https://portfolio.example/en/dev-experience',
       'https://portfolio.example/ja/publications',
       'https://portfolio.example/en/publications',
+      'https://portfolio.example/ja/privacy',
+      'https://portfolio.example/en/privacy',
+      'https://portfolio.example/ja/terms',
+      'https://portfolio.example/en/terms',
     ]);
   });
 });

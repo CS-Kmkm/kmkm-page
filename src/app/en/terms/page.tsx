@@ -2,61 +2,65 @@ import PageLayout from '@/components/layout/PageLayout';
 import { generatePageMetadata } from '@/lib/metadata';
 
 export const metadata = generatePageMetadata({
-  title: 'プライバシーポリシー',
-  path: '/ja/privacy',
-  description: '個人ポートフォリオサイトにおけるデータの取り扱い方針です。',
+  locale: 'en',
+  title: 'Terms of Use',
+  path: '/en/terms',
+  description: 'The terms of use of this personal portfolio site.',
+  keywords: ['terms of use', 'disclaimer', 'external links'],
 });
 
-export default function PrivacyPage() {
+export default function EnglishTermsPage() {
   return (
-    <PageLayout title="プライバシーポリシー">
+    <PageLayout title="Terms of Use" locale="en">
       <div className="w-[90%] max-w-4xl mx-auto px-4 py-2 sm:py-4">
         <div className="space-y-6">
           <header className="space-y-2">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
-              プライバシーポリシー
+              Terms of Use
             </h1>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              最終更新日: 2026年4月13日
+              Last updated: April 13, 2026
             </p>
           </header>
 
           <section className="space-y-2">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              取得する情報
+              About the published content
             </h2>
             <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-              このサイトは個人ポートフォリオであり、研究活動や開発経験の紹介を主目的としています。
-              フォーム入力や会員登録は設けておらず、氏名やメールアドレスなどの個人情報を直接収集する仕組みはありません。
+              The content of this site is published in order to introduce research activities and development
+              experience. When quoting or referring to it, please state the source in a way that makes the context
+              clear. Please get in touch in advance if you would like to reprint or redistribute it.
             </p>
           </section>
 
           <section className="space-y-2">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              アクセス解析とローカル保存
+              Disclaimer
             </h2>
             <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-              利用状況の把握のために、環境設定によってはアクセス解析を有効にする場合があります。また、テーマ設定はブラウザの
-              <code className="rounded bg-gray-100 px-1 py-0.5 text-[0.9em] dark:bg-gray-800">localStorage</code> に保存されます。これらの情報はサイト表示や改善のためにのみ利用します。
+              The content of this site is published with care for its accuracy, but its completeness and timeliness
+              are not guaranteed. The content may be changed, updated or removed without prior notice.
             </p>
           </section>
 
           <section className="space-y-2">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              外部サービス
+              External links
             </h2>
             <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-              GitHub、X、ORCID、研究室サイトなどの外部リンクを利用した場合、遷移先サービスのポリシーが適用されます。
-              詳細は各サービスの案内をご確認ください。
+              Information and services provided beyond links to external sites are managed under the
+              responsibility of their respective operators.
             </p>
           </section>
 
           <section className="space-y-2">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              お問い合わせ
+              Contact
             </h2>
             <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-              このポリシーに関するご連絡は、サイト内に掲載している公開プロフィールリンクからお願いします。
+              For inquiries about the content of this site or about these terms of use, please use the various
+              profile links that are published here.
             </p>
           </section>
         </div>
@@ -64,4 +68,3 @@ export default function PrivacyPage() {
     </PageLayout>
   );
 }
-

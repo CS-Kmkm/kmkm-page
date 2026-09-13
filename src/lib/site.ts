@@ -13,6 +13,7 @@ type NavigationItem = {
 type FooterLink = {
   href: string;
   label: string;
+  ariaLabel: string;
 };
 
 export const siteConfig = {
@@ -54,8 +55,16 @@ export const englishNavigationItems: NavigationItem[] = [
   { href: '/dev-experience', label: 'Development', ariaLabel: 'Go to development experience page' },
 ];
 
+// The visible label is kept short so the footer stays on a single row down to 375px; the
+// accessible name spells out the full document title.
 export const footerLinks: FooterLink[] = [
-  // Footer policy links are intentionally hidden to keep the footer compact.
+  { href: '/privacy', label: 'プライバシー', ariaLabel: 'プライバシーポリシー' },
+  { href: '/terms', label: '利用条件', ariaLabel: '利用条件' },
+];
+
+export const englishFooterLinks: FooterLink[] = [
+  { href: '/privacy', label: 'Privacy', ariaLabel: 'Privacy Policy' },
+  { href: '/terms', label: 'Terms', ariaLabel: 'Terms of Use' },
 ];
 
 const socialLinkLabels: Record<SocialLink['platform'], string> = {
