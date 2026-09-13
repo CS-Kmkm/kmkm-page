@@ -2,17 +2,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { getMessages, localeFromPathname, localizeHref } from '@/lib/i18n';
-import type { Locale } from '@/lib/i18n';
 
-export interface NotFoundContentProps {
-  locale?: Locale;
-}
-
-// The root boundary serves unmatched URLs of both locale trees, so the locale falls back to the
-// one of the rendered route; locale-scoped boundaries pass it explicitly.
-const NotFoundContent = ({ locale: localeProp }: NotFoundContentProps) => {
-  const pathname = usePathname();
-  const locale = localeProp ?? localeFromPathname(pathname);
+// Next registers a single 404 route, so this one boundary answers unmatched URLs of both locale
+// trees. A nested not-found.tsx would only run for a notFound() thrown inside its subtree, and
+// nothing throws one here - the requested path is the only locale signal available.
+const NotFoundContent = () => {
+  const locale = localeFromPathname(usePathname());
   const messages = getMessages(locale);
   const suggestions = [
     { href: localizeHref('/career', locale), label: messages.career },

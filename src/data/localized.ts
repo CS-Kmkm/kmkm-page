@@ -230,10 +230,12 @@ function localizeProjectEvent(event: EventEntry): EventEntry {
   if (!source || !project) return event;
   const title = source.name.includes('JPHACKS') ? `${project.name} Participation` : project.name;
   // Event tags are derived from the Japanese technology labels, so translate them through the
-  // project's own overlay instead of leaving source-language strings on the English record.
-  const technologyLabels = new Map(
-    source.technologies.map((name, index) => [name, project.technologies[index] ?? name]),
-  );
+  // project's own overlay instead of leaving source-language strings on the English record. The
+  // overlay replaces the whole array, so the pairing is positional and only trustworthy while the
+  // two arrays line up; a reordered or shortened overlay would silently mistranslate a tag.
+  const technologyLabels = source.technologies.length === project.technologies.length
+    ? new Map(source.technologies.map((name, index) => [name, project.technologies[index]]))
+    : new Map<string, string>();
 
   return {
     ...event,

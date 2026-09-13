@@ -1,7 +1,9 @@
 import profileJson from '@/data/profile.json';
+import englishProfileJson from '@/data/en/profile.json';
 import type { ProfileInfo, SocialLink } from '@/types';
 
 const profile = profileJson as ProfileInfo;
+const englishProfile = englishProfileJson as Pick<ProfileInfo, 'currentAffiliation' | 'currentPosition'>;
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || null;
 
 type NavigationItem = {
@@ -39,8 +41,10 @@ export const englishSiteConfig = {
   locale: 'en_US',
   lang: 'en',
   siteUrl,
-  currentAffiliation: 'Matsubara Laboratory, Graduate School of Informatics, Nagoya University',
-  currentPosition: "Master's Student",
+  // Read from the English profile overlay rather than restated here: the footer and the social
+  // card would otherwise print a different affiliation than the page they describe.
+  currentAffiliation: englishProfile.currentAffiliation,
+  currentPosition: englishProfile.currentPosition,
 } as const;
 
 export const navigationItems: NavigationItem[] = [

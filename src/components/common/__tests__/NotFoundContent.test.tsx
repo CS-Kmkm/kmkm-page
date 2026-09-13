@@ -31,12 +31,4 @@ describe('NotFoundContent', () => {
     expect(screen.getByRole('link', { name: 'Publications' })).toHaveAttribute('href', '/en/publications');
     expect(container.textContent).not.toMatch(/[ぁ-んァ-ヶ一-龠々ー]/);
   });
-
-  it('prefers the locale of the boundary that renders it', () => {
-    pathname.current = '/ja/does-not-exist';
-    render(<NotFoundContent locale="en" />);
-
-    expect(screen.getByRole('heading', { name: '404 - Page not found' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Back to top' })).toHaveAttribute('href', '/en');
-  });
 });

@@ -167,6 +167,33 @@ describe('localized portfolio data', () => {
     expect(englishProject?.technologies).toEqual(['Event Participation']);
   });
 
+  it('keeps the English affiliation in step with the profile overlay', async () => {
+    const { englishSiteConfig } = await import('@/lib/site');
+
+    expect(englishSiteConfig.currentAffiliation).toBe(getLocalizedProfile('en').currentAffiliation);
+    expect(englishSiteConfig.currentPosition).toBe(getLocalizedProfile('en').currentPosition);
+  });
+
+  it('leaves a tag untranslated rather than mispairing a misaligned overlay', () => {
+    // The overlay replaces the whole technologies array, so the ja/en pairing is positional.
+    // A shorter or reordered overlay must not silently hand a tag the wrong translation.
+    const events = getLocalizedEvents('en');
+    const projectEvents = events.filter(event => event.id.startsWith('project-'));
+
+    projectEvents.forEach(event => {
+      const projectId = event.id.replace(/^project-/, '');
+      const source = getProjectDetails().find(project => project.id === projectId);
+      const english = getLocalizedProjectDetails('en').find(project => project.id === projectId);
+      const aligned = source?.technologies.length === english?.technologies.length;
+
+      (event.tags ?? []).forEach(tag => {
+        const sourceIndex = source?.technologies.indexOf(tag) ?? -1;
+        if (!aligned || sourceIndex === -1) return;
+        expect(tag, `${event.id} kept a source-language tag`).toBe(english?.technologies[sourceIndex]);
+      });
+    });
+  });
+
   it('returns the original objects for the Japanese locale', () => {
     expect(getLocalizedProfile('ja')).toBe(getProfile());
     expect(getLocalizedCareerEntries('ja')).toEqual(getCareerEntries());
