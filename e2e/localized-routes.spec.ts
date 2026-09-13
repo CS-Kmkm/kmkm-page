@@ -37,6 +37,36 @@ test.describe('Localized routes', () => {
     }
   });
 
+  test('marks the document language of every locale tree', async ({ page }) => {
+    const documents = [
+      ['/ja', 'ja'],
+      ['/ja/career', 'ja'],
+      ['/en', 'en'],
+      ['/en/career', 'en'],
+    ] as const;
+
+    for (const [url, lang] of documents) {
+      await page.goto(url);
+      await expect(page.locator('html'), url).toHaveAttribute('lang', lang);
+    }
+  });
+
+  test('answers unknown URLs with a 404 in the locale of the requested tree', async ({ page }) => {
+    const japaneseResponse = await page.goto('/ja/does-not-exist');
+    expect(japaneseResponse?.status()).toBe(404);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ja');
+    await expect(page.getByRole('heading', { name: '404 - ページが見つかりません' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'トップへ戻る' })).toHaveAttribute('href', '/ja');
+
+    const englishResponse = await page.goto('/en/does-not-exist');
+    expect(englishResponse?.status()).toBe(404);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await expect(page.getByRole('heading', { name: '404 - Page not found' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Back to top' })).toHaveAttribute('href', '/en');
+    await expect(page.getByRole('link', { name: 'Career' })).toHaveAttribute('href', '/en/career');
+    expect(await page.locator('body').innerText()).not.toMatch(/[ぁ-んァ-ヶ一-龠々ー]/);
+  });
+
   test('switches directly between matching Japanese and English routes', async ({ page }) => {
     await page.goto('/ja/career');
     await page.getByRole('link', { name: 'Switch to English' }).first().click();

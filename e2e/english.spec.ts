@@ -20,7 +20,7 @@ test.describe('English portfolio', () => {
     await page.goto('/en');
 
     await expect(page).toHaveTitle(/Koshi Motegi/);
-    await expect(page.locator('[lang="en"]')).toBeVisible();
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
     await expect(page.getByRole('heading', { name: 'Koshi Motegi' })).toBeVisible();
     await expect(page.locator('main').getByText(/Matsubara Laboratory/).first()).toBeVisible();
     await expect(page.getByRole('navigation', { name: 'Main navigation' })).toBeVisible();

@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext } from 'react';
+import { usePathname } from 'next/navigation';
 
 export type Locale = 'ja' | 'en';
 
@@ -15,6 +16,7 @@ const messages = {
     projectDetails: (name: string) => `${name}の詳細を表示`, experienceYears: '経験年数:', proficiency: '習熟度:', high: '高', medium: '中', low: '低',
     current: '現在', ongoing: '進行中', period: (start: string, end: string) => `期間: ${start}から${end}まで。`, eventYear: (year: string) => `${year}年の出来事`, eventPoint: (count: number, multiple: boolean) => `${count}件のイベント。クリックして${multiple ? 'リスト' : '詳細'}を表示`, viewDetails: '詳細を表示', profilePhoto: (name: string) => `${name}のプロフィール写真`, location: '所在地: ', socialLinks: 'ソーシャルメディアリンク', socialProfile: (name: string, user: string) => `${name}で${user}を見る`, relatedTech: '関連技術', programmingLanguages: 'プログラミング言語', frameworks: 'フレームワーク・ライブラリ', tools: 'ツール・プラットフォーム', databases: 'データベース', reload: '再読み込み', backToTop: 'トップへ戻る', viewMode: (current: string) => `表示モードを切り替え: 現在は${current}表示`, timeline: 'タイムライン', list: 'リスト', listView: 'リスト表示', timelineView: 'タイムライン表示',
     projectDescription: 'プロジェクト概要', technologyStack: '技術スタック', liveSite: 'サイトを見る', github: 'GitHubで見る', previous: '前へ', next: '次へ', latestUpdates: '最新の更新情報', noUpdatesAvailable: '公開中の更新情報はまだありません。', moreItems: (count: number) => `他${count}件`, viewMoreUpdates: (count: number) => `他${count}件を経歴リストで表示`, categoryLabel: (label: string) => `カテゴリ: ${label}`, yearEventsLabel: (year: number, count: number) => `${year}年のイベント${count}件を表示`, yearEventsTitle: (year: number) => `${year}年のイベント`, previousEvent: '前のイベント', nextEvent: '次のイベント',
+    career: '経歴', devExperience: '開発経験', notFoundTitle: '404 - ページが見つかりません', notFoundDescription: 'お探しのページは移動したか、現在は公開されていない可能性があります。', notFoundSuggestions: '次のページもご覧いただけます', errorTitle: 'エラーが発生しました', errorDescription: '申し訳ありません。予期しない問題が発生しました。時間をおいて再度お試しください。', errorDetails: 'エラー詳細（開発環境のみ）',
   },
   en: {
     skipToContent: 'Skip to main content', home: 'Go to home page', mainNavigation: 'Main navigation', mobileNavigation: 'Mobile navigation', openMenu: 'Open main menu', closeMenu: 'Close main menu', switchToEnglish: 'Switch to English', switchToJapanese: 'Switch to Japanese',
@@ -26,6 +28,7 @@ const messages = {
     projectDetails: (name: string) => `Show details for ${name}`, experienceYears: 'Experience:', proficiency: 'Proficiency:', high: 'Advanced', medium: 'Intermediate', low: 'Beginner',
     current: 'Present', ongoing: 'Ongoing', period: (start: string, end: string) => `Period: ${start} to ${end}.`, eventYear: (year: string) => `Events in ${year}`, eventPoint: (count: number, multiple: boolean) => `${count} ${count === 1 ? 'event' : 'events'}. Click to view ${multiple ? 'the list' : 'details'}`, viewDetails: 'Show details', profilePhoto: (name: string) => `${name} profile photo`, location: 'Location: ', socialLinks: 'Social media links', socialProfile: (name: string, user: string) => `View ${user} on ${name}`, relatedTech: 'Related technologies', programmingLanguages: 'Programming languages', frameworks: 'Frameworks and libraries', tools: 'Tools and platforms', databases: 'Databases', reload: 'Reload', backToTop: 'Back to top', viewMode: (current: string) => `Switch display mode: currently ${current}`, timeline: 'timeline', list: 'list', listView: 'List view', timelineView: 'Timeline view',
     projectDescription: 'Project description', technologyStack: 'Technology stack', liveSite: 'View live site', github: 'View on GitHub', previous: 'Previous', next: 'Next', latestUpdates: 'Latest Updates', noUpdatesAvailable: 'No updates are currently available.', moreItems: (count: number) => `${count} more ${count === 1 ? 'item' : 'items'}`, viewMoreUpdates: (count: number) => `View ${count} more ${count === 1 ? 'item' : 'items'} in the career list`, categoryLabel: (label: string) => `Category: ${label}`, yearEventsLabel: (year: number, count: number) => `Show ${count} ${count === 1 ? 'event' : 'events'} from ${year}`, yearEventsTitle: (year: number) => `Events from ${year}`, previousEvent: 'Previous event', nextEvent: 'Next event',
+    career: 'Career', devExperience: 'Development Experience', notFoundTitle: '404 - Page not found', notFoundDescription: 'The page you are looking for may have moved, or may not be published.', notFoundSuggestions: 'You may also be looking for', errorTitle: 'Something went wrong', errorDescription: 'Sorry, an unexpected problem occurred. Please try again later.', errorDetails: 'Error details (development only)',
   },
 } as const;
 
@@ -48,4 +51,25 @@ export function getMessages(locale: Locale = 'ja') {
 export function localizeHref(href: string, locale: Locale) {
   const prefix = `/${locale}`;
   return href === '/' ? prefix : `${prefix}${href}`;
+}
+
+export function localeFromPathname(pathname: string | null | undefined): Locale {
+  return pathname === '/en' || pathname?.startsWith('/en/') ? 'en' : 'ja';
+}
+
+// The root layout is shared by both locale trees, so the document language has to follow the
+// rendered route instead of a static config value. usePathname is available while the shell is
+// rendered on the server, so the emitted HTML already carries the right lang attribute.
+export function LocaleHtml({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang={localeFromPathname(usePathname())} className={className} suppressHydrationWarning>
+      {children}
+    </html>
+  );
 }
