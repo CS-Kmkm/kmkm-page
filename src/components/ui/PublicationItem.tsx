@@ -1,11 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useId } from 'react';
 import { PublicationItemProps } from '@/types';
 import { useI18n } from '@/lib/i18n';
+import { Badge } from './Badge';
 
 const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick }) => {
   const { messages } = useI18n();
+  const badgesId = useId();
   const formatAuthors = (authors: string[], isFirstAuthor: boolean) => {
     if (authors.length === 0) return '';
 
@@ -15,7 +17,7 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
         ? <strong key={`${author}-${index}`}>{author}</strong>
         : <React.Fragment key={`${author}-${index}`}>{author}</React.Fragment>
     ));
-    
+
     if (isFirstAuthor && authors.length > 0) {
       if (authors.length === 1) {
         return renderedAuthors[0];
@@ -30,6 +32,9 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
     ));
   };
 
+  const awardCount = publication.awards?.length ?? 0;
+  const hasAwards = awardCount > 0;
+
   return (
     <button
       type="button"
@@ -37,6 +42,7 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
       onClick={onClick}
       className="block w-full text-left border-l-4 border-gray-200 dark:border-gray-700 pl-3 sm:pl-4 py-2 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 min-h-[44px]"
       aria-label={messages.showPublicationDetails(publication.title)}
+      aria-describedby={hasAwards ? badgesId : undefined}
     >
       {/* Title */}
       <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 leading-tight">
@@ -52,6 +58,16 @@ const PublicationItem: React.FC<PublicationItemProps> = ({ publication, onClick 
       <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
         <em>{publication.venue}</em>
       </p>
+
+      {hasAwards && (
+        <span
+          id={badgesId}
+          data-testid="publication-badges"
+          className="mt-2 flex flex-wrap items-center gap-1.5"
+        >
+          <Badge label={messages.awardBadge(awardCount)} variant="yellow" icon="🏆" />
+        </span>
+      )}
     </button>
   );
 };

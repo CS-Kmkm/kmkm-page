@@ -2,6 +2,7 @@
 
 import { SocialLinksProps, SocialLink } from '@/types';
 import { useI18n } from '@/lib/i18n';
+import type { Locale } from '@/lib/i18n';
 
 // Platform icon components
 const TwitterIcon = ({ className }: { className?: string }) => (
@@ -47,7 +48,19 @@ const WebsiteIcon = ({ className }: { className?: string }) => (
 );
 
 // Platform configuration
-const platformConfig = {
+// Brand names read the same in every locale; the generic fallbacks do not, so those carry one
+// name per locale instead of a bare string.
+type PlatformName = string | Record<Locale, string>;
+
+interface PlatformConfig {
+  name: PlatformName;
+  icon: typeof WebsiteIcon;
+  color: string;
+  // Points at a site rather than at an account, so the profile phrasing does not fit it.
+  isSite?: boolean;
+}
+
+const platformConfig: Record<SocialLink['platform'], PlatformConfig> = {
   twitter: {
     name: 'X',
     icon: TwitterIcon,
@@ -74,14 +87,15 @@ const platformConfig = {
     color: 'hover:text-teal-600'
   },
   email: {
-    name: 'メール',
+    name: { ja: 'メール', en: 'Email' },
     icon: EmailIcon,
     color: 'hover:text-red-500'
   },
   website: {
-    name: 'Webサイト',
+    name: { ja: 'Webサイト', en: 'Website' },
     icon: WebsiteIcon,
-    color: 'hover:text-purple-600'
+    color: 'hover:text-purple-600',
+    isSite: true
   }
 };
 
@@ -94,10 +108,14 @@ function SocialLinkItem({
   showLabel: boolean; 
   orientation: 'horizontal' | 'vertical';
 }) {
-  const { messages } = useI18n();
+  const { locale, messages } = useI18n();
   const config = platformConfig[link.platform];
   const IconComponent = config.icon;
-  
+  const platformName = typeof config.name === 'string' ? config.name : config.name[locale];
+  // The data names the target where a platform name would be too vague (研究室サイト /
+  // Laboratory website), and getLocalizedProfile has already translated it.
+  const label = link.username || platformName;
+
   return (
     <a
       href={link.url}
@@ -112,12 +130,14 @@ function SocialLinkItem({
         focus:ring-offset-2 dark:focus:ring-offset-gray-900
         ${orientation === 'vertical' ? 'w-full justify-start' : 'justify-center'}
       `}
-      aria-label={messages.socialProfile(config.name, link.username || 'profile')}
+      aria-label={
+        config.isSite ? messages.openNewTab(label) : messages.socialProfile(platformName, label)
+      }
     >
       <IconComponent className="w-5 h-5 flex-shrink-0" />
       {showLabel && (
         <span className="text-sm font-medium">
-          {link.username || config.name}
+          {label}
         </span>
       )}
     </a>

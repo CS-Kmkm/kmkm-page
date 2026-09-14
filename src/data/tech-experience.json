@@ -579,7 +579,7 @@
       "name": "技育祭2025[春]現地参加",
       "description": "技育祭2025[春]に現地参加しました。技術系学生向けのイベントで、企業ブースの見学や技術セッションへの参加を行いました。",
       "technologies": [
-        "Event Participation"
+        "イベント参加"
       ],
       "duration": "2025年3月",
       "role": "参加者",
@@ -627,6 +627,7 @@
       "role": "個人開発者",
       "date": "2025-10-01",
       "displayDate": "2025-10-01",
+      "githubUrl": "https://github.com/CS-Kmkm/kmkm-page",
       "imageUrl": null
     }
   ]

@@ -1,7 +1,9 @@
 import profileJson from '@/data/profile.json';
+import englishProfileJson from '@/data/en/profile.json';
 import type { ProfileInfo, SocialLink } from '@/types';
 
 const profile = profileJson as ProfileInfo;
+const englishProfile = englishProfileJson as Pick<ProfileInfo, 'currentAffiliation' | 'currentPosition'>;
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || null;
 
 type NavigationItem = {
@@ -13,6 +15,7 @@ type NavigationItem = {
 type FooterLink = {
   href: string;
   label: string;
+  ariaLabel: string;
 };
 
 export const siteConfig = {
@@ -38,8 +41,10 @@ export const englishSiteConfig = {
   locale: 'en_US',
   lang: 'en',
   siteUrl,
-  currentAffiliation: 'Matsubara Laboratory, Graduate School of Informatics, Nagoya University',
-  currentPosition: "Master's Student",
+  // Read from the English profile overlay rather than restated here: the footer and the social
+  // card would otherwise print a different affiliation than the page they describe.
+  currentAffiliation: englishProfile.currentAffiliation,
+  currentPosition: englishProfile.currentPosition,
 } as const;
 
 export const navigationItems: NavigationItem[] = [
@@ -54,8 +59,16 @@ export const englishNavigationItems: NavigationItem[] = [
   { href: '/dev-experience', label: 'Development', ariaLabel: 'Go to development experience page' },
 ];
 
+// The visible label is kept short so the footer stays on a single row down to 375px; the
+// accessible name spells out the full document title.
 export const footerLinks: FooterLink[] = [
-  // Footer policy links are intentionally hidden to keep the footer compact.
+  { href: '/privacy', label: 'プライバシー', ariaLabel: 'プライバシーポリシー' },
+  { href: '/terms', label: '利用条件', ariaLabel: '利用条件' },
+];
+
+export const englishFooterLinks: FooterLink[] = [
+  { href: '/privacy', label: 'Privacy', ariaLabel: 'Privacy Policy' },
+  { href: '/terms', label: 'Terms', ariaLabel: 'Terms of Use' },
 ];
 
 const socialLinkLabels: Record<SocialLink['platform'], string> = {

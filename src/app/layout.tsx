@@ -3,7 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { defaultMetadata } from "@/lib/metadata";
 import WebVitals from "@/components/common/WebVitals";
+import StructuredData, { buildPersonSchema } from "@/components/common/StructuredData";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { LocaleHtml } from "@/lib/i18n";
 import { siteConfig } from "@/lib/site";
 
 // Optimize font loading with display swap and preload
@@ -36,8 +38,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang={siteConfig.lang} className={inter.variable} suppressHydrationWarning>
+    <LocaleHtml className={inter.variable}>
       <body className={`font-sans antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200`}>
+        {/* Site-wide schema.org identity, shared by both locale trees */}
+        <StructuredData data={buildPersonSchema()} />
+
         <ThemeProvider>
           {children}
         </ThemeProvider>
@@ -68,6 +73,6 @@ export default function RootLayout({
           </>
         )}
       </body>
-    </html>
+    </LocaleHtml>
   );
 }

@@ -274,14 +274,6 @@ export interface PublicationListProps {
   showFilters?: boolean;
 }
 
-export interface NavigationCardProps {
-  title: string;
-  description?: string;
-  href: string;
-  icon?: React.ReactNode;
-  className?: string;
-}
-
 export interface ProjectModalProps {
   project: ProjectDetail | null;
   isOpen: boolean;

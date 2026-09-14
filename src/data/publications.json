@@ -13,11 +13,13 @@
       "year": 2026,
       "date": "2026-05-12",
       "displayDate": "2026-04-27",
+      "doi": "10.63317/2g9fq97f2h2j",
       "url": "https://aclanthology.org/2026.nslp-1.18/",
       "isFirstAuthor": true,
       "isPeerReviewed": true,
       "publicationType": "workshop",
-      "conferenceScope": "international"
+      "conferenceScope": "international",
+      "abstract": "To encourage the public release of research data under open science, it is beneficial to establish mechanisms for evaluating research data based on metrics such as citation counts. In scholarly papers, authors sometimes cite papers that report the creation or release of research data instead of citing the research data themselves. In this paper, as a step toward computing citation counts of research data, we investigate the feasibility of identifying paper citations that refer to research data. We conducted an identification experiment using large language models and evaluated their performance."
     },
     {
       "id": "pub-001",
@@ -28,14 +30,17 @@
         "Shigeki Matsubara"
       ],
       "venue": "The 27th International Conference on Asia-Pacific Digital Libraries (ICADL 2025)",
+      "shortVenue": "ICADL 2025",
       "year": 2025,
       "date": "2025-12-04",
       "displayDate": "2025-12-04",
+      "doi": "10.1007/978-981-95-4861-3_29",
       "url": "https://link.springer.com/chapter/10.1007/978-981-95-4861-3_29",
       "isFirstAuthor": true,
       "isPeerReviewed": true,
       "publicationType": "conference",
-      "conferenceScope": "international"
+      "conferenceScope": "international",
+      "abstract": "Prior knowledge of existing methodologies and resources is essential for a comprehensive understanding of research. In scholarly papers, citations help readers identify prior knowledge. However, research data, such as datasets, lack such mechanisms, making it difficult to trace their origins. In this study, we discuss approaches to acquiring information about the origins of research data, i.e., research data provenance. We focused on scholarly papers as a source for acquiring information about research data provenance, as they often include descriptions of how research data were created. Accordingly, we conducted a preliminary experiment on extracting information about research data provenance from scholarly papers using large language models (LLMs). The results demonstrated the feasibility of extracting information about research data provenance from scholarly papers."
     },
     {
       "id": "pub-002",
@@ -54,11 +59,12 @@
       "isFirstAuthor": true,
       "isPeerReviewed": false,
       "publicationType": "conference",
-      "conferenceScope": "domestic"
+      "conferenceScope": "domestic",
+      "abstract": "語る機会を創出するために，会話エージェントが語りの聴き手を担うことが期待されている．これらが聴き手として認められるためには，語り手に対して傾聴態度を示す発話（傾聴応答）を生成することが有効である．傾聴応答の 1 つに，語り手の発話を言い換える応答（言い換え応答）がある．言い換え応答を適切に生成できれば，語りを理解していることを示すことに寄与する．本論文では，大規模言語モデルによる言い換え応答の生成可能性を検証する．生成実験を行い，その性能を評価した．"
     },
     {
       "id": "pub-003",
-      "title": "研究データのオープンアクセスを加速化する：生成AIを用いたメタデータ生成と機関レポジトリへの収載",
+      "title": "研究データのオープンアクセスを加速化する：生成AIを用いたメタデータ生成と機関リポジトリへの収載",
       "authors": [
         "渡邉優",
         "茂木光志",
@@ -68,12 +74,14 @@
       "year": 2025,
       "date": "2025-12-03",
       "displayDate": "2025-12-03",
+      "doi": "10.24669/axies.2025.0_702",
       "url": "https://www.jstage.jst.go.jp/article/axies/2025/0/2025_702/_article/-char/ja",
       "isFirstAuthor": false,
       "isPeerReviewed": false,
       "publicationType": "conference",
       "conferenceScope": "domestic",
       "hasOfficialEnglishTitle": true,
+      "abstract": "本論文では，大学における研究データのオープンアクセスの加速化を目指し，研究データのメタデータ生成とその機関リポジトリへの収載の新たな方式を提案する．大学における研究データ公開は，メタデータ作成の負担が小さくなく，十分に進んでいないのが現状である．本方式では，学術論文テキストおよび公開プラットフォーム内の情報を活用し，大規模言語モデル（LLM）によりメタデータを自動生成し，それをリポジトリソフトウェアに搭載する．論文テキストデータを用いた実験では，同定された16,426件の研究データの64.8%に相当する10,640件についてメタデータが生成され，データリポジトリの効率的作成の実現性が示された．",
       "awards": [
         {
           "title": "大学ICT推進協議会2025年度年次大会（AXIES2025）最優秀論文賞",
@@ -97,7 +105,8 @@
       "isFirstAuthor": true,
       "isPeerReviewed": false,
       "publicationType": "conference",
-      "conferenceScope": "domestic"
+      "conferenceScope": "domestic",
+      "abstract": "オープンサイエンスの一環である研究データの公開促進のために，被引用数などに基づき研究データを評価できる仕組みを整えることが考えられる．学術論文では，研究データの引用の代替として，その作成や公開を報じる論文が引用されることがある．本論文では，研究データの被引用数の算出に向けて，研究データを参照する論文引用を識別することの実現性について考察する．LLM を用いた識別実験を行い，その性能を評価した．"
     },
         {
       "id": "pub-005",
@@ -113,7 +122,8 @@
       "isFirstAuthor": false,
       "isPeerReviewed": false,
       "publicationType": "conference",
-      "conferenceScope": "domestic"
+      "conferenceScope": "domestic",
+      "abstract": "オープンサイエンスの潮流のもと，論文と研究データの公開が進んでいる．同一の研究活動で産出された論文と研究データが相互に参照可能であることは，双方の理解を深めるうえで重要となる．本論文では，同一の研究活動で産出された論文と研究データを対応付ける手法について述べる．本手法では，論文中の URL を，その周辺テキストを利用して，対応する研究データの公開先であるか否かに分類する．BERT ベースのモデルを fine-tuning することで本手法を実装し，実験でその性能を評価した．"
     }
   ]
 }

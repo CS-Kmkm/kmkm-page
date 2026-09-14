@@ -23,7 +23,7 @@ export interface BadgeProps {
   icon?: string | React.ReactNode;
   /** Additional CSS classes */
   className?: string;
-  /** Custom aria-label for accessibility */
+  /** Custom aria-label for accessibility. Omit when the visible label already reads correctly. */
   ariaLabel?: string;
 }
 
@@ -37,10 +37,12 @@ export function Badge({
   className = '',
   ariaLabel,
 }: BadgeProps) {
+  // A plain <span> carries the generic role, which prohibits aria-label. When no caller-supplied
+  // label is given the visible text is already the accessible text, so no attribute is emitted.
   return (
     <span
       className={`${getBadgeClasses(variant)} ${icon ? 'gap-1' : ''} ${className}`}
-      aria-label={ariaLabel || `Category: ${label}`}
+      aria-label={ariaLabel}
     >
       {icon && (
         <span aria-hidden="true">

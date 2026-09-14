@@ -29,7 +29,7 @@ describe('localized metadata routes', () => {
     });
   });
 
-  it('lists only locale-prefixed primary routes in the sitemap', async () => {
+  it('lists every locale-prefixed route in the sitemap', async () => {
     vi.stubEnv('NEXT_PUBLIC_SITE_URL', 'https://portfolio.example');
     const { default: sitemap } = await import('@/app/sitemap');
 
@@ -44,6 +44,27 @@ describe('localized metadata routes', () => {
       'https://portfolio.example/en/dev-experience',
       'https://portfolio.example/ja/publications',
       'https://portfolio.example/en/publications',
+      'https://portfolio.example/ja/privacy',
+      'https://portfolio.example/en/privacy',
+      'https://portfolio.example/ja/terms',
+      'https://portfolio.example/en/terms',
     ]);
+  });
+
+  it('emits a reciprocal hreflang link for every path the sitemap pairs', async () => {
+    vi.stubEnv('NEXT_PUBLIC_SITE_URL', 'https://portfolio.example');
+    const { default: sitemap } = await import('@/app/sitemap');
+    const { generatePageMetadata } = await import('@/lib/metadata');
+
+    // A sitemap alternate is only honoured when the document carries the return link, so every
+    // paired URL has to resolve language alternates in its own head.
+    const pairedPaths = sitemap().map(entry => new URL(entry.url).pathname);
+
+    const withoutAlternates = pairedPaths.filter(path => {
+      const locale = path.startsWith('/en') ? 'en' : 'ja';
+      return generatePageMetadata({ path, locale }).alternates?.languages === undefined;
+    });
+
+    expect(withoutAlternates).toEqual([]);
   });
 });

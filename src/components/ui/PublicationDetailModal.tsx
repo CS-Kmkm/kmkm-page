@@ -132,7 +132,7 @@ const PublicationDetailModal: React.FC<PublicationDetailModalProps> = ({
           {publication.abstract && (
             <details className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
               <summary className="cursor-pointer text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
-                Abstract ({messages.overview})
+                Abstract
               </summary>
               <p className="mt-2 sm:mt-3 text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
                 {publication.abstract}

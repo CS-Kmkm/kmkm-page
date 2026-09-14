@@ -14,7 +14,6 @@ export { default as Timeline } from '../ui/Timeline';
 export { default as TechGrid } from '../ui/TechGrid';
 export { default as PublicationList } from '../ui/PublicationList';
 export { default as EventList } from '../ui/EventList';
-export { default as NavigationCard } from '../ui/NavigationCard';
 export { default as ProjectModal } from '../ui/ProjectModal';
 export { default as TechBadge } from '../ui/TechBadge';
 export { default as ProfileSection } from '../ui/ProfileSection';

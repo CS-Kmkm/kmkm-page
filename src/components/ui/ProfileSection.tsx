@@ -60,7 +60,12 @@ export default function ProfileSection({
           )}
         </div>
 
-        {children}
+        {/* Bio */}
+        {showBio && profile.bio && (
+          <p className="mb-3 sm:mb-4 text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+            {profile.bio}
+          </p>
+        )}
 
         {/* Location */}
         {showLocation && profile.location && (
@@ -94,14 +99,7 @@ export default function ProfileSection({
           </p>
         )}
 
-        {/* Bio */}
-        {showBio && profile.bio && (
-          <div className="max-w-none">
-            <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-              {profile.bio}
-            </p>
-          </div>
-        )}
+        {children}
       </div>
     </section>
   );

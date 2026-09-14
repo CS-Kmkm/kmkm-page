@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, within } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import PublicationList from '../PublicationList'
 import { PublicationEntry } from '@/types'
@@ -13,6 +13,7 @@ const mockPublications: PublicationEntry[] = [
     year: 2024,
     displayDate: '2024-01-01',
     doi: '10.1000/test.001',
+    abstract: 'Test abstract',
     awards: [
       {
         title: 'Test Award',
@@ -70,17 +71,25 @@ describe('PublicationList', () => {
     expect(screen.getByText(/2022/)).toBeInTheDocument()
   })
 
-  it('does not render metadata badges inside publication entries', () => {
+  it('renders a badge only for publications with awards', () => {
     render(<PublicationList publications={mockPublications} />)
 
     const firstPublication = screen.getByRole('button', {
       name: 'Test Publication 1の詳細を表示'
     })
 
-    expect(firstPublication).not.toHaveTextContent('第一著者')
+    expect(firstPublication).toHaveTextContent('受賞')
     expect(firstPublication).not.toHaveTextContent('査読あり')
     expect(firstPublication).not.toHaveTextContent('ジャーナル')
+    expect(firstPublication).not.toHaveTextContent('第一著者')
     expect(firstPublication).not.toHaveTextContent('Test Award')
+
+    const secondPublication = screen.getByRole('button', {
+      name: 'Test Publication 2の詳細を表示'
+    })
+    expect(secondPublication).not.toHaveTextContent('査読なし')
+    expect(secondPublication).not.toHaveTextContent('会議')
+    expect(secondPublication).not.toHaveTextContent('受賞')
   })
 
   it('renders publication items correctly', () => {
@@ -146,6 +155,8 @@ describe('PublicationList', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Test Publication 1の詳細を表示' }))
 
     const dialog = screen.getByRole('dialog')
+    expect(within(dialog).getByText('Abstract', { selector: 'summary' })).toBeInTheDocument()
+    expect(within(dialog).queryByText(/Abstract \((Overview|概要)\)/)).not.toBeInTheDocument()
     expect(dialog).not.toHaveTextContent('第一著者')
     expect(dialog).not.toHaveTextContent('査読あり')
     expect(dialog).not.toHaveTextContent('ジャーナル')

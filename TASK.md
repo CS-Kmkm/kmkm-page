@@ -1,37 +1,36 @@
-Goal: Make `/ja` the canonical URL prefix for every Japanese page while preserving working redirects from the previous unprefixed URLs.
+Goal: Close the content gaps found in the 2026-09-13 site review so that both locales expose the same information, publication records carry bibliographic detail, and the site is shareable and reachable.
 
 Scope / non-scope:
-- In scope: Japanese App Router entries, root and legacy redirects, locale-aware links, metadata alternates/canonicals, sitemap and manifest URLs, route-focused E2E/unit tests, and README route documentation.
-- In scope: Japanese home, career, publications, development experience, privacy, terms, and the legacy events redirect.
-- Out of scope: English page content, portfolio data, component visual design, and a broad i18n architecture refactor.
+- In scope: publication DOIs/abstracts, publication list badges, profile bio and laboratory-site link, English policy pages and footer policy links, locale correctness for `<html lang>` / loading / 404, OG image, JSON-LD, PWA icons, removal of unused template assets and dead code.
+- Out of scope: researchmap / Google Scholar links, CV download (no artifact exists), publishing an email address, slide/poster/code fields on publications, a Research topic page, career and project description rewrites that need facts only the site owner has.
 
 Constraints:
-- Keep English routes at `/en` and `/en/...`.
-- Use `/ja` and `/ja/...` for every generated or internal Japanese page link.
-- Preserve old public URLs with permanent redirects instead of leaving duplicate content or returning 404.
-- Preserve the user's existing README changes and use `corepack pnpm` for JavaScript commands.
-- New route behavior is test-first; long command output is redirected outside the worktree.
+- Decided: do not publish an email address; the laboratory site link is the single contact route.
+- Decided: keep the English publications policy as-is (international venues plus papers with an official English title, 3 of 6). Unused English overlay entries are deleted in a separate, easily revertable commit.
+- Decided: publications gain source URL, DOI and abstract only.
+- Never invent facts about the owner. Web-sourced values must come from an authoritative page (ACL Anthology, Springer, J-STAGE, AXIES, GitHub) and the source is recorded in the PR.
+- `corepack pnpm` for every JavaScript command. `minimumReleaseAge` forbids fresh dependency versions; prefer no new dependencies.
+- New logic is test-first. Long command output is redirected to the scratchpad and read filtered.
 
 Acceptance criteria:
-1. `/ja`, `/ja/career`, `/ja/publications`, `/ja/dev-experience`, `/ja/privacy`, and `/ja/terms` render the corresponding Japanese content. Verify with focused Playwright route and content assertions.
-2. `/`, `/career`, `/publications`, `/dev-experience`, `/privacy`, `/terms`, and `/events` permanently redirect to their `/ja` targets. Verify status and `Location` headers with a table-driven route test.
-3. Japanese navigation, home/update links, recovery links, and language switching use `/ja`; English navigation stays under `/en`. Verify with focused unit/E2E assertions for Japanese and English pages.
-4. Japanese canonical URLs and sitemap entries use `/ja`, English alternates remain under `/en`, and the manifest starts at `/ja`. Verify with unit tests or route responses and a source/config audit.
-5. README route documentation matches the new canonical URLs and its document contract remains accurate. Verify with technical and expression review lenses.
-6. Type-check, lint, unit tests, production build, and focused Chromium E2E tests pass.
+1. Every publication that has a public DOI carries it, and every publication carries an abstract in its own language. The English overlay carries the publisher's own English abstract for each paper the English page shows and none is invented; where the publisher issued no English abstract the English page shows none rather than the Japanese one. Verify with `src/data/__tests__/publications-bibliography.test.ts` and the overlay cases in `src/data/__tests__/localized.test.ts`.
+2. The publications list shows peer-review status, venue scope, publication type and award badges in both locales. Verify with component tests.
+3. The home page shows the bio and the laboratory site link in both locales. Verify with component tests.
+4. `/en/privacy` and `/en/terms` return 200 with English content, the footer links to the policy pages in both locales, and the sitemap lists all four policy URLs. Verify with a route test and a sitemap unit test.
+5. `<html lang>` matches the rendered locale, the loading state and the 404 page are localized, and `/en/...` 404s link to `/en` targets. Verify with unit and E2E assertions.
+6. Every page emits `og:image` and `twitter:image`; a `Person` JSON-LD is present site-wide and `ScholarlyArticle` JSON-LD on the publications pages; the manifest declares 192 and 512 icons and an apple-touch-icon exists. Every URL the sitemap pairs across locales also carries the reciprocal `hreflang` link in its own head. Verify with metadata unit tests and `e2e/document-head.spec.ts`.
+7. No unused template SVG or dead component remains, and unused English overlay entries are removed with tests updated.
+8. Type-check, lint, unit tests, `validate-data`, production build, and focused Chromium E2E tests pass.
+
+Deviations from the decisions above, recorded rather than hidden:
+- The AXIES paper (`pub-003`) has no official English abstract. Confirmed against the J-STAGE English record, which carries no `citation_abstract` and marks the abstract `[in Japanese]`. Its English entry therefore has none; inventing a translation would have broken the no-invented-facts constraint.
+- The unused English overlay entries were removed inside the data commit, not a separate one. Separating them would have left an intermediate commit whose tests fail, because the test pinning the visibility rule was added in the same change. The three removed entries are quoted verbatim in the pull request so restoring them stays a copy-paste.
 
 Open questions:
-- Decided: `/` redirects to `/ja` so both supported locales have explicit prefixes; this avoids treating Japanese as an implicit special case.
-- Decided: legacy unprefixed Japanese routes use permanent redirects to preserve inbound links while preventing duplicate canonical content.
-- Decided: keep shared/client implementation files in their existing directories where practical; route entry files under `/ja` may import them to avoid a broad move-only refactor.
+- Owner decision required: the publication-list badges reverse commit `23bf621`, which deliberately removed them and pinned their absence with a unit test and an e2e test. Kept as its own commit so it can be dropped alone.
+- Bio placement (hero vs a dedicated section) was left to implementation judgment and is reviewed in the PR.
 
 Context:
-- Route definitions: `src/app`, especially the Japanese root/primary/policy pages and the existing `src/app/en` tree.
-- URL generation: `src/lib/i18n/index.tsx`, `src/lib/metadata.ts`, `src/lib/site.ts`, `src/app/sitemap.ts`, and `src/app/manifest.ts`.
-- Internal links: `src/components/layout/Header.tsx`, `src/components/common/PageError.tsx`, `src/components/ui/UpdatesList.tsx`, `src/components/ui/NavigationCard.tsx`, and root error/not-found pages.
-- Verification: `e2e/*.spec.ts` and existing unit tests under `src/**/__tests__`.
-
-Verification status (2026-08-26):
-- Criteria 1-5: done. Canonical `/ja` pages, legacy 308 redirects with query preservation, locale-aware links, metadata alternates, sitemap/manifest URLs, and README route documentation are implemented and covered.
-- Criterion 6: done. Type-check passed; lint passed with one pre-existing unrelated warning; 63 unit tests passed; production build passed; Chromium E2E passed 68/68 tests.
-- Independent defect review: one missing `/ja/events` regression case was adopted; the focused route suite passed 3/3 afterward.
+- Issues: #123 publication data, #124 publication badges, #125 profile display, #126 policy pages, #127 locale correctness, #128 SEO metadata, #129 cleanup.
+- Branch: `feat/content-completeness`. The PR stays open for owner review; issues are not closed automatically.
+- Review source: the 2026-09-13 content review covering rendered output of all ten routes on a local dev server.
