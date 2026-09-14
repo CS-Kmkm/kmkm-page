@@ -64,19 +64,22 @@ test.describe('Publications Page', () => {
     await expect(firstAuthorButton).toHaveCSS('border-top-width', '0px');
   });
 
-  test('should display the filterable facts as badges in publication entries', async ({ page }) => {
+  test('should display a badge only for a publication with an award', async ({ page }) => {
     // Wait for publications to load
     await page.waitForLoadState('networkidle');
 
     // Check that publication articles are displayed
     const publications = page.getByRole('button', { name: /の詳細を表示/ });
-    const first = publications.first();
-    await expect(first).toBeVisible();
+    await expect(publications.first()).toBeVisible();
 
-    // The filters offer authorship, peer review and venue criteria, so each row has to say
-    // why it matched. The badges are the button's description, never part of its name.
-    await expect(first).toContainText(/査読(あり|なし)/);
-    await expect(first).toHaveAccessibleName(/の詳細を表示$/);
+    const awardedPublication = page.getByRole('button', {
+      name: '研究データのオープンアクセスを加速化する：生成AIを用いたメタデータ生成と機関リポジトリへの収載の詳細を表示',
+    });
+    await expect(awardedPublication).toContainText('受賞');
+    await expect(awardedPublication).not.toContainText('査読なし');
+    await expect(awardedPublication).not.toContainText('国内');
+    await expect(awardedPublication).not.toContainText('会議');
+    await expect(page.getByTestId('publication-badges')).toHaveCount(1);
   });
 
   test('should open publication detail modal', async ({ page }) => {

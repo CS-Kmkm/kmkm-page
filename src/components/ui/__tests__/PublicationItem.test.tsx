@@ -23,19 +23,6 @@ const internationalConference: PublicationEntry = {
   conferenceScope: 'international',
 };
 
-const internationalWorkshop: PublicationEntry = {
-  id: 'pub-006',
-  title: 'Identifying Implicit Research Data References in Paper Citations',
-  authors: ['Koshi Motegi', 'Shigeki Matsubara'],
-  venue: 'NSLP 2026',
-  year: 2026,
-  displayDate: '2026-05-01',
-  isFirstAuthor: true,
-  isPeerReviewed: true,
-  publicationType: 'workshop',
-  conferenceScope: 'international',
-};
-
 const awardedDomestic: PublicationEntry = {
   id: 'pub-003',
   title: '生成AIを活用したメタデータ生成と機関リポジトリへの登録',
@@ -80,38 +67,25 @@ function renderItem(publication: PublicationEntry, locale: 'ja' | 'en' = 'ja') {
 }
 
 function badgeTexts(button: HTMLElement): string[] {
-  const group = within(button).getByTestId('publication-badges');
+  const group = within(button).queryByTestId('publication-badges');
+  if (!group) return [];
   return Array.from(group.children).map(child => child.textContent?.trim() ?? '');
 }
 
 describe('PublicationItem badges (Japanese)', () => {
-  it('maps a peer-reviewed international conference paper to its badges', () => {
+  it('renders no badges for a publication without awards', () => {
     const { button } = renderItem(internationalConference);
-    expect(badgeTexts(button)).toEqual(['査読あり', '国際', '会議']);
-  });
-
-  it('maps a non-peer-reviewed domestic paper to its badges', () => {
-    const { button } = renderItem({ ...awardedDomestic, awards: undefined });
-    expect(badgeTexts(button)).toEqual(['査読なし', '国内', '会議']);
-  });
-
-  it('labels workshop and journal publication types', () => {
-    expect(badgeTexts(renderItem(internationalWorkshop).button)).toContain('ワークショップ');
-    expect(badgeTexts(renderItem(journalWithoutScope).button)).toContain('ジャーナル');
-  });
-
-  it('omits the venue scope badge when the record has none', () => {
-    const texts = badgeTexts(renderItem(journalWithoutScope).button);
-    expect(texts).not.toContain('国際');
-    expect(texts).not.toContain('国内');
-    expect(texts).toEqual(['査読あり', 'ジャーナル']);
+    expect(badgeTexts(button)).toEqual([]);
+    expect(button).not.toHaveTextContent('査読あり');
+    expect(button).not.toHaveTextContent('国際');
+    expect(button).not.toHaveTextContent('会議');
   });
 });
 
 describe('PublicationItem award badge', () => {
   it('signals the award without printing the award title', () => {
     const { button } = renderItem(awardedDomestic);
-    expect(badgeTexts(button)).toEqual(['査読なし', '国内', '会議', '🏆受賞']);
+    expect(badgeTexts(button)).toEqual(['🏆受賞']);
     expect(button).not.toHaveTextContent('最優秀論文賞');
   });
 
@@ -130,24 +104,19 @@ describe('PublicationItem award badge', () => {
 
   it('renders no award badge when the awards array is empty', () => {
     const { button } = renderItem({ ...internationalConference, awards: [] });
-    expect(badgeTexts(button)).toEqual(['査読あり', '国際', '会議']);
+    expect(badgeTexts(button)).toEqual([]);
   });
 });
 
 describe('PublicationItem badges (English)', () => {
-  it('renders English badge labels', () => {
+  it('renders no badges for a publication without awards', () => {
     const { button } = renderItem(internationalConference, 'en');
-    expect(badgeTexts(button)).toEqual(['Peer-reviewed', 'International', 'Conference']);
+    expect(badgeTexts(button)).toEqual([]);
   });
 
-  it('renders the English labels for the domestic awarded record the English page shows', () => {
+  it('renders only the English award label for the domestic awarded record', () => {
     const { button } = renderItem(awardedDomestic, 'en');
-    expect(badgeTexts(button)).toEqual(['Not peer-reviewed', 'Domestic', 'Conference', '🏆Award']);
-  });
-
-  it('keeps no Japanese copy in the English badges', () => {
-    const { button } = renderItem(internationalWorkshop, 'en');
-    expect(badgeTexts(button).join(' ')).not.toMatch(/[ぁ-んァ-ヶ一-龠々ー]/);
+    expect(badgeTexts(button)).toEqual(['🏆Award']);
   });
 });
 
@@ -161,13 +130,17 @@ describe('PublicationItem accessibility', () => {
     expect(button).toHaveAttribute('type', 'button');
   });
 
-  it('exposes the badges as the accessible description instead of folding them into the name', () => {
+  it('exposes only the award badge as the accessible description', () => {
     const { button } = renderItem(awardedDomestic);
     const description = button.getAttribute('aria-describedby');
     expect(description).toBeTruthy();
-    expect(button).toHaveAccessibleDescription(/査読なし/);
-    expect(button).toHaveAccessibleDescription(/国内/);
-    expect(button).toHaveAccessibleDescription(/受賞/);
+    expect(button).toHaveAccessibleDescription('受賞');
+  });
+
+  it('does not reference an empty badge description when there is no award', () => {
+    const { button } = renderItem(journalWithoutScope);
+    expect(button).not.toHaveAttribute('aria-describedby');
+    expect(button).not.toHaveAccessibleDescription();
   });
 
   it('lets the badge row wrap on narrow viewports', () => {
