@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { buildSecurityHeaders } from './src/lib/securityHeaders';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -26,7 +27,7 @@ const nextConfig: NextConfig = {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    dangerouslyAllowSVG: true,
+    dangerouslyAllowSVG: false,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
@@ -34,39 +35,17 @@ const nextConfig: NextConfig = {
   // Static export configuration (if needed)
   // output: 'standalone', // Commented out for Vercel deployment
   
-  // Security headers
+  // One source for local production and Vercel response headers.
   async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on'
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload'
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY'
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block'
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin'
-          }
-        ]
-      }
-    ];
+    return [{
+      source: '/(.*)',
+      headers: buildSecurityHeaders({
+        development: process.env.NODE_ENV === 'development',
+        preview: process.env.VERCEL_ENV === 'preview',
+        gaId: process.env.NEXT_PUBLIC_GA_ID,
+        analyticsEndpoint: process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT,
+      }),
+    }];
   },
 };
 

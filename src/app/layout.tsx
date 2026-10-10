@@ -7,6 +7,7 @@ import StructuredData, { buildPersonSchema } from "@/components/common/Structure
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { LocaleHtml } from "@/lib/i18n";
 import { siteConfig } from "@/lib/site";
+import { validateAnalyticsConfig } from '@/lib/securityHeaders';
 
 // Optimize font loading with display swap and preload
 const inter = Inter({
@@ -37,6 +38,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { gaId } = validateAnalyticsConfig(process.env.NEXT_PUBLIC_GA_ID);
   return (
     <LocaleHtml className={inter.variable}>
       <body className={`font-sans antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200`}>
@@ -51,11 +53,11 @@ export default function RootLayout({
         <WebVitals />
         
         {/* Performance monitoring script (optional) */}
-        {process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_GA_ID && (
+        {process.env.NODE_ENV === 'production' && gaId && (
           <>
             <script
               async
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
             />
             <script
               dangerouslySetInnerHTML={{
@@ -63,9 +65,11 @@ export default function RootLayout({
                   window.dataLayer = window.dataLayer || [];
                   function gtag(){dataLayer.push(arguments);}
                   gtag('js', new Date());
-                  gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
+                  gtag('config', '${gaId}', {
+                    send_page_view: false,
                     page_title: document.title,
-                    page_location: window.location.href,
+                    page_location: window.location.origin + window.location.pathname,
+                    page_referrer: document.referrer.split(/[?#]/)[0],
                   });
                 `,
               }}

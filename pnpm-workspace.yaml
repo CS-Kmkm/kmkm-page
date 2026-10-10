@@ -1,8 +1,16 @@
-minimumReleaseAge: 7200
+minimumReleaseAge: 10080
 overrides:
-  'minimatch@3>brace-expansion': '1.1.18'
-  'minimatch@10>brace-expansion': '5.0.9'
+  # Next's plugin uses only globSync(pattern, { onlyDirectories: true }).
+  # Replace that dependency to remove fast-glob -> micromatch -> unpatched braces.
+  # The pinned patch below preserves directory expansion and path semantics.
+  # Recheck both the override and patch on Next upgrades.
+  '@next/eslint-plugin-next@16.3.8>fast-glob': 'npm:tinyglobby@0.2.17'
   browserslist: '4.28.9'
   js-yaml: '4.3.2'
+  'minimatch@10>brace-expansion': '5.0.12'
+  'minimatch@3>brace-expansion': '1.1.21'
   postcss: '>=8.5.23'
-  sharp: '0.35.4'
+  sharp: '0.35.5'
+  source-map-js: '1.2.2'
+patchedDependencies:
+  '@next/eslint-plugin-next@16.3.8': patches/@next__eslint-plugin-next@16.3.8.patch

@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main, develop]
 
+permissions:
+  contents: read
+
 jobs:
   e2e-tests:
     name: E2E Tests
@@ -59,4 +62,49 @@ jobs:
       with:
         name: playwright-videos
         path: test-results/
+        retention-days: 7
+
+  analytics-security:
+    name: Analytics Security E2E
+    runs-on: ubuntu-latest
+    env:
+      # Synthetic public config; requests are intercepted by the security tests.
+      NEXT_PUBLIC_GA_ID: G-AUDIT123
+      NEXT_PUBLIC_ANALYTICS_ENDPOINT: https://metrics.example.test/vitals
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      NEXT_PUBLIC_SITE_NAME: Personal Portfolio
+      PLAYWRIGHT_TEST_BASE_URL: http://localhost:3000
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: '22.x'
+
+    - name: Enable Corepack
+      run: corepack enable
+
+    - name: Install dependencies
+      run: corepack pnpm install --frozen-lockfile
+
+    - name: Install Playwright browser
+      run: corepack pnpm exec playwright install --with-deps chromium
+
+    - name: Build analytics-enabled application
+      run: corepack pnpm build
+
+    - name: Run analytics security regression tests
+      run: corepack pnpm exec playwright test e2e/security.spec.ts --project=chromium
+
+    - name: Upload analytics security results
+      uses: actions/upload-artifact@v6
+      if: always()
+      with:
+        name: analytics-security-report
+        path: |
+          playwright-report/
+          test-results/
         retention-days: 7

@@ -50,9 +50,15 @@ macOS または Linux では `cp .env.example .env.local` を使用します。
 | --- | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | 本番環境では必須 | 公開 URL。canonical URL、言語別 URL、サイトマップ、robots.txt に使用します。末尾の `/` は付けません。 |
 | `NEXT_PUBLIC_GA_ID` | 任意 | Google Analytics 4 の測定 ID。設定すると本番環境で計測スクリプトと Web Vitals 送信を有効にします。 |
-| `NEXT_PUBLIC_ANALYTICS_ENDPOINT` | 任意 | 本番環境で Web Vitals を JSON の `POST` リクエストにより送信するエンドポイントです。 |
+| `NEXT_PUBLIC_ANALYTICS_ENDPOINT` | 任意 | 本番環境で Web Vitals を JSON の `POST` リクエストにより送信する HTTPS エンドポイントです。ユーザー名・パスワードを含む URL は指定できません。 |
 
 ローカル開発では `.env.example` の値をそのまま利用できます。本番環境で `NEXT_PUBLIC_SITE_URL` を設定しない場合、canonical URL は出力されません。サイトマップ項目と robots.txt のサイトマップ参照も省略されます。
+
+計測を利用する場合、GA4 の測定 ID は `G-` で始まる英大文字・数字の形式で指定してください。アプリが送るページ URL と参照元 URL はクエリ・フラグメントを除去し、カスタム計測の POST は `Referer` ヘッダーを送信しません。
+
+GA4 を使う場合は、GA の「管理」から対象のウェブデータストリームを開き、**拡張計測機能をオフ**にしてください。アプリはページビューを手動送信します。GA 側の自動計測を有効にしたままだと、重複計測や、アプリが正規化していない URL の送信が発生する可能性があります。[Google 公式のページビュー設定](https://developers.google.com/analytics/devguides/collection/ga4/views)
+
+`NEXT_PUBLIC_*` の値はブラウザーへ公開されます。Vercel の Secret を選んでも秘密にはならないため、API キーや認証トークンを入れないでください。環境変数を変更した後は再デプロイが必要です。
 
 ### ローカル起動
 
@@ -139,3 +145,5 @@ corepack pnpm measure:client
 ## デプロイ
 
 Vercel 用のビルド設定は `vercel.json` に定義されています。デプロイ先で `NEXT_PUBLIC_SITE_URL` を公開 URL に設定し、`corepack pnpm build` が成功することを確認してください。
+
+セキュリティヘッダーは `next.config.ts` と `src/lib/securityHeaders.ts` で管理します。CSP は静的ページの描画を維持するためインラインスクリプトを許可し、外部の読み込み先・通信先、埋め込み、プラグインを制限します。nonce による厳格なインライン XSS 対策ではありません。Vercel Toolbar の通信先は Preview のみ許可します。

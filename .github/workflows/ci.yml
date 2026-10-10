@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main, develop]
 
+permissions:
+  contents: read
+
 jobs:
   lint-and-test:
     name: Lint and Test
@@ -107,15 +110,32 @@ jobs:
       run: corepack pnpm install --frozen-lockfile
 
     - name: Run security audit
+      id: audit
+      # Keep the full dependency gate strict; do not suppress advisories.
       run: corepack pnpm audit --audit-level=moderate
 
+    - name: Check optional Snyk configuration
+      id: snyk-config
+      # Collect both scan results even when the mandatory audit fails.
+      if: ${{ !cancelled() && (steps.audit.outcome == 'success' || steps.audit.outcome == 'failure') }}
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      run: |
+        if [ -n "$SNYK_TOKEN" ]; then
+          echo "enabled=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "enabled=false" >> "$GITHUB_OUTPUT"
+          echo "::warning::Optional Snyk scan skipped: SNYK_TOKEN is not configured. Full pnpm audit remains mandatory."
+        fi
+
     - name: Run Snyk security scan
-      uses: snyk/actions/node@master
+      if: ${{ !cancelled() && steps.snyk-config.outputs.enabled == 'true' }}
+      uses: snyk/actions/node@11b673cfb4b0dc0d860a1323caa199d54950dcce
       continue-on-error: true
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-        args: --severity-threshold=high
+        args: --all-projects --severity-threshold=high
 
   lighthouse:
     name: Lighthouse Performance Audit
