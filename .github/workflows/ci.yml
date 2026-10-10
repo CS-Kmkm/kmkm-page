@@ -110,9 +110,13 @@ jobs:
       run: corepack pnpm install --frozen-lockfile
 
     - name: Run security audit
+      id: audit
+      # Keep the full dependency gate strict: unpatched advisories block merge.
       run: corepack pnpm audit --audit-level=moderate
 
     - name: Run Snyk security scan
+      # Collect both scan results even when the mandatory audit fails.
+      if: ${{ !cancelled() && (steps.audit.outcome == 'success' || steps.audit.outcome == 'failure') }}
       uses: snyk/actions/node@11b673cfb4b0dc0d860a1323caa199d54950dcce
       continue-on-error: true
       env:
