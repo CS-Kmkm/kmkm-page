@@ -1,0 +1,38 @@
+diff --git a/dist/utils/get-root-dirs.js b/dist/utils/get-root-dirs.js
+index 47108c943514a1d7e686c5eb18aad00a59963c83..3c14ae475014f23710a7d034d4425181890f3cd4 100644
+--- a/dist/utils/get-root-dirs.js
++++ b/dist/utils/get-root-dirs.js
+@@ -9,11 +9,31 @@ Object.defineProperty(exports, "getRootDirs", {
+     }
+ });
+ var _fastglob = require("fast-glob");
++var _path = require("node:path");
++var _fs = require("node:fs");
+ /**
+  * Process a Next.js root directory glob.
+  */ var processRootDir = function(rootDir) {
+-    return (0, _fastglob.globSync)(rootDir.replace(/\\/g, '/'), {
+-        onlyDirectories: true
++    var pattern = rootDir.replace(/\\/g, '/');
++    var absolute = _path.isAbsolute(pattern);
++    var globstarBase = pattern.replace(/(?:\/\*\*)+$/, '');
++    var excludedBase = globstarBase !== pattern && !_fastglob.isDynamicPattern(globstarBase)
++        ? _path.resolve(globstarBase) : null;
++    // tinyglobby omits the filesystem root itself from directory results.
++    if (absolute && pattern === _path.parse(pattern).root) {
++        return _fs.existsSync(pattern) ? [pattern] : [];
++    }
++    return (0, _fastglob.globSync)(pattern, {
++        onlyDirectories: true,
++        absolute: absolute,
++        // Match fast-glob semantics when the dependency is aliased to tinyglobby.
++        expandDirectories: false
++    }).map(function(dir) {
++        // tinyglobby marks directories with '/'; keep filesystem roots intact.
++        return dir.replace(/([^:])\/$/, '$1');
++    }).filter(function(dir) {
++        // fast-glob does not return the crawl base for a literal-prefix globstar.
++        return excludedBase === null || _path.resolve(dir) !== excludedBase;
+     });
+ };
+ var getRootDirs = function(context) {
