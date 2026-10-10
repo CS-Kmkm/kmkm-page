@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { useReportWebVitals } from 'next/web-vitals';
 import { analyticsUrl } from '@/lib/analytics';
@@ -26,7 +26,7 @@ export default function WebVitals() {
     gtag('event', 'page_view', { ...context, send_to: gaId });
   }, [pathname]);
 
-  useReportWebVitals((metric) => {
+  const reportWebVitals = useCallback<Parameters<typeof useReportWebVitals>[0]>((metric) => {
     if (process.env.NODE_ENV === 'development') console.log('Web Vital:', metric);
     if (process.env.NODE_ENV !== 'production' || typeof window === 'undefined') return;
 
@@ -62,7 +62,8 @@ export default function WebVitals() {
         }),
       }).catch(console.error);
     }
-  });
+  }, []);
+  useReportWebVitals(reportWebVitals);
 
   return null;
 }
