@@ -139,3 +139,5 @@ corepack pnpm measure:client
 ## デプロイ
 
 Vercel 用のビルド設定は `vercel.json` に定義されています。デプロイ先で `NEXT_PUBLIC_SITE_URL` を公開 URL に設定し、`corepack pnpm build` が成功することを確認してください。
+
+セキュリティヘッダーは `next.config.ts` と `src/lib/securityHeaders.ts` で管理します。CSP は静的ページの描画を維持するためインラインスクリプトを許可し、外部の読み込み先・通信先、埋め込み、プラグインを制限します。nonce による厳格なインライン XSS 対策ではありません。Vercel Toolbar の通信先は Preview のみ許可します。
