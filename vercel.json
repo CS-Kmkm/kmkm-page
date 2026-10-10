@@ -1,4 +1,5 @@
 {
+  "installCommand": "corepack pnpm install --frozen-lockfile",
   "buildCommand": "corepack pnpm build",
   "outputDirectory": ".next",
   "framework": "nextjs",
