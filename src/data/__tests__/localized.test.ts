@@ -121,7 +121,7 @@ describe('localized portfolio data', () => {
         && publication.hasOfficialEnglishTitle !== true)
       .map(publication => publication.id);
 
-    expect(englishIds).toEqual(['pub-006', 'pub-001', 'pub-003']);
+    expect(englishIds).toEqual(['pub-007', 'pub-006', 'pub-001', 'pub-003']);
     expect(hiddenIds).toEqual(['pub-002', 'pub-004', 'pub-005']);
     hiddenIds.forEach(hiddenId => expect(englishIds).not.toContain(hiddenId));
   });

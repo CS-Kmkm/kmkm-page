@@ -193,6 +193,17 @@ describe('buildPublicationsSchema', () => {
     });
   });
 
+  it('keeps the publication date separate from the presentation date', async () => {
+    const { buildPublicationsSchema } = await loadModule(SITE_URL);
+    const publications = await loadPublications('ja');
+    const source = publications.find(publication => publication.id === 'pub-007')!;
+
+    const [article] = buildPublicationsSchema([source])['@graph'];
+
+    expect(article.datePublished).toBe('2026-10-13');
+    expect(article.publication?.startDate).toBe('2026-10-16');
+  });
+
   it('falls back to the source URL and the year when a paper has no DOI', async () => {
     const { buildPublicationsSchema } = await loadModule(SITE_URL);
     const publications = await loadPublications('ja');

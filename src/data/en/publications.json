@@ -1,5 +1,11 @@
 {
   "publications": {
+    "pub-007": {
+      "title": "Cross-Format Citation Classification: Examining the Effects of Combining Bibliographic and URL Citations",
+      "venue": "Proceedings of the 26th ACM/IEEE Joint Conference on Digital Libraries (JCDL 2026), pp. 1–6, October 2026",
+      "shortVenue": "JCDL 2026",
+      "abstract": "Citations in scholarly papers serve various functions and refer to diverse resources. Methods have been proposed to classify citation functions and the types of cited resources. In scholarly papers, citations take two formats, i.e., citations using citation tags (bibliographic citations) and citations using URLs (URL citations). To utilize information about citation functions and the types of cited resources, it is important to be able to classify them across both formats; however, previous studies have classified them independently for each format. This study investigated the effect of combining bibliographic and URL citations on the classification of citation functions and the types of cited resources. We constructed classifiers through transfer learning and multitask learning, and evaluated their performance. The results demonstrated that combining the two citation formats improved classification performance across various encoder models and learning approaches. The improvements were particularly large for cited resource type classification of bibliographic citations."
+    },
     "pub-006": {
       "title": "Identifying Implicit Research Data References in Paper Citations",
       "venue": "Proceedings of the 3rd International Workshop on Natural Scientific Language Processing (NSLP 2026) co-located with LREC 2026, pp. 186–192, May 2026",

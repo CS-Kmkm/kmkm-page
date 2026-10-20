@@ -210,7 +210,7 @@ function buildScholarlyArticleSchema(publication: PublicationEntry): ScholarlyAr
     headline: publication.title,
     name: publication.title,
     author: publication.authors.map(buildAuthorReference),
-    datePublished: publication.date ?? String(publication.year),
+    datePublished: publication.publishedDate ?? publication.date ?? String(publication.year),
     // The language of the paper itself, which does not change with the page it is listed on:
     // domestic venues here are Japanese-language, even where an official English title exists.
     inLanguage: publication.conferenceScope === 'international' ? 'en' : 'ja',
