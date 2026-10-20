@@ -124,6 +124,7 @@ export interface PublicationEntry {
   shortVenue?: string;      // 更新情報などで使う短い会議名
   year: number;
   date?: string;            // 発表・公開日（YYYY-MM-DD形式）
+  publishedDate?: string;   // Publication date when it differs from the presentation date (YYYY-MM-DD).
   displayDate: string;      // 表示日（YYYY-MM-DD形式）
   toBeAppear?: boolean;     // 公開日前でも表示する（デフォルト: false）
   doi?: string;
