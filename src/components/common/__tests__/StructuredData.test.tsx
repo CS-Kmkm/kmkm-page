@@ -218,6 +218,18 @@ describe('buildPublicationsSchema', () => {
     expect(article.author).toContainEqual({ '@type': 'Person', '@id': ORCID, name: '茂木光志' });
   });
 
+  it('gives forthcoming papers without a DOI or URL distinct site-local identities', async () => {
+    const { buildPublicationsSchema } = await loadModule(SITE_URL);
+    const publications = await loadPublications('ja');
+    const forthcoming = publications.filter(publication => !publication.doi && !publication.url);
+    expect(forthcoming.length).toBeGreaterThan(1);
+
+    const ids = buildPublicationsSchema(forthcoming)['@graph'].map(article => article['@id']);
+
+    expect(ids).toEqual(forthcoming.map(p => `${SITE_URL}/ja/publications#${p.id}`));
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
   it('carries awards granted to a publication', async () => {
     const { buildPublicationsSchema } = await loadModule(SITE_URL);
     const publications = await loadPublications('ja');

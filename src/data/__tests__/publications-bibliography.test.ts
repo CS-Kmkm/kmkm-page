@@ -9,9 +9,11 @@ const isAnlpProceedingsPdf = (url: string | undefined) =>
   url?.startsWith('https://www.anlp.jp/proceedings/') === true;
 
 describe('publication bibliographic data', () => {
-  it('records an abstract for every publication', () => {
+  // Forthcoming papers may be listed before their camera-ready abstract is available.
+  it('records an abstract for every published paper', () => {
     const missing = getPublications()
-      .filter(publication => (publication.abstract ?? '').trim().length === 0)
+      .filter(publication => !publication.toBeAppear
+        && (publication.abstract ?? '').trim().length === 0)
       .map(publication => publication.id);
 
     expect(missing).toEqual([]);
