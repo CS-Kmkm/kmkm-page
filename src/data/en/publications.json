@@ -1,5 +1,15 @@
 {
   "publications": {
+    "pub-011": {
+      "title": "Generating Research Data Management Guidelines with Generative AI Using Institutional Documents",
+      "authors": ["Koshi Motegi", "Shigeki Matsubara"],
+      "venue": "AXIES 2026 Annual Conference, December 2026"
+    },
+    "pub-010": {
+      "title": "Metadata Generation for Research Data Using Generative AI and Repository Registration: Classification of URL Citations in Scholarly Papers and Use of README Files",
+      "authors": ["Ryoma Okada", "Koshi Motegi", "Shigeki Matsubara"],
+      "venue": "AXIES 2026 Annual Conference, December 2026"
+    },
     "pub-009": {
       "title": "What, Why, and How Research Data Are Cited? Investigating Research Data Citation Practices Across Time and Domains",
       "venue": "The 28th International Conference on Asia-Pacific Digital Libraries (ICADL 2026), December 2026",
