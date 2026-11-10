@@ -200,13 +200,17 @@ function buildAuthorReference(name: string): PersonReferenceSchema {
 
 function buildScholarlyArticleSchema(publication: PublicationEntry): ScholarlyArticleSchema {
   const doiUrl = publication.doi ? `https://doi.org/${publication.doi}` : undefined;
-  const canonicalUrl = doiUrl ?? publication.url;
+  // Forthcoming papers have neither a DOI nor a URL yet; a stable site-local fragment keeps
+  // each one a distinct node instead of several anonymous ones that merge or collide.
+  const canonicalUrl = doiUrl
+    ?? publication.url
+    ?? `${siteConfig.siteUrl ?? ''}/ja/publications#${publication.id}`;
   const isEvent = publication.publicationType === 'conference'
     || publication.publicationType === 'workshop';
 
   return {
     '@type': 'ScholarlyArticle',
-    ...(canonicalUrl ? { '@id': canonicalUrl } : {}),
+    '@id': canonicalUrl,
     headline: publication.title,
     name: publication.title,
     author: publication.authors.map(buildAuthorReference),
