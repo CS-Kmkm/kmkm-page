@@ -28,9 +28,11 @@ describe('publication bibliographic data', () => {
     });
   });
 
-  it('records a DOI for every publication whose publisher registers one', () => {
+  it('records a DOI for every published paper whose publisher registers one', () => {
     const missing = getPublications()
-      .filter(publication => !isAnlpProceedingsPdf(publication.url) && !publication.doi)
+      .filter(publication => !publication.toBeAppear
+        && !isAnlpProceedingsPdf(publication.url)
+        && !publication.doi)
       .map(publication => publication.id);
 
     expect(missing).toEqual([]);

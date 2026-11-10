@@ -1,6 +1,45 @@
 {
   "publications": [
     {
+      "id": "pub-011",
+      "title": "学内文書群を活用した生成AIによる研究データ管理ガイドラインの生成",
+      "authors": [
+        "茂木光志",
+        "松原茂樹"
+      ],
+      "venue": "大学ICT推進協議会 2026年度 年次大会 (AXIES2026)",
+      "year": 2026,
+      "date": "2026-12-09",
+      "displayDate": "2026-11-10",
+      "toBeAppear": true,
+      "isFirstAuthor": true,
+      "isPeerReviewed": false,
+      "publicationType": "conference",
+      "conferenceScope": "domestic",
+      "hasOfficialEnglishTitle": true,
+      "abstract": "学術機関の研究データガバナンスを構築するために，研究データ管理ガイドラインを策定することは重要である．しかし，大学における研究データ管理ガイドラインは，規程やポリシー，サービスマニュアルなど既存の学内文書と整合させる必要があり，その策定には膨大な労力を要する．本論文では，研究データに関わる既存の学内文書群を用いた研究データ管理ガイドラインの生成方式について述べる．本方式では，策定するガイドラインの構成に基づき，生成AIを用いてガイドラインの本文を生成する．生成の過程における学内文書の利用形式の違いにより複数の方式を試行する．名古屋大学の学内文書群，ならびに，策定された研究データ管理ガイドラインの章構成を用いて，ガイドライン本文の生成実験を行った．"
+    },
+    {
+      "id": "pub-010",
+      "title": "生成AIを用いた研究データのメタデータ生成とリポジトリへの登録：論文におけるURL引用の分類とREADMEの活用",
+      "authors": [
+        "岡田怜真",
+        "茂木光志",
+        "松原茂樹"
+      ],
+      "venue": "大学ICT推進協議会 2026年度 年次大会 (AXIES2026)",
+      "year": 2026,
+      "date": "2026-12-09",
+      "displayDate": "2026-11-10",
+      "toBeAppear": true,
+      "isFirstAuthor": false,
+      "isPeerReviewed": false,
+      "publicationType": "conference",
+      "conferenceScope": "domestic",
+      "hasOfficialEnglishTitle": true,
+      "abstract": "本論文では，研究データのメタデータ自動生成の新たな方式を提案する．機関リポジトリを介した研究データ公開は，共通メタデータを作成する負担もあり，必ずしも加速化されているとはいえない．本方式では，研究データと紐づく学術論文，ならびに，研究データの説明文書であるREADMEを情報源に，生成AIを用いてメタデータを生成する．また，論文テキストに出現するURL引用を自動分類することで，学術論文と紐づく研究データを同定する．データプラットフォームで公開されている研究データを対象に実施した実験では，論文テキストから59,650件，READMEから41,539件のメタデータが生成され，大規模データリポジトリの効率的な生成可能性が示された．"
+    },
+    {
       "id": "pub-009",
       "title": "What, Why, and How Research Data Are Cited? Investigating Research Data Citation Practices Across Time and Domains",
       "authors": [
