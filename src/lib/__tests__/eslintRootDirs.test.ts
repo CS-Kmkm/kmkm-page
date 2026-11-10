@@ -16,7 +16,7 @@ const { getRootDirs } = pluginRequire(path.join(pluginDirectory, 'utils/get-root
 
 describe('Next ESLint root discovery with the scoped glob dependency replacement', () => {
   it('exercises the pinned plugin and its actual substituted dependency', () => {
-    expect(pluginRequire('@next/eslint-plugin-next/package.json').version).toBe('16.3.8');
+    expect(pluginRequire('@next/eslint-plugin-next/package.json').version).toBe('16.4.4');
     expect(pluginRequire('fast-glob/package.json')).toMatchObject({ name: 'tinyglobby', version: '0.2.17' });
   });
 
