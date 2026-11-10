@@ -1,6 +1,45 @@
 {
   "publications": [
     {
+      "id": "pub-009",
+      "title": "What, Why, and How Research Data Are Cited? Investigating Research Data Citation Practices Across Time and Domains",
+      "authors": [
+        "Koshi Motegi",
+        "Koichiro Ito",
+        "Shigeki Matsubara"
+      ],
+      "venue": "The 28th International Conference on Asia-Pacific Digital Libraries (ICADL 2026)",
+      "shortVenue": "ICADL 2026",
+      "year": 2026,
+      "date": "2026-12-03",
+      "displayDate": "2026-11-10",
+      "toBeAppear": true,
+      "isFirstAuthor": true,
+      "isPeerReviewed": true,
+      "publicationType": "conference",
+      "conferenceScope": "international"
+    },
+    {
+      "id": "pub-008",
+      "title": "Where Are Research Data Published? Identifying Their Publication URLs in Scholarly Papers",
+      "authors": [
+        "Ryoma Okada",
+        "Koshi Motegi",
+        "Koichiro Ito",
+        "Shigeki Matsubara"
+      ],
+      "venue": "The 28th International Conference on Asia-Pacific Digital Libraries (ICADL 2026)",
+      "shortVenue": "ICADL 2026",
+      "year": 2026,
+      "date": "2026-12-02",
+      "displayDate": "2026-11-10",
+      "toBeAppear": true,
+      "isFirstAuthor": false,
+      "isPeerReviewed": true,
+      "publicationType": "conference",
+      "conferenceScope": "international"
+    },
+    {
       "id": "pub-007",
       "title": "Cross-Format Citation Classification: Examining the Effects of Combining Bibliographic and URL Citations",
       "authors": [
