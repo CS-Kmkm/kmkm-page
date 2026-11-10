@@ -12,7 +12,7 @@ permissions:
 jobs:
   e2e-tests:
     name: E2E Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Checkout code
@@ -66,7 +66,7 @@ jobs:
 
   analytics-security:
     name: Analytics Security E2E
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       # Synthetic public config; requests are intercepted by the security tests.
       NEXT_PUBLIC_GA_ID: G-AUDIT123
