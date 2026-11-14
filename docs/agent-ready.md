@@ -109,3 +109,10 @@ corepack pnpm exec playwright test e2e/agent-ready.spec.ts e2e/document-head.spe
 [stated] ローカルの最終ビルドで、ユニットテスト201件、Chromiumの回帰テスト33件が成功（安全ヘッダーの開発専用テスト1件はスキップ）。E2Eでは `Accept-Encoding` と `Accept` を区別してVaryを検査し、HEADの空本文、HTML/RSC、Markdownの交互取得、日英404、JS無効時の本文・主要リンク、既存メタデータを確認した。検証ログは `.ai/test-results/unit-final.log` と `.ai/test-results/e2e-final.log`。
 
 [stated] 1440×1000のスクリーンショットで、本番とローカルの日英8ページを比較し、通常表示の差分は確認されなかった。比較画像は `.ai/test-results/visual-comparison.png`。[stated] ユーザーの明示指示でOpusの独立監査は停止し、監査結果は利用していない。
+
+### Preview検証の環境制約
+
+- [stated] 2026-11-14、保護されたPreviewを取得するコネクターは、一時共有リンクを作成・再利用する可能性を理由に自動承認審査が拒否した。共有リンクは作成していない。
+- [stated] `vercel --version` は通常実行・権限付き再試行の両方でコマンド未認識だった。既存の認証CLIを用いた取得はできていない。
+- [stated] 匿名の既存Previewは302でVercel SSOへ遷移し、保護を維持している。ローカル検証とCI/Previewビルド成功を、認証付きPreviewの実HTTP検証と同一視しない。
+- [unresolved] 最終パッチのVercel実配信でのVaryは、保護されたPreviewを既存認証で確認するか、レビュー後のProduction反映で確認する必要がある。保護解除や新規共有リンク作成は今回行わない。
