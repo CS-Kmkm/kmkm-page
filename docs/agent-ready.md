@@ -8,7 +8,7 @@
 
 明示URLは `/ja/.md`、`/en/.md`、`/ja/publications.md` など。HTMLレスポンスの `Link` ヘッダーから発見できる。両形式に `Vary: Accept` を付け、Markdownは `Cache-Control: private, no-store` として共有キャッシュへの保存を避ける。HTMLの既存RSC用Varyも維持する。RSC・prefetch通信はMarkdown交渉から除外する。
 
-[stated] Next.js 16.4.4の `dist/{esm/,}build/templates/app-page-runtime.js` は既存VaryをRSC用の値で上書きする。[decision] 固定バージョンへのpnpmパッチで既存値をマージする。静的生成を無効化したりHTMLを再取得するプロキシを設けたりせず、キャッシュとRSCの区別を維持するため。Next更新時にはこのパッチの要否と `e2e/agent-ready.spec.ts` のVary検査を再確認する。
+[stated] Next.js 16.4.4の `dist/{esm/,}build/templates/app-page-runtime.js` は既存VaryをRSC用の値で上書きする。またVercelの静的配信は `generate-routes-manifest.js` が生成する `rsc.varyHeader` を使用するため、ローカルの実行時修正だけではAcceptが残らない。[decision] 固定バージョンへのpnpmパッチで実行時は既存値をマージし、静的ルートマニフェストにはAcceptを追加する。静的生成を無効化したりHTMLを再取得するプロキシを設けたりせず、キャッシュとRSCの区別を維持するため。Next更新時にはこのパッチの要否と `e2e/agent-ready.spec.ts` のVary検査を再確認する。
 
 Privacy/TermsはHTMLのみ。旧URLの恒久リダイレクトは維持する。不明な日英の文書パスには、Markdown要求時に主要ページのリンクを含む同言語の404を返す。アセットの通常リクエストは対象外。
 
@@ -46,7 +46,7 @@ Disallow: /api/
 Disallow: /_next/
 ```
 
-[stated] 本番ではcanonicalとOG画像URLがなく、サイトマップは空のurlset、robotsにSitemap参照がない。Vercelの環境変数一覧は空だった。[derived] 本番 `NEXT_PUBLIC_SITE_URL=https://kmkm-page.vercel.app` の設定と再ビルドで既存のSEO生成処理を有効にする必要がある。これは本番反映承認後に行う。
+[stated] 変更前の本番ではcanonicalとOG画像URLがなく、サイトマップは空のurlset、robotsにSitemap参照がなかった。Vercelの環境変数一覧は空だった。[stated] オーナー承認後、Productionのみ `NEXT_PUBLIC_SITE_URL=https://kmkm-page.vercel.app` を設定した。mainの復元後の本番でも正しい公開URLのcanonicalを確認した。アクセス制御は変更していない。
 
 ## スキャナーの変更前結果
 
@@ -102,7 +102,9 @@ corepack pnpm build
 corepack pnpm exec playwright test e2e/agent-ready.spec.ts e2e/document-head.spec.ts e2e/localized-routes.spec.ts --project=chromium --workers=2
 ```
 
-本番反映後は同じURL・同じチェック構成で両スキャナーを再計測し、ここに新しい日時と結果を追記する。現時点では本番反映前であり、改善後の点数を主張しない。HTML/Markdownの交互GETでContent-Type、Vary、Link、canonical、JSON-LD、sitemapと保護URLを再確認する。#141–#143の本番受け入れ確認はこの計測完了まで未完了。
+レビュー・マージ後の本番反映で、同じURL・同じチェック構成で両スキャナーを再計測し、ここに新しい日時と結果を追記する。現時点では最終実装の本番受け入れ前であり、改善後の点数を主張しない。HTML/Markdownの交互GETでContent-Type、Vary、Link、canonical、JSON-LD、sitemapと保護URLを再確認する。#141–#143の本番受け入れ確認はこの計測完了まで未完了。
+
+[stated] mainのコードは変更前と同じ状態に復元されている。最終実装はPRレビュー後に反映する。Productionの環境変数は設定済み。Previewは認証保護を維持する。[stated] Vercelの静的マニフェスト修正を含む最終ビルドと33件のE2Eが成功した（`.ai/test-results/build-manifest.log`、`.ai/test-results/e2e-manifest.log`）。この静的Vary修正のVercel実配信での確認は、反映後検証として残る。
 
 [stated] ローカルの最終ビルドで、ユニットテスト201件、Chromiumの回帰テスト33件が成功（安全ヘッダーの開発専用テスト1件はスキップ）。E2Eでは `Accept-Encoding` と `Accept` を区別してVaryを検査し、HEADの空本文、HTML/RSC、Markdownの交互取得、日英404、JS無効時の本文・主要リンク、既存メタデータを確認した。検証ログは `.ai/test-results/unit-final.log` と `.ai/test-results/e2e-final.log`。
 
