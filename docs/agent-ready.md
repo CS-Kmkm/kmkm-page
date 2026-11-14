@@ -8,7 +8,7 @@
 
 明示URLは `/ja/.md`、`/en/.md`、`/ja/publications.md` など。HTMLレスポンスの `Link` ヘッダーから発見できる。両形式に `Vary: Accept` を付け、Markdownは `Cache-Control: private, no-store` として共有キャッシュへの保存を避ける。HTMLの既存RSC用Varyも維持する。RSC・prefetch通信はMarkdown交渉から除外する。
 
-[stated] Next.js 16.4.4の `dist/{esm/,}build/templates/app-page-runtime.js` は既存VaryをRSC用の値で上書きする。[decision] 固定バージョンへのpnpmパッチで既存値をマージする。静的生成を無効化したりHTMLを再取得するプロキシを設けたりせず、キャッシュとRSCの区別を維持するため。Next更新時にはこのパッチの要否と `e2e/agent-ready.spec.ts` のVary検査を再確認する。
+[stated] Next.js 16.4.4の `dist/{esm/,}build/templates/app-page-runtime.js` は既存VaryをRSC用の値で上書きする。またVercelの静的配信は `generate-routes-manifest.js` が生成する `rsc.varyHeader` を使用するため、ローカルの実行時修正だけではAcceptが残らない。[decision] 固定バージョンへのpnpmパッチで実行時は既存値をマージし、静的ルートマニフェストにはAcceptを追加する。静的生成を無効化したりHTMLを再取得するプロキシを設けたりせず、キャッシュとRSCの区別を維持するため。Next更新時にはこのパッチの要否と `e2e/agent-ready.spec.ts` のVary検査を再確認する。
 
 Privacy/TermsはHTMLのみ。旧URLの恒久リダイレクトは維持する。不明な日英の文書パスには、Markdown要求時に主要ページのリンクを含む同言語の404を返す。アセットの通常リクエストは対象外。
 

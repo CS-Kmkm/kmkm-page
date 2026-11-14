@@ -28,3 +28,23 @@ index d71ec25ee15d8c2584e4558a1345995f42b5d8d1..5006f7f73b874330b37decc35e3f7e79
              const invokeRouteModule = async (span, context, renderOperation)=>{
                  const nextReq = new NodeNextRequest(req);
                  const nextRes = new NodeNextResponse(res);
+diff --git a/dist/build/generate-routes-manifest.js b/dist/build/generate-routes-manifest.js
+--- a/dist/build/generate-routes-manifest.js
++++ b/dist/build/generate-routes-manifest.js
+@@ -58,5 +58,5 @@
+             // This vary header is used as a default. It is technically re-assigned in `base-server`,
+             // and may include an additional Vary option for `Next-URL`.
+-            varyHeader: `${_approuterheaders.RSC_HEADER}, ${_approuterheaders.NEXT_ROUTER_STATE_TREE_HEADER}, ${_approuterheaders.NEXT_ROUTER_PREFETCH_HEADER}, ${_approuterheaders.NEXT_ROUTER_SEGMENT_PREFETCH_HEADER}`,
++            varyHeader: `Accept, ${_approuterheaders.RSC_HEADER}, ${_approuterheaders.NEXT_ROUTER_STATE_TREE_HEADER}, ${_approuterheaders.NEXT_ROUTER_PREFETCH_HEADER}, ${_approuterheaders.NEXT_ROUTER_SEGMENT_PREFETCH_HEADER}`,
+             prefetchHeader: _approuterheaders.NEXT_ROUTER_PREFETCH_HEADER,
+             didPostponeHeader: _approuterheaders.NEXT_DID_POSTPONE_HEADER,
+diff --git a/dist/esm/build/generate-routes-manifest.js b/dist/esm/build/generate-routes-manifest.js
+--- a/dist/esm/build/generate-routes-manifest.js
++++ b/dist/esm/build/generate-routes-manifest.js
+@@ -52,5 +52,5 @@
+             // This vary header is used as a default. It is technically re-assigned in `base-server`,
+             // and may include an additional Vary option for `Next-URL`.
+-            varyHeader: `${RSC_HEADER}, ${NEXT_ROUTER_STATE_TREE_HEADER}, ${NEXT_ROUTER_PREFETCH_HEADER}, ${NEXT_ROUTER_SEGMENT_PREFETCH_HEADER}`,
++            varyHeader: `Accept, ${RSC_HEADER}, ${NEXT_ROUTER_STATE_TREE_HEADER}, ${NEXT_ROUTER_PREFETCH_HEADER}, ${NEXT_ROUTER_SEGMENT_PREFETCH_HEADER}`,
+             prefetchHeader: NEXT_ROUTER_PREFETCH_HEADER,
+             didPostponeHeader: NEXT_DID_POSTPONE_HEADER,
