@@ -85,8 +85,6 @@ corepack pnpm dev
 
 ## コンテンツの更新
 
-AIエージェント向けMarkdown配信、クローラー方針、本番アクセスとスキャナーの計測手順は [docs/agent-ready.md](docs/agent-ready.md) を参照してください。
-
 表示内容は `src/data` 以下の JSON で管理しています。
 
 ```text

@@ -1,3 +1,1 @@
-import Loading from '@/app/publications/loading';
-
-export default function EnglishLoading() { return <Loading locale="en" />; }
+export { default } from '@/app/publications/loading';

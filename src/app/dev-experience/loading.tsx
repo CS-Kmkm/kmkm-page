@@ -1,11 +1,5 @@
-import NoScriptContent from '@/components/common/NoScriptContent';
-import type { ContentLocale } from '@/data/localized';
-
-export default function DevExperienceLoading({ locale = 'ja' }: { locale?: ContentLocale } = {}) {
+export default function DevExperienceLoading() {
   return (
-    <>
-    <NoScriptContent locale={locale} page="dev-experience" />
-    <div className="loading-visual">
     <div className="w-[90%] max-w-7xl mx-auto px-4 py-4 sm:py-6 lg:py-8">
       <div className="space-y-6 sm:space-y-8">
         {/* Header skeleton */}
@@ -53,7 +47,5 @@ export default function DevExperienceLoading({ locale = 'ja' }: { locale?: Conte
         </div>
       </div>
     </div>
-    </div>
-    </>
   );
 }

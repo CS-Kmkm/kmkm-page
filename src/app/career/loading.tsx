@@ -1,11 +1,5 @@
-import NoScriptContent from '@/components/common/NoScriptContent';
-import type { ContentLocale } from '@/data/localized';
-
-export default function CareerLoading({ locale = 'ja' }: { locale?: ContentLocale } = {}) {
+export default function CareerLoading() {
   return (
-    <>
-    <NoScriptContent locale={locale} page="career" />
-    <div className="loading-visual">
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Breadcrumb skeleton */}
       <div className="mb-8">
@@ -30,18 +24,18 @@ export default function CareerLoading({ locale = 'ja' }: { locale?: ContentLocal
             <div className="flex-shrink-0 flex items-start">
               <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-200 rounded-full animate-pulse"></div>
             </div>
-
+            
             {/* Content */}
             <div className="flex-1 min-w-0">
               {/* Year badge */}
               <div className="h-6 bg-gray-200 rounded-full w-16 mb-2 animate-pulse"></div>
-
+              
               {/* Title and organization */}
               <div className="mb-2">
                 <div className="h-5 sm:h-6 bg-gray-200 rounded w-48 mb-1 animate-pulse"></div>
                 <div className="h-4 sm:h-5 bg-gray-200 rounded w-36 animate-pulse"></div>
               </div>
-
+              
               {/* Description */}
               <div className="space-y-2">
                 <div className="h-4 bg-gray-200 rounded w-full animate-pulse"></div>
@@ -52,7 +46,5 @@ export default function CareerLoading({ locale = 'ja' }: { locale?: ContentLocal
         ))}
       </div>
     </div>
-    </div>
-    </>
   );
 }

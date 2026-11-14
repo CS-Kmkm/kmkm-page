@@ -4,8 +4,6 @@ import { buildSecurityHeaders } from './src/lib/securityHeaders';
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
-  // Preserve flight headers and _rsc so Proxy can leave RSC requests untouched.
-  skipProxyUrlNormalize: true,
   
   // Performance optimizations
   compress: true,
