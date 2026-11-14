@@ -9,10 +9,12 @@ overrides:
   js-yaml: '4.3.2'
   'minimatch@10>brace-expansion': '5.0.12'
   'minimatch@3>brace-expansion': '1.1.21'
+  'minimatch@>=7 <11': '11.0.4'
   postcss: '>=8.5.23'
   sharp: '0.35.5'
   source-map-js: '1.2.2'
   zod: '4.6.7'
-  'minimatch@>=7 <11': '11.0.4'
 patchedDependencies:
   '@next/eslint-plugin-next@16.4.4': patches/@next__eslint-plugin-next@16.4.4.patch
+  # Preserve Proxy Vary: Accept alongside Next's RSC variants. Recheck on upgrades.
+  next@16.4.4: patches/next@16.4.4.patch
