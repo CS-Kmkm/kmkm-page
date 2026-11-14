@@ -1,5 +1,11 @@
-export default function PublicationsLoading() {
+import NoScriptContent from '@/components/common/NoScriptContent';
+import type { ContentLocale } from '@/data/localized';
+
+export default function PublicationsLoading({ locale = 'ja' }: { locale?: ContentLocale } = {}) {
   return (
+    <>
+    <NoScriptContent locale={locale} page="publications" />
+    <div className="loading-visual">
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header skeleton */}
       <div className="mb-6 sm:mb-8">
@@ -19,13 +25,13 @@ export default function PublicationsLoading() {
           <div key={i} className="border-l-4 border-gray-200 pl-3 sm:pl-4">
             {/* Title */}
             <div className="h-5 sm:h-6 bg-gray-200 rounded w-full mb-2 animate-pulse"></div>
-            
+
             {/* Authors */}
             <div className="h-4 bg-gray-200 rounded w-2/3 mb-2 animate-pulse"></div>
-            
+
             {/* Venue and year */}
             <div className="h-4 bg-gray-200 rounded w-1/2 mb-3 animate-pulse"></div>
-            
+
             {/* Badges */}
             <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               {[...Array(3)].map((_, j) => (
@@ -36,5 +42,7 @@ export default function PublicationsLoading() {
         ))}
       </div>
     </div>
+    </div>
+    </>
   );
 }
