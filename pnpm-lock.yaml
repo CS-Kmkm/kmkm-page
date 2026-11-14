@@ -21,7 +21,7 @@ patchedDependencies:
     hash: 9814503a560af1529fdaacbe3f2525220746b0a86bd3e5d6537e317d15ede4eb
     path: patches/@next__eslint-plugin-next@16.4.4.patch
   next@16.4.4:
-    hash: 04dbfc767931209ca437a6d3ca28fcdfdfbab13ac67c8f56a1dbe7503c11cc08
+    hash: aa282e127330b5cbddfb73ced17140c14818d465363e950fd85aaedc37b8268a
     path: patches/next@16.4.4.patch
 
 importers:
@@ -33,7 +33,7 @@ importers:
         version: 12.38.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       next:
         specifier: 16.4.4
-        version: 16.4.4(patch_hash=04dbfc767931209ca437a6d3ca28fcdfdfbab13ac67c8f56a1dbe7503c11cc08)(@babel/core@7.29.7)(@playwright/test@1.59.1)(@types/node@25.6.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        version: 16.4.4(patch_hash=aa282e127330b5cbddfb73ced17140c14818d465363e950fd85aaedc37b8268a)(@babel/core@7.29.7)(@playwright/test@1.59.1)(@types/node@25.6.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       react:
         specifier: 19.2.3
         version: 19.2.3
@@ -4505,7 +4505,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next@16.4.4(patch_hash=04dbfc767931209ca437a6d3ca28fcdfdfbab13ac67c8f56a1dbe7503c11cc08)(@babel/core@7.29.7)(@playwright/test@1.59.1)(@types/node@25.6.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+  next@16.4.4(patch_hash=aa282e127330b5cbddfb73ced17140c14818d465363e950fd85aaedc37b8268a)(@babel/core@7.29.7)(@playwright/test@1.59.1)(@types/node@25.6.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
       '@next/env': 16.4.4
       '@swc/helpers': 0.5.23
