@@ -29,6 +29,9 @@ for (const locale of ['ja', 'en']) {
       expect(await head.body()).toHaveLength(0);
       const flight = await request.get(`${url}?_rsc=test`, { headers: { RSC: '1', Accept: 'text/markdown' } });
       expect(flight.headers()['content-type']).not.toContain('text/markdown');
+      // Flight bypasses Proxy's response headers, like Vercel's ISR renderer.
+      // The framework response itself must retain Accept as well as its RSC keys.
+      expect(flight.headers().vary.toLowerCase().split(',').map(value => value.trim())).toContain('accept');
     });
     test(`${locale}${path} exposes primary content without JavaScript`, async ({ browser, request }) => {
       const context = await browser.newContext({ javaScriptEnabled: false });
