@@ -5,7 +5,8 @@ index c99842fab6b9b4f9174031cced6241fb7998060d..dc23ff7595bb3da27ffe7ee0987773d7
 @@ -480,7 +480,9 @@ function createAppPageEntrypoint({ tree, page, pathname, require: __next_app_req
          };
          try {
-             const varyHeader = routeModule.getVaryHeader(resolvedPathname, interceptionRoutePatterns);
+-            const varyHeader = routeModule.getVaryHeader(resolvedPathname, interceptionRoutePatterns);
++            const varyHeader = 'Accept, ' + routeModule.getVaryHeader(resolvedPathname, interceptionRoutePatterns);
 -            res.setHeader('Vary', varyHeader);
 +            const existingVary = res.getHeader('Vary');
 +            const varyValues = [existingVary, varyHeader].flat().filter(Boolean).join(', ').split(',').map(value => value.trim());
@@ -20,7 +21,8 @@ index d71ec25ee15d8c2584e4558a1345995f42b5d8d1..5006f7f73b874330b37decc35e3f7e79
 @@ -503,7 +503,9 @@ export function createAppPageEntrypoint({ tree, page, pathname, require: __next_
          };
          try {
-             const varyHeader = routeModule.getVaryHeader(resolvedPathname, interceptionRoutePatterns);
+-            const varyHeader = routeModule.getVaryHeader(resolvedPathname, interceptionRoutePatterns);
++            const varyHeader = 'Accept, ' + routeModule.getVaryHeader(resolvedPathname, interceptionRoutePatterns);
 -            res.setHeader('Vary', varyHeader);
 +            const existingVary = res.getHeader('Vary');
 +            const varyValues = [existingVary, varyHeader].flat().filter(Boolean).join(', ').split(',').map(value => value.trim());
