@@ -1,0 +1,236 @@
+{
+  "is_agentic": {
+    "post": {
+      "score": 80,
+      "report_url": "https://is-agentic.com/scan/kmkm-page.vercel.app",
+      "issues": [
+        {
+          "id": "content-no-js",
+          "name": "Content without JavaScript",
+          "result": "partial",
+          "tier": "essential",
+          "details": "Homepage: 826 chars with H1, but 1.9% content ratio is below the 5% target. Sampled pages with almost no text without JavaScript (1 of 5): https://kmkm-page.vercel.app/ja/career (10 chars).",
+          "recommendation": "Serve at least 500 characters of meaningful homepage content in raw HTML. Add a clear H1, keep deeper heading levels sequential, and remove excessive non-content markup. Inner pages need their main text in the raw HTML too, not only after JavaScript runs."
+        },
+        {
+          "id": "agent-friendly-404",
+          "name": "Agent-friendly 404s",
+          "result": "partial",
+          "tier": "essential",
+          "details": "The nonexistent path https://kmkm-page.vercel.app/__ora-404-probe-tqshxgd9 correctly returns HTTP 404. Partial credit: no Markdown error body was detected.",
+          "recommendation": "Keep the correct HTTP 404 status. The remaining requirement is a Markdown error body when agents request Accept: text/markdown. Include at least 20 characters explaining the error and a link to your docs, sitemap, or llms.txt. Verify with `curl -sS -L -i -H 'Accept: text/markdown' https://yourdomain.com/some-path-that-does-not-exist`. Check both the final 404 status and the Markdown body with Content-Type: text/markdown. Checking the status alone does not verify the missing requirement."
+        },
+        {
+          "id": "brand-search-accuracy",
+          "name": "Brand name discoverability",
+          "result": "failed",
+          "tier": "recommended",
+          "details": "kmkm-page.vercel.app was not in the top 10 for \"vercel 自然言語処理\" or \"vercel デジタルライブラリ\"",
+          "recommendation": "Make sure your own domain ranks in the top results when people search your brand together with your main product (for example \"Acme payments API\"). Ora first reads product terms from your homepage's JSON-LD keywords or knowsAbout, or its meta keywords tag. If none qualifies, it checks the main service's serviceType in JSON-LD, then a short product phrase in the page title. If those do not qualify, it checks product names in the homepage business's JSON-LD offers. Use clear product terms that also appear on the page. If no term qualifies, Ora searches your brand name alone. If your domain does not rank, your brand may be too generic, conflict with a more established term, or not yet indexed. Strengthen it by describing your main product clearly in your homepage title and headings, earning press mentions that link to your domain, and avoiding redirect chains that mask your main domain in search results."
+        },
+        {
+          "id": "agent-instruction",
+          "name": "Agent instruction / when-to-use",
+          "result": "failed",
+          "tier": "recommended",
+          "details": "No agent instruction file with when-to-use guidance found",
+          "recommendation": "Tell agents when to reach for you: add a 'when to use this' section to your llms.txt (or a dedicated agent-instructions file) that names your best-fit use cases and how an agent should call you. Be specific about the jobs you are right for - generic marketing copy does not read as guidance."
+        },
+        {
+          "id": "org-schema-completeness",
+          "name": "Organization schema completeness",
+          "result": "partial",
+          "tier": "recommended",
+          "details": "Organization schema found but missing: contactPoint, address",
+          "recommendation": "Add Organization JSON-LD that includes both contactPoint (with email/phone and contactType) and address (PostalAddress). This lets AI verify your business legitimacy and answer contact queries."
+        },
+        {
+          "id": "trust-anchors",
+          "name": "Trust anchor pages",
+          "result": "partial",
+          "tier": "recommended",
+          "details": "Only Privacy page verified - missing: About, Contact",
+          "recommendation": "Publish real /about, /contact, and /privacy pages with at least 500 characters of content each. These are the pages AI agents check to verify your business is legitimate before recommending you."
+        }
+      ],
+      "scanned_at": "2026-11-15T12:20:58.917Z"
+    },
+    "baseline": {
+      "score": 66,
+      "report_url": "https://is-agentic.com/scan/kmkm-page.vercel.app",
+      "issues": [
+        {
+          "id": "agent-friendly-404",
+          "name": "Agent-friendly 404s",
+          "result": "partial",
+          "tier": "essential",
+          "details": "The nonexistent path https://kmkm-page.vercel.app/__ora-404-probe-vet4y46w correctly returns HTTP 404. Partial credit: no Markdown error body was detected.",
+          "recommendation": "Keep the correct HTTP 404 status. The remaining requirement is a Markdown error body when agents request Accept: text/markdown. Include at least 20 characters explaining the error and a link to your docs, sitemap, or llms.txt. Verify with `curl -sS -L -i -H 'Accept: text/markdown' https://yourdomain.com/some-path-that-does-not-exist`. Check both the final 404 status and the Markdown body with Content-Type: text/markdown. Checking the status alone does not verify the missing requirement."
+        },
+        {
+          "id": "content-no-js",
+          "name": "Content without JavaScript",
+          "result": "partial",
+          "tier": "essential",
+          "details": "Homepage: 834 chars with H1, but 1.9% content ratio is below the 5% target. No inner pages checked: the 5 sampled pages were skipped (forms, login pages, bot challenges, error pages, non-HTML pages and pages over 1 MB are skipped).",
+          "recommendation": "Serve at least 500 characters of meaningful homepage content in raw HTML. Add a clear H1, keep deeper heading levels sequential, and remove excessive non-content markup. Inner pages need their main text in the raw HTML too, not only after JavaScript runs."
+        },
+        {
+          "id": "markdown-negotiation-vary",
+          "name": "Markdown content negotiation (acceptmarkdown.com)",
+          "result": "failed",
+          "tier": "essential",
+          "details": "Homepage https://kmkm-page.vercel.app does not meet the Markdown negotiation requirements: Accept: text/markdown returned text/html; charset=utf-8; Vary header missing Accept (got \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\")",
+          "recommendation": "Enable Markdown negotiation on the scanned homepage. Supporting it only on /docs or a separate .md URL does not satisfy this check. Requests with Accept: text/markdown must receive a nonempty Markdown body with Content-Type: text/markdown and Vary: Accept. Keep serving HTML for Accept: text/html. Adding Vary alone does not create a Markdown response. Verify both with `curl -sS -L -i -H 'Accept: text/markdown' https://yourdomain.com/` and `curl -sS -L -i -H 'Accept: text/html' https://yourdomain.com/`. Check the final response headers and body: Markdown with Vary: Accept for the first request, HTML for the second."
+        },
+        {
+          "id": "brand-search-accuracy",
+          "name": "Brand name discoverability",
+          "result": "failed",
+          "tier": "recommended",
+          "details": "kmkm-page.vercel.app was not in the top 10 for \"vercel 自然言語処理\" or \"vercel デジタルライブラリ\"",
+          "recommendation": "Make sure your own domain ranks in the top results when people search your brand together with your main product (for example \"Acme payments API\"). Ora first reads product terms from your homepage's JSON-LD keywords or knowsAbout, or its meta keywords tag. If none qualifies, it checks the main service's serviceType in JSON-LD, then a short product phrase in the page title. If those do not qualify, it checks product names in the homepage business's JSON-LD offers. Use clear product terms that also appear on the page. If no term qualifies, Ora searches your brand name alone. If your domain does not rank, your brand may be too generic, conflict with a more established term, or not yet indexed. Strengthen it by describing your main product clearly in your homepage title and headings, earning press mentions that link to your domain, and avoiding redirect chains that mask your main domain in search results."
+        },
+        {
+          "id": "agent-instruction",
+          "name": "Agent instruction / when-to-use",
+          "result": "failed",
+          "tier": "recommended",
+          "details": "No agent instruction file with when-to-use guidance found",
+          "recommendation": "Tell agents when to reach for you: add a 'when to use this' section to your llms.txt (or a dedicated agent-instructions file) that names your best-fit use cases and how an agent should call you. Be specific about the jobs you are right for - generic marketing copy does not read as guidance."
+        },
+        {
+          "id": "sitemap",
+          "name": "Sitemap exists",
+          "result": "failed",
+          "tier": "recommended",
+          "details": "No sitemap found",
+          "recommendation": "Add a valid XML sitemap at /sitemap.xml listing all indexable URLs. Include lastmod dates and keep it under 50MB."
+        },
+        {
+          "id": "metadata-completeness",
+          "name": "Metadata completeness",
+          "result": "partial",
+          "tier": "recommended",
+          "details": "2/4 metadata signals present - missing: canonical URL, og:image",
+          "recommendation": "Add all four signals to your homepage: <link rel=\"canonical\"> pointing to the page on your own site, <html lang=\"...\">, <meta property=\"og:image\">, and <meta property=\"og:type\">. Agents use these for entity resolution and attribution."
+        },
+        {
+          "id": "org-schema-completeness",
+          "name": "Organization schema completeness",
+          "result": "partial",
+          "tier": "recommended",
+          "details": "Organization schema found but missing: contactPoint, address",
+          "recommendation": "Add Organization JSON-LD that includes both contactPoint (with email/phone and contactType) and address (PostalAddress). This lets AI verify your business legitimacy and answer contact queries."
+        },
+        {
+          "id": "trust-anchors",
+          "name": "Trust anchor pages",
+          "result": "partial",
+          "tier": "recommended",
+          "details": "Only Privacy page verified - missing: About, Contact",
+          "recommendation": "Publish real /about, /contact, and /privacy pages with at least 500 characters of content each. These are the pages AI agents check to verify your business is legitimate before recommending you."
+        },
+        {
+          "id": "json-ld",
+          "name": "JSON-LD structured data",
+          "result": "partial",
+          "tier": "recommended",
+          "details": "JSON-LD Person found - missing url on this entity",
+          "recommendation": "Add url to the Person JSON-LD entity for full score."
+        }
+      ],
+      "scanned_at": "2026-11-14T07:33:13.427Z"
+    }
+  },
+  "schema_version": 1,
+  "site": "https://kmkm-page.vercel.app",
+  "cloudflare": {
+    "post": {
+      "target": "https://kmkm-page.vercel.app/ja",
+      "level_name": "Basic Web Presence",
+      "checks": [
+        {
+          "message": "robots.txt exists with valid format",
+          "id": "robotsTxt",
+          "status": "pass"
+        },
+        {
+          "message": "sitemap.xml exists with valid structure",
+          "id": "sitemap",
+          "status": "pass"
+        },
+        {
+          "message": "Found agent-useful Link relations: alternate",
+          "id": "linkHeaders",
+          "status": "pass"
+        },
+        {
+          "message": "DNS for AI Discovery (DNS-AID) well-known entrypoint records not found",
+          "id": "dnsAid",
+          "status": "fail"
+        },
+        {
+          "message": "Site supports Markdown for Agents",
+          "id": "markdownNegotiation",
+          "status": "pass"
+        },
+        {
+          "message": "No AI-specific bot rules; wildcard rules apply to all crawlers including AI bots",
+          "id": "robotsTxtAiRules",
+          "status": "pass"
+        },
+        {
+          "message": "No Content Signals found in robots.txt",
+          "id": "contentSignals",
+          "status": "fail"
+        }
+      ],
+      "scanned_at": "2026-11-15T12:20:48.156Z",
+      "level": 1
+    },
+    "baseline": {
+      "target": "https://kmkm-page.vercel.app/ja",
+      "level_name": "Basic Web Presence",
+      "checks": [
+        {
+          "message": "robots.txt exists with valid format",
+          "id": "robotsTxt",
+          "status": "pass"
+        },
+        {
+          "message": "sitemap.xml exists with valid structure",
+          "id": "sitemap",
+          "status": "pass"
+        },
+        {
+          "message": "No Link headers found on target page",
+          "id": "linkHeaders",
+          "status": "fail"
+        },
+        {
+          "message": "DNS for AI Discovery (DNS-AID) well-known entrypoint records not found",
+          "id": "dnsAid",
+          "status": "fail"
+        },
+        {
+          "message": "Site does not support Markdown for Agents",
+          "id": "markdownNegotiation",
+          "status": "fail"
+        },
+        {
+          "message": "No AI-specific bot rules; wildcard rules apply to all crawlers including AI bots",
+          "id": "robotsTxtAiRules",
+          "status": "pass"
+        },
+        {
+          "message": "No Content Signals found in robots.txt",
+          "id": "contentSignals",
+          "status": "fail"
+        }
+      ],
+      "scanned_at": "2026-11-14T07:26:39.167Z",
+      "level": 1
+    }
+  }
+}
