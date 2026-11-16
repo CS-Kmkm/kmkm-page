@@ -78,14 +78,11 @@ const TechIconGrid: React.FC<TechIconGridProps> = ({
       role="list"
       aria-label={messages.techStackList}
     >
-      {sortedTechItems.map((tech, index) => (
+      {sortedTechItems.map((tech) => (
         <div
           key={tech.id}
           role="listitem"
-          className="min-w-0 animate-fade-in"
-          style={{
-            animationDelay: `${index * 50}ms`
-          }}
+          className="min-w-0"
         >
           <TechIcon
             tech={tech}
