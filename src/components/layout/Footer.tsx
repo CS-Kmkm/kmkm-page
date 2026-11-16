@@ -54,7 +54,7 @@ const Footer: React.FC<LocalizedFooterProps> = ({ className = '', locale = 'ja' 
     <footer className={`border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950/60 transition-colors duration-200 ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3">
         <div className="flex items-center justify-between gap-3">
-          <p className="min-w-0 flex-1 text-xs text-gray-500 dark:text-gray-500 truncate pr-2">
+          <p className="min-w-0 flex-1 text-xs text-gray-500 dark:text-gray-400 truncate pr-2">
             <span className="font-semibold text-gray-700 dark:text-gray-300">{localizedSite.personName}</span>
             <span className="mx-1 text-gray-400 dark:text-gray-600">|</span>
             {localizedSite.currentPosition} / {localizedSite.currentAffiliation}
@@ -67,7 +67,7 @@ const Footer: React.FC<LocalizedFooterProps> = ({ className = '', locale = 'ja' 
                   <li key={link.href}>
                     <Link
                       href={localizePolicyHref(link.href)}
-                      className="inline-flex h-6 items-center text-xs text-gray-500 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 hover:underline underline-offset-2 transition-colors duration-200"
+                      className="inline-flex h-6 items-center text-xs text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:underline underline-offset-2 transition-colors duration-200"
                       aria-label={link.ariaLabel}
                     >
                       {link.label}

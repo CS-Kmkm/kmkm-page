@@ -2,6 +2,7 @@
 
 import type { KeyboardEvent } from 'react';
 import { useI18n } from '@/lib/i18n';
+import { getTabClasses } from '@/lib/theme/tokens';
 
 export type ViewMode = 'timeline' | 'list';
 
@@ -11,13 +12,6 @@ export interface ViewToggleButtonProps {
   className?: string;
 }
 
-const tabClassName = (isActive: boolean) => [
-  'relative min-h-11 border-0 bg-transparent px-0.5 pb-2 text-xs font-semibold transition-colors sm:px-1 sm:pb-3 sm:text-sm',
-  'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-blue-400 dark:focus-visible:ring-offset-gray-900',
-  isActive
-    ? 'text-blue-700 after:absolute after:inset-x-0 after:bottom-[-1px] after:h-0.5 after:bg-blue-600 dark:text-blue-300 dark:after:bg-blue-400'
-    : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100',
-].join(' ');
 
 const VIEW_ORDER: readonly ViewMode[] = ['timeline', 'list'];
 
@@ -66,7 +60,7 @@ export default function ViewToggleButton({
             aria-selected={isActive}
             aria-controls={`career-${view}-panel`}
             tabIndex={isActive ? 0 : -1}
-            className={tabClassName(isActive)}
+            className={getTabClasses(isActive)}
             onClick={() => onViewChange(view)}
             onKeyDown={handleKeyDown}
           >

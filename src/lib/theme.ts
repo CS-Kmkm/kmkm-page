@@ -164,6 +164,7 @@ export const applyCSSVariables = (resolvedTheme: ResolvedTheme): void => {
   
   const variables = cssVariables[resolvedTheme];
   const root = document.documentElement;
+  root.style.colorScheme = resolvedTheme;
   
   Object.entries(variables).forEach(([property, value]) => {
     root.style.setProperty(property, value);
