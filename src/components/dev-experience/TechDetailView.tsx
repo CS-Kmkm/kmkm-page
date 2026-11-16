@@ -15,6 +15,7 @@ import { useI18n } from '@/lib/i18n';
  */
 const TechDetailView: React.FC<TechDetailViewProps> = ({
   tech,
+  backLabel,
   projects,
   technologyCategories,
   relatedFrameworks = [],
@@ -46,7 +47,7 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
     if (backButton) {
       backButton.focus();
     }
-  }, []);
+  }, [tech.id]);
 
   return (
     <section
@@ -67,7 +68,7 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
             focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900
             min-h-[44px]
           "
-          aria-label={messages.backToTechList}
+          aria-label={backLabel ?? messages.backToTechList}
           type="button"
         >
           <svg
@@ -84,7 +85,7 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          <span className="font-medium">{messages.back}</span>
+          <span className="font-medium">{backLabel ?? messages.back}</span>
         </button>
 
         {/* Content - Two Column Layout */}

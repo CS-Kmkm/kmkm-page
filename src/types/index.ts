@@ -279,6 +279,8 @@ export interface ProjectModalProps {
   project: ProjectDetail | null;
   isOpen: boolean;
   onClose: () => void;
+  onTechnologySelect?: (name: string) => void;
+  availableTechnologies?: readonly string[];
 }
 
 export interface TechBadgeProps {
@@ -341,6 +343,7 @@ export interface ProjectListProps {
 }
 
 export interface TechDetailViewProps {
+  backLabel?: string;
   tech: TechItem;
   projects: ProjectDetail[];
   technologyCategories: TechCategoryLookup;

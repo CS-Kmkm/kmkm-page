@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, type KeyboardEvent } from 'react';
+import { useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import TechCategorySection from '@/components/dev-experience/TechCategorySection';
 import TechDetailView from '@/components/dev-experience/TechDetailView';
 import AllProjectsSection from '@/components/dev-experience/AllProjectsSection';
@@ -9,16 +9,10 @@ import PageHeading from '@/components/layout/PageHeading';
 import { useTechExperience } from '@/hooks/useTechExperience';
 import type { ProjectDetail, TechItem } from '@/types';
 import { useI18n } from '@/lib/i18n';
+import { getTabClasses } from '@/lib/theme/tokens';
 
 type OverviewSection = 'technologies' | 'projects';
 
-const tabClassName = (isActive: boolean) => [
-  'relative min-h-10 px-0.5 pb-2 text-xs font-semibold transition-colors sm:min-h-11 sm:px-1 sm:pb-3 sm:text-sm',
-  'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
-  isActive
-    ? 'text-blue-700 after:absolute after:inset-x-0 after:bottom-[-1px] after:h-0.5 after:bg-blue-600 dark:text-blue-300 dark:after:bg-blue-400'
-    : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100',
-].join(' ');
 
 interface DevExperienceClientProps {
   allTechItems: TechItem[];
@@ -43,6 +37,9 @@ export default function DevExperienceClient({
   const [selectedProject, setSelectedProject] = useState<ProjectDetail | null>(null);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<OverviewSection>('technologies');
+  const [projectTrail, setProjectTrail] = useState<Array<{ project: ProjectDetail; tech: TechItem | null; name: string; trigger: HTMLElement | null }>>([]);
+  const returnToProject = projectTrail.at(-1);
+  const projectTriggerRef = useRef<HTMLElement | null>(null);
 
   const selectedTechProjects = useMemo(
     () => selectedTech ? getProjectsForTech(selectedTech) : [],
@@ -60,6 +57,7 @@ export default function DevExperienceClient({
   );
 
   const handleProjectSelect = (project: ProjectDetail) => {
+    projectTriggerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     setSelectedProject(project);
     setIsProjectModalOpen(true);
   };
@@ -67,6 +65,20 @@ export default function DevExperienceClient({
   const handleCloseModal = () => {
     setIsProjectModalOpen(false);
     setSelectedProject(null);
+    requestAnimationFrame(() => {
+      if (projectTriggerRef.current?.isConnected) projectTriggerRef.current.focus();
+      else if (!selectedTech) document.getElementById(`project-card-${selectedProject?.id}`)?.focus();
+    });
+  };
+
+  const handleProjectTechnologySelect = (name: string) => {
+    const tech = allTechItems.find(item => item.name === name);
+    if (!tech || !selectedProject) return;
+    setProjectTrail(trail => [...trail, { project: selectedProject, tech: selectedTech, name, trigger: projectTriggerRef.current }]);
+    setIsProjectModalOpen(false);
+    setSelectedProject(null);
+    setSelectedTech(tech);
+    requestAnimationFrame(() => document.getElementById('tech-detail-back-button')?.focus());
   };
 
   const handleTechSelect = (tech: TechItem) => {
@@ -74,6 +86,15 @@ export default function DevExperienceClient({
   };
 
   const handleBackToOverview = () => {
+    if (returnToProject) {
+      setSelectedTech(returnToProject.tech);
+      setSelectedProject(returnToProject.project);
+      setIsProjectModalOpen(true);
+      projectTriggerRef.current = returnToProject.trigger;
+      setProjectTrail(trail => trail.slice(0, -1));
+      requestAnimationFrame(() => document.getElementById(`project-tech-${returnToProject.name}`)?.focus());
+      return;
+    }
     const selectedTechId = selectedTech?.id;
     setSelectedTech(null);
 
@@ -102,7 +123,7 @@ export default function DevExperienceClient({
   return (
     <>
       <div className="space-y-8 sm:space-y-10">
-        <header className="flex items-center justify-between gap-4">
+        <header className="flex flex-wrap items-center justify-between gap-4">
           <PageHeading>{pageTitle}</PageHeading>
           {!selectedTech && (
             <div
@@ -117,7 +138,7 @@ export default function DevExperienceClient({
                 aria-selected={activeSection === 'technologies'}
                 aria-controls="technologies-panel"
                 tabIndex={activeSection === 'technologies' ? 0 : -1}
-                className={tabClassName(activeSection === 'technologies')}
+                className={getTabClasses(activeSection === 'technologies')}
                 onClick={() => setActiveSection('technologies')}
                 onKeyDown={handleTabKeyDown}
               >
@@ -130,7 +151,7 @@ export default function DevExperienceClient({
                 aria-selected={activeSection === 'projects'}
                 aria-controls="projects-panel"
                 tabIndex={activeSection === 'projects' ? 0 : -1}
-                className={tabClassName(activeSection === 'projects')}
+                className={getTabClasses(activeSection === 'projects')}
                 onClick={() => setActiveSection('projects')}
                 onKeyDown={handleTabKeyDown}
               >
@@ -192,6 +213,7 @@ export default function DevExperienceClient({
           </div>
         ) : (
           <TechDetailView
+            backLabel={returnToProject ? (locale === 'en' ? `Back to ${returnToProject.project.name}` : `${returnToProject.project.name}に戻る`) : undefined}
             tech={selectedTech}
             projects={selectedTechProjects}
             technologyCategories={techCategoryByName}
@@ -206,6 +228,8 @@ export default function DevExperienceClient({
 
       <ProjectModal
         project={selectedProject}
+        availableTechnologies={allTechItems.map(tech => tech.name)}
+        onTechnologySelect={handleProjectTechnologySelect}
         isOpen={isProjectModalOpen}
         onClose={handleCloseModal}
       />

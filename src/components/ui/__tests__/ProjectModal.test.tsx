@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import ProjectModal from '../ProjectModal'
 import type { ProjectDetail } from '@/types'
@@ -17,6 +17,14 @@ const project: ProjectDetail = {
 }
 
 describe('ProjectModal', () => {
+  it('only offers navigation to technologies present in the existing catalog', () => {
+    const select = vi.fn()
+    render(<ProjectModal project={{ ...project, technologies: ['TypeScript', 'Unknown'] }} isOpen onClose={vi.fn()} availableTechnologies={['TypeScript']} onTechnologySelect={select} />)
+    fireEvent.click(screen.getByRole('button', { name: 'TypeScript' }))
+    expect(select).toHaveBeenCalledWith('TypeScript')
+    expect(screen.queryByRole('button', { name: 'Unknown' })).not.toBeInTheDocument()
+    expect(screen.getByText('Unknown')).toBeVisible()
+  })
   it('aligns full-width media with responsive modal padding', () => {
     render(<ProjectModal project={project} isOpen onClose={vi.fn()} />)
 
