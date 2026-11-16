@@ -88,6 +88,26 @@ for (const locale of ['ja', 'en']) {
           }
         });
 
+        test('career nodes and event points support keyboard interaction', async ({ page }) => {
+          await page.goto(`/${locale}/career`);
+          const node = page.locator('[aria-haspopup="dialog"]').first();
+          await node.focus();
+          await expect(node).toHaveCSS('outline-style', 'solid');
+          await node.press('Enter');
+          await expect(page.getByRole('dialog')).toBeVisible();
+          await page.keyboard.press('Escape');
+          await expect(node).toBeFocused();
+          await page.getByRole('button', { name: locale === 'ja' ? '経歴の表示順を反転' : 'Reverse career order' }).click();
+          await expect(page.getByRole('tab').first()).toHaveAttribute('aria-selected', 'true');
+          const event = page.getByRole('button', { name: locale === 'ja' ? /年のイベント/ : /events? from/ }).first();
+          await event.focus();
+          await event.press('Space');
+          await expect(page.getByRole('dialog')).toBeVisible();
+          await page.keyboard.press('Escape');
+          await expect(event).toBeFocused();
+          expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+        });
+
         test('Escape closes a related project without leaving technology details', async ({ page }) => {
           await page.goto(`/${locale}/dev-experience`);
           await page.locator('#tech-card-tech-001').click();

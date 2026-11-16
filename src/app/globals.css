@@ -491,6 +491,10 @@ img {
 }
 .dark .site-modal::backdrop { background: rgb(15 23 42 / 0.55); }
 
+.timeline-control:focus-visible {
+  outline: 3px solid var(--color-interactive-primary);
+  outline-offset: 3px;
+}
 
 /* Include later-defined animation utilities and SVG motion in the preference. */
 @media (prefers-reduced-motion: reduce) {
