@@ -2,10 +2,14 @@
   "ci": {
     "collect": {
       "url": [
-        "http://localhost:3000",
-        "http://localhost:3000/career",
-        "http://localhost:3000/dev-experience",
-        "http://localhost:3000/publications"
+        "http://localhost:3000/ja",
+        "http://localhost:3000/ja/career",
+        "http://localhost:3000/ja/dev-experience",
+        "http://localhost:3000/ja/publications",
+        "http://localhost:3000/en",
+        "http://localhost:3000/en/career",
+        "http://localhost:3000/en/dev-experience",
+        "http://localhost:3000/en/publications"
       ],
       "startServerCommand": "corepack pnpm start",
       "startServerReadyPattern": "started server on|Local:|Ready in|started server",

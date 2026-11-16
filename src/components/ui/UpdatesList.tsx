@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { UpdatesListProps, UpdateItem } from '@/types';
 import { Modal } from './Modal';
@@ -63,6 +63,8 @@ export default function UpdatesList({
   const { locale, messages } = useI18n();
   const [selectedUpdate, setSelectedUpdate] = useState<UpdateItem | null>(null);
   const [autoFitItems, setAutoFitItems] = useState(() => Math.max(1, maxItems));
+  const [measurementLimit, setMeasurementLimit] = useState(() => Math.max(2, maxItems + 1));
+  const [fitPending, setFitPending] = useState(true);
   const sectionRef = useRef<HTMLElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
   const measurementRef = useRef<HTMLDivElement | null>(null);
@@ -70,8 +72,8 @@ export default function UpdatesList({
   const isAutoFitEnabled = autoFitToViewport && !showScrollable;
 
   // Sort updates by date (newest first)
-  const sortedUpdates = [...updates]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const sortedUpdates = useMemo(() => [...updates]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()), [updates]);
 
   const calculateAutoFitItems = useCallback(() => {
     if (!isAutoFitEnabled || sortedUpdates.length === 0) return;
@@ -104,7 +106,7 @@ export default function UpdatesList({
     for (let index = 0; index < measuredItems.length; index += 1) {
       const itemHeight = measuredItems[index].getBoundingClientRect().height;
       const candidateHeight = accumulatedHeight + (index > 0 ? gap : 0) + itemHeight;
-      const hiddenItemsHeight = index + 1 < measuredItems.length ? hiddenMessageHeight : 0;
+      const hiddenItemsHeight = index + 1 < sortedUpdates.length ? hiddenMessageHeight : 0;
 
       if (candidateHeight + hiddenItemsHeight <= availableHeight || index === 0) {
         accumulatedHeight = candidateHeight;
@@ -113,6 +115,15 @@ export default function UpdatesList({
         break;
       }
     }
+
+    // Measure only a prefix initially. Expand until the viewport is filled, keeping
+    // one real overflow item so resize/font changes retain the same fitting rule.
+    if (nextCount === measuredItems.length && measuredItems.length < sortedUpdates.length) {
+      setFitPending(true);
+      setMeasurementLimit(limit => Math.max(limit, Math.min(sortedUpdates.length, measuredItems.length * 2)));
+      return;
+    }
+    setFitPending(false);
 
     setAutoFitItems((currentCount) => (
       currentCount === nextCount ? currentCount : nextCount
@@ -141,7 +152,7 @@ export default function UpdatesList({
       window.removeEventListener('resize', calculateAutoFitItems);
       window.removeEventListener('orientationchange', calculateAutoFitItems);
     };
-  }, [calculateAutoFitItems, isAutoFitEnabled]);
+  }, [calculateAutoFitItems, isAutoFitEnabled, measurementLimit, sortedUpdates]);
 
   if (sortedUpdates.length === 0) {
     return (
@@ -172,7 +183,7 @@ export default function UpdatesList({
 
   return (
     <>
-      <section ref={sectionRef} className={`relative ${className}`} aria-labelledby="updates-heading">
+      <section ref={sectionRef} className={`relative ${className}`} aria-labelledby="updates-heading" data-update-fit={isAutoFitEnabled ? (fitPending ? 'pending' : 'settled') : undefined}>
         <h2
           id="updates-heading"
           className={`text-lg sm:text-xl font-bold ${tokens.text.primary} mb-2`}
@@ -219,7 +230,7 @@ export default function UpdatesList({
               aria-hidden="true"
               className="pointer-events-none invisible absolute left-0 top-0 -z-10 h-0 w-full space-y-1.5 overflow-hidden"
             >
-              {sortedUpdates.map((update) => {
+              {sortedUpdates.slice(0, measurementLimit).map((update) => {
                 const categoryConfig = localizedCategory(update.category);
 
                 return (

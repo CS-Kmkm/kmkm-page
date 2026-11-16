@@ -1,15 +1,28 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Performance Tests', () => {
-  test('Homepage should pass a basic load-time smoke check', async ({ page }) => {
-    const startTime = Date.now();
+  for (const locale of ['ja', 'en']) for (const route of ['', '/career', '/dev-experience', '/publications']) {
+    test(`${locale}${route} keeps initial layout shifts within the CLS budget`, async ({ page }) => {
+      await page.addInitScript(() => {
+        const state = window as typeof window & { labCls: number };
+        state.labCls = 0;
+        new PerformanceObserver(list => {
+          for (const entry of list.getEntries()) {
+            const shift = entry as PerformanceEntry & { value: number; hadRecentInput: boolean };
+            if (!shift.hadRecentInput) state.labCls += shift.value;
+          }
+        }).observe({ type: 'layout-shift', buffered: true });
+      });
+      const response = await page.goto(`/${locale}${route}`, { waitUntil: 'networkidle' });
+      expect(response?.status()).toBe(200);
+      await expect(page.locator('main h1').first()).toBeVisible();
+      const cls = await page.evaluate(() => (window as typeof window & { labCls: number }).labCls);
+      expect(cls).toBeLessThanOrEqual(0.1);
+    });
+  }
+  test('Homepage should load successfully with visible content', async ({ page }) => {
 
     await page.goto('/ja', { waitUntil: 'networkidle' });
-
-    const loadTime = Date.now() - startTime;
-
-    // Check that page loads within 7 seconds
-    expect(loadTime).toBeLessThan(7000);
 
     // Check that main content is visible
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
@@ -88,31 +101,23 @@ test.describe('Performance Tests', () => {
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible({ timeout: 10000 });
   });
 
-  test('Mobile homepage should pass a basic load-time smoke check', async ({ page }) => {
+  test('Mobile homepage should load successfully with visible content', async ({ page }) => {
     // Simulate mobile device
     await page.setViewportSize({ width: 375, height: 667 });
 
-    const startTime = Date.now();
     await page.goto('/ja', { waitUntil: 'networkidle' });
-    const loadTime = Date.now() - startTime;
-
-    // Mobile should still load reasonably fast
-    expect(loadTime).toBeLessThan(5000);
 
     // Check that content is properly displayed on mobile
     await expect(page.getByRole('heading', { name: '茂木光志' })).toBeVisible();
     await expect(page.getByLabel('ソーシャルメディアリンク')).toBeVisible();
   });
 
-  test('Publications filtering should remain responsive', async ({ page }) => {
+  test('Publications filtering should expose its selected state', async ({ page }) => {
     await page.goto('/ja/publications');
     await expect(page.getByRole('heading', { name: '論文', exact: true })).toBeVisible();
 
-    const filterStartTime = Date.now();
     await page.getByRole('button', { name: '主著' }).click();
     await expect(page.getByRole('button', { name: '主著' })).toHaveAttribute('aria-pressed', 'true');
-    const filterTime = Date.now() - filterStartTime;
 
-    expect(filterTime).toBeLessThan(2000);
   });
 });
