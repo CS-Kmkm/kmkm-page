@@ -17,4 +17,4 @@ overrides:
 patchedDependencies:
   '@next/eslint-plugin-next@16.4.4': patches/@next__eslint-plugin-next@16.4.4.patch
   # Preserve Proxy Vary: Accept alongside Next's RSC variants. Recheck on upgrades.
-  next@16.4.4: patches/next@16.4.4.patch
+  next@16.4.5: patches/next@16.4.5.patch
