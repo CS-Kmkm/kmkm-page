@@ -478,8 +478,18 @@ img {
 .stagger-4 { animation-delay: 200ms; }
 .stagger-5 { animation-delay: 250ms; }
 
+/* Native dialogs retain the existing panel design; the browser owns the top layer. */
 :root { color-scheme: light dark; }
 .dark { color-scheme: dark; }
+.site-modal { position: fixed; inset: 0; max-width: none; }
+.site-modal:modal { overscroll-behavior: contain; }
+.site-modal::backdrop {
+  background: rgb(241 245 249 / 0.45);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+.dark .site-modal::backdrop { background: rgb(15 23 42 / 0.55); }
 
 
 /* Include later-defined animation utilities and SVG motion in the preference. */

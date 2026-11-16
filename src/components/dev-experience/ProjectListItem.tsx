@@ -46,6 +46,7 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({
 
   return (
     <button
+      id={`project-card-${project.id}`}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       className={getProjectListItemClasses()}

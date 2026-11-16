@@ -27,7 +27,8 @@ const TechDetailView: React.FC<TechDetailViewProps> = ({
   // Handle Escape key to go back
   useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === 'Escape' && !document.querySelector('dialog[open]')) {
+        event.preventDefault();
         onBack();
       }
     };

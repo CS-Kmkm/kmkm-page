@@ -1,263 +1,93 @@
-/**
- * Generic Modal Component
- * 
- * A reusable modal component with built-in accessibility features,
- * keyboard navigation, focus management, and animations.
- */
-
 'use client';
 
-import { useEffect, useRef, ReactNode } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useId, useLayoutEffect, useRef, type ReactNode, type PointerEvent } from 'react';
 import {
-  getBackdropClassesWithFallback,
-  getModalContainerClasses,
-  getModalHeaderClasses,
-  getModalTitleClasses,
-  getCloseButtonClasses,
-  getModalContentClasses,
+  getModalContainerClasses, getModalHeaderClasses, getModalTitleClasses,
+  getCloseButtonClasses, getModalContentClasses,
 } from '@/lib/ui/modalStyles';
 import { useI18n } from '@/lib/i18n';
 
-/**
- * Modal props interface
- */
 export interface ModalProps {
-  /** Whether the modal is open */
   isOpen: boolean;
-  /** Callback when modal should close */
   onClose: () => void;
-  /** Modal title */
   title: string;
-  /** Optional description for accessibility */
   description?: string;
-  /** Modal content */
   children: ReactNode;
-  /** Whether to show the close button */
   showCloseButton?: boolean;
-  /** Accessible label for the close button */
   closeButtonLabel?: string;
-  /** Optional footer content */
   footer?: ReactNode;
-  /** Additional CSS classes */
   className?: string;
-  /** Custom aria-labelledby ID */
   ariaLabelledBy?: string;
-  /** Custom aria-describedby ID */
   ariaDescribedBy?: string;
 }
 
-/**
- * Generic Modal Component
- */
 export function Modal({
-  isOpen,
-  onClose,
-  title,
-  description,
-  children,
-  showCloseButton = true,
-  closeButtonLabel,
-  footer,
-  className = '',
-  ariaLabelledBy,
-  ariaDescribedBy,
+  isOpen, onClose, title, description, children, showCloseButton = true,
+  closeButtonLabel, footer, className = '', ariaLabelledBy, ariaDescribedBy,
 }: ModalProps) {
   const { locale, messages } = useI18n();
+  const modalRef = useRef<HTMLDialogElement>(null);
+  const pressedOutside = useRef(false);
+  const instanceId = useId();
+  const titleId = ariaLabelledBy || `${instanceId}-title`;
+  const descriptionId = ariaDescribedBy || (description ? `${instanceId}-description` : undefined);
   const resolvedCloseButtonLabel = closeButtonLabel ?? (locale === 'en' ? messages.closeModal : 'Close modal');
-  const modalRef = useRef<HTMLDivElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-  
-  const titleId = ariaLabelledBy || 'modal-title';
-  const descriptionId = ariaDescribedBy || (description ? 'modal-description' : undefined);
 
-  // Handle keyboard events (Escape key)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      
-      // Focus the close button when modal opens
-      setTimeout(() => {
-        closeButtonRef.current?.focus();
-      }, 100);
-      
-      // Prevent body scroll
-      document.body.style.overflow = 'hidden';
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen, onClose]);
-
-  // Focus trap implementation
-  useEffect(() => {
-    if (!isOpen || !modalRef.current) return;
-
-    const modal = modalRef.current;
-    const focusableElements = modal.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    
-    const firstElement = focusableElements[0] as HTMLElement;
-    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
-
-    const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key === 'Tab') {
-        if (e.shiftKey) {
-          if (document.activeElement === firstElement) {
-            e.preventDefault();
-            lastElement?.focus();
-          }
-        } else {
-          if (document.activeElement === lastElement) {
-            e.preventDefault();
-            firstElement?.focus();
-          }
-        }
-      }
-    };
-
-    document.addEventListener('keydown', handleTabKey);
-    return () => document.removeEventListener('keydown', handleTabKey);
+  // Native modal behavior owns containment, background inertness, Escape and focus return.
+  // Keep this independent of onClose: callers may recreate that callback on every render.
+  useLayoutEffect(() => {
+    const dialog = modalRef.current;
+    if (!dialog) return;
+    if (!isOpen) { if (dialog.open) dialog.close(); return; }
+    // React autoFocus runs before showModal and would replace the native return target.
+    dialog.querySelector('[data-modal-autofocus]')?.setAttribute('autofocus', '');
+    dialog.showModal();
+    return () => { if (dialog.open) dialog.close(); };
   }, [isOpen]);
 
-  // Animation variants
-  const overlayVariants = {
-    hidden: {
-      opacity: 0,
-      transition: {
-        duration: 0.2
-      }
-    },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.3
-      }
-    }
+  const outside = (event: PointerEvent<HTMLDialogElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    return event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
   };
 
-  const modalVariants = {
-    hidden: {
-      opacity: 0,
-      scale: 0.95,
-      y: 20
-    },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0
-    }
+  // Close while the element is connected, before the controlled parent removes it.
+  // Removing first prevents the browser from restoring focus to the invoker.
+  const dismiss = () => {
+    modalRef.current?.close();
+    onClose();
   };
-
-  // Check for reduced motion preference
-  const prefersReducedMotion = typeof window !== 'undefined' && 
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const animationProps = prefersReducedMotion
-    ? { initial: { opacity: 1 }, animate: { opacity: 1 } }
-    : {
-        initial: "hidden",
-        animate: "visible",
-        exit: "hidden",
-        variants: modalVariants
-      };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          className={getBackdropClassesWithFallback()}
-          initial="hidden"
-          animate="visible"
-          exit="hidden"
-          variants={overlayVariants}
-        >
-          {/* Backdrop overlay */}
-          <div
-            className="absolute inset-0"
-            onClick={onClose}
-            aria-hidden="true"
-          />
-
-          {/* Modal container */}
-          <motion.div
-            ref={modalRef}
-            className={`${getModalContainerClasses()} ${className}`}
-            {...animationProps}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={titleId}
-            aria-describedby={descriptionId}
-          >
-            <div className="p-4 sm:p-6">
-              {/* Header */}
-              <div className={getModalHeaderClasses()}>
-                <div className="flex-1">
-                  <h2
-                    id={titleId}
-                    className={getModalTitleClasses()}
-                  >
-                    {title}
-                  </h2>
-                  {description && (
-                    <p
-                      id={descriptionId}
-                      className="sr-only"
-                    >
-                      {description}
-                    </p>
-                  )}
-                </div>
-                {showCloseButton && (
-                  <button
-                    ref={closeButtonRef}
-                    onClick={onClose}
-                    className={getCloseButtonClasses()}
-                    aria-label={resolvedCloseButtonLabel}
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                )}
-              </div>
-
-              {/* Content */}
-              <div className={getModalContentClasses()}>
-                {children}
-              </div>
-
-              {/* Footer */}
-              {footer && (
-                <div className="mt-6">
-                  {footer}
-                </div>
-              )}
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <dialog
+      ref={modalRef}
+      className={`site-modal m-auto border-0 p-0 ${getModalContainerClasses()} ${className}`}
+      aria-labelledby={titleId}
+      aria-describedby={descriptionId}
+      onCancel={event => { event.preventDefault(); event.stopPropagation(); dismiss(); }}
+      onPointerDown={event => { pressedOutside.current = outside(event); }}
+      onPointerUp={event => {
+        if (pressedOutside.current && outside(event)) dismiss();
+        pressedOutside.current = false;
+      }}
+    >
+      <div className="p-4 sm:p-6">
+        <div className={getModalHeaderClasses()}>
+          <div className="flex-1 min-w-0">
+            <h2 id={titleId} className={getModalTitleClasses()} tabIndex={showCloseButton ? undefined : -1} data-modal-autofocus={!showCloseButton || undefined}>{title}</h2>
+            {description && <p id={descriptionId} className="sr-only">{description}</p>}
+          </div>
+          {showCloseButton && (
+            <button type="button" data-modal-autofocus onClick={dismiss} className={getCloseButtonClasses()} aria-label={resolvedCloseButtonLabel}>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+        </div>
+        <div className={getModalContentClasses()}>{children}</div>
+        {footer && <div className="mt-6">{footer}</div>}
+      </div>
+    </dialog>
   );
 }
 
