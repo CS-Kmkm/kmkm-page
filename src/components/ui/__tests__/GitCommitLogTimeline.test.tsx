@@ -35,6 +35,12 @@ const events: EventEntry[] = [
 ]
 
 describe('GitCommitLogTimeline', () => {
+  it('opens the full existing career record from its labeled control', () => {
+    render(<GitCommitLogTimeline entries={[{ ...entries[0], description: 'Full career description' }]} events={events} />)
+    fireEvent.click(screen.getByRole('button', { name: 'University: Student' }))
+    expect(screen.getByRole('dialog')).toHaveAccessibleName('University')
+    expect(screen.getByText('Full career description')).toBeVisible()
+  })
   it('links the paper title to its source URL in the event details', () => {
     render(<GitCommitLogTimeline entries={entries} events={events} />)
 

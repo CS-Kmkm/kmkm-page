@@ -1,9 +1,10 @@
-﻿'use client';
+'use client';
 
 import React, { useMemo, useId, useEffect, useRef, useState } from 'react';
 import type { ExtendedCareerEntry, EventEntry, YearEventGroup, TimelineEventEntry } from '@/types';
 import EventListModal from './EventListModal';
 import EventModal from './EventModal';
+import { Modal } from './Modal';
 import { useI18n } from '@/lib/i18n';
 
 /**
@@ -361,6 +362,7 @@ export default function GitCommitLogTimeline({
   const [selectedYearGroup, setSelectedYearGroup] = useState<YearEventGroup | null>(null);
   const [isEventDetailModalOpen, setIsEventDetailModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<TimelineEventEntry | null>(null);
+  const [selectedCareer, setSelectedCareer] = useState<ExtendedCareerEntry | null>(null);
 
   const processedEntries = useMemo(
     () => processEntries(entries),
@@ -527,7 +529,7 @@ export default function GitCommitLogTimeline({
 
   return (
     <>
-      <div ref={containerRef} className="text-sm font-sans">
+      <div ref={containerRef} className="min-w-[48rem] text-sm font-sans md:min-w-0">
       {rows.map((row, rowIndex) => {
         const clipId = `${clipBaseId}-row-clip-${rowIndex}`;
         const entry = row.entry;
@@ -933,7 +935,9 @@ export default function GitCommitLogTimeline({
                     className={`w-1.5 ${isCompactRow ? 'h-6' : 'h-10'} rounded-full flex-shrink-0`}
                     style={{ backgroundColor: entry.color }}
                   />
-                  <div className="flex-1 min-w-0">
+                  <button type="button" className="timeline-control flex-1 min-w-0 rounded text-left min-h-6"
+                    aria-label={`${entry.organization}: ${entry.role}`}
+                    aria-haspopup="dialog" onClick={() => setSelectedCareer(entries.find(item => item.id === entry.id) ?? null)}>
                     <div className="flex items-center gap-2 min-w-0">
                       <span
                         className={`font-semibold text-gray-900 dark:text-gray-100 leading-tight min-w-0 ${
@@ -954,7 +958,7 @@ export default function GitCommitLogTimeline({
                         {roleText}
                       </span>
                     </div>
-                  </div>
+                  </button>
                   <div className="flex-shrink-0 ml-auto w-[15ch] -mr-2">
                     <div
                       className="grid grid-cols-[8ch_7ch] items-center text-xs text-gray-500 dark:text-gray-400 font-mono"
@@ -982,6 +986,14 @@ export default function GitCommitLogTimeline({
       })}
       </div>
 
+      <Modal isOpen={selectedCareer !== null} onClose={() => setSelectedCareer(null)} title={selectedCareer?.organization ?? ''}>
+        {selectedCareer && <>
+          <p className="font-semibold text-gray-900 dark:text-gray-100">{selectedCareer.role}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-300">{formatDateRangeLabel(selectedCareer.startDate, selectedCareer.endDate ?? null, messages.current)}</p>
+          {selectedCareer.description && <p className="whitespace-pre-wrap break-words text-gray-700 dark:text-gray-300">{selectedCareer.description}</p>}
+        </>}
+      </Modal>
+
       <EventListModal
         isOpen={isEventListModalOpen}
         onClose={closeYearEventModal}
@@ -997,4 +1009,3 @@ export default function GitCommitLogTimeline({
     </>
   );
 }
-

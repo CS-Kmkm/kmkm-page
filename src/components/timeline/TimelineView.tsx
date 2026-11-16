@@ -16,7 +16,7 @@ const TimelineView: React.FC<TimelineViewProps> = ({
   events,
   isReversed
 }) => {
-  const { messages } = useI18n();
+  const { locale, messages } = useI18n();
   const hasCareerData = careerEntries.length > 0;
 
   return (
@@ -26,7 +26,11 @@ const TimelineView: React.FC<TimelineViewProps> = ({
       </h2>
 
       {hasCareerData ? (
-        <div className="overflow-hidden">
+        <div>
+          <p className="mb-2 text-xs text-gray-600 dark:text-gray-300 md:hidden">
+            {locale === 'en' ? 'Scroll horizontally to read career labels. Select a career to view its full details.' : '横スクロールで経歴を確認できます。経歴を選択すると詳細を表示します。'}
+          </p>
+          <div className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-blue-600" role="region" aria-label={messages.careerTimeline} tabIndex={0}>
           <GitCommitLogTimeline
             entries={careerEntries}
             events={events}
@@ -35,6 +39,7 @@ const TimelineView: React.FC<TimelineViewProps> = ({
             fitToViewport
             viewportBottomOffset={32}
           />
+          </div>
         </div>
       ) : (
         <div className="text-center py-12">
