@@ -1,0 +1,224 @@
+{
+  "environment": {
+    "before": {
+      "browser": "147.0.7727.15",
+      "baseURL": "http://localhost:3000",
+      "lighthouse": {
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+        "benchmarkIndex": 458,
+        "formFactor": "mobile",
+        "throttlingMethod": "simulate",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        }
+      }
+    },
+    "after": {
+      "browser": "147.0.7727.15",
+      "baseURL": "http://localhost:3000",
+      "lighthouse": {
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1112,
+        "formFactor": "mobile",
+        "throttlingMethod": "simulate",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        }
+      }
+    }
+  },
+  "accessibility": {
+    "before": {
+      "conditions": 32,
+      "conditionsWithViolations": 15,
+      "rules": [
+        "color-contrast"
+      ],
+      "pageOverflows": [],
+      "clippedSvgText": []
+    },
+    "after": {
+      "conditions": 32,
+      "conditionsWithViolations": 0,
+      "rules": [],
+      "pageOverflows": [],
+      "clippedSvgText": []
+    }
+  },
+  "lighthouse": {
+    "before": [
+      {
+        "url": "http://localhost:3000/en",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.71,
+        "lcpMs": 3520.3701499999997,
+        "cls": 0,
+        "tbtMs": 894.9999999999998,
+        "accessibility": 0.97
+      },
+      {
+        "url": "http://localhost:3000/en/career",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.74,
+        "lcpMs": 3626.9181,
+        "cls": 0,
+        "tbtMs": 685.8766999999998,
+        "accessibility": 0.96
+      },
+      {
+        "url": "http://localhost:3000/en/dev-experience",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.85,
+        "lcpMs": 3650.8268500000004,
+        "cls": 0,
+        "tbtMs": 190.9326500000002,
+        "accessibility": 0.95
+      },
+      {
+        "url": "http://localhost:3000/en/publications",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.9,
+        "lcpMs": 3117.7522,
+        "cls": 0,
+        "tbtMs": 209.00000000000023,
+        "accessibility": 0.94
+      },
+      {
+        "url": "http://localhost:3000/ja",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.62,
+        "lcpMs": 3671.46605,
+        "cls": 0,
+        "tbtMs": 1752,
+        "accessibility": 0.97
+      },
+      {
+        "url": "http://localhost:3000/ja/career",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.64,
+        "lcpMs": 3641.0407499999997,
+        "cls": 0,
+        "tbtMs": 1321.5000000000002,
+        "accessibility": 0.96
+      },
+      {
+        "url": "http://localhost:3000/ja/dev-experience",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.7,
+        "lcpMs": 3244.6041000000005,
+        "cls": 0,
+        "tbtMs": 1087.19795,
+        "accessibility": 0.95
+      },
+      {
+        "url": "http://localhost:3000/ja/publications",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.72,
+        "lcpMs": 3450.5281999999997,
+        "cls": 0,
+        "tbtMs": 757.5000000000005,
+        "accessibility": 0.94
+      }
+    ],
+    "after": [
+      {
+        "url": "http://localhost:3000/en",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.64,
+        "lcpMs": 3549.1327499999998,
+        "cls": 0,
+        "tbtMs": 1408.8523499999988,
+        "accessibility": 1
+      },
+      {
+        "url": "http://localhost:3000/en/career",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.69,
+        "lcpMs": 3414.5893,
+        "cls": 0,
+        "tbtMs": 1034.1368999999997,
+        "accessibility": 1
+      },
+      {
+        "url": "http://localhost:3000/en/dev-experience",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.74,
+        "lcpMs": 3340.3031250000004,
+        "cls": 0,
+        "tbtMs": 948.5022000000001,
+        "accessibility": 0.99
+      },
+      {
+        "url": "http://localhost:3000/en/publications",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.71,
+        "lcpMs": 3270.9316,
+        "cls": 0,
+        "tbtMs": 935,
+        "accessibility": 0.98
+      },
+      {
+        "url": "http://localhost:3000/ja",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.65,
+        "lcpMs": 3255.9807,
+        "cls": 0,
+        "tbtMs": 1793.988175,
+        "accessibility": 1
+      },
+      {
+        "url": "http://localhost:3000/ja/career",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.77,
+        "lcpMs": 3140.7874999999995,
+        "cls": 0,
+        "tbtMs": 640.2375,
+        "accessibility": 1
+      },
+      {
+        "url": "http://localhost:3000/ja/dev-experience",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.72,
+        "lcpMs": 3483.6184000000007,
+        "cls": 0,
+        "tbtMs": 704.4999999999999,
+        "accessibility": 0.99
+      },
+      {
+        "url": "http://localhost:3000/ja/publications",
+        "runs": 3,
+        "lighthouseVersion": "12.8.2",
+        "score": 0.7,
+        "lcpMs": 3085.4488,
+        "cls": 0,
+        "tbtMs": 1189,
+        "accessibility": 0.98
+      }
+    ]
+  }
+}

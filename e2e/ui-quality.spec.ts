@@ -130,7 +130,9 @@ for (const locale of ['ja', 'en']) {
 
         test('Escape closes a related project without leaving technology details', async ({ page }) => {
           await page.goto(`/${locale}/dev-experience`);
-          await page.locator('#tech-card-tech-001').click();
+          await page.getByRole('button', {
+            name: locale === 'ja' ? 'Pythonの詳細を表示' : 'Show Python details', exact: true,
+          }).click();
           const region = page.getByRole('region', { name: /Python/ });
           const trigger = region.locator('#project-card-proj-001');
           await trigger.click();

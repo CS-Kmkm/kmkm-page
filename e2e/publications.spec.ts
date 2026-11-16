@@ -16,7 +16,7 @@ test.describe('Publications Page', () => {
     await expect(page.getByRole('button', { name: 'なし' })).toBeVisible();
 
     // Check that results count is displayed
-    await expect(page.getByText(/\d+ \/ \d+件/)).toBeVisible();
+    await expect(page.getByRole('status')).toHaveText(/\d+ \/ \d+件/);
 
     // Check that publications are displayed
     const publications = page.getByRole('button', { name: /の詳細を表示/ });
@@ -120,7 +120,7 @@ test.describe('Publications Page', () => {
 
   test('should show results count', async ({ page }) => {
     // Check results count is displayed
-    await expect(page.getByText(/\d+ \/ \d+件/)).toBeVisible();
+    await expect(page.getByRole('status')).toHaveText(/\d+ \/ \d+件/);
   });
 
   test('should handle keyboard navigation for filters', async ({ page }) => {
