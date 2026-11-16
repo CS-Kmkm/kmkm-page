@@ -108,6 +108,26 @@ for (const locale of ['ja', 'en']) {
           expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
         });
 
+        test('project technology navigation returns to its project and preserves its overview', async ({ page }) => {
+          await page.goto(`/${locale}/dev-experience`);
+          await page.getByRole('tab').last().click();
+          const project = page.locator('#project-card-proj-001');
+          await project.click();
+          const title = await page.getByRole('dialog').getByRole('heading', { level: 2 }).textContent();
+          await page.getByRole('dialog').getByRole('button', { name: 'Python', exact: true }).click();
+          await expect(page.getByRole('dialog')).toHaveCount(0);
+          await expect(page.getByRole('region', { name: /Python/ })).toBeVisible();
+          const back = page.locator('#tech-detail-back-button');
+          await expect(back).toBeFocused();
+          await back.press('Escape');
+          await expect(page.getByRole('dialog')).toBeVisible();
+          await expect(page.getByRole('dialog').getByRole('heading', { level: 2 })).toHaveText(title!);
+          await expect(page.getByRole('dialog').getByRole('button', { name: 'Python', exact: true })).toBeFocused();
+          await page.keyboard.press('Escape');
+          await expect(page.getByRole('tab').last()).toHaveAttribute('aria-selected', 'true');
+          await expect(project).toBeFocused();
+        });
+
         test('Escape closes a related project without leaving technology details', async ({ page }) => {
           await page.goto(`/${locale}/dev-experience`);
           await page.locator('#tech-card-tech-001').click();

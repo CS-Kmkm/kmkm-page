@@ -15,7 +15,9 @@ import { useI18n } from '@/lib/i18n';
 const ProjectModal: React.FC<ProjectModalProps> = ({
   project,
   isOpen,
-  onClose
+  onClose,
+  onTechnologySelect,
+  availableTechnologies = [],
 }) => {
   const { messages } = useI18n();
   if (!isOpen || !project) {
@@ -99,7 +101,12 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           {messages.technologyStack}
         </h3>
         <div className="flex flex-wrap gap-2">
-          {project.technologies.map((tech, index) => (
+          {project.technologies.map((tech, index) => onTechnologySelect && availableTechnologies.includes(tech) ? (
+            <button key={tech} id={`project-tech-${tech}`} type="button" onClick={() => onTechnologySelect(tech)}
+              className={`min-h-11 px-3 py-1 ${tokens.badge.blue.bg} ${tokens.badge.blue.text} ${tokens.radius.full} ${tokens.focus.ringFull} text-sm font-medium underline underline-offset-2`}>
+              {tech}
+            </button>
+          ) : (
             <span
               key={index}
               className={`px-3 py-1 ${tokens.badge.blue.bg} ${tokens.badge.blue.text} ${tokens.radius.full} text-sm font-medium`}
