@@ -8,6 +8,12 @@ for (const locale of ['ja', 'en']) {
       const control = page.locator('section[aria-labelledby="timeline-heading"] .timeline-control').first();
       await expect(control).toBeVisible();
       await control.scrollIntoViewIfNeeded();
+      // Horizontal scrolling emits its scroll event on the next rendering turn.
+      // Let that event and responsive ResizeObserver updates finish before the
+      // one pointer move below; those updates intentionally clear old hover.
+      await page.evaluate(() => new Promise<void>(resolve => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      }));
       const timeline = control.locator('xpath=../../..');
       const originalRow = control.locator('xpath=../..');
       const point = await control.boundingBox();
