@@ -2,6 +2,7 @@
 
 import { Fragment } from 'react';
 import { useI18n } from '@/lib/i18n';
+import { focusTokens } from '@/lib/theme/tokens';
 
 export interface FilterControlOption<FilterKey extends string> {
   key: FilterKey;
@@ -29,7 +30,7 @@ interface FilterControlsProps<FilterKey extends string> {
 }
 
 const filterButtonClass = (isActive: boolean) =>
-  `relative min-h-11 min-w-11 border-0 border-b-2 bg-transparent px-0.5 pb-2 text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-blue-400 dark:focus-visible:ring-offset-gray-900 sm:px-1 sm:pb-3 sm:text-sm ${
+  `relative min-h-11 min-w-11 border-0 border-b-2 bg-transparent px-0.5 pb-2 text-xs font-semibold transition-colors ${focusTokens.ringFull} sm:px-1 sm:pb-3 sm:text-sm ${
     isActive
       ? 'border-blue-600 text-blue-700 dark:border-blue-400 dark:text-blue-300'
       : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-900 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-100'
@@ -92,7 +93,7 @@ export default function FilterControls<FilterKey extends string>({
             <button
               type="button"
               onClick={onClearFilters}
-              className="inline-flex min-h-11 min-w-11 items-center border-0 bg-transparent px-0.5 pb-2 text-xs font-medium text-gray-500 transition-colors hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus-visible:ring-blue-400 dark:focus-visible:ring-offset-gray-900 sm:px-1 sm:pb-3 sm:text-sm"
+              className={`inline-flex min-h-11 min-w-11 items-center border-0 bg-transparent px-0.5 pb-2 text-xs font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 ${focusTokens.ringFull} sm:px-1 sm:pb-3 sm:text-sm`}
             >
               <svg
                 className="w-4 h-4 mr-1.5"

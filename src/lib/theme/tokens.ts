@@ -57,10 +57,19 @@ export const interactiveTokens = {
  * Focus ring tokens
  */
 export const focusTokens = {
-  ring: 'focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400',
+  ring: 'focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:focus-visible:outline-blue-400',
   ringOffset: 'focus:ring-offset-2 dark:focus:ring-offset-gray-900',
-  ringFull: 'focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900',
+  ringFull: 'focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:focus-visible:outline-blue-400',
 } as const;
+
+/** Shared tab geometry and states used by both portfolio and career views. */
+export const getTabClasses = (active: boolean): string => [
+  'relative min-h-11 min-w-11 border-0 bg-transparent px-0.5 pb-2 text-xs font-semibold transition-colors sm:px-1 sm:pb-3 sm:text-sm',
+  focusTokens.ringFull,
+  active
+    ? 'text-blue-700 after:absolute after:inset-x-0 after:bottom-[-1px] after:h-0.5 after:bg-blue-600 dark:text-blue-300 dark:after:bg-blue-400'
+    : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100',
+].join(' ');
 
 /**
  * Status color tokens
