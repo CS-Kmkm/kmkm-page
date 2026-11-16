@@ -5,8 +5,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { EventListModalProps, YearEventGroup } from '@/types';
 import { formatEventDate } from '@/lib/career/eventUtils';
 import { Modal } from './Modal';
@@ -26,67 +25,6 @@ export default function EventListModal({
   className = ''
 }: EventListModalProps) {
   const { locale, messages } = useI18n();
-  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
-  const activeFocusedIndex = focusedIndex ?? 0;
-
-  // Handle keyboard events for list navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isOpen || !yearGroup) return;
-
-      switch (e.key) {
-        case 'ArrowDown':
-          e.preventDefault();
-          setFocusedIndex(prev => {
-            const current = prev ?? 0;
-            return current < yearGroup.events.length - 1 ? current + 1 : current;
-          });
-          break;
-        case 'ArrowUp':
-          e.preventDefault();
-          setFocusedIndex(prev => {
-            const current = prev ?? 0;
-            return current > 0 ? current - 1 : current;
-          });
-          break;
-        case 'Enter':
-          e.preventDefault();
-          if (yearGroup.events[activeFocusedIndex]) {
-            onEventSelect(yearGroup.events[activeFocusedIndex]);
-          }
-          break;
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen, onEventSelect, yearGroup, activeFocusedIndex]);
-
-  // Animation variants for list items
-  const listItemVariants = {
-    hidden: {
-      opacity: 0,
-      x: -20
-    },
-    visible: (index: number) => ({
-      opacity: 1,
-      x: 0,
-      transition: {
-        delay: index * 0.1,
-        duration: 0.3
-      }
-    })
-  };
-
-  // Check for reduced motion preference
-  const prefersReducedMotion = typeof window !== 'undefined' && 
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
   if (!yearGroup) return null;
 
   return (
@@ -98,8 +36,16 @@ export default function EventListModal({
     >
       {/* Event List */}
       <div className="space-y-2 max-h-96 overflow-y-auto">
-        <ul role="list" className="space-y-2">
-          {yearGroup.events.map((event, index) => {
+        <ul role="list" className="space-y-2" onKeyDown={event => {
+          if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
+          const buttons = Array.from(event.currentTarget.querySelectorAll('button'));
+          const index = buttons.indexOf(document.activeElement as HTMLButtonElement);
+          if (index < 0) return;
+          event.preventDefault();
+          const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1 : event.key === 'ArrowDown' ? Math.min(index + 1, buttons.length - 1) : Math.max(index - 1, 0);
+          buttons[next]?.focus();
+        }}>
+          {yearGroup.events.map((event) => {
             const categoryConfig = event.category ? getEventCategoryConfig(event.category) : null;
             const categoryLabel = event.category === 'affiliation'
               ? messages.affiliation
@@ -114,22 +60,11 @@ export default function EventListModal({
                       : messages.other;
             
             return (
-              <motion.li
-                key={event.id}
-                role="listitem"
-                custom={index}
-                initial="hidden"
-                animate="visible"
-                variants={prefersReducedMotion ? {} : listItemVariants}
-              >
+              <li key={event.id} className="animate-slide-in-right">
                 <button
-                  className={`w-full p-3 text-left border ${tokens.radius.lg} ${tokens.transition.normal} ${tokens.focus.ringFull} ${
-                    activeFocusedIndex === index
-                      ? `${tokens.surface.primary} ${tokens.border.focus}`
-                      : `${tokens.surface.primary} ${tokens.border.default} ${tokens.border.hover.replace('border-', 'hover:border-')}`
-                  }`}
+                  className={`w-full min-h-11 p-3 text-left border ${tokens.radius.lg} ${tokens.transition.colors} ${tokens.focus.ringFull} ${tokens.surface.primary} ${tokens.border.default}`}
                   onClick={() => onEventSelect(event)}
-                  onMouseEnter={() => setFocusedIndex(index)}
+
                   aria-label={`${event.title} - ${locale === 'en' ? messages.viewDetails : 'View event details'}`}
                 >
                   <div className="flex justify-between items-start">
@@ -164,7 +99,7 @@ export default function EventListModal({
                     </div>
                   </div>
                 </button>
-              </motion.li>
+              </li>
             );
           })}
         </ul>
