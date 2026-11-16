@@ -37,6 +37,7 @@ export default function DevExperienceClient({
   const [selectedProject, setSelectedProject] = useState<ProjectDetail | null>(null);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<OverviewSection>('technologies');
+  const [hasVisitedProjects, setHasVisitedProjects] = useState(false);
   const [projectTrail, setProjectTrail] = useState<Array<{ project: ProjectDetail; tech: TechItem | null; name: string; trigger: HTMLElement | null }>>([]);
   const returnToProject = projectTrail.at(-1);
   const projectTriggerRef = useRef<HTMLElement | null>(null);
@@ -105,6 +106,11 @@ export default function DevExperienceClient({
     }
   };
 
+  const handleSectionChange = (section: OverviewSection) => {
+    if (section === 'projects') setHasVisitedProjects(true);
+    setActiveSection(section);
+  };
+
   const handleTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
       return;
@@ -114,7 +120,7 @@ export default function DevExperienceClient({
     const nextSection: OverviewSection = event.key === 'ArrowLeft' || event.key === 'Home'
       ? 'technologies'
       : 'projects';
-    setActiveSection(nextSection);
+    handleSectionChange(nextSection);
     requestAnimationFrame(() => {
       document.getElementById(`${nextSection}-tab`)?.focus();
     });
@@ -139,7 +145,7 @@ export default function DevExperienceClient({
                 aria-controls="technologies-panel"
                 tabIndex={activeSection === 'technologies' ? 0 : -1}
                 className={getTabClasses(activeSection === 'technologies')}
-                onClick={() => setActiveSection('technologies')}
+                onClick={() => handleSectionChange('technologies')}
                 onKeyDown={handleTabKeyDown}
               >
                 {locale === 'en' ? 'Technology Stack' : '技術スタック'}
@@ -152,7 +158,7 @@ export default function DevExperienceClient({
                 aria-controls="projects-panel"
                 tabIndex={activeSection === 'projects' ? 0 : -1}
                 className={getTabClasses(activeSection === 'projects')}
-                onClick={() => setActiveSection('projects')}
+                onClick={() => handleSectionChange('projects')}
                 onKeyDown={handleTabKeyDown}
               >
                 {locale === 'en' ? 'Projects' : 'プロジェクト'}
@@ -204,11 +210,14 @@ export default function DevExperienceClient({
               aria-labelledby="projects-tab"
               hidden={activeSection !== 'projects'}
             >
-              <AllProjectsSection
-                projects={allProjects}
-                technologyCategories={techCategoryByName}
-                onProjectSelect={handleProjectSelect}
-              />
+              {/* Defer the unvisited tab, then retain it for fast, stateful revisits. */}
+              {hasVisitedProjects && (
+                <AllProjectsSection
+                  projects={allProjects}
+                  technologyCategories={techCategoryByName}
+                  onProjectSelect={handleProjectSelect}
+                />
+              )}
             </div>
           </div>
         ) : (

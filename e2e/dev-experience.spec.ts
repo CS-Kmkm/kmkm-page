@@ -37,15 +37,33 @@ test.describe('Development Experience Page', () => {
     await expect(technologyPanel).toBeVisible();
     await expect(technologyPanel.getByRole('heading', { name: '技術スタック' })).toHaveCount(0);
     await expect(projectsPanel).toBeHidden();
+    await expect(projectsPanel.locator('[role="listitem"]')).toHaveCount(0);
 
     await projectsTab.click();
     await expect(projectsTab).toHaveAttribute('aria-selected', 'true');
     await expect(projectsPanel).toBeVisible();
+    await expect(projectsPanel.getByRole('listitem').first()).toBeVisible();
     await expect(projectsPanel.getByRole('heading', { name: '全プロジェクト' })).toHaveCount(0);
     await expect(technologyPanel).toBeHidden();
 
     await technologyTab.click();
     await expect(technologyPanel).toBeVisible();
+    // Keep the visited list mounted so subsequent switches can reuse it.
+    await expect(projectsPanel.locator('[role="listitem"]')).not.toHaveCount(0);
+  });
+
+  test('preserves collapsed categories across keyboard tab round trips', async ({ page }) => {
+    const languageToggle = page.getByRole('button', { name: /プログラミング言語/ });
+    await languageToggle.click();
+    const technologyTab = page.getByRole('tab', { name: '技術スタック' });
+    await technologyTab.focus();
+    await page.keyboard.press('End');
+    await expect(page.getByRole('tab', { name: 'プロジェクト' })).toBeFocused();
+    await expect(page.locator('#projects-panel [role="listitem"]').first()).toBeVisible();
+    await page.keyboard.press('Home');
+    await expect(technologyTab).toBeFocused();
+    await expect(languageToggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.getByRole('button', { name: 'Pythonの詳細を表示' })).toBeHidden();
   });
 
   test('should display tech detail view when clicking technology', async ({ page }) => {

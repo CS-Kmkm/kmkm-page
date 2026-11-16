@@ -41,6 +41,7 @@
     "playwright.config.ts"
   ],
   "exclude": [
+    ".ai",
     "node_modules"
   ]
 }

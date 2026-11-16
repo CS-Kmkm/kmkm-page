@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { getUpdates } from '../src/data';
 
 async function openNavigation(page: Page) {
   const mobileMenuButton = page.getByRole('button', { name: 'メインメニューを開く' });
@@ -74,6 +75,25 @@ test.describe('Homepage', () => {
     await expect(updates.first()).toBeVisible();
   });
 
+  test('keeps tall viewport layout shifts within budget while measuring updates', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 1400 });
+    await page.addInitScript(() => {
+      const state = window as typeof window & { updateCls: number };
+      state.updateCls = 0;
+      new PerformanceObserver(list => {
+        for (const entry of list.getEntries()) {
+          const shift = entry as PerformanceEntry & { value: number; hadRecentInput: boolean };
+          if (!shift.hadRecentInput) state.updateCls += shift.value;
+        }
+      }).observe({ type: 'layout-shift', buffered: true });
+    });
+    await page.goto('/ja', { waitUntil: 'networkidle' });
+    await page.locator('[data-update-fit="settled"]').waitFor();
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await expect.poll(() => page.locator('[data-visible-update-item]').count()).toBeGreaterThan(3);
+    expect(await page.evaluate(() => (window as typeof window & { updateCls: number }).updateCls)).toBeLessThanOrEqual(0.1);
+  });
+
   test('should fit updates count to available viewport height', async ({ page }) => {
     const updatesSection = page.locator('section[aria-labelledby="updates-heading"]');
 
@@ -83,14 +103,17 @@ test.describe('Homepage', () => {
       return section ? section.querySelectorAll('[data-visible-update-item]').length > 0 : false;
     });
 
+    await expect.poll(() => updatesSection.locator('[data-visible-update-item]').count()).toBeLessThan(3);
     const compactVisibleCount = await updatesSection.locator('[data-visible-update-item]').count();
-    const compactTotalCount = await updatesSection.locator('[data-update-measure-item]').count();
+    const compactTotalCount = getUpdates().length;
+    const compactMeasured = await updatesSection.locator('[data-update-measure-item]').count();
     expect(compactVisibleCount).toBeGreaterThanOrEqual(1);
     expect(compactVisibleCount).toBeLessThan(3);
 
     const compactMoreText = await updatesSection.locator('[data-visible-update-more]').textContent();
     const compactHiddenCount = Number(compactMoreText?.match(/\d+/)?.[0]);
     expect(compactHiddenCount).toBe(compactTotalCount - compactVisibleCount);
+    expect(compactMeasured > compactVisibleCount || compactHiddenCount === 0).toBe(true);
 
     await page.setViewportSize({ width: 1280, height: 1400 });
     await page.waitForFunction(() => {
@@ -100,6 +123,8 @@ test.describe('Homepage', () => {
 
     const roomyVisibleCount = await updatesSection.locator('[data-visible-update-item]').count();
     expect(roomyVisibleCount).toBeGreaterThan(3);
+    const roomyMeasured = await updatesSection.locator('[data-update-measure-item]').count();
+    expect(roomyMeasured > roomyVisibleCount || roomyVisibleCount === compactTotalCount).toBe(true);
 
     const hasHorizontalScroll = await page.evaluate(() => {
       return document.body.scrollWidth > window.innerWidth;
