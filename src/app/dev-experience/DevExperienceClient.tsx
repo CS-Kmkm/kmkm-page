@@ -41,6 +41,8 @@ export default function DevExperienceClient({
   const [projectTrail, setProjectTrail] = useState<Array<{ project: ProjectDetail; tech: TechItem | null; name: string; trigger: HTMLElement | null }>>([]);
   const returnToProject = projectTrail.at(-1);
   const projectTriggerRef = useRef<HTMLElement | null>(null);
+  const technologyTabRef = useRef<HTMLButtonElement>(null);
+  const projectsTabRef = useRef<HTMLButtonElement>(null);
 
   const selectedTechProjects = useMemo(
     () => selectedTech ? getProjectsForTech(selectedTech) : [],
@@ -122,7 +124,8 @@ export default function DevExperienceClient({
       : 'projects';
     handleSectionChange(nextSection);
     requestAnimationFrame(() => {
-      document.getElementById(`${nextSection}-tab`)?.focus();
+      const nextTab = nextSection === 'technologies' ? technologyTabRef : projectsTabRef;
+      nextTab.current?.focus();
     });
   };
 
@@ -139,6 +142,7 @@ export default function DevExperienceClient({
             >
               <button
                 id="technologies-tab"
+                ref={technologyTabRef}
                 type="button"
                 role="tab"
                 aria-selected={activeSection === 'technologies'}
@@ -152,6 +156,7 @@ export default function DevExperienceClient({
               </button>
               <button
                 id="projects-tab"
+                ref={projectsTabRef}
                 type="button"
                 role="tab"
                 aria-selected={activeSection === 'projects'}

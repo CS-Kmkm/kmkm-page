@@ -1,4 +1,13 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+async function addInactivePageCopy(page: Page) {
+  // Model a retained hidden route explicitly so page isolation is deterministic.
+  await page.getByRole('main', { name: '開発経験', exact: true }).evaluate(main => {
+    const inactivePage = main.cloneNode(true) as HTMLElement;
+    inactivePage.hidden = true;
+    main.before(inactivePage);
+  });
+}
 
 test.describe('Development Experience Page', () => {
   test.describe.configure({ mode: 'serial' });
@@ -28,10 +37,14 @@ test.describe('Development Experience Page', () => {
   });
 
   test('should switch between technology stack and projects', async ({ page }) => {
-    const technologyTab = page.getByRole('tab', { name: '技術スタック' });
-    const projectsTab = page.getByRole('tab', { name: 'プロジェクト' });
-    const technologyPanel = page.getByRole('tabpanel', { name: '技術スタック', includeHidden: true });
-    const projectsPanel = page.getByRole('tabpanel', { name: 'プロジェクト', includeHidden: true });
+    await addInactivePageCopy(page);
+    // Next can retain hidden route trees. Include inactive tabs within the active
+    // page, rather than including panels belonging to those retained routes.
+    const activePage = page.getByRole('main', { name: '開発経験', exact: true });
+    const technologyTab = activePage.getByRole('tab', { name: '技術スタック' });
+    const projectsTab = activePage.getByRole('tab', { name: 'プロジェクト' });
+    const technologyPanel = activePage.getByRole('tabpanel', { name: '技術スタック', includeHidden: true });
+    const projectsPanel = activePage.getByRole('tabpanel', { name: 'プロジェクト', includeHidden: true });
 
     await expect(technologyTab).toHaveAttribute('aria-selected', 'true');
     await expect(technologyPanel).toBeVisible();
@@ -53,17 +66,23 @@ test.describe('Development Experience Page', () => {
   });
 
   test('preserves collapsed categories across keyboard tab round trips', async ({ page }) => {
-    const languageToggle = page.getByRole('button', { name: /プログラミング言語/ });
+    await addInactivePageCopy(page);
+    const activePage = page.getByRole('main', { name: '開発経験', exact: true });
+    const languageToggle = activePage.getByRole('button', { name: /プログラミング言語/ });
     await languageToggle.click();
-    const technologyTab = page.getByRole('tab', { name: '技術スタック' });
+    // Wait for the interaction to commit before moving focus to the tablist.
+    await expect(languageToggle).toHaveAttribute('aria-expanded', 'false');
+    const technologyTab = activePage.getByRole('tab', { name: '技術スタック' });
+    const projectsTab = activePage.getByRole('tab', { name: 'プロジェクト' });
     await technologyTab.focus();
-    await page.keyboard.press('End');
-    await expect(page.getByRole('tab', { name: 'プロジェクト' })).toBeFocused();
-    await expect(page.locator('#projects-panel [role="listitem"]').first()).toBeVisible();
-    await page.keyboard.press('Home');
+    await expect(technologyTab).toBeFocused();
+    await technologyTab.press('End');
+    await expect(projectsTab).toBeFocused();
+    await expect(activePage.getByRole('tabpanel', { name: 'プロジェクト' }).getByRole('listitem').first()).toBeVisible();
+    await projectsTab.press('Home');
     await expect(technologyTab).toBeFocused();
     await expect(languageToggle).toHaveAttribute('aria-expanded', 'false');
-    await expect(page.getByRole('button', { name: 'Pythonの詳細を表示' })).toBeHidden();
+    await expect(activePage.getByRole('button', { name: 'Pythonの詳細を表示' })).toBeHidden();
   });
 
   test('should display tech detail view when clicking technology', async ({ page }) => {
