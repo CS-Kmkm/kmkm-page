@@ -28,6 +28,9 @@ export function Modal({
   const { locale, messages } = useI18n();
   const modalRef = useRef<HTMLDialogElement>(null);
   const pressedOutside = useRef(false);
+  const dismissAnimation = useRef<Animation | null>(null);
+  const onCloseRef = useRef(onClose);
+  useLayoutEffect(() => { onCloseRef.current = onClose; }, [onClose]);
   const instanceId = useId();
   const titleId = ariaLabelledBy || `${instanceId}-title`;
   const descriptionId = ariaDescribedBy || (description ? `${instanceId}-description` : undefined);
@@ -39,10 +42,16 @@ export function Modal({
     const dialog = modalRef.current;
     if (!dialog) return;
     if (!isOpen) { if (dialog.open) dialog.close(); return; }
+    dialog.removeAttribute('data-closing');
     // React autoFocus runs before showModal and would replace the native return target.
     dialog.querySelector('[data-modal-autofocus]')?.setAttribute('autofocus', '');
     dialog.showModal();
-    return () => { if (dialog.open) dialog.close(); };
+    return () => {
+      // An unmount or controlled close must never deliver a stale close callback.
+      dismissAnimation.current?.cancel();
+      dismissAnimation.current = null;
+      if (dialog.open) dialog.close();
+    };
   }, [isOpen]);
 
   const outside = (event: PointerEvent<HTMLDialogElement>) => {
@@ -53,8 +62,33 @@ export function Modal({
   // Close while the element is connected, before the controlled parent removes it.
   // Removing first prevents the browser from restoring focus to the invoker.
   const dismiss = () => {
-    modalRef.current?.close();
-    onClose();
+    const dialog = modalRef.current;
+    if (!dialog?.open || dismissAnimation.current) return;
+    const finish = () => {
+      dialog.close();
+      // Clear WAAPI's forwards fill before a retained dialog can reopen.
+      dismissAnimation.current?.cancel();
+      dismissAnimation.current = null;
+      dialog.removeAttribute('data-closing');
+      onCloseRef.current();
+    };
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !dialog.animate) {
+      finish();
+      return;
+    }
+    // Keep the dialog in the top layer until its exit finishes, so the background
+    // stays inert and native focus restoration still runs before parent removal.
+    dialog.setAttribute('data-closing', '');
+    const current = getComputedStyle(dialog);
+    const animation = dialog.animate([
+      { opacity: current.opacity, transform: current.transform },
+      { opacity: 0, transform: 'translateY(8px) scale(0.98)' },
+    ], { duration: 140, easing: 'ease-in', fill: 'forwards' });
+    dismissAnimation.current = animation;
+    void animation.finished.then(() => {
+      if (dismissAnimation.current !== animation) return;
+      finish();
+    }, () => { /* Cleanup cancels an interrupted exit. */ });
   };
 
   return (

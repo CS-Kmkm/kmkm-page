@@ -482,13 +482,30 @@ img {
 :root { color-scheme: light dark; }
 .dark { color-scheme: dark; }
 .site-modal { position: fixed; inset: 0; max-width: none; }
-.site-modal:modal { overscroll-behavior: contain; }
+.site-modal:modal {
+  overscroll-behavior: contain;
+  animation: modal-enter 180ms ease-out;
+}
+@keyframes modal-enter {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes modal-backdrop-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes modal-backdrop-exit {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
 .site-modal::backdrop {
   background: rgb(241 245 249 / 0.45);
   backdrop-filter: blur(12px);
   overflow: hidden;
   overscroll-behavior: contain;
 }
+.site-modal:modal::backdrop { animation: modal-backdrop-enter 180ms ease-out; }
+.site-modal[data-closing]::backdrop { animation: modal-backdrop-exit 140ms ease-in forwards; }
 .dark .site-modal::backdrop { background: rgb(15 23 42 / 0.55); }
 
 .timeline-control:focus-visible {
