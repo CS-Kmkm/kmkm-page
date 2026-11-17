@@ -363,6 +363,7 @@ export default function GitCommitLogTimeline({
   const [isEventDetailModalOpen, setIsEventDetailModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<TimelineEventEntry | null>(null);
   const [selectedCareer, setSelectedCareer] = useState<ExtendedCareerEntry | null>(null);
+  const [hoveredRowIndex, setHoveredRowIndex] = useState<number | null>(null);
 
   const processedEntries = useMemo(
     () => processEntries(entries),
@@ -454,7 +455,9 @@ export default function GitCommitLogTimeline({
   }, [processedEntries, rows]);
 
   useEffect(() => {
+    const clearRowHover = () => setHoveredRowIndex(null);
     const updateLayoutMetrics = () => {
+      clearRowHover();
       if (!containerRef.current) {
         setContainerWidth(0);
         setResolvedRowHeight(rowHeight);
@@ -482,6 +485,7 @@ export default function GitCommitLogTimeline({
 
     updateLayoutMetrics();
     window.addEventListener('resize', updateLayoutMetrics);
+    window.addEventListener('scroll', clearRowHover, { capture: true, passive: true });
 
     let resizeObserver: ResizeObserver | null = null;
     if (typeof ResizeObserver !== 'undefined' && containerRef.current) {
@@ -493,6 +497,7 @@ export default function GitCommitLogTimeline({
 
     return () => {
       window.removeEventListener('resize', updateLayoutMetrics);
+      window.removeEventListener('scroll', clearRowHover, true);
       resizeObserver?.disconnect();
     };
   }, [fitToViewport, rowHeight, rows.length, viewportBottomOffset]);
@@ -529,7 +534,17 @@ export default function GitCommitLogTimeline({
 
   return (
     <>
-      <div ref={containerRef} className="min-w-[48rem] text-sm font-sans md:min-w-0">
+      <div ref={containerRef} className="min-w-[48rem] text-sm font-sans md:min-w-0"
+        onPointerMove={(event) => {
+          if (event.pointerType === 'touch') return;
+          // Labels are translated into other rows. CSS :hover would highlight
+          // their original ancestor, rather than the row under the pointer.
+          const y = event.clientY - event.currentTarget.getBoundingClientRect().top;
+          const index = Math.floor(y / resolvedRowHeight);
+          setHoveredRowIndex(index >= 0 && index < rows.length ? index : null);
+        }}
+        onPointerLeave={() => setHoveredRowIndex(null)}
+      >
       {rows.map((row, rowIndex) => {
         const clipId = `${clipBaseId}-row-clip-${rowIndex}`;
         const entry = row.entry;
@@ -590,7 +605,7 @@ export default function GitCommitLogTimeline({
         return (
           <div
             key={`row-${rowIndex}`}
-            className="flex items-center hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors"
+            className={`flex items-center transition-colors ${hoveredRowIndex === rowIndex ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`}
             style={{ height: resolvedRowHeight }}
           >
             {/* Year Label */}
