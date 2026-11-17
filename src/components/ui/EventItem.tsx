@@ -72,7 +72,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, onClick }) => {
     >
       <button
         type="button"
-        className="block w-full rounded-sm text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+        className="block w-full rounded-sm text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800"
         onClick={(clickEvent) => {
           clickEvent.stopPropagation();
           handleClick();
